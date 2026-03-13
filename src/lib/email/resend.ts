@@ -5,7 +5,7 @@ const resend = process.env.RESEND_API_KEY
   : null;
 
 const FROM_ADDRESS =
-  process.env.RESEND_FROM || "Metalorix <onboarding@resend.dev>";
+  process.env.RESEND_FROM || "Metalorix <alertas@metalorix.com>";
 
 export async function sendEmail({
   to,
