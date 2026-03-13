@@ -1,0 +1,99 @@
+name: Scheduled Cron Jobs
+
+on:
+  schedule:
+    # Scrape prices every 15 minutes
+    - cron: '*/15 * * * *'
+  workflow_dispatch:
+    inputs:
+      job:
+        description: 'Job to run'
+        required: true
+        default: 'all'
+        type: choice
+        options:
+          - all
+          - prices
+          - content
+          - news
+
+env:
+  SERVICE_URL: https://metalorix.com
+
+jobs:
+  scrape-prices:
+    if: >
+      github.event_name == 'schedule' ||
+      github.event.inputs.job == 'all' ||
+      github.event.inputs.job == 'prices'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Scrape metal prices
+        run: |
+          response=$(curl -s -w "\n%{http_code}" -X POST \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+            "${{ env.SERVICE_URL }}/api/cron/scrape-prices")
+          http_code=$(echo "$response" | tail -1)
+          body=$(echo "$response" | head -n -1)
+          echo "Status: $http_code"
+          echo "Response: $body"
+          if [ "$http_code" -ge 400 ]; then
+            echo "::error::Scrape prices failed with status $http_code"
+            exit 1
+          fi
+
+  generate-content:
+    if: >
+      (github.event_name == 'schedule' && github.event.schedule == '*/15 * * * *') ||
+      github.event.inputs.job == 'all' ||
+      github.event.inputs.job == 'content'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check if daily content should run
+        id: check
+        run: |
+          hour=$(date -u +%H)
+          minute=$(date -u +%M)
+          day_of_week=$(date -u +%u)
+          # Daily summary at 19:00 UTC (20:00 CET)
+          if [ "$hour" = "19" ] && [ "$minute" -lt "15" ]; then
+            echo "type=daily" >> $GITHUB_OUTPUT
+            echo "should_run=true" >> $GITHUB_OUTPUT
+          # Weekly summary on Sunday at 18:00 UTC
+          elif [ "$day_of_week" = "7" ] && [ "$hour" = "18" ] && [ "$minute" -lt "15" ]; then
+            echo "type=weekly" >> $GITHUB_OUTPUT
+            echo "should_run=true" >> $GITHUB_OUTPUT
+          # Manual trigger
+          elif [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "type=auto" >> $GITHUB_OUTPUT
+            echo "should_run=true" >> $GITHUB_OUTPUT
+          else
+            echo "should_run=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Generate content
+        if: steps.check.outputs.should_run == 'true'
+        run: |
+          response=$(curl -s -w "\n%{http_code}" -X POST \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+            "${{ env.SERVICE_URL }}/api/cron/generate-content?type=${{ steps.check.outputs.type }}")
+          http_code=$(echo "$response" | tail -1)
+          body=$(echo "$response" | head -n -1)
+          echo "Status: $http_code"
+          echo "Response: $body"
+
+  scrape-news:
+    if: >
+      github.event_name == 'workflow_dispatch' &&
+      (github.event.inputs.job == 'all' || github.event.inputs.job == 'news')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Scrape news feeds
+        run: |
+          response=$(curl -s -w "\n%{http_code}" -X POST \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+            "${{ env.SERVICE_URL }}/api/cron/scrape-news")
+          http_code=$(echo "$response" | tail -1)
+          body=$(echo "$response" | head -n -1)
+          echo "Status: $http_code"
+          echo "Response: $body"
