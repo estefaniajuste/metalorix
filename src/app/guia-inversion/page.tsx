@@ -4,10 +4,7 @@ import { getTranslations, getLocale } from "next-intl/server";
 import { InvestmentComparison } from "@/components/guide/InvestmentComparison";
 
 export const revalidate = 86400;
-import {
-  InvestmentMethodCard,
-  INVESTMENT_METHODS,
-} from "@/components/guide/InvestmentMethodCard";
+import { InvestmentMethodsList } from "@/components/guide/InvestmentMethodCard";
 import { EtfTable } from "@/components/guide/EtfTable";
 import { FaqSection } from "@/components/guide/FaqSection";
 import { FAQ_ITEMS } from "@/lib/data/faq-items";
@@ -36,9 +33,8 @@ export async function generateMetadata(): Promise<Metadata> {
     description: t("subtitle"),
     keywords: seoKeywords,
     openGraph: {
-      title: "Cómo invertir en oro y metales preciosos — Guía completa",
-      description:
-        "Compara las diferentes formas de invertir en metales preciosos: oro físico, bóvedas, ETFs y más. Con tabla de ETFs europeos.",
+      title: t("title") + " — Metalorix",
+      description: t("subtitle"),
       type: "website",
       url: "https://metalorix.com/guia-inversion",
     },
@@ -115,11 +111,7 @@ export default async function GuiaInversionPage() {
             <p className="text-sm text-content-2 mb-6">
               {t("detailedAnalysisDesc")}
             </p>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {INVESTMENT_METHODS.map((method) => (
-                <InvestmentMethodCard key={method.title} method={method} />
-              ))}
-            </div>
+            <InvestmentMethodsList />
           </div>
 
           {/* Section 3: ETF table */}

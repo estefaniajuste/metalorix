@@ -1,13 +1,14 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 
 interface Etf {
   name: string;
   ticker: string;
-  metal: "Oro" | "Plata" | "Platino";
+  metal: "gold" | "silver" | "platinum";
   ter: string;
-  replication: string;
+  replication: "physicalAllocated" | "physicalDelivery";
   size: string;
   currency: string;
   url: string;
@@ -17,9 +18,9 @@ const ETF_DATA: Etf[] = [
   {
     name: "Invesco Physical Gold ETC",
     ticker: "SGLD",
-    metal: "Oro",
+    metal: "gold",
     ter: "0,12 %",
-    replication: "Física (asignada)",
+    replication: "physicalAllocated",
     size: "~20.000 M$",
     currency: "USD",
     url: "https://www.justetf.com/en/etf-profile.html?isin=IE00B579F325",
@@ -27,9 +28,9 @@ const ETF_DATA: Etf[] = [
   {
     name: "iShares Physical Gold ETC",
     ticker: "IGLN",
-    metal: "Oro",
+    metal: "gold",
     ter: "0,12 %",
-    replication: "Física (asignada)",
+    replication: "physicalAllocated",
     size: "~16.000 M$",
     currency: "USD",
     url: "https://www.justetf.com/en/etf-profile.html?isin=IE00B4ND3602",
@@ -37,9 +38,9 @@ const ETF_DATA: Etf[] = [
   {
     name: "WisdomTree Physical Gold",
     ticker: "PHAU",
-    metal: "Oro",
+    metal: "gold",
     ter: "0,39 %",
-    replication: "Física (asignada)",
+    replication: "physicalAllocated",
     size: "~5.000 M$",
     currency: "USD",
     url: "https://www.justetf.com/en/etf-profile.html?isin=JE00B1VS3770",
@@ -47,9 +48,9 @@ const ETF_DATA: Etf[] = [
   {
     name: "Xetra-Gold",
     ticker: "4GLD",
-    metal: "Oro",
+    metal: "gold",
     ter: "0,00 %",
-    replication: "Física (entrega posible)",
+    replication: "physicalDelivery",
     size: "~12.000 M€",
     currency: "EUR",
     url: "https://www.justetf.com/en/etf-profile.html?isin=DE000A0S9GB0",
@@ -57,9 +58,9 @@ const ETF_DATA: Etf[] = [
   {
     name: "Amundi Physical Gold ETC",
     ticker: "GOLD",
-    metal: "Oro",
+    metal: "gold",
     ter: "0,15 %",
-    replication: "Física (asignada)",
+    replication: "physicalAllocated",
     size: "~5.000 M$",
     currency: "USD",
     url: "https://www.justetf.com/en/etf-profile.html?isin=FR0013416716",
@@ -67,9 +68,9 @@ const ETF_DATA: Etf[] = [
   {
     name: "iShares Physical Silver ETC",
     ticker: "ISLN",
-    metal: "Plata",
+    metal: "silver",
     ter: "0,20 %",
-    replication: "Física (asignada)",
+    replication: "physicalAllocated",
     size: "~1.200 M$",
     currency: "USD",
     url: "https://www.justetf.com/en/etf-profile.html?isin=IE00B4NCWG09",
@@ -77,9 +78,9 @@ const ETF_DATA: Etf[] = [
   {
     name: "WisdomTree Physical Silver",
     ticker: "PHAG",
-    metal: "Plata",
+    metal: "silver",
     ter: "0,49 %",
-    replication: "Física (asignada)",
+    replication: "physicalAllocated",
     size: "~1.800 M$",
     currency: "USD",
     url: "https://www.justetf.com/en/etf-profile.html?isin=JE00B1VS3333",
@@ -87,16 +88,17 @@ const ETF_DATA: Etf[] = [
   {
     name: "WisdomTree Physical Platinum",
     ticker: "PHPT",
-    metal: "Platino",
+    metal: "platinum",
     ter: "0,49 %",
-    replication: "Física (asignada)",
+    replication: "physicalAllocated",
     size: "~300 M$",
     currency: "USD",
     url: "https://www.justetf.com/en/etf-profile.html?isin=JE00B1VS2W53",
   },
 ];
 
-const METALS = ["Todos", "Oro", "Plata", "Platino"] as const;
+const METAL_KEYS = ["all", "gold", "silver", "platinum"] as const;
+type MetalFilter = (typeof METAL_KEYS)[number];
 
 type SortKey = "name" | "ticker" | "metal" | "ter" | "size" | "currency";
 
@@ -111,11 +113,12 @@ function ExternalLinkIcon() {
 }
 
 export function EtfTable() {
-  const [filter, setFilter] = useState<(typeof METALS)[number]>("Todos");
+  const t = useTranslations("etfTable");
+  const [filter, setFilter] = useState<MetalFilter>("all");
   const [sortKey, setSortKey] = useState<SortKey>("metal");
   const [sortAsc, setSortAsc] = useState(true);
 
-  const filtered = ETF_DATA.filter((e) => filter === "Todos" || e.metal === filter);
+  const filtered = ETF_DATA.filter((e) => filter === "all" || e.metal === filter);
 
   const sorted = [...filtered].sort((a, b) => {
     const va = a[sortKey];
@@ -143,8 +146,8 @@ export function EtfTable() {
   return (
     <div className="bg-surface-1 border border-border rounded-DEFAULT overflow-hidden">
       <div className="flex items-center gap-2 px-4 py-3 border-b border-border bg-surface-2">
-        <span className="text-xs font-semibold text-content-3 uppercase tracking-wider mr-2">Filtrar:</span>
-        {METALS.map((m) => (
+        <span className="text-xs font-semibold text-content-3 uppercase tracking-wider mr-2">{t("filter")}</span>
+        {METAL_KEYS.map((m) => (
           <button
             key={m}
             onClick={() => setFilter(m)}
@@ -154,34 +157,34 @@ export function EtfTable() {
                 : "bg-surface-1 text-content-2 hover:text-content-0 hover:bg-surface-3"
             }`}
           >
-            {m}
+            {t(m)}
           </button>
         ))}
       </div>
       <div className="overflow-x-auto">
-        <table className="w-full border-collapse text-sm" aria-label="ETFs de metales preciosos en Europa">
+        <table className="w-full border-collapse text-sm" aria-label={t("ariaLabel")}>
           <thead>
             <tr>
-              <th className={thBase} onClick={() => handleSort("name")} role="button" aria-label="Ordenar por nombre">
-                Nombre <SortIndicator col="name" />
+              <th className={thBase} onClick={() => handleSort("name")} role="button" aria-label={t("sortByName")}>
+                {t("name")} <SortIndicator col="name" />
               </th>
-              <th className={thBase} onClick={() => handleSort("ticker")} role="button" aria-label="Ordenar por ticker">
-                Ticker <SortIndicator col="ticker" />
+              <th className={thBase} onClick={() => handleSort("ticker")} role="button" aria-label={t("sortByTicker")}>
+                {t("ticker")} <SortIndicator col="ticker" />
               </th>
-              <th className={thBase} onClick={() => handleSort("metal")} role="button" aria-label="Ordenar por metal">
-                Metal <SortIndicator col="metal" />
+              <th className={thBase} onClick={() => handleSort("metal")} role="button" aria-label={t("sortByMetal")}>
+                {t("metal")} <SortIndicator col="metal" />
               </th>
-              <th className={thBase} onClick={() => handleSort("ter")} role="button" aria-label="Ordenar por TER">
-                TER <SortIndicator col="ter" />
+              <th className={thBase} onClick={() => handleSort("ter")} role="button" aria-label={t("sortByTer")}>
+                {t("terLabel")} <SortIndicator col="ter" />
               </th>
-              <th className={`${thBase} hidden sm:table-cell`}>Réplica</th>
-              <th className={thBase} onClick={() => handleSort("size")} role="button" aria-label="Ordenar por tamaño">
-                Tamaño <SortIndicator col="size" />
+              <th className={`${thBase} hidden sm:table-cell`}>{t("replication")}</th>
+              <th className={thBase} onClick={() => handleSort("size")} role="button" aria-label={t("sortBySize")}>
+                {t("size")} <SortIndicator col="size" />
               </th>
-              <th className={thBase} onClick={() => handleSort("currency")} role="button" aria-label="Ordenar por divisa">
-                Divisa <SortIndicator col="currency" />
+              <th className={thBase} onClick={() => handleSort("currency")} role="button" aria-label={t("sortByCurrency")}>
+                {t("currency")} <SortIndicator col="currency" />
               </th>
-              <th className={`${thBase} cursor-default hover:text-content-3`}>Ficha</th>
+              <th className={`${thBase} cursor-default hover:text-content-3`}>{t("factsheet")}</th>
             </tr>
           </thead>
           <tbody>
@@ -193,10 +196,10 @@ export function EtfTable() {
                 <td className="px-4 py-3 border-b border-border text-brand-gold font-mono text-xs font-semibold">
                   {etf.ticker}
                 </td>
-                <td className="px-4 py-3 border-b border-border text-content-2">{etf.metal}</td>
+                <td className="px-4 py-3 border-b border-border text-content-2">{t(etf.metal)}</td>
                 <td className="px-4 py-3 border-b border-border text-content-1 tabular-nums">{etf.ter}</td>
                 <td className="px-4 py-3 border-b border-border text-content-2 hidden sm:table-cell text-xs">
-                  {etf.replication}
+                  {t(etf.replication)}
                 </td>
                 <td className="px-4 py-3 border-b border-border text-content-2 tabular-nums">{etf.size}</td>
                 <td className="px-4 py-3 border-b border-border text-content-2">{etf.currency}</td>
@@ -207,7 +210,7 @@ export function EtfTable() {
                     rel="noopener noreferrer"
                     className="text-brand-gold hover:text-brand-gold-hover transition-colors text-xs font-medium"
                   >
-                    Ver<ExternalLinkIcon />
+                    {t("view")}<ExternalLinkIcon />
                   </a>
                 </td>
               </tr>
@@ -215,7 +218,7 @@ export function EtfTable() {
             {sorted.length === 0 && (
               <tr>
                 <td colSpan={8} className="text-center text-content-3 py-8">
-                  No hay ETFs para este filtro
+                  {t("noResults")}
                 </td>
               </tr>
             )}

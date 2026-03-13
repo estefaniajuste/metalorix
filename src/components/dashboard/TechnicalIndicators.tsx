@@ -7,6 +7,7 @@ import {
   calculateMACD,
   calculateBollinger,
 } from "@/lib/utils/indicators";
+import { useTranslations } from "next-intl";
 
 interface TechnicalIndicatorsProps {
   history: HistoryResult | null;
@@ -241,6 +242,7 @@ function drawBollinger(
 }
 
 export function TechnicalIndicators({ history, hideTitle }: TechnicalIndicatorsProps) {
+  const t = useTranslations("technicalIndicators");
   const rsiRef = useRef<HTMLCanvasElement>(null);
   const macdRef = useRef<HTMLCanvasElement>(null);
   const bollRef = useRef<HTMLCanvasElement>(null);
@@ -281,16 +283,16 @@ export function TechnicalIndicators({ history, hideTitle }: TechnicalIndicatorsP
 
   const rsiZone =
     lastRsi >= 70
-      ? { label: "Sobrecomprado", color: "text-signal-down" }
+      ? { label: t("overbought"), color: "text-signal-down" }
       : lastRsi <= 30
-        ? { label: "Sobrevendido", color: "text-signal-up" }
-        : { label: "Neutral", color: "text-content-2" };
+        ? { label: t("oversold"), color: "text-signal-up" }
+        : { label: t("neutral"), color: "text-content-2" };
 
   return (
     <div className="space-y-4 mb-6">
       {!hideTitle && (
         <h3 className="text-base font-semibold text-content-0">
-          Indicadores técnicos
+          {t("title")}
         </h3>
       )}
 
@@ -305,10 +307,10 @@ export function TechnicalIndicators({ history, hideTitle }: TechnicalIndicatorsP
           </div>
           <div className="flex items-center gap-3 text-[10px] text-content-3">
             <span className="flex items-center gap-1">
-              <span className="w-2 h-0.5 bg-red-500/30 rounded" /> &gt;70 Sobrecomprado
+              <span className="w-2 h-0.5 bg-red-500/30 rounded" /> {t("overboughtLabel")}
             </span>
             <span className="flex items-center gap-1">
-              <span className="w-2 h-0.5 bg-green-500/30 rounded" /> &lt;30 Sobrevendido
+              <span className="w-2 h-0.5 bg-green-500/30 rounded" /> {t("oversoldLabel")}
             </span>
           </div>
         </div>
@@ -346,17 +348,17 @@ export function TechnicalIndicators({ history, hideTitle }: TechnicalIndicatorsP
       <div className="bg-surface-1 border border-border rounded-DEFAULT p-4">
         <div className="flex items-center justify-between mb-3">
           <span className="text-sm font-semibold text-content-0">
-            Bandas de Bollinger (20, 2)
+            {t("bollingerTitle")}
           </span>
           <div className="flex items-center gap-3 text-[10px] text-content-3">
             <span className="flex items-center gap-1">
-              <span className="w-2 h-0.5 bg-brand-gold rounded" /> Precio
+              <span className="w-2 h-0.5 bg-brand-gold rounded" /> {t("price")}
             </span>
             <span className="flex items-center gap-1">
               <span className="w-2 h-0.5 bg-blue-500 rounded" /> SMA(20)
             </span>
             <span className="flex items-center gap-1">
-              <span className="w-5 h-2 bg-blue-500/10 rounded border border-blue-500/30" /> Bandas
+              <span className="w-5 h-2 bg-blue-500/10 rounded border border-blue-500/30" /> {t("bands")}
             </span>
           </div>
         </div>

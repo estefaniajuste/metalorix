@@ -2,21 +2,22 @@
 
 import { useEffect, useState } from "react";
 import type { MetalSpot } from "@/lib/providers/metals";
+import { useTranslations } from "next-intl";
 
 const TROY_OZ_GRAMS = 31.1035;
 
 const KARATS = [
-  { label: "24K (puro)", factor: 1.0 },
-  { label: "22K", factor: 0.917 },
-  { label: "18K", factor: 0.75 },
-  { label: "14K", factor: 0.585 },
-  { label: "9K", factor: 0.375 },
+  { key: "karat24", label: "24K (puro)", factor: 1.0 },
+  { key: "22K", label: "22K", factor: 0.917 },
+  { key: "18K", label: "18K", factor: 0.75 },
+  { key: "14K", label: "14K", factor: 0.585 },
+  { key: "9K", label: "9K", factor: 0.375 },
 ];
 
-const METALS = [
-  { symbol: "XAU", name: "Oro", color: "#D6B35A" },
-  { symbol: "XAG", name: "Plata", color: "#A7B0BE" },
-  { symbol: "XPT", name: "Platino", color: "#8B9DC3" },
+const METALS_LIST = [
+  { symbol: "XAU", nameKey: "gold", color: "#D6B35A" },
+  { symbol: "XAG", nameKey: "silver", color: "#A7B0BE" },
+  { symbol: "XPT", nameKey: "platinum", color: "#8B9DC3" },
 ];
 
 function fmt(val: number): string {
@@ -26,6 +27,7 @@ function fmt(val: number): string {
 }
 
 export function GramPriceContent() {
+  const t = useTranslations("gramPriceContent");
   const [prices, setPrices] = useState<MetalSpot[]>([]);
   const [eurRate, setEurRate] = useState(1.08);
   const [loading, setLoading] = useState(true);
@@ -59,7 +61,7 @@ export function GramPriceContent() {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           <div className="text-center sm:text-left">
             <div className="text-xs text-content-3 font-medium uppercase tracking-wider mb-1">
-              Gramo de oro 24K en USD
+              {t("goldGram24kUsd")}
             </div>
             <div className="text-4xl font-extrabold text-brand-gold tabular-nums">
               ${fmt(goldUsdGram)}
@@ -67,7 +69,7 @@ export function GramPriceContent() {
           </div>
           <div className="text-center sm:text-left">
             <div className="text-xs text-content-3 font-medium uppercase tracking-wider mb-1">
-              Gramo de oro 24K en EUR
+              {t("goldGram24kEur")}
             </div>
             <div className="text-4xl font-extrabold text-brand-gold tabular-nums">
               €{fmt(goldEurGram)}
@@ -75,29 +77,29 @@ export function GramPriceContent() {
           </div>
         </div>
         <p className="text-[11px] text-content-3 mt-4">
-          Basado en: XAU/USD = ${fmt(goldUsdOz)}/oz · EUR/USD = {eurRate.toFixed(4)} · 1 oz troy = {TROY_OZ_GRAMS} g
+          {t("basedOn", { price: fmt(goldUsdOz), rate: eurRate.toFixed(4) })}
         </p>
       </div>
 
       {/* Karat table */}
       <div className="bg-surface-1 border border-border rounded-DEFAULT p-6">
         <h3 className="text-base font-semibold text-content-0 mb-4">
-          Precio del gramo de oro por quilates
+          {t("gramPriceByKarat")}
         </h3>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-border">
-                <th className="text-left text-content-3 font-medium py-2 pr-4">Quilates</th>
-                <th className="text-right text-content-3 font-medium py-2 px-4">USD/gramo</th>
-                <th className="text-right text-content-3 font-medium py-2 px-4">EUR/gramo</th>
-                <th className="text-right text-content-3 font-medium py-2 pl-4">USD/kilo</th>
+                <th className="text-left text-content-3 font-medium py-2 pr-4">{t("karats")}</th>
+                <th className="text-right text-content-3 font-medium py-2 px-4">{t("usdPerGram")}</th>
+                <th className="text-right text-content-3 font-medium py-2 px-4">{t("eurPerGram")}</th>
+                <th className="text-right text-content-3 font-medium py-2 pl-4">{t("usdPerKilo")}</th>
               </tr>
             </thead>
             <tbody>
               {KARATS.map((k) => (
-                <tr key={k.label} className="border-b border-border/50 last:border-0">
-                  <td className="py-3 pr-4 text-content-1 font-medium">{k.label}</td>
+                <tr key={k.key} className="border-b border-border/50 last:border-0">
+                  <td className="py-3 pr-4 text-content-1 font-medium">{k.key === "karat24" ? t("karat24") : k.label}</td>
                   <td className="py-3 px-4 text-right text-content-0 font-semibold tabular-nums">
                     ${fmt(goldUsdGram * k.factor)}
                   </td>
@@ -117,10 +119,10 @@ export function GramPriceContent() {
       {/* All metals comparison */}
       <div className="bg-surface-1 border border-border rounded-DEFAULT p-6">
         <h3 className="text-base font-semibold text-content-0 mb-4">
-          Comparativa: precio por gramo de todos los metales
+          {t("comparison")}
         </h3>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          {METALS.map((m) => {
+          {METALS_LIST.map((m) => {
             const spot = prices.find((p) => p.symbol === m.symbol);
             if (!spot) return null;
             const usdGram = spot.price / TROY_OZ_GRAMS;
@@ -134,7 +136,7 @@ export function GramPriceContent() {
                   className="text-xs font-semibold uppercase tracking-wider mb-2"
                   style={{ color: m.color }}
                 >
-                  {m.name}
+                  {t(m.nameKey)}
                 </div>
                 <div className="text-xl font-bold text-content-0 tabular-nums">
                   ${fmt(usdGram)}/g

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useTranslations } from "next-intl";
 import type { MetalSymbol } from "@/lib/providers/metals";
 
 interface SpotData {
@@ -27,6 +28,7 @@ export function ProductSpotPrice({
   fineWeightOz: number;
   metalName: string;
 }) {
+  const t = useTranslations("productSpotPrice");
   const [spot, setSpot] = useState<SpotData | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -67,7 +69,7 @@ export function ProductSpotPrice({
   return (
     <div className="bg-surface-1 border border-border rounded-DEFAULT p-6">
       <h3 className="text-base font-semibold text-content-0 mb-4">
-        Precio spot del {metalName}
+        {t("spotPrice", { metal: metalName })}
       </h3>
 
       {loading ? (
@@ -96,7 +98,7 @@ export function ProductSpotPrice({
           {metalValue !== null && (
             <div className="pt-4 border-t border-border">
               <div className="text-xs text-content-3 mb-1">
-                Valor del metal contenido
+                {t("metalValue")}
               </div>
               <div className="text-xl font-bold text-content-0 tabular-nums">
                 ${formatPrice(metalValue)}
@@ -110,12 +112,11 @@ export function ProductSpotPrice({
           )}
         </>
       ) : (
-        <p className="text-sm text-content-3">No se pudo cargar el precio.</p>
+        <p className="text-sm text-content-3">{t("errorLoading")}</p>
       )}
 
       <p className="text-[11px] text-content-3 mt-4 leading-relaxed">
-        Precio spot indicativo. Puede diferir del precio final de compra
-        (prima + gastos del dealer).
+        {t("disclaimer")}
       </p>
     </div>
   );

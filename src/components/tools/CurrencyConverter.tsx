@@ -1,22 +1,23 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useTranslations } from "next-intl";
 import type { MetalSpot, MetalSymbol } from "@/lib/providers/metals";
 import { METALS } from "@/lib/providers/metals";
 
 interface CurrencyInfo {
   code: string;
   symbol: string;
-  name: string;
+  nameKey: string;
   flag: string;
 }
 
-const CURRENCIES: CurrencyInfo[] = [
-  { code: "USD", symbol: "$", name: "Dólar estadounidense", flag: "🇺🇸" },
-  { code: "EUR", symbol: "€", name: "Euro", flag: "🇪🇺" },
-  { code: "GBP", symbol: "£", name: "Libra esterlina", flag: "🇬🇧" },
-  { code: "CHF", symbol: "Fr", name: "Franco suizo", flag: "🇨🇭" },
-  { code: "JPY", symbol: "¥", name: "Yen japonés", flag: "🇯🇵" },
+const CURRENCY_DEFS: CurrencyInfo[] = [
+  { code: "USD", symbol: "$", nameKey: "usd", flag: "🇺🇸" },
+  { code: "EUR", symbol: "€", nameKey: "eur", flag: "🇪🇺" },
+  { code: "GBP", symbol: "£", nameKey: "gbp", flag: "🇬🇧" },
+  { code: "CHF", symbol: "Fr", nameKey: "chf", flag: "🇨🇭" },
+  { code: "JPY", symbol: "¥", nameKey: "jpy", flag: "🇯🇵" },
 ];
 
 function formatCurrency(val: number, code: string) {
@@ -33,6 +34,8 @@ function formatCurrency(val: number, code: string) {
 }
 
 export function CurrencyConverter() {
+  const t = useTranslations("currencyConverter");
+  const tMetals = useTranslations("metalNames");
   const [metal, setMetal] = useState<MetalSymbol>("XAU");
   const [prices, setPrices] = useState<Record<string, number>>({});
   const [rates, setRates] = useState<Record<string, number>>({});
@@ -78,10 +81,10 @@ export function CurrencyConverter() {
   return (
     <div className="bg-surface-1 border border-border rounded-DEFAULT p-6">
       <h3 className="text-lg font-bold text-content-0 mb-2">
-        Precio en divisas
+        {t("title")}
       </h3>
       <p className="text-xs text-content-3 mb-5">
-        Precio por onza troy en las principales divisas mundiales
+        {t("subtitle")}
       </p>
 
       {/* Metal selector */}
@@ -96,14 +99,14 @@ export function CurrencyConverter() {
                 : "bg-surface-2 text-content-2 hover:bg-surface-2/80"
             }`}
           >
-            {METALS[sym].name}
+            {tMetals(sym)}
           </button>
         ))}
       </div>
 
       {/* Price list */}
       <div className="space-y-2">
-        {CURRENCIES.map((curr) => {
+        {CURRENCY_DEFS.map((curr) => {
           const rate = curr.code === "USD" ? 1 : (rates[curr.code] ?? 0);
           const converted = priceUSD * rate;
 
@@ -122,7 +125,7 @@ export function CurrencyConverter() {
                   {curr.code}
                 </div>
                 <div className="text-[10px] text-content-3 truncate">
-                  {curr.name}
+                  {t(curr.nameKey)}
                 </div>
               </div>
               <div className="text-right">
@@ -141,7 +144,7 @@ export function CurrencyConverter() {
       </div>
 
       <p className="text-[10px] text-content-3 mt-4 text-center">
-        Tipos de cambio actualizados cada hora. Pueden diferir del mercado real.
+        {t("disclaimer")}
       </p>
     </div>
   );

@@ -48,7 +48,8 @@ export async function generateMetadata() {
 
 export default async function HerramientasPage() {
   const t = await getTranslations("tools");
-  const breadcrumb = breadcrumbSchema([{ name: t("title"), path: "/herramientas" }]);
+  const tc = await getTranslations("common");
+  const breadcrumb = breadcrumbSchema([{ name: t("title"), path: "/herramientas" }], tc("breadcrumbHome"));
   const appSchema = softwareAppSchema({
     name: `${t("title")} Metalorix`,
     description: t("subtitle"),

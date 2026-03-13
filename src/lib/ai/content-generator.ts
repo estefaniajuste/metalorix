@@ -66,7 +66,33 @@ function slugify(text: string): string {
     .replace(/[\u0300-\u036f]/g, "")
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-|-$/g, "")
-    .slice(0, 120);
+    .slice(0, 100);
+}
+
+interface StructuredArticle {
+  titulo_seo: string;
+  meta_descripcion: string;
+  palabras_clave_url: string;
+  contenido: string;
+}
+
+function parseStructuredResponse(raw: string): StructuredArticle | null {
+  try {
+    const jsonMatch = raw.match(/```(?:json)?\s*([\s\S]*?)```/);
+    const jsonStr = jsonMatch ? jsonMatch[1].trim() : raw.trim();
+    const parsed = JSON.parse(jsonStr);
+    if (
+      parsed.titulo_seo &&
+      parsed.meta_descripcion &&
+      parsed.palabras_clave_url &&
+      parsed.contenido
+    ) {
+      return parsed as StructuredArticle;
+    }
+    return null;
+  } catch {
+    return null;
+  }
 }
 
 function formatDate(d: Date): string {
@@ -109,7 +135,7 @@ export async function generateDailySummary(): Promise<{
   const today = new Date();
   const dateStr = formatDate(today);
 
-  const prompt = `Eres un analista experto en metales preciosos que escribe en español para inversores hispanohablantes. 
+  const prompt = `Eres un analista experto en metales preciosos y SEO que escribe en español para inversores hispanohablantes.
 
 Escribe un RESUMEN DIARIO del mercado de metales preciosos para hoy, ${dateStr}.
 
@@ -119,7 +145,7 @@ ${formatPrices(prices)}
 NOTICIAS RELEVANTES DE LAS ÚLTIMAS 24H:
 ${formatNews(news)}
 
-INSTRUCCIONES:
+INSTRUCCIONES PARA EL CONTENIDO:
 - Escribe en español natural, profesional pero accesible
 - Longitud: 400-600 palabras
 - Estructura: Empieza con un párrafo resumen, luego analiza cada metal, luego perspectivas
@@ -130,21 +156,46 @@ INSTRUCCIONES:
 - Incluye una sección "Perspectivas" al final con lo que podría pasar
 - Tono: informativo, analítico, útil para quien invierte en metales
 - NO incluyas título ni fecha al inicio (se añaden automáticamente)
-- NO digas "como analista" ni uses primera persona`;
+- NO digas "como analista" ni uses primera persona
 
-  const content = await generateText(prompt);
-  if (!content) return null;
+INSTRUCCIONES SEO (MUY IMPORTANTE):
+Debes devolver tu respuesta como un JSON válido con esta estructura exacta:
+
+{
+  "titulo_seo": "Un título optimizado para SEO (50-65 caracteres). Debe captar la esencia de la jornada con palabras clave que la gente busca en Google. Ejemplos de buen título: 'El oro supera los $5000 por tensiones en Oriente Medio', 'Caída del oro y subida de la plata tras datos de empleo en EE.UU.', 'Récord del oro ante debilidad del dólar y compras de bancos centrales'. NO uses títulos genéricos como 'Resumen del mercado'. Incluye la causa principal del movimiento.",
+  "meta_descripcion": "Metadescripción atractiva para Google (140-155 caracteres). Resumen con precios concretos y el factor clave del día. Debe invitar al clic.",
+  "palabras_clave_url": "3-6 palabras clave separadas por espacios para la URL, sin fecha. Ejemplo: 'oro sube tensiones geopoliticas ormuz' o 'plata maximo anual demanda industrial'. Solo las palabras más relevantes del día.",
+  "contenido": "El artículo completo aquí (400-600 palabras con formato ## para secciones)"
+}
+
+Devuelve SOLO el JSON, sin texto adicional antes o después. No envuelvas en bloques de código.`;
+
+  const raw = await generateText(prompt);
+  if (!raw) return null;
 
   const dateSlug = today.toISOString().slice(0, 10);
-  const slug = `resumen-diario-metales-preciosos-${dateSlug}`;
-  const title = `Resumen del mercado de metales preciosos — ${dateStr}`;
-  const excerpt = `Oro a $${prices.find((p) => p.symbol === "XAU")?.price.toFixed(0) ?? "N/A"}, Plata a $${prices.find((p) => p.symbol === "XAG")?.price.toFixed(2) ?? "N/A"}, Platino a $${prices.find((p) => p.symbol === "XPT")?.price.toFixed(0) ?? "N/A"}. Análisis del día.`;
+  const parsed = parseStructuredResponse(raw);
+
+  if (parsed) {
+    const keywordSlug = slugify(parsed.palabras_clave_url);
+    return {
+      slug: `${keywordSlug}-${dateSlug}`,
+      title: parsed.titulo_seo,
+      excerpt: parsed.meta_descripcion,
+      content: parsed.contenido.trim(),
+      metals: ["XAU", "XAG", "XPT"],
+    };
+  }
+
+  const fallbackSlug = `resumen-diario-metales-preciosos-${dateSlug}`;
+  const fallbackTitle = `Resumen del mercado de metales preciosos — ${dateStr}`;
+  const fallbackExcerpt = `Oro a $${prices.find((p) => p.symbol === "XAU")?.price.toFixed(0) ?? "N/A"}, Plata a $${prices.find((p) => p.symbol === "XAG")?.price.toFixed(2) ?? "N/A"}, Platino a $${prices.find((p) => p.symbol === "XPT")?.price.toFixed(0) ?? "N/A"}. Análisis del día.`;
 
   return {
-    slug,
-    title,
-    excerpt,
-    content: content.trim(),
+    slug: fallbackSlug,
+    title: fallbackTitle,
+    excerpt: fallbackExcerpt,
+    content: raw.trim(),
     metals: ["XAU", "XAG", "XPT"],
   };
 }
@@ -169,7 +220,7 @@ export async function generateEventArticle(
   const today = new Date();
   const dateStr = formatDate(today);
 
-  const prompt = `Eres un analista experto en metales preciosos que escribe en español.
+  const prompt = `Eres un analista experto en metales preciosos y SEO que escribe en español.
 
 ALERTA DE MERCADO: ${metalName} ${direction} un ${absChange}% hoy (${dateStr}).
 Precio actual: $${price.toFixed(2)} USD/oz
@@ -184,21 +235,46 @@ Escribe un artículo de 300-400 palabras explicando:
 4. Niveles clave a vigilar
 
 FORMATO: párrafos normales, ## para secciones. Tono profesional, datos concretos.
-NO incluyas título. NO uses primera persona.`;
+NO incluyas título. NO uses primera persona.
 
-  const content = await generateText(prompt);
-  if (!content) return null;
+INSTRUCCIONES SEO (MUY IMPORTANTE):
+Debes devolver tu respuesta como un JSON válido con esta estructura exacta:
+
+{
+  "titulo_seo": "Un título optimizado para SEO (50-65 caracteres). Debe explicar qué ha pasado y por qué. Ejemplos: '${metalName} se dispara un ${absChange}% por sanciones a Rusia', '${metalName} cae tras subida de tipos de la Fed', 'Desplome del ${metalName.toLowerCase()}: inversores huyen a bonos del Tesoro'. Incluye la CAUSA del movimiento, no solo el dato.",
+  "meta_descripcion": "Metadescripción para Google (140-155 caracteres). Precio actual, cambio porcentual y causa principal. Debe generar clics.",
+  "palabras_clave_url": "3-6 palabras clave para la URL sin fecha. Ejemplo: '${metalName.toLowerCase()} ${direction} ${absChange} sanciones rusia' o '${metalName.toLowerCase()} caida tipos interes fed'. Solo palabras relevantes.",
+  "contenido": "El artículo completo aquí (300-400 palabras con formato ## para secciones)"
+}
+
+Devuelve SOLO el JSON, sin texto adicional antes o después. No envuelvas en bloques de código.`;
+
+  const raw = await generateText(prompt);
+  if (!raw) return null;
 
   const dateSlug = today.toISOString().slice(0, 10);
-  const slug = `${metalName.toLowerCase()}-${direction}-${absChange}-porciento-${dateSlug}`;
-  const title = `${metalName} ${direction} un ${absChange}% — Análisis del movimiento`;
-  const excerpt = `${metalName} cotiza a $${price.toFixed(2)} tras ${direction === "sube" ? "una subida" : "una caída"} del ${absChange}% hoy. Analizamos las causas y perspectivas.`;
+  const parsed = parseStructuredResponse(raw);
+
+  if (parsed) {
+    const keywordSlug = slugify(parsed.palabras_clave_url);
+    return {
+      slug: `${keywordSlug}-${dateSlug}`,
+      title: parsed.titulo_seo,
+      excerpt: parsed.meta_descripcion,
+      content: parsed.contenido.trim(),
+      metals: [metal],
+    };
+  }
+
+  const fallbackSlug = `${metalName.toLowerCase()}-${direction}-${absChange}-porciento-${dateSlug}`;
+  const fallbackTitle = `${metalName} ${direction} un ${absChange}% — Análisis del movimiento`;
+  const fallbackExcerpt = `${metalName} cotiza a $${price.toFixed(2)} tras ${direction === "sube" ? "una subida" : "una caída"} del ${absChange}% hoy. Analizamos las causas y perspectivas.`;
 
   return {
-    slug,
-    title,
-    excerpt,
-    content: content.trim(),
+    slug: fallbackSlug,
+    title: fallbackTitle,
+    excerpt: fallbackExcerpt,
+    content: raw.trim(),
     metals: [metal],
   };
 }
@@ -220,7 +296,7 @@ export async function generateWeeklySummary(): Promise<{
   weekStart.setDate(today.getDate() - 7);
   const weekRange = `${weekStart.toLocaleDateString("es-ES", { day: "numeric", month: "long" })} — ${today.toLocaleDateString("es-ES", { day: "numeric", month: "long", year: "numeric" })}`;
 
-  const prompt = `Eres un analista experto en metales preciosos que escribe en español.
+  const prompt = `Eres un analista experto en metales preciosos y SEO que escribe en español.
 
 Escribe un ANÁLISIS SEMANAL del mercado de metales preciosos.
 Semana: ${weekRange}
@@ -231,28 +307,53 @@ ${formatPrices(prices)}
 NOTICIAS DE LA SEMANA:
 ${formatNews(news)}
 
-INSTRUCCIONES:
+INSTRUCCIONES PARA EL CONTENIDO:
 - 600-800 palabras
 - Estructura: Resumen de la semana, análisis por metal, factores macro, perspectiva para la próxima semana
 - Usa ## para títulos de sección
 - Datos concretos, tendencias, niveles de soporte/resistencia
 - Menciona factores macro: dólar, tipos de interés, geopolítica
 - Tono: profesional, analítico
-- NO incluyas título. NO uses primera persona.`;
+- NO incluyas título. NO uses primera persona.
 
-  const content = await generateText(prompt);
-  if (!content) return null;
+INSTRUCCIONES SEO (MUY IMPORTANTE):
+Debes devolver tu respuesta como un JSON válido con esta estructura exacta:
+
+{
+  "titulo_seo": "Un título optimizado para SEO (50-65 caracteres). Debe resumir el hecho más importante de la semana. Ejemplos: 'Semana alcista para el oro: máximos históricos por compras de China', 'La plata lidera las subidas semanales por demanda industrial', 'Oro y platino caen en semana marcada por la Fed'. NO uses títulos genéricos como 'Análisis semanal'. Destaca el evento o tendencia más relevante.",
+  "meta_descripcion": "Metadescripción para Google (140-155 caracteres). Resumen con datos clave de la semana y el factor dominante. Debe invitar al clic.",
+  "palabras_clave_url": "3-6 palabras clave para la URL sin fecha. Ejemplo: 'oro maximos historicos compras china' o 'plata sube demanda industrial semana'. Solo palabras relevantes.",
+  "contenido": "El artículo completo aquí (600-800 palabras con formato ## para secciones)"
+}
+
+Devuelve SOLO el JSON, sin texto adicional antes o después. No envuelvas en bloques de código.`;
+
+  const raw = await generateText(prompt);
+  if (!raw) return null;
 
   const dateSlug = today.toISOString().slice(0, 10);
-  const slug = `analisis-semanal-metales-preciosos-${dateSlug}`;
-  const title = `Análisis semanal — ${weekRange}`;
-  const excerpt = `Repaso completo de la semana en el mercado de metales preciosos. Oro, plata y platino: tendencias, niveles clave y perspectivas.`;
+  const parsed = parseStructuredResponse(raw);
+
+  if (parsed) {
+    const keywordSlug = slugify(parsed.palabras_clave_url);
+    return {
+      slug: `${keywordSlug}-${dateSlug}`,
+      title: parsed.titulo_seo,
+      excerpt: parsed.meta_descripcion,
+      content: parsed.contenido.trim(),
+      metals: ["XAU", "XAG", "XPT"],
+    };
+  }
+
+  const fallbackSlug = `analisis-semanal-metales-preciosos-${dateSlug}`;
+  const fallbackTitle = `Análisis semanal — ${weekRange}`;
+  const fallbackExcerpt = `Repaso completo de la semana en el mercado de metales preciosos. Oro, plata y platino: tendencias, niveles clave y perspectivas.`;
 
   return {
-    slug,
-    title,
-    excerpt,
-    content: content.trim(),
+    slug: fallbackSlug,
+    title: fallbackTitle,
+    excerpt: fallbackExcerpt,
+    content: raw.trim(),
     metals: ["XAU", "XAG", "XPT"],
   };
 }

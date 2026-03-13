@@ -101,82 +101,84 @@ export function Nav() {
   }, [mobileOpen]);
 
   return (
-    <nav className="sticky top-0 z-50 h-16 bg-surface-1 border-b border-border backdrop-blur-xl transition-colors duration-250 ease-smooth">
-      <div className="mx-auto max-w-[1200px] px-6 h-full flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-2.5" aria-label="Metalorix Home">
-          <Logo className="h-8 w-auto" />
-        </Link>
+    <>
+      <nav className="sticky top-0 z-50 h-16 bg-surface-1 border-b border-border backdrop-blur-xl transition-colors duration-250 ease-smooth">
+        <div className="mx-auto max-w-[1200px] px-6 h-full flex items-center justify-between">
+          <Link href="/" className="flex items-center gap-2.5" aria-label="Metalorix Home">
+            <Logo className="h-8 w-auto" />
+          </Link>
 
-        {/* Desktop nav */}
-        <div className="hidden md:flex items-center gap-1.5">
-          {navItems.map((item) =>
-            item.hasDropdown ? (
-              <div key={item.href} className="relative" ref={dropdownRef}>
-                <button
-                  onClick={() => setDropdownOpen(!dropdownOpen)}
-                  aria-expanded={dropdownOpen}
-                  aria-haspopup="menu"
-                  className="flex items-center gap-1 px-3.5 py-2 rounded-xs text-sm font-medium text-content-2 hover:text-content-0 hover:bg-surface-2 transition-colors"
+          {/* Desktop nav */}
+          <div className="hidden md:flex items-center gap-1.5">
+            {navItems.map((item) =>
+              item.hasDropdown ? (
+                <div key={item.href} className="relative" ref={dropdownRef}>
+                  <button
+                    onClick={() => setDropdownOpen(!dropdownOpen)}
+                    aria-expanded={dropdownOpen}
+                    aria-haspopup="menu"
+                    className="flex items-center gap-1 px-3.5 py-2 rounded-xs text-sm font-medium text-content-2 hover:text-content-0 hover:bg-surface-2 transition-colors"
+                  >
+                    {item.label}
+                    <ChevronDown />
+                  </button>
+                  {dropdownOpen && (
+                    <div role="menu" aria-label={t("metalPrices")} className="absolute top-full start-0 mt-1 w-48 bg-surface-1 border border-border rounded-DEFAULT shadow-card py-1.5 z-50">
+                      {metalLinks.map((metal) => (
+                        <Link
+                          key={metal.href}
+                          href={metal.href}
+                          role="menuitem"
+                          onClick={() => setDropdownOpen(false)}
+                          className="flex items-center gap-3 px-4 py-2.5 text-sm text-content-2 hover:text-content-0 hover:bg-surface-2 transition-colors"
+                        >
+                          <span
+                            className="w-2.5 h-2.5 rounded-full flex-shrink-0"
+                            style={{ backgroundColor: metal.color }}
+                          />
+                          <span className="font-medium">{metal.label}</span>
+                          <span className="text-xs text-content-3 ms-auto">{metal.symbol}</span>
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className="px-3.5 py-2 rounded-xs text-sm font-medium text-content-2 hover:text-content-0 hover:bg-surface-2 transition-colors"
                 >
                   {item.label}
-                  <ChevronDown />
-                </button>
-                {dropdownOpen && (
-                  <div role="menu" aria-label={t("metalPrices")} className="absolute top-full start-0 mt-1 w-48 bg-surface-1 border border-border rounded-DEFAULT shadow-card py-1.5 z-50">
-                    {metalLinks.map((metal) => (
-                      <Link
-                        key={metal.href}
-                        href={metal.href}
-                        role="menuitem"
-                        onClick={() => setDropdownOpen(false)}
-                        className="flex items-center gap-3 px-4 py-2.5 text-sm text-content-2 hover:text-content-0 hover:bg-surface-2 transition-colors"
-                      >
-                        <span
-                          className="w-2.5 h-2.5 rounded-full flex-shrink-0"
-                          style={{ backgroundColor: metal.color }}
-                        />
-                        <span className="font-medium">{metal.label}</span>
-                        <span className="text-xs text-content-3 ms-auto">{metal.symbol}</span>
-                      </Link>
-                    ))}
-                  </div>
-                )}
-              </div>
-            ) : (
-              <Link
-                key={item.href}
-                href={item.href}
-                className="px-3.5 py-2 rounded-xs text-sm font-medium text-content-2 hover:text-content-0 hover:bg-surface-2 transition-colors"
-              >
-                {item.label}
-              </Link>
-            )
-          )}
+                </Link>
+              )
+            )}
+          </div>
+
+          <div className="flex items-center gap-2.5">
+            <LanguageSwitcher />
+
+            <button
+              onClick={toggle}
+              className="w-10 h-10 rounded-xs flex items-center justify-center text-content-2 hover:text-brand-gold hover:bg-surface-2 transition-colors"
+              aria-label={t("toggleTheme")}
+            >
+              {theme === "dark" ? <SunIcon /> : <MoonIcon />}
+            </button>
+
+            <button
+              className="md:hidden w-10 h-10 rounded-xs flex items-center justify-center text-content-1 hover:bg-surface-2"
+              onClick={() => setMobileOpen(!mobileOpen)}
+              aria-label={mobileOpen ? t("closeMenu") : t("openMenu")}
+              aria-expanded={mobileOpen}
+            >
+              {mobileOpen ? <CloseIcon /> : <MenuIcon />}
+            </button>
+          </div>
         </div>
+      </nav>
 
-        <div className="flex items-center gap-2.5">
-          <LanguageSwitcher />
-
-          <button
-            onClick={toggle}
-            className="w-10 h-10 rounded-xs flex items-center justify-center text-content-2 hover:text-brand-gold hover:bg-surface-2 transition-colors"
-            aria-label={t("toggleTheme")}
-          >
-            {theme === "dark" ? <SunIcon /> : <MoonIcon />}
-          </button>
-
-          <button
-            className="md:hidden w-10 h-10 rounded-xs flex items-center justify-center text-content-1 hover:bg-surface-2"
-            onClick={() => setMobileOpen(!mobileOpen)}
-            aria-label={mobileOpen ? t("closeMenu") : t("openMenu")}
-            aria-expanded={mobileOpen}
-          >
-            {mobileOpen ? <CloseIcon /> : <MenuIcon />}
-          </button>
-        </div>
-      </div>
-
-      {/* Mobile nav */}
+      {/* Mobile nav - outside <nav> so backdrop-blur doesn't break fixed positioning */}
       {mobileOpen && (
         <div role="dialog" aria-label={t("openMenu")} className="md:hidden fixed top-16 inset-x-0 bottom-0 bg-surface-1 border-t border-border p-4 z-40 overflow-y-auto">
           {navItems.map((item) =>
@@ -214,6 +216,6 @@ export function Nav() {
           )}
         </div>
       )}
-    </nav>
+    </>
   );
 }

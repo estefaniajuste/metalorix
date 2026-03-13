@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useMemo, useCallback } from "react";
+import { useTranslations } from "next-intl";
 import type { MetalSpot } from "@/lib/providers/metals";
 import { METALS } from "@/lib/providers/metals";
 
@@ -15,14 +16,6 @@ interface DcaResult {
   gainLossPct: number;
   purchases: { month: number; price: number; oz: number; invested: number }[];
 }
-
-const PERIOD_OPTIONS = [
-  { value: 6, label: "6 meses" },
-  { value: 12, label: "1 año" },
-  { value: 24, label: "2 años" },
-  { value: 36, label: "3 años" },
-  { value: 60, label: "5 años" },
-];
 
 const AMOUNT_PRESETS = [50, 100, 200, 500, 1000];
 
@@ -138,6 +131,7 @@ function StatCard({
 }
 
 function MiniBarChart({ purchases, maxPrice }: { purchases: DcaResult["purchases"]; maxPrice: number }) {
+  const t = useTranslations("dcaCalculator");
   if (purchases.length === 0) return null;
   const barWidth = Math.max(2, Math.min(12, 400 / purchases.length));
 
@@ -154,7 +148,7 @@ function MiniBarChart({ purchases, maxPrice }: { purchases: DcaResult["purchases
               width: `${barWidth}px`,
               minWidth: "2px",
             }}
-            title={`Mes ${p.month}: ${formatCurrency(p.price)}/oz — ${p.oz.toFixed(4)} oz`}
+            title={`${t("month")} ${p.month}: ${formatCurrency(p.price)}/oz — ${p.oz.toFixed(4)} oz`}
           />
         );
       })}
@@ -163,12 +157,25 @@ function MiniBarChart({ purchases, maxPrice }: { purchases: DcaResult["purchases
 }
 
 export function DcaCalculator() {
+  const t = useTranslations("dcaCalculator");
+  const tMetals = useTranslations("metalNames");
   const [metal, setMetal] = useState<MetalSymbol>("XAU");
   const [amount, setAmount] = useState(200);
   const [customAmount, setCustomAmount] = useState("");
   const [months, setMonths] = useState(24);
   const [prices, setPrices] = useState<Record<string, number>>({});
   const [loading, setLoading] = useState(true);
+
+  const PERIOD_OPTIONS = useMemo(
+    () => [
+      { value: 6, label: t("months6") },
+      { value: 12, label: t("year1") },
+      { value: 24, label: t("years2") },
+      { value: 36, label: t("years3") },
+      { value: 60, label: t("years5") },
+    ],
+    [t]
+  );
 
   useEffect(() => {
     async function load() {
@@ -211,22 +218,19 @@ export function DcaCalculator() {
     setCustomAmount("");
   }, []);
 
-  const metalInfo = METALS[metal];
-
   return (
     <div className="bg-surface-1 border border-border rounded-DEFAULT p-6">
       <div className="flex items-start justify-between gap-4 mb-6">
         <div>
           <h3 className="text-lg font-bold text-content-0 mb-1">
-            Calculadora DCA
+            {t("title")}
           </h3>
           <p className="text-sm text-content-2">
-            Simula inversiones periódicas en metales preciosos con Dollar Cost
-            Averaging.
+            {t("description")}
           </p>
         </div>
         <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-[rgba(214,179,90,0.12)] text-brand-gold uppercase tracking-wider flex-shrink-0">
-          Simulación
+          {t("simulation")}
         </span>
       </div>
 
@@ -235,7 +239,7 @@ export function DcaCalculator() {
         {/* Metal selector */}
         <div>
           <label className="block text-[11px] text-content-3 uppercase tracking-wider font-medium mb-2">
-            Metal
+            {t("metal")}
           </label>
           <div className="flex gap-1.5">
             {(["XAU", "XAG", "XPT"] as MetalSymbol[]).map((s) => (
@@ -253,7 +257,7 @@ export function DcaCalculator() {
                     : undefined
                 }
               >
-                {METALS[s].name}
+                {tMetals(s)}
               </button>
             ))}
           </div>
@@ -262,7 +266,7 @@ export function DcaCalculator() {
         {/* Amount */}
         <div>
           <label className="block text-[11px] text-content-3 uppercase tracking-wider font-medium mb-2">
-            Inversión mensual (USD)
+            {t("monthlyInvestment")}
           </label>
           <div className="flex gap-1.5 flex-wrap">
             {AMOUNT_PRESETS.map((preset) => (
@@ -282,10 +286,10 @@ export function DcaCalculator() {
           <input
             type="number"
             min="1"
-            placeholder="Otra cantidad..."
+            placeholder={t("otherAmount")}
             value={customAmount}
             onChange={(e) => setCustomAmount(e.target.value)}
-            aria-label="Cantidad mensual personalizada (USD)"
+            aria-label={t("otherAmount")}
             className="mt-2 w-full bg-surface-2 border border-border rounded-sm px-3 py-1.5 text-sm text-content-0 placeholder:text-content-3 focus:outline-none focus:border-brand-gold transition-colors"
           />
         </div>
@@ -293,7 +297,7 @@ export function DcaCalculator() {
         {/* Period */}
         <div>
           <label className="block text-[11px] text-content-3 uppercase tracking-wider font-medium mb-2">
-            Periodo
+            {t("period")}
           </label>
           <div className="flex flex-col gap-1.5">
             {PERIOD_OPTIONS.map((opt) => (
@@ -327,23 +331,23 @@ export function DcaCalculator() {
         <>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4">
             <StatCard
-              label="Total invertido"
+              label={t("totalInvested")}
               value={formatCurrency(result.totalInvested)}
-              sub={`${months} compras de ${formatCurrency(effectiveAmount)}`}
+              sub={`${months} ${t("purchases")} ${formatCurrency(effectiveAmount)}`}
             />
             <StatCard
-              label="Valor actual"
+              label={t("currentValue")}
               value={formatCurrency(result.currentValue)}
-              sub={`${result.totalOz.toFixed(4)} oz de ${metalInfo.name}`}
+              sub={`${result.totalOz.toFixed(4)} oz ${tMetals(metal)}`}
               highlight={result.gainLoss >= 0 ? "up" : "down"}
             />
             <StatCard
-              label="Coste medio/oz"
+              label={t("avgCostOz")}
               value={formatCurrency(result.avgCostPerOz)}
-              sub={`Spot actual: ${formatCurrency(currentPrice)}`}
+              sub={`${t("currentSpot")}: ${formatCurrency(currentPrice)}`}
             />
             <StatCard
-              label="Rendimiento"
+              label={t("performance")}
               value={`${result.gainLoss >= 0 ? "+" : ""}${formatCurrency(result.gainLoss)}`}
               sub={`${result.gainLossPct >= 0 ? "+" : ""}${result.gainLossPct.toFixed(2)}%`}
               highlight={result.gainLoss >= 0 ? "up" : "down"}
@@ -354,36 +358,32 @@ export function DcaCalculator() {
           <div className="bg-surface-2 rounded-sm p-4">
             <div className="flex items-center justify-between mb-1">
               <span className="text-[11px] text-content-3 uppercase tracking-wider font-medium">
-                Precio de compra por mes
+                {t("purchasePriceMonth")}
               </span>
               <span className="text-[11px] text-content-3">
-                {result.purchases.length} compras
+                {result.purchases.length} {t("purchases")}
               </span>
             </div>
             <MiniBarChart purchases={result.purchases} maxPrice={maxPrice} />
             <div className="flex justify-between mt-2 text-[10px] text-content-3">
-              <span>Mes 1</span>
-              <span>Mes {result.purchases.length}</span>
+              <span>{t("month")} 1</span>
+              <span>{t("month")} {result.purchases.length}</span>
             </div>
           </div>
 
           {/* Explanation */}
           <div className="mt-5 p-4 bg-surface-2 rounded-sm">
             <p className="text-xs text-content-2 leading-relaxed">
-              <strong className="text-content-0">¿Qué es DCA?</strong>{" "}
-              Dollar Cost Averaging consiste en invertir una cantidad fija de
-              forma periódica, independientemente del precio. Compras más
-              cuando el precio es bajo y menos cuando es alto, reduciendo el
-              impacto de la volatilidad. Esta simulación usa datos históricos
-              aproximados y no garantiza resultados futuros.
+              <strong className="text-content-0">{t("whatIsDca")}</strong>{" "}
+              {t("dcaExplanation")}
             </p>
           </div>
         </>
       ) : (
         <div className="text-center py-8 text-content-3 text-sm">
           {effectiveAmount <= 0
-            ? "Introduce una cantidad mensual para simular."
-            : "No hay datos de precios disponibles."}
+            ? t("enterAmount")
+            : t("noData")}
         </div>
       )}
     </div>

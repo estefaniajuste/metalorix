@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useTranslations } from "next-intl";
 import type { MetalSpot, MetalSymbol } from "@/lib/providers/metals";
 import { METALS } from "@/lib/providers/metals";
 
@@ -8,12 +9,6 @@ const TROY_OZ_TO_GRAMS = 31.1035;
 const GRAMS_TO_KG = 1000;
 
 type Unit = "oz" | "g" | "kg";
-
-const UNIT_LABELS: Record<Unit, string> = {
-  oz: "Onzas Troy",
-  g: "Gramos",
-  kg: "Kilogramos",
-};
 
 function convert(value: number, from: Unit, to: Unit): number {
   let grams = value;
@@ -26,11 +21,19 @@ function convert(value: number, from: Unit, to: Unit): number {
 }
 
 export function UnitConverter() {
+  const t = useTranslations("unitConverter");
+  const tMetals = useTranslations("metalNames");
   const [metal, setMetal] = useState<MetalSymbol>("XAU");
   const [amount, setAmount] = useState("1");
   const [unit, setUnit] = useState<Unit>("oz");
   const [prices, setPrices] = useState<Record<string, number>>({});
   const [loading, setLoading] = useState(true);
+
+  const UNIT_LABELS: Record<Unit, string> = {
+    oz: t("troyOunces"),
+    g: t("grams"),
+    kg: t("kilograms"),
+  };
 
   useEffect(() => {
     async function load() {
@@ -62,7 +65,7 @@ export function UnitConverter() {
   return (
     <div className="bg-surface-1 border border-border rounded-DEFAULT p-6">
       <h3 className="text-lg font-bold text-content-0 mb-6">
-        Conversor de peso y precio
+        {t("title")}
       </h3>
 
       {/* Metal selector */}
@@ -77,7 +80,7 @@ export function UnitConverter() {
                 : "bg-surface-2 text-content-2 hover:bg-surface-2/80"
             }`}
           >
-            {METALS[sym].name}
+            {tMetals(sym)}
           </button>
         ))}
       </div>
@@ -86,7 +89,7 @@ export function UnitConverter() {
       <div className="flex gap-3 mb-5">
         <div className="flex-1">
           <label className="text-xs text-content-3 font-medium mb-1.5 block">
-            Cantidad
+            {t("amount")}
           </label>
           <input
             type="number"
@@ -99,7 +102,7 @@ export function UnitConverter() {
         </div>
         <div className="w-36">
           <label className="text-xs text-content-3 font-medium mb-1.5 block">
-            Unidad
+            {t("unit")}
           </label>
           <select
             value={unit}
@@ -118,7 +121,7 @@ export function UnitConverter() {
       {/* Value */}
       <div className="bg-surface-2 rounded-sm p-4 mb-5 text-center">
         <div className="text-xs text-content-3 font-medium mb-1">
-          Valor estimado
+          {t("estimatedValue")}
         </div>
         {loading ? (
           <div className="h-8 w-32 mx-auto bg-surface-1 rounded-xs animate-shimmer" />
@@ -128,13 +131,13 @@ export function UnitConverter() {
           </div>
         )}
         <div className="text-xs text-content-3 mt-1">
-          USD al precio spot actual
+          {t("usdAtSpot")}
         </div>
       </div>
 
       {/* Conversions */}
       <div className="space-y-2">
-        <div className="text-xs text-content-3 font-medium">Equivalencias</div>
+        <div className="text-xs text-content-3 font-medium">{t("equivalences")}</div>
         {conversions.map((c) => (
           <div
             key={c.unit}
@@ -166,7 +169,7 @@ export function UnitConverter() {
             return (
               <div key={u} className="bg-surface-0 border border-border rounded-sm p-3">
                 <div className="text-[10px] text-content-3 font-medium">
-                  Precio / {UNIT_LABELS[u].toLowerCase().replace("onzas troy", "oz")}
+                  {t("pricePerUnit", { unit: UNIT_LABELS[u].toLowerCase() })}
                 </div>
                 <div className="text-sm font-bold text-content-0 tabular-nums mt-0.5">
                   ${priceInUnit.toLocaleString("es-ES", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
