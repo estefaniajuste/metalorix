@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next";
+import { PRODUCTS } from "@/lib/data/products";
 
 const BASE_URL = "https://metalorix.com";
 
@@ -11,6 +12,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: now,
       changeFrequency: "hourly",
       priority: 1,
+    },
+    {
+      url: `${BASE_URL}/productos`,
+      lastModified: now,
+      changeFrequency: "weekly",
+      priority: 0.85,
     },
     {
       url: `${BASE_URL}/noticias`,
@@ -53,5 +60,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     })
   );
 
-  return [...staticPages, ...metalPages];
+  const productPages: MetadataRoute.Sitemap = PRODUCTS.map((product) => ({
+    url: `${BASE_URL}/productos/${product.slug}`,
+    lastModified: now,
+    changeFrequency: "monthly" as const,
+    priority: 0.8,
+  }));
+
+  return [...staticPages, ...metalPages, ...productPages];
 }

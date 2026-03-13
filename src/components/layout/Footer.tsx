@@ -14,6 +14,7 @@ const sections = [
     title: "Plataforma",
     links: [
       { href: "/", label: "Dashboard" },
+      { href: "/productos", label: "Productos" },
       { href: "/herramientas", label: "Herramientas" },
       { href: "/guia-inversion", label: "Guía de inversión" },
       { href: "/noticias", label: "Noticias" },

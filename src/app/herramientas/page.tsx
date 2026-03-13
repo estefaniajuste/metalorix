@@ -1,8 +1,19 @@
 import type { Metadata } from "next";
+import dynamic from "next/dynamic";
 import { GoldSilverRatio } from "@/components/tools/GoldSilverRatio";
 import { UnitConverter } from "@/components/tools/UnitConverter";
-import { MetalComparison } from "@/components/tools/MetalComparison";
 import { CurrencyConverter } from "@/components/tools/CurrencyConverter";
+import { DcaCalculator } from "@/components/tools/DcaCalculator";
+
+const MetalComparison = dynamic(
+  () => import("@/components/tools/MetalComparison").then((m) => m.MetalComparison),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="w-full h-[420px] bg-surface-1 border border-border rounded-DEFAULT animate-shimmer" />
+    ),
+  }
+);
 
 export const metadata: Metadata = {
   title: "Herramientas de trading — Metalorix",
@@ -14,6 +25,8 @@ export const metadata: Metadata = {
     "precio oro en euros",
     "herramientas trading metales",
     "calculadora oro plata platino",
+    "calculadora DCA oro",
+    "dollar cost averaging metales preciosos",
   ],
   alternates: {
     canonical: "https://metalorix.com/herramientas",
@@ -21,12 +34,6 @@ export const metadata: Metadata = {
 };
 
 const upcoming = [
-  {
-    title: "Calculadora DCA",
-    description:
-      "Simula el rendimiento de invertir una cantidad fija mensual en oro, plata o platino a lo largo del tiempo.",
-    phase: "Fase 4",
-  },
   {
     title: "Indicadores técnicos",
     description:
@@ -65,8 +72,13 @@ export default function HerramientasPage() {
         </div>
 
         {/* Row 2: unit converter full width */}
-        <div className="mb-16">
+        <div className="mb-6">
           <UnitConverter />
+        </div>
+
+        {/* Row 3: DCA Calculator full width */}
+        <div className="mb-16">
+          <DcaCalculator />
         </div>
 
         {/* Upcoming tools */}

@@ -14,6 +14,7 @@ const metalLinks = [
 const navItems = [
   { href: "/", label: "Dashboard" },
   { href: "#precios", label: "Precios", hasDropdown: true },
+  { href: "/productos", label: "Productos" },
   { href: "/herramientas", label: "Herramientas" },
   { href: "/guia-inversion", label: "Guía" },
   { href: "/noticias", label: "Noticias" },

@@ -7,10 +7,17 @@ import type {
   MetalSymbol,
   TimeRange,
 } from "@/lib/providers/metals";
+import dynamic from "next/dynamic";
 import { METALS } from "@/lib/providers/metals";
 import { RangeSelector } from "./RangeSelector";
-import { PriceChart } from "./PriceChart";
 import { DataTable } from "./DataTable";
+
+const PriceChart = dynamic(() => import("./PriceChart").then((m) => m.PriceChart), {
+  ssr: false,
+  loading: () => (
+    <div className="w-full h-[400px] bg-surface-1 border border-border rounded-DEFAULT animate-shimmer" />
+  ),
+});
 
 function formatPrice(val: number) {
   return val >= 100
