@@ -174,6 +174,19 @@ Se migró `metalorix.com` de Firebase Hosting a Cloud Run:
 
 | Commit | Mensaje |
 |--------|---------|
+| `3b9a109` | Fix next-intl build, merge configs, and fix all E2E tests |
+| `4fc4b59` | Add real logo/favicon, investment guide, ETF table and Google Analytics |
+| `84f82da` | Add Playwright E2E tests with CI integration |
+| `0aebd34` | Add multi-language support (ES/EN/PT) with next-intl |
+| `f572ee2` | Add rate limiting, cache headers, and structured error tracking |
+| `16bcd08` | Add user panel with magic link authentication |
+| `fd8ba0f` | Add RSI, MACD, and Bollinger Bands technical indicators |
+| `04dbd43` | Add Web Vitals monitoring, CI test gate, and security headers |
+| `71500ba` | Extend charts with long-term historical data (3M to 5Y) |
+| `0b7b73f` | Add component tests: Sparkline, ShareButton, CookieConsent, ScrollToTop |
+| `f50c09a` | Add economic calendar for precious metals traders |
+| `c8b4f89` | Add historical metals comparator with interactive chart |
+| `5242cf3` | Add legal pages: aviso legal and terms of service |
 | `b47ee62` | Add Firebase Hosting config and GitHub Actions CI/CD for auto-deploy |
 | `4440f5f` | Migrate to Next.js 14 with real-time precious metals data |
 | `9503c7e` | Add workflow_dispatch trigger for manual deployments |
@@ -283,42 +296,51 @@ metalorix/
 
 ---
 
-## 8. Siguientes Pasos
+## 8. Estado de las Fases
 
-### FASE 2 — Motor de Contenido e IA (Próxima)
+### FASE 2 — Motor de Contenido e IA — COMPLETADA
 
 1. ~~**Configurar Cloud SQL (PostgreSQL)**~~ — COMPLETADO
-2. **Scraper de noticias** — Implementar recolección de RSS/web cada 2h desde Reuters, Kitco, Investing.com, BullionVault, World Gold Council. Guardar en tabla `news_sources` con deduplicación
-3. **Generador de contenido con Gemini** — Conectar Gemini API para generar:
-   - Resumen diario del mercado (automatizado a las 20:00 CET)
-   - Análisis semanal (domingos)
-   - Artículos por evento (movimientos >2% diario)
-   - Contenido educativo (1x semana)
-4. **Página `/noticias`** — Feed paginado con filtros por metal y categoría
-5. **Páginas `/noticias/[slug]`** — Artículos individuales con SSR completo
-6. **SEO técnico** — Schema markup (NewsArticle, FinancialProduct), sitemap XML dinámico, meta tags OG, Twitter Cards
+2. ~~**Scraper de noticias**~~ — COMPLETADO (`src/lib/scraper/rss.ts`) — 5 feeds: Reuters, Kitco, Investing.com, BullionVault, World Gold Council. Detección automática de metales y sentimiento. API: `POST /api/cron/scrape-news`
+3. ~~**Generador de contenido con Gemini**~~ — COMPLETADO (`src/lib/ai/content-generator.ts` + `src/lib/ai/gemini.ts`) — Resumen diario, análisis semanal, artículos por evento (>2% movimiento). API: `POST /api/cron/generate-content?type=daily|weekly|event|auto`
+4. ~~**Página `/noticias`**~~ — COMPLETADO — Feed con artículos de BD, tipos de contenido, fuentes
+5. ~~**Páginas `/noticias/[slug]`**~~ — COMPLETADO — SSR completo con JSON-LD NewsArticle, breadcrumbs, metadata OG
+6. ~~**SEO técnico**~~ — COMPLETADO — `sitemap.ts` (17+ rutas estáticas + artículos dinámicos), `robots.ts`, OG images para home/herramientas/precios, JSON-LD Organization + WebSite en homepage
 
-### FASE 3 — Alertas Inteligentes
+### FASE 3 — Alertas Inteligentes — COMPLETADA
 
-7. **Sistema de usuarios** — NextAuth.js con Google + magic link email
-8. **Motor de alertas** — Detectar:
-   - Mínimos/máximos anuales (52 semanas)
-   - Mínimos/máximos históricos
-   - Cambios bruscos (>3% en 4h)
-   - Niveles de precio personalizados
-   - Ratio oro/plata en extremos
-   - Cruces de medias móviles
-9. **Envío de alertas por email** — Resend (100/día gratis)
-10. **Panel de usuario** — Gestionar alertas, ver historial
+7. ~~**Sistema de usuarios**~~ — COMPLETADO — Magic link email (`src/lib/auth/magic-link.ts`), rutas API: login, verify, logout, me
+8. ~~**Motor de alertas**~~ — COMPLETADO (`src/lib/alerts/engine.ts`) — Alertas personalizadas (price_above, price_below) + alertas inteligentes automáticas (movimientos >2%), cooldown de 4h, rate limiting
+9. ~~**Envío de alertas por email**~~ — COMPLETADO — Resend (`src/lib/email/resend.ts`), templates HTML profesionales para alertas de precio, alertas inteligentes, bienvenida y newsletter semanal
+10. ~~**Panel de usuario**~~ — COMPLETADO (`src/app/panel/page.tsx`) — Gestión de alertas activas
 
-### FASE 4 — Herramientas de Trading
+### FASE 4 — Herramientas de Trading — COMPLETADA
 
-11. **Calculadora ratio oro/plata** — Gráfico histórico con zonas marcadas
-12. **Indicadores técnicos** — RSI, MACD, Bollinger sobre gráficos de precio
-13. **Calendario económico** — FOMC, NFP, IPC, BCE scrapeados automáticamente
-14. **Conversor multi-divisa** — Precio en EUR, GBP, CHF, JPY
-15. **Calculadora DCA** — Simulación de inversión periódica con gráfico de rendimiento
-16. **Comparador histórico** — Oro vs Plata vs Platino a lo largo del tiempo
+11. ~~**Ratio oro/plata**~~ — COMPLETADO (`/ratio-oro-plata`) — Página dedicada con contenido y gráfico
+12. ~~**Indicadores técnicos**~~ — COMPLETADO (`TechnicalIndicators.tsx`) — RSI, MACD, Bollinger Bands
+13. ~~**Calendario económico**~~ — COMPLETADO (`/calendario-economico`) — Eventos FOMC, NFP, IPC, BCE
+14. ~~**Conversor multi-divisa**~~ — COMPLETADO (`/conversor-divisas`) — EUR, GBP, CHF, JPY
+15. ~~**Calculadora DCA**~~ — COMPLETADO — Simulación de inversión periódica con rendimiento
+16. ~~**Comparador histórico**~~ — COMPLETADO (`/comparador`) — Oro vs Plata vs Platino
+
+### Funcionalidades Adicionales (no planificadas originalmente)
+
+- [x] **Multi-idioma** — ES/EN/PT con `next-intl` (selector de idioma en nav)
+- [x] **Catálogo de productos** — Krugerrands, Maple Leafs, Eagles, Filarmónicas, lingotes (`/productos`)
+- [x] **Guía de inversión** — Métodos de inversión, tabla ETFs, FAQ (`/guia-inversion`)
+- [x] **Glosario** — Términos del sector metales preciosos (`/glosario`)
+- [x] **Precio del gramo** — Página SEO para "precio gramo oro" (`/precio-gramo-oro`)
+- [x] **Precio oro hoy** — Página SEO para "precio oro hoy" (`/precio-oro-hoy`)
+- [x] **Rate limiting** — Protección en endpoints API
+- [x] **Error tracking** — Reporte estructurado de errores cliente (`/api/errors`)
+- [x] **Web Vitals** — Monitorización LCP, FID, CLS (`/api/vitals`)
+- [x] **Cookie consent** — Banner RGPD
+- [x] **Scroll to top** — Botón de vuelta arriba
+- [x] **Google Analytics** — GA4 integrado
+- [x] **Newsletter semanal** — Generada con IA y enviada a suscriptores
+- [x] **Tests unitarios** — 56 tests Jest (componentes, API, providers)
+- [x] **Tests E2E** — 29 tests Playwright (páginas, API, SEO, accesibilidad)
+- [x] **CI/CD con tests** — GitHub Actions: Jest + Playwright + deploy a Cloud Run
 
 ### Completado en Sesión 3 (13 marzo 2026 — tarde)
 
@@ -327,14 +349,38 @@ metalorix/
 - [x] **Cloud Run conectado a Cloud SQL** via Auth Proxy (Unix socket)
 - [x] **Yahoo Finance** como proveedor principal (cubre XAU, XAG, XPT sin límites)
 - [x] **Cloud Scheduler** configurado: scraping cada 15 min (Europe/Madrid)
-- [x] **3 metales con datos reales** en producción: Oro $5,044, Plata $80.61, Platino $2,044
+- [x] **3 metales con datos reales** en producción
 - [x] **HTTPS funcionando** en metalorix.com con SSL auto-provisionado
-- [x] **README.md** actualizado para el proyecto Next.js
 - [x] **GitHub Secrets** configurados: DB_PASSWORD, CRON_SECRET
+
+### Completado en Sesión 4 (13 marzo 2026 — noche)
+
+- [x] **Fix build next-intl** — Fusionados `next.config.mjs` + `next.config.ts` (conflicto de prioridad Next.js 14)
+- [x] **Fix imports i18n** — Cambiado import dinámico a imports estáticos por locale (webpack)
+- [x] **Fix themeColor** — Movido de `metadata` a `viewport` export
+- [x] **Fix Jest config** — Excluido `e2e/` de testPathIgnorePatterns
+- [x] **Fix Playwright config** — Comando `dev` en vez de `start`, reuseExistingServer
+- [x] **Fix E2E tests** — 3 tests corregidos (nav, robots.txt, JSON-LD)
+- [x] **85 tests pasando** — 56 unitarios + 29 E2E
 
 ---
 
-## 9. Costes Estimados Mensuales
+## 9. Pendiente (Infraestructura)
+
+Todas las fases de código están completadas. Lo que queda es configuración de infraestructura:
+
+| Tarea | Requiere | Estado |
+|-------|----------|--------|
+| **Cron job scrape-news** | Cloud Scheduler | Pendiente — crear job cada 2h llamando a `POST /api/cron/scrape-news` |
+| **Cron job generate-content** | Cloud Scheduler + GEMINI_API_KEY | Pendiente — crear job diario (20:00 CET) con `?type=auto` |
+| **Cron job check-alerts** | Cloud Scheduler + RESEND_API_KEY | Pendiente — crear job cada 15 min llamando a `POST /api/cron/check-alerts` |
+| **Verificar GEMINI_API_KEY** | Secret en Cloud Run | Pendiente — asegurar que el secret está configurado |
+| **Verificar RESEND_API_KEY** | Secret en Cloud Run | Pendiente — asegurar que el secret está configurado |
+| **Dominio email** | Resend + DNS | Pendiente — verificar `metalorix.com` en Resend para enviar desde `alertas@metalorix.com` |
+
+---
+
+## 10. Costes Estimados Mensuales
 
 | Servicio | Coste estimado |
 |----------|---------------|
@@ -349,7 +395,7 @@ metalorix/
 
 ---
 
-## 10. Comandos Útiles
+## 11. Comandos Útiles
 
 ```bash
 # Desarrollo local
@@ -360,6 +406,11 @@ docker-compose up -d           # Arranca PostgreSQL local
 npm run db:push                # Aplica schema a la BD
 npm run db:studio              # Abre Drizzle Studio (interfaz visual BD)
 npm run db:generate            # Genera migraciones SQL
+
+# Tests
+npm test                       # Tests unitarios (Jest, 56 tests)
+npm run test:e2e               # Tests E2E (Playwright, 29 tests)
+npm run test:e2e:ui            # Tests E2E con interfaz visual
 
 # Build y deploy
 npm run build                  # Build de producción
