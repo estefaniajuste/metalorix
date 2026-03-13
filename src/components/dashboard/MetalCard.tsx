@@ -1,6 +1,13 @@
 "use client";
 
+import Link from "next/link";
 import { METALS, type MetalSpot, type MetalSymbol } from "@/lib/providers/metals";
+
+const SLUG_MAP: Record<string, string> = {
+  XAU: "oro",
+  XAG: "plata",
+  XPT: "platino",
+};
 
 function formatPrice(val: number) {
   return val >= 100
@@ -88,6 +95,17 @@ export function MetalCard({ spot, active, onClick }: MetalCardProps) {
         {formatChange(spot.change)} ({isUp ? "+" : ""}
         {spot.changePct}%)
       </div>
+
+      <Link
+        href={`/precio/${SLUG_MAP[spot.symbol]}`}
+        onClick={(e) => e.stopPropagation()}
+        className="mt-4 inline-flex items-center gap-1 text-xs font-medium text-content-3 hover:text-brand-gold transition-colors"
+      >
+        Ver detalle
+        <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+          <polyline points="9 18 15 12 9 6" />
+        </svg>
+      </Link>
     </button>
   );
 }
