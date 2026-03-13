@@ -12,7 +12,11 @@ const RANGE_CONFIG: Record<TimeRange, { interval: string; outputsize: number }> 
   "1D": { interval: "30min", outputsize: 48 },
   "1W": { interval: "4h", outputsize: 42 },
   "1M": { interval: "1day", outputsize: 30 },
+  "3M": { interval: "1day", outputsize: 90 },
+  "6M": { interval: "1day", outputsize: 130 },
   "1Y": { interval: "1week", outputsize: 52 },
+  "2Y": { interval: "1week", outputsize: 104 },
+  "5Y": { interval: "1month", outputsize: 60 },
 };
 
 function getApiKey(): string | null {

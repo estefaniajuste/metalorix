@@ -54,7 +54,7 @@ describe("MockProvider.getSpotPrices", () => {
 });
 
 describe("MockProvider.getHistory", () => {
-  const ranges: TimeRange[] = ["1D", "1W", "1M", "1Y"];
+  const ranges: TimeRange[] = ["1D", "1W", "1M", "3M", "6M", "1Y", "2Y", "5Y"];
   const symbols: MetalSymbol[] = ["XAU", "XAG", "XPT"];
 
   it.each(symbols)("returns data for %s", async (symbol) => {
@@ -69,7 +69,11 @@ describe("MockProvider.getHistory", () => {
       "1D": 48,
       "1W": 42,
       "1M": 30,
+      "3M": 90,
+      "6M": 26,
       "1Y": 52,
+      "2Y": 52,
+      "5Y": 60,
     };
     const result = await MockProvider.getHistory("XAU", range);
     expect(result.data).toHaveLength(expectedPoints[range]);

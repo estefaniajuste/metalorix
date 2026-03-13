@@ -18,7 +18,7 @@ export interface HistoryResult {
   changePct: number;
 }
 
-export type TimeRange = "1D" | "1W" | "1M" | "1Y";
+export type TimeRange = "1D" | "1W" | "1M" | "3M" | "6M" | "1Y" | "2Y" | "5Y";
 
 export const METALS = {
   XAU: { name: "Oro", base: 2342.5, vol: 18, color: "#D6B35A" },
@@ -39,11 +39,15 @@ function seededRandom(seed: number) {
 function generateHistory(symbol: MetalSymbol, range: TimeRange): HistoryResult {
   const meta = METALS[symbol];
   const now = Date.now();
-  const configs = {
+  const configs: Record<TimeRange, { points: number; interval: number; volMult: number }> = {
     "1D": { points: 48, interval: 30 * 60000, volMult: 0.3 },
     "1W": { points: 42, interval: 4 * 3600000, volMult: 0.6 },
     "1M": { points: 30, interval: 24 * 3600000, volMult: 1.0 },
+    "3M": { points: 90, interval: 24 * 3600000, volMult: 1.5 },
+    "6M": { points: 26, interval: 7 * 24 * 3600000, volMult: 2.0 },
     "1Y": { points: 52, interval: 7 * 24 * 3600000, volMult: 2.5 },
+    "2Y": { points: 52, interval: 14 * 24 * 3600000, volMult: 3.5 },
+    "5Y": { points: 60, interval: 30 * 24 * 3600000, volMult: 5.0 },
   };
   const cfg = configs[range];
   const rng = seededRandom(symbol.charCodeAt(0) * 100 + range.charCodeAt(0));
