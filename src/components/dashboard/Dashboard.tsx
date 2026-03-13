@@ -32,6 +32,7 @@ export function Dashboard() {
   const [prices, setPrices] = useState<MetalSpot[] | null>(null);
   const [history, setHistory] = useState<Record<string, HistoryResult>>({});
   const [dataSource, setDataSource] = useState<string>("loading");
+  const [lastUpdate, setLastUpdate] = useState<Date | null>(null);
   const historyRef = useRef(history);
   historyRef.current = history;
 
@@ -40,6 +41,7 @@ export function Dashboard() {
       const { source, prices: data } = await apiFetchPrices();
       setPrices(data);
       setDataSource(source);
+      setLastUpdate(new Date());
     } catch {
       setDataSource("error");
     }
@@ -100,6 +102,11 @@ export function Dashboard() {
                     ? "Cargando"
                     : "En vivo"}
             </span>
+            {lastUpdate && (
+              <span className="text-[11px] text-content-3 font-normal ml-1 tabular-nums">
+                · {lastUpdate.toLocaleTimeString("es-ES", { hour: "2-digit", minute: "2-digit" })}
+              </span>
+            )}
           </h2>
           <RangeSelector active={activeRange} onChange={setActiveRange} />
         </div>

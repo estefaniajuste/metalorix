@@ -4,8 +4,28 @@ import { metalPrices, priceHistory } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 import { fetchAllSpotPrices as fetchFromGoldApi } from "@/lib/providers/gold-api";
 import { fetchAllSpotPrices as fetchFromTwelveData } from "@/lib/providers/twelve-data";
+import type { MetalSpot } from "@/lib/providers/metals";
 
 const CRON_SECRET = process.env.CRON_SECRET;
+const REQUIRED_SYMBOLS = ["XAU", "XAG", "XPT"];
+
+async function fetchAllPrices(): Promise<MetalSpot[]> {
+  const [goldApi, twelveData] = await Promise.all([
+    fetchFromGoldApi().catch(() => null),
+    fetchFromTwelveData().catch(() => null),
+  ]);
+
+  const bySymbol = new Map<string, MetalSpot>();
+
+  // Twelve Data as base (has all 3 metals with API key)
+  for (const p of twelveData ?? []) bySymbol.set(p.symbol, p);
+  // Gold API overwrites if available (often more accurate for XAU)
+  for (const p of goldApi ?? []) bySymbol.set(p.symbol, p);
+
+  return REQUIRED_SYMBOLS
+    .map((s) => bySymbol.get(s))
+    .filter((p): p is MetalSpot => p !== undefined);
+}
 
 export async function POST(request: NextRequest) {
   if (CRON_SECRET) {
@@ -23,8 +43,8 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const prices = await fetchFromGoldApi() ?? await fetchFromTwelveData();
-  if (!prices || prices.length === 0) {
+  const prices = await fetchAllPrices();
+  if (prices.length === 0) {
     return NextResponse.json(
       { error: "Failed to fetch prices from any provider" },
       { status: 502 }

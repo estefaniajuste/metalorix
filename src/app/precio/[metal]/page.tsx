@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getMetalSEO, METAL_SEO } from "@/lib/seo/metal-content";
 import { MetalPageContent } from "@/components/dashboard/MetalPageContent";
+import { ShareButton } from "@/components/dashboard/ShareButton";
 import Link from "next/link";
 
 export function generateStaticParams() {
@@ -108,9 +109,16 @@ export default function PrecioMetalPage({
             <span className="text-content-1">Precio del {seo.name}</span>
           </nav>
 
-          <h1 className="text-3xl sm:text-4xl font-extrabold text-content-0 tracking-tight mb-3">
-            Precio del {seo.name} hoy
-          </h1>
+          <div className="flex items-start justify-between gap-4 flex-wrap mb-3">
+            <h1 className="text-3xl sm:text-4xl font-extrabold text-content-0 tracking-tight">
+              Precio del {seo.name} hoy
+            </h1>
+            <ShareButton
+              title={`Precio del ${seo.name} hoy — Metalorix`}
+              text={`Cotización ${seo.fullName} en tiempo real`}
+              url={`https://metalorix.com/precio/${seo.slug}`}
+            />
+          </div>
           <p className="text-content-2 mb-10 max-w-2xl leading-relaxed">
             Cotización {seo.fullName} en tiempo real. Gráfico interactivo,
             datos históricos y contexto del mercado.
