@@ -5,7 +5,7 @@ export function Logo({ className = "" }: { className?: string }) {
     <span className={`flex items-center gap-2 ${className}`}>
       <Image
         src="/icon-192.png"
-        alt=""
+        alt="Metalorix"
         width={192}
         height={192}
         className="h-full w-auto"

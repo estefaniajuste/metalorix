@@ -69,6 +69,11 @@
 
   :focus-visible {
     @apply outline-2 outline-brand-gold outline-offset-2 rounded;
+    outline-style: solid;
+  }
+
+  :focus:not(:focus-visible) {
+    outline: none;
   }
 }
 
@@ -98,5 +103,20 @@
 @media (max-width: 640px) {
   :root {
     --section-py: 64px;
+  }
+}
+
+/* ==========================================================
+   Reduced motion
+   ========================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }

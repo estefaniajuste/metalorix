@@ -74,8 +74,8 @@ export function SubscribeForm() {
 
   if (status === "success") {
     return (
-      <div className="bg-surface-1 border border-signal-up/30 rounded-DEFAULT p-8 text-center max-w-md mx-auto">
-        <div className="text-3xl mb-4">✅</div>
+      <div role="alert" className="bg-surface-1 border border-signal-up/30 rounded-DEFAULT p-8 text-center max-w-md mx-auto">
+        <div className="text-3xl mb-4" aria-hidden="true">✅</div>
         <h3 className="text-lg font-bold text-content-0 mb-2">
           ¡Suscripción completada!
         </h3>
@@ -210,7 +210,7 @@ export function SubscribeForm() {
         </button>
 
         {status === "error" && (
-          <p className="text-xs text-signal-down text-center mt-3">{message}</p>
+          <p role="alert" className="text-xs text-signal-down text-center mt-3">{message}</p>
         )}
 
         <p className="text-[10px] text-content-3 text-center mt-3">
