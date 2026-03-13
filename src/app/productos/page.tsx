@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { getTranslations } from "next-intl/server";
 import { ProductFilter } from "@/components/products/ProductFilter";
 
 export const metadata: Metadata = {
@@ -49,7 +50,10 @@ const breadcrumbSchema = {
   ],
 };
 
-export default function ProductosPage() {
+export default async function ProductosPage() {
+  const t = await getTranslations("products");
+  const tc = await getTranslations("common");
+
   return (
     <>
       <script
@@ -67,20 +71,17 @@ export default function ProductosPage() {
               href="/"
               className="hover:text-content-1 transition-colors"
             >
-              Inicio
+              {tc("breadcrumbHome")}
             </Link>
             <span className="mx-2">/</span>
-            <span className="text-content-1">Productos</span>
+            <span className="text-content-1">{t("breadcrumb")}</span>
           </nav>
 
           <h1 className="text-3xl sm:text-4xl font-extrabold text-content-0 tracking-tight mb-3">
-            Monedas y lingotes de inversión
+            {t("title")}
           </h1>
           <p className="text-content-2 mb-10 max-w-3xl leading-relaxed">
-            Fichas detalladas de las monedas y lingotes de oro y plata más
-            negociados del mercado. Pureza, peso fino, prima típica sobre
-            spot, liquidez, fiscalidad en España y para qué perfil de
-            inversor es cada producto.
+            {t("subtitle")}
           </p>
 
           <ProductFilter />

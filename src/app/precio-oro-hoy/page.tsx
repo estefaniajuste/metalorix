@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { getTranslations } from "next-intl/server";
 import { MetalPageContent } from "@/components/dashboard/MetalPageContent";
 
 export const metadata: Metadata = {
@@ -27,25 +28,43 @@ export const metadata: Metadata = {
   },
 };
 
-export default function PrecioOroHoyPage() {
+export default async function PrecioOroHoyPage() {
+  const t = await getTranslations("goldToday");
+  const tc = await getTranslations("common");
+
+  const bulletItems = [
+    t("fedDecisions"),
+    t("inflationData"),
+    t("geopolitical"),
+    t("dollarStrength"),
+    t("centralBankDemand"),
+    t("etfFlows"),
+  ];
+
+  const toolLinks = [
+    { href: "/precio-gramo-oro", label: t("gramPrice"), desc: t("gramPriceDesc") },
+    { href: "/conversor-divisas", label: t("multiCurrency"), desc: t("multiCurrencyDesc") },
+    { href: "/ratio-oro-plata", label: t("ratioLink"), desc: t("ratioLinkDesc") },
+    { href: "/calculadora-rentabilidad", label: t("roiCalc"), desc: t("roiCalcDesc") },
+    { href: "/alertas", label: t("alertsLink"), desc: t("alertsLinkDesc") },
+  ];
+
   return (
     <section className="py-[var(--section-py)]">
       <div className="mx-auto max-w-[1200px] px-6">
         <nav className="text-sm text-content-3 mb-6" aria-label="Breadcrumb">
           <Link href="/" className="hover:text-content-1 transition-colors">
-            Inicio
+            {tc("breadcrumbHome")}
           </Link>
           <span className="mx-2">/</span>
-          <span className="text-content-1">Precio del oro hoy</span>
+          <span className="text-content-1">{t("breadcrumb")}</span>
         </nav>
 
         <h1 className="text-3xl sm:text-4xl font-extrabold text-content-0 tracking-tight mb-4">
-          Precio del oro hoy
+          {t("title")}
         </h1>
         <p className="text-content-2 mb-10 max-w-2xl leading-relaxed">
-          Cotización del oro (XAU/USD) actualizada en tiempo real. Gráfico
-          interactivo con datos históricos, variación diaria y precio por
-          onza, gramo y kilogramo.
+          {t("subtitle")}
         </p>
 
         <MetalPageContent symbol="XAU" />
@@ -53,17 +72,10 @@ export default function PrecioOroHoyPage() {
         <div className="mt-12 grid grid-cols-1 lg:grid-cols-2 gap-6">
           <div className="bg-surface-1 border border-border rounded-DEFAULT p-6">
             <h2 className="text-xl font-bold text-content-0 mb-4">
-              ¿Qué mueve el precio del oro hoy?
+              {t("whatMoves")}
             </h2>
             <ul className="space-y-3 text-sm text-content-2 leading-relaxed">
-              {[
-                "Decisiones de la Reserva Federal (Fed) sobre tipos de interés",
-                "Datos de inflación (IPC) en Estados Unidos y Europa",
-                "Tensiones geopolíticas y conflictos internacionales",
-                "Fortaleza o debilidad del dólar estadounidense (DXY)",
-                "Demanda de bancos centrales (China, India, Turquía)",
-                "Flujos de entrada/salida de ETFs de oro (GLD, IAU)",
-              ].map((item) => (
+              {bulletItems.map((item) => (
                 <li key={item} className="flex gap-3">
                   <span className="flex-shrink-0 w-1.5 h-1.5 rounded-full bg-brand-gold mt-2" />
                   {item}
@@ -74,16 +86,10 @@ export default function PrecioOroHoyPage() {
 
           <div className="bg-surface-1 border border-border rounded-DEFAULT p-6">
             <h2 className="text-xl font-bold text-content-0 mb-4">
-              Herramientas relacionadas
+              {t("relatedTools")}
             </h2>
             <div className="space-y-3">
-              {[
-                { href: "/precio-gramo-oro", label: "Precio del gramo de oro", desc: "En EUR y USD" },
-                { href: "/conversor-divisas", label: "Conversor multi-divisa", desc: "Oro en 11 divisas" },
-                { href: "/ratio-oro-plata", label: "Ratio Oro/Plata", desc: "Análisis de valoración relativa" },
-                { href: "/calculadora-rentabilidad", label: "Calculadora de rentabilidad", desc: "Simula inversiones pasadas" },
-                { href: "/alertas", label: "Alertas de precio", desc: "Recibe avisos por email" },
-              ].map((link) => (
+              {toolLinks.map((link) => (
                 <Link
                   key={link.href}
                   href={link.href}

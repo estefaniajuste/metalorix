@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 
 interface RoiResult {
   symbol: string;
@@ -17,19 +18,6 @@ interface RoiResult {
   yearsHeld: number;
 }
 
-const METALS = [
-  { symbol: "XAU", name: "Oro", color: "#D6B35A" },
-  { symbol: "XAG", name: "Plata", color: "#A7B0BE" },
-  { symbol: "XPT", name: "Platino", color: "#8B9DC3" },
-];
-
-const PRESETS = [
-  { label: "Hace 1 año", years: 1 },
-  { label: "Hace 3 años", years: 3 },
-  { label: "Hace 5 años", years: 5 },
-  { label: "Hace 10 años", years: 10 },
-];
-
 function formatDate(d: Date): string {
   return d.toISOString().split("T")[0];
 }
@@ -42,6 +30,22 @@ function formatCurrency(val: number): string {
 }
 
 export function RoiCalculator() {
+  const t = useTranslations("roiCalc");
+  const tm = useTranslations("metals");
+
+  const metals = [
+    { symbol: "XAU", name: tm("gold"), color: "#D6B35A" },
+    { symbol: "XAG", name: tm("silver"), color: "#A7B0BE" },
+    { symbol: "XPT", name: tm("platinum"), color: "#8B9DC3" },
+  ];
+
+  const presets = [
+    { label: t("yearsAgo1"), years: 1 },
+    { label: t("yearsAgo3"), years: 3 },
+    { label: t("yearsAgo5"), years: 5 },
+    { label: t("yearsAgo10"), years: 10 },
+  ];
+
   const [symbol, setSymbol] = useState("XAU");
   const [amount, setAmount] = useState("10000");
   const [date, setDate] = useState(() => {
@@ -65,34 +69,37 @@ export function RoiCalculator() {
       const data = await res.json();
 
       if (!res.ok) {
-        setError(data.error || "Error al calcular");
+        setError(data.error || t("calcError"));
       } else {
         setResult(data);
       }
     } catch {
-      setError("Error de conexión");
+      setError(t("connectionError"));
     }
     setLoading(false);
   }
 
   const isProfit = result ? result.profit >= 0 : true;
+  const translatedMetalName = result
+    ? metals.find((m) => m.symbol === result.symbol)?.name ?? result.metalName
+    : "";
 
   return (
     <div className="space-y-6">
       {/* Form */}
       <div className="bg-surface-1 border border-border rounded-DEFAULT p-6 sm:p-8">
         <h2 className="text-lg font-bold text-content-0 mb-6">
-          Simula tu inversión
+          {t("simulateTitle")}
         </h2>
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
           {/* Metal */}
           <div>
             <label className="block text-xs font-medium text-content-3 mb-1.5">
-              Metal
+              {t("metal")}
             </label>
             <div className="flex gap-2">
-              {METALS.map((m) => (
+              {metals.map((m) => (
                 <button
                   key={m.symbol}
                   onClick={() => setSymbol(m.symbol)}
@@ -116,7 +123,7 @@ export function RoiCalculator() {
           {/* Amount */}
           <div>
             <label className="block text-xs font-medium text-content-3 mb-1.5">
-              Cantidad invertida (USD)
+              {t("amountInvested")}
             </label>
             <div className="relative">
               <span className="absolute left-3 top-1/2 -translate-y-1/2 text-content-3 text-sm">
@@ -134,7 +141,7 @@ export function RoiCalculator() {
           {/* Date */}
           <div>
             <label className="block text-xs font-medium text-content-3 mb-1.5">
-              Fecha de inversión
+              {t("investmentDate")}
             </label>
             <input
               type="date"
@@ -149,7 +156,7 @@ export function RoiCalculator() {
 
         {/* Presets */}
         <div className="flex gap-2 flex-wrap mb-6">
-          {PRESETS.map((p) => {
+          {presets.map((p) => {
             const d = new Date();
             d.setFullYear(d.getFullYear() - p.years);
             const presetDate = formatDate(d);
@@ -175,7 +182,7 @@ export function RoiCalculator() {
           disabled={loading}
           className="w-full sm:w-auto bg-brand-gold text-[#0B0F17] font-semibold text-sm px-8 py-3 rounded-sm hover:brightness-110 transition-all disabled:opacity-50"
         >
-          {loading ? "Calculando..." : "Calcular rentabilidad"}
+          {loading ? t("calculating") : t("calculate")}
         </button>
 
         {error && (
@@ -187,14 +194,14 @@ export function RoiCalculator() {
       {result && (
         <div className="bg-surface-1 border border-border rounded-DEFAULT p-6 sm:p-8">
           <h3 className="text-lg font-bold text-content-0 mb-6">
-            Resultado de tu inversión en {result.metalName}
+            {t("resultTitle", { metal: translatedMetalName })}
           </h3>
 
           {/* Main result */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
             <div className="bg-surface-0 border border-border rounded-sm p-5 text-center">
               <div className="text-xs text-content-3 font-medium mb-1">
-                Valor actual de tu inversión
+                {t("currentValue")}
               </div>
               <div
                 className={`text-3xl font-extrabold tabular-nums ${
@@ -204,13 +211,13 @@ export function RoiCalculator() {
                 ${formatCurrency(result.currentValue)}
               </div>
               <div className="text-xs text-content-3 mt-1">
-                Invertiste ${formatCurrency(result.investmentAmount)}
+                {t("youInvested")} ${formatCurrency(result.investmentAmount)}
               </div>
             </div>
 
             <div className="bg-surface-0 border border-border rounded-sm p-5 text-center">
               <div className="text-xs text-content-3 font-medium mb-1">
-                {isProfit ? "Ganancia" : "Pérdida"} total
+                {isProfit ? t("totalGain") : t("totalLoss")}
               </div>
               <div
                 className={`text-3xl font-extrabold tabular-nums ${
@@ -234,44 +241,44 @@ export function RoiCalculator() {
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
             {[
               {
-                label: "Precio al invertir",
+                label: t("priceAtInvestment"),
                 value: `$${formatCurrency(result.priceAtInvestment)}`,
               },
               {
-                label: "Precio actual",
+                label: t("currentPrice"),
                 value: `$${formatCurrency(result.currentPrice)}`,
               },
               {
-                label: "Onzas adquiridas",
+                label: t("ouncesAcquired"),
                 value: result.ouncesOwned.toFixed(4),
               },
               {
-                label: "Tiempo invertido",
+                label: t("timeInvested"),
                 value:
                   result.yearsHeld >= 1
-                    ? `${result.yearsHeld.toFixed(1)} años`
-                    : `${Math.round(result.yearsHeld * 12)} meses`,
+                    ? `${result.yearsHeld.toFixed(1)} ${t("years")}`
+                    : `${Math.round(result.yearsHeld * 12)} ${t("months")}`,
               },
               {
-                label: "Retorno anualizado",
+                label: t("annualizedReturn"),
                 value: `${result.annualizedReturn >= 0 ? "+" : ""}${result.annualizedReturn.toFixed(2)}%`,
                 color: result.annualizedReturn >= 0,
               },
               {
-                label: "Revalorización del metal",
+                label: t("metalAppreciation"),
                 value: `${result.profitPct >= 0 ? "+" : ""}${result.profitPct.toFixed(1)}%`,
                 color: result.profitPct >= 0,
               },
               {
-                label: "Equivalente mensual",
+                label: t("monthlyEquivalent"),
                 value:
                   result.yearsHeld > 0
                     ? `$${formatCurrency(result.profit / (result.yearsHeld * 12))}/mes`
                     : "—",
               },
               {
-                label: "Metal",
-                value: `${result.metalName} (${result.symbol})`,
+                label: t("metal"),
+                value: `${translatedMetalName} (${result.symbol})`,
               },
             ].map((stat) => (
               <div

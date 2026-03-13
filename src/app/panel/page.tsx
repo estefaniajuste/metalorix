@@ -1,31 +1,33 @@
-import type { Metadata } from "next";
 import Link from "next/link";
+import { getTranslations } from "next-intl/server";
 import { UserPanel } from "@/components/panel/UserPanel";
 
-export const metadata: Metadata = {
-  title: "Mi panel de alertas — Metalorix",
-  description: "Gestiona tus alertas de precio de metales preciosos. Acceso sin contraseña via magic link.",
-  robots: { index: false, follow: false },
-};
+export async function generateMetadata() {
+  const t = await getTranslations("panel");
+  return {
+    title: `${t("title")} — Metalorix`,
+    description: t("subtitle"),
+    robots: { index: false, follow: false },
+  };
+}
 
-export default function PanelPage() {
+export default async function PanelPage() {
+  const t = await getTranslations("panel");
+  const tc = await getTranslations("common");
+
   return (
     <section className="py-[var(--section-py)]">
       <div className="mx-auto max-w-[800px] px-6">
         <nav className="text-sm text-content-3 mb-6" aria-label="Breadcrumb">
-          <Link href="/" className="hover:text-content-1 transition-colors">
-            Inicio
-          </Link>
+          <Link href="/" className="hover:text-content-1 transition-colors">{tc("breadcrumbHome")}</Link>
           <span className="mx-2">/</span>
-          <span className="text-content-1">Mi panel</span>
+          <span className="text-content-1">{t("title")}</span>
         </nav>
 
         <h1 className="text-3xl font-extrabold text-content-0 tracking-tight mb-2">
-          Mi panel
+          {t("title")}
         </h1>
-        <p className="text-content-2 mb-8 text-sm">
-          Gestiona tus alertas de precio y suscripciones.
-        </p>
+        <p className="text-content-2 mb-8 text-sm">{t("subtitle")}</p>
 
         <UserPanel />
       </div>

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { getTranslations } from "next-intl/server";
 import { MultiCurrencyTable } from "@/components/tools/MultiCurrencyTable";
 import { breadcrumbSchema, softwareAppSchema } from "@/lib/seo/schemas";
 
@@ -28,7 +29,11 @@ export const metadata: Metadata = {
   },
 };
 
-export default function ConversorDivisasPage() {
+export default async function ConversorDivisasPage() {
+  const t = await getTranslations("currencyConverter");
+  const tc = await getTranslations("common");
+  const tt = await getTranslations("tools");
+
   const bc = breadcrumbSchema([
     { name: "Herramientas", path: "/herramientas" },
     { name: "Conversor divisas", path: "/conversor-divisas" },
@@ -48,26 +53,24 @@ export default function ConversorDivisasPage() {
         {/* Breadcrumb */}
         <nav className="text-sm text-content-3 mb-6" aria-label="Breadcrumb">
           <Link href="/" className="hover:text-content-1 transition-colors">
-            Inicio
+            {tc("breadcrumbHome")}
           </Link>
           <span className="mx-2">/</span>
           <Link
             href="/herramientas"
             className="hover:text-content-1 transition-colors"
           >
-            Herramientas
+            {tt("title")}
           </Link>
           <span className="mx-2">/</span>
-          <span className="text-content-1">Conversor de divisas</span>
+          <span className="text-content-1">{t("breadcrumb")}</span>
         </nav>
 
         <h1 className="text-3xl sm:text-4xl font-extrabold text-content-0 tracking-tight mb-4">
-          Precio del oro en diferentes divisas
+          {t("title")}
         </h1>
         <p className="text-content-2 mb-10 max-w-2xl leading-relaxed">
-          Consulta el precio del oro, plata y platino en 11 divisas
-          internacionales. Elige entre onza troy, gramo o kilogramo. Tipos de
-          cambio actualizados en tiempo real.
+          {t("subtitle")}
         </p>
 
         <MultiCurrencyTable />
@@ -75,18 +78,13 @@ export default function ConversorDivisasPage() {
         {/* SEO content */}
         <div className="mt-12 bg-surface-1 border border-border rounded-DEFAULT p-6">
           <h2 className="text-xl font-bold text-content-0 mb-4">
-            ¿Por qué importa la divisa al invertir en oro?
+            {t("whyCurrency")}
           </h2>
           <p className="text-content-2 leading-relaxed mb-4">
-            El oro cotiza internacionalmente en dólares estadounidenses (USD),
-            pero el coste real de tu inversión depende de la divisa en la que
-            operas. Un inversor europeo puede ver cómo el oro sube en USD pero
-            se mantiene estable en EUR si el euro se fortalece frente al dólar.
+            {t("whyCurrencyP1")}
           </p>
           <p className="text-content-2 leading-relaxed">
-            Por eso es fundamental consultar el precio en tu divisa local. Esta
-            herramienta te muestra el precio actualizado en EUR, GBP, CHF, JPY,
-            AUD, CAD, CNY, INR, MXN y BRL, por onza troy, gramo y kilogramo.
+            {t("whyCurrencyP2")}
           </p>
         </div>
       </div>

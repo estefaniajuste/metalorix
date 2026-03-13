@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { getTranslations } from "next-intl/server";
 import { getMetalSEO, METAL_SEO } from "@/lib/seo/metal-content";
 import { MetalPageContent } from "@/components/dashboard/MetalPageContent";
 import { ShareButton } from "@/components/dashboard/ShareButton";
@@ -11,20 +12,21 @@ export function generateStaticParams() {
   return Object.keys(METAL_SEO).map((metal) => ({ metal }));
 }
 
-export function generateMetadata({
+export async function generateMetadata({
   params,
 }: {
   params: { metal: string };
-}): Metadata {
+}): Promise<Metadata> {
+  const t = await getTranslations("prices");
   const seo = getMetalSEO(params.metal);
-  if (!seo) return { title: "Metal no encontrado — Metalorix" };
+  if (!seo) return { title: t("notFound") };
 
   return {
-    title: `Precio del ${seo.name} hoy — Metalorix`,
+    title: `${t("priceOf", { metal: seo.name })} — Metalorix`,
     description: seo.description,
     keywords: seo.keywords,
     openGraph: {
-      title: `Precio del ${seo.name} hoy en tiempo real — Metalorix`,
+      title: `${t("priceOf", { metal: seo.name })} — Metalorix`,
       description: seo.description,
       type: "website",
       url: `https://metalorix.com/precio/${seo.slug}`,
@@ -44,29 +46,15 @@ function JsonLd({ slug }: { slug: string }) {
       name: seo.fullName,
       description: seo.about,
       url: `https://metalorix.com/precio/${seo.slug}`,
-      provider: {
-        "@type": "Organization",
-        name: "Metalorix",
-        url: "https://metalorix.com",
-      },
+      provider: { "@type": "Organization", name: "Metalorix", url: "https://metalorix.com" },
       category: "Precious Metals",
     },
     {
       "@context": "https://schema.org",
       "@type": "BreadcrumbList",
       itemListElement: [
-        {
-          "@type": "ListItem",
-          position: 1,
-          name: "Inicio",
-          item: "https://metalorix.com",
-        },
-        {
-          "@type": "ListItem",
-          position: 2,
-          name: `Precio del ${seo.name}`,
-          item: `https://metalorix.com/precio/${seo.slug}`,
-        },
+        { "@type": "ListItem", position: 1, name: "Metalorix", item: "https://metalorix.com" },
+        { "@type": "ListItem", position: 2, name: seo.name, item: `https://metalorix.com/precio/${seo.slug}` },
       ],
     },
   ];
@@ -74,17 +62,13 @@ function JsonLd({ slug }: { slug: string }) {
   return (
     <>
       {schemas.map((schema, i) => (
-        <script
-          key={i}
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
-        />
+        <script key={i} type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
       ))}
     </>
   );
 }
 
-export default function PrecioMetalPage({
+export default async function PrecioMetalPage({
   params,
 }: {
   params: { metal: string };
@@ -92,9 +76,10 @@ export default function PrecioMetalPage({
   const seo = getMetalSEO(params.metal);
   if (!seo) notFound();
 
-  const otherMetals = Object.values(METAL_SEO).filter(
-    (m) => m.slug !== seo.slug
-  );
+  const t = await getTranslations("prices");
+  const tc = await getTranslations("common");
+  const tf = await getTranslations("footer");
+  const otherMetals = Object.values(METAL_SEO).filter((m) => m.slug !== seo.slug);
 
   return (
     <>
@@ -102,52 +87,39 @@ export default function PrecioMetalPage({
 
       <section className="py-[var(--section-py)]">
         <div className="mx-auto max-w-[1200px] px-6">
-          {/* Breadcrumb */}
           <nav className="text-sm text-content-3 mb-6" aria-label="Breadcrumb">
-            <Link href="/" className="hover:text-content-1 transition-colors">
-              Inicio
-            </Link>
+            <Link href="/" className="hover:text-content-1 transition-colors">{tc("breadcrumbHome")}</Link>
             <span className="mx-2">/</span>
-            <span className="text-content-1">Precio del {seo.name}</span>
+            <span className="text-content-1">{t("breadcrumbPrice", { metal: seo.name })}</span>
           </nav>
 
           <div className="flex items-start justify-between gap-4 flex-wrap mb-3">
             <h1 className="text-3xl sm:text-4xl font-extrabold text-content-0 tracking-tight">
-              Precio del {seo.name} hoy
+              {t("priceOf", { metal: seo.name })}
             </h1>
             <ShareButton
-              title={`Precio del ${seo.name} hoy — Metalorix`}
-              text={`Cotización ${seo.fullName} en tiempo real`}
+              title={`${t("priceOf", { metal: seo.name })} — Metalorix`}
+              text={t("shareText", { metal: seo.fullName })}
               url={`https://metalorix.com/precio/${seo.slug}`}
             />
           </div>
           <p className="text-content-2 mb-10 max-w-2xl leading-relaxed">
-            Cotización {seo.fullName} en tiempo real. Gráfico interactivo,
-            datos históricos y contexto del mercado.
+            {t("description", { metal: seo.fullName })}
           </p>
 
-          {/* Chart + Data */}
           <MetalPageContent symbol={seo.symbol} />
 
-          {/* About section */}
           <div className="mt-12 grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div className="lg:col-span-2">
               <div className="bg-surface-1 border border-border rounded-DEFAULT p-6">
                 <h2 className="text-xl font-bold text-content-0 mb-4">
-                  Sobre el {seo.name}
+                  {t("about", { metal: seo.name })}
                 </h2>
-                <p className="text-content-2 leading-relaxed mb-6">
-                  {seo.about}
-                </p>
-                <h3 className="text-base font-semibold text-content-0 mb-3">
-                  Datos clave
-                </h3>
+                <p className="text-content-2 leading-relaxed mb-6">{seo.about}</p>
+                <h3 className="text-base font-semibold text-content-0 mb-3">{t("keyFacts")}</h3>
                 <ul className="space-y-3">
                   {seo.facts.map((fact, i) => (
-                    <li
-                      key={i}
-                      className="flex gap-3 text-sm text-content-1 leading-relaxed"
-                    >
+                    <li key={i} className="flex gap-3 text-sm text-content-1 leading-relaxed">
                       <span className="flex-shrink-0 w-1.5 h-1.5 rounded-full bg-brand-gold mt-2" />
                       {fact}
                     </li>
@@ -156,38 +128,18 @@ export default function PrecioMetalPage({
               </div>
             </div>
 
-            {/* Sidebar: other metals */}
             <div>
               <div className="bg-surface-1 border border-border rounded-DEFAULT p-6">
-                <h3 className="text-base font-semibold text-content-0 mb-4">
-                  Otros metales
-                </h3>
+                <h3 className="text-base font-semibold text-content-0 mb-4">{t("otherMetals")}</h3>
                 <div className="space-y-3">
                   {otherMetals.map((m) => (
-                    <Link
-                      key={m.slug}
-                      href={`/precio/${m.slug}`}
-                      className="flex items-center gap-3 p-3 rounded-sm hover:bg-surface-2 transition-colors group"
-                    >
-                      <span className="text-sm font-bold text-content-3 group-hover:text-content-1 transition-colors w-8">
-                        {m.symbol.slice(1)}
-                      </span>
+                    <Link key={m.slug} href={`/precio/${m.slug}`} className="flex items-center gap-3 p-3 rounded-sm hover:bg-surface-2 transition-colors group">
+                      <span className="text-sm font-bold text-content-3 group-hover:text-content-1 transition-colors w-8">{m.symbol.slice(1)}</span>
                       <div>
-                        <div className="text-sm font-medium text-content-0">
-                          {m.name}
-                        </div>
-                        <div className="text-xs text-content-3">
-                          {m.symbol}/USD
-                        </div>
+                        <div className="text-sm font-medium text-content-0">{m.name}</div>
+                        <div className="text-xs text-content-3">{m.symbol}/USD</div>
                       </div>
-                      <svg
-                        className="ml-auto w-4 h-4 text-content-3 group-hover:text-content-1 transition-colors"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                      >
+                      <svg className="ms-auto w-4 h-4 text-content-3 group-hover:text-content-1 transition-colors" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
                         <polyline points="9 18 15 12 9 6" />
                       </svg>
                     </Link>
@@ -196,15 +148,8 @@ export default function PrecioMetalPage({
               </div>
 
               <div className="bg-surface-1 border border-border rounded-DEFAULT p-6 mt-6">
-                <h3 className="text-base font-semibold text-content-0 mb-3">
-                  Aviso legal
-                </h3>
-                <p className="text-xs text-content-3 leading-relaxed">
-                  Los datos mostrados son informativos y no constituyen
-                  asesoramiento financiero. Los precios pueden tener un retraso
-                  de hasta 15 minutos respecto al mercado. Consulta siempre con
-                  un asesor cualificado antes de tomar decisiones de inversión.
-                </p>
+                <h3 className="text-base font-semibold text-content-0 mb-3">{tf("legalNotice")}</h3>
+                <p className="text-xs text-content-3 leading-relaxed">{tf("disclaimer")}</p>
               </div>
             </div>
           </div>

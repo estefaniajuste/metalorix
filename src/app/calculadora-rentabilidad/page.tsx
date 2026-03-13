@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { getTranslations } from "next-intl/server";
 import { RoiCalculator } from "@/components/tools/RoiCalculator";
 import { breadcrumbSchema, softwareAppSchema } from "@/lib/seo/schemas";
 
@@ -28,7 +29,11 @@ export const metadata: Metadata = {
   },
 };
 
-export default function CalculadoraRentabilidadPage() {
+export default async function CalculadoraRentabilidadPage() {
+  const t = await getTranslations("roiCalc");
+  const tc = await getTranslations("common");
+  const tt = await getTranslations("tools");
+
   const bc = breadcrumbSchema([
     { name: "Herramientas", path: "/herramientas" },
     { name: "Calculadora de rentabilidad", path: "/calculadora-rentabilidad" },
@@ -48,26 +53,24 @@ export default function CalculadoraRentabilidadPage() {
         {/* Breadcrumb */}
         <nav className="text-sm text-content-3 mb-6" aria-label="Breadcrumb">
           <Link href="/" className="hover:text-content-1 transition-colors">
-            Inicio
+            {tc("breadcrumbHome")}
           </Link>
           <span className="mx-2">/</span>
           <Link
             href="/herramientas"
             className="hover:text-content-1 transition-colors"
           >
-            Herramientas
+            {tt("title")}
           </Link>
           <span className="mx-2">/</span>
-          <span className="text-content-1">Calculadora de rentabilidad</span>
+          <span className="text-content-1">{tt("roiCalculator")}</span>
         </nav>
 
         <h1 className="text-3xl sm:text-4xl font-extrabold text-content-0 tracking-tight mb-4">
-          Calculadora de rentabilidad histórica
+          {tt("roiCalculator")}
         </h1>
         <p className="text-content-2 mb-10 max-w-2xl leading-relaxed">
-          ¿Cuánto habrías ganado si hubieras invertido en oro, plata o platino?
-          Introduce la cantidad, elige el metal y la fecha, y calcula la
-          rentabilidad real con datos históricos.
+          {tt("roiDesc")}
         </p>
 
         <RoiCalculator />
@@ -75,24 +78,16 @@ export default function CalculadoraRentabilidadPage() {
         {/* SEO content */}
         <div className="mt-12 bg-surface-1 border border-border rounded-DEFAULT p-6">
           <h2 className="text-xl font-bold text-content-0 mb-4">
-            ¿Es rentable invertir en oro?
+            {t("isProfitable")}
           </h2>
           <p className="text-content-2 leading-relaxed mb-4">
-            El oro ha sido históricamente uno de los activos refugio más
-            fiables. En los últimos 20 años, ha pasado de cotizar alrededor de
-            $400/oz a superar los $2.000/oz, ofreciendo una rentabilidad
-            acumulada superior al 400%.
+            {t("profitableP1")}
           </p>
           <p className="text-content-2 leading-relaxed mb-4">
-            Sin embargo, la rentabilidad pasada no garantiza resultados futuros.
-            El oro no genera dividendos ni intereses, y su valor depende
-            principalmente de la percepción de riesgo global, la inflación y la
-            política monetaria de los bancos centrales.
+            {t("profitableP2")}
           </p>
           <p className="text-content-2 leading-relaxed">
-            Esta calculadora utiliza precios históricos reales de los mercados
-            de futuros para simular cómo habría evolucionado una inversión
-            en el pasado.
+            {t("profitableP3")}
           </p>
         </div>
       </div>

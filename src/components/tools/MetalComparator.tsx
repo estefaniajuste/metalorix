@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, useCallback } from "react";
+import { useTranslations } from "next-intl";
 
 interface DataPoint {
   t: number;
@@ -11,23 +12,6 @@ interface CompareData {
   series: Record<string, DataPoint[]>;
 }
 
-const METALS = [
-  { symbol: "XAU", name: "Oro", color: "#D6B35A" },
-  { symbol: "XAG", name: "Plata", color: "#A7B0BE" },
-  { symbol: "XPT", name: "Platino", color: "#8B9DC3" },
-];
-
-const RANGES = [
-  { value: "1m", label: "1M" },
-  { value: "3m", label: "3M" },
-  { value: "6m", label: "6M" },
-  { value: "1y", label: "1A" },
-  { value: "2y", label: "2A" },
-  { value: "5y", label: "5A" },
-  { value: "10y", label: "10A" },
-  { value: "max", label: "Máx" },
-];
-
 function normalizeToPercent(data: DataPoint[]): DataPoint[] {
   if (data.length === 0) return [];
   const base = data[0].p;
@@ -35,6 +19,26 @@ function normalizeToPercent(data: DataPoint[]): DataPoint[] {
 }
 
 export function MetalComparator() {
+  const t = useTranslations("comparatorPage");
+  const tm = useTranslations("metals");
+
+  const metals = [
+    { symbol: "XAU", name: tm("gold"), color: "#D6B35A" },
+    { symbol: "XAG", name: tm("silver"), color: "#A7B0BE" },
+    { symbol: "XPT", name: tm("platinum"), color: "#8B9DC3" },
+  ];
+
+  const ranges = [
+    { value: "1m", label: "1M" },
+    { value: "3m", label: "3M" },
+    { value: "6m", label: "6M" },
+    { value: "1y", label: "1Y" },
+    { value: "2y", label: "2Y" },
+    { value: "5y", label: "5Y" },
+    { value: "10y", label: "10Y" },
+    { value: "max", label: t("max") },
+  ];
+
   const [range, setRange] = useState("1y");
   const [raw, setRaw] = useState<CompareData | null>(null);
   const [loading, setLoading] = useState(true);
@@ -74,7 +78,7 @@ export function MetalComparator() {
 
     ctx.clearRect(0, 0, W, H);
 
-    const datasets = METALS.filter((m) => selected.includes(m.symbol)).map(
+    const datasets = metals.filter((m) => selected.includes(m.symbol)).map(
       (m) => {
         const points =
           mode === "percent"
@@ -202,7 +206,7 @@ export function MetalComparator() {
 
   const getSummary = () => {
     if (!raw?.series) return [];
-    return METALS.filter((m) => selected.includes(m.symbol)).map((m) => {
+    return metals.filter((m) => selected.includes(m.symbol)).map((m) => {
       const points = raw.series[m.symbol] || [];
       if (points.length < 2)
         return { ...m, change: 0, startPrice: 0, endPrice: 0 };
@@ -219,7 +223,7 @@ export function MetalComparator() {
       <div className="flex flex-wrap items-center gap-3">
         {/* Metal toggles */}
         <div className="flex gap-2">
-          {METALS.map((m) => (
+          {metals.map((m) => (
             <button
               key={m.symbol}
               onClick={() => toggleMetal(m.symbol)}
@@ -249,7 +253,7 @@ export function MetalComparator() {
                 : "text-content-3 hover:text-content-1"
             }`}
           >
-            % Variación
+            {t("percentChange")}
           </button>
           <button
             onClick={() => setMode("absolute")}
@@ -259,13 +263,13 @@ export function MetalComparator() {
                 : "text-content-3 hover:text-content-1"
             }`}
           >
-            Precio USD
+            {t("priceUSD")}
           </button>
         </div>
 
         {/* Range selector */}
         <div className="flex bg-surface-1 border border-border rounded-sm overflow-hidden">
-          {RANGES.map((r) => (
+          {ranges.map((r) => (
             <button
               key={r.value}
               onClick={() => setRange(r.value)}
@@ -295,7 +299,7 @@ export function MetalComparator() {
         />
         {/* Legend */}
         <div className="flex items-center justify-center gap-6 pt-3">
-          {METALS.filter((m) => selected.includes(m.symbol)).map((m) => (
+          {metals.filter((m) => selected.includes(m.symbol)).map((m) => (
             <div key={m.symbol} className="flex items-center gap-2 text-xs text-content-2">
               <span
                 className="w-3 h-0.5 rounded"

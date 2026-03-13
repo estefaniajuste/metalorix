@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { getTranslations } from "next-intl/server";
 import { EconomicCalendar } from "@/components/tools/EconomicCalendar";
 import { breadcrumbSchema, webPageSchema } from "@/lib/seo/schemas";
 
@@ -28,7 +29,11 @@ export const metadata: Metadata = {
   },
 };
 
-export default function CalendarioEconomicoPage() {
+export default async function CalendarioEconomicoPage() {
+  const t = await getTranslations("calendarPage");
+  const tc = await getTranslations("common");
+  const tt = await getTranslations("tools");
+
   const bc = breadcrumbSchema([
     { name: "Herramientas", path: "/herramientas" },
     { name: "Calendario económico", path: "/calendario-economico" },
@@ -47,43 +52,34 @@ export default function CalendarioEconomicoPage() {
       <div className="mx-auto max-w-[1200px] px-6">
         <nav className="text-sm text-content-3 mb-6" aria-label="Breadcrumb">
           <Link href="/" className="hover:text-content-1 transition-colors">
-            Inicio
+            {tc("breadcrumbHome")}
           </Link>
           <span className="mx-2">/</span>
           <Link href="/herramientas" className="hover:text-content-1 transition-colors">
-            Herramientas
+            {tt("title")}
           </Link>
           <span className="mx-2">/</span>
-          <span className="text-content-1">Calendario económico</span>
+          <span className="text-content-1">{t("breadcrumb")}</span>
         </nav>
 
         <h1 className="text-3xl sm:text-4xl font-extrabold text-content-0 tracking-tight mb-4">
-          Calendario económico
+          {t("title")}
         </h1>
         <p className="text-content-2 mb-10 max-w-2xl leading-relaxed">
-          Eventos macroeconómicos clave que impactan directamente en el precio
-          del oro, plata y platino. Desde las decisiones de la Fed hasta los
-          datos de inflación.
+          {t("subtitle")}
         </p>
 
         <EconomicCalendar />
 
         <div className="mt-12 bg-surface-1 border border-border rounded-DEFAULT p-6">
           <h2 className="text-xl font-bold text-content-0 mb-4">
-            ¿Por qué seguir el calendario económico?
+            {t("whyFollow")}
           </h2>
           <p className="text-content-2 text-sm leading-relaxed mb-4">
-            Los metales preciosos son extremadamente sensibles a la política
-            monetaria y los datos macroeconómicos. Una decisión sorpresa de la
-            Fed sobre tipos de interés puede mover el precio del oro un 2-3% en
-            cuestión de minutos.
+            {t("whyFollowP1")}
           </p>
           <p className="text-content-2 text-sm leading-relaxed">
-            Conocer las fechas de estos eventos te permite anticipar periodos de
-            alta volatilidad, ajustar tus posiciones y tomar decisiones más
-            informadas. Los eventos marcados con impacto &quot;alto&quot; son los que
-            históricamente han generado los mayores movimientos en metales
-            preciosos.
+            {t("whyFollowP2")}
           </p>
         </div>
       </div>
