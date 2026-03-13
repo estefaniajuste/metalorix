@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import dynamic from "next/dynamic";
+import Link from "next/link";
 import { GoldSilverRatio } from "@/components/tools/GoldSilverRatio";
 import { UnitConverter } from "@/components/tools/UnitConverter";
 import { CurrencyConverter } from "@/components/tools/CurrencyConverter";
@@ -79,6 +80,42 @@ export default function HerramientasPage() {
         {/* Row 3: DCA Calculator full width */}
         <div className="mb-16">
           <DcaCalculator />
+        </div>
+
+        {/* Featured tools */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-16">
+          <Link
+            href="/calculadora-rentabilidad"
+            className="bg-surface-1 border border-border rounded-DEFAULT p-6 hover:border-border-hover hover:shadow-card transition-all group"
+          >
+            <div className="text-brand-gold mb-3">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" /><polyline points="17 6 23 6 23 12" />
+              </svg>
+            </div>
+            <h3 className="text-base font-semibold text-content-0 mb-1 group-hover:text-brand-gold transition-colors">
+              Calculadora de rentabilidad
+            </h3>
+            <p className="text-sm text-content-2 leading-relaxed">
+              ¿Cuánto habrías ganado invirtiendo en oro hace 5 años? Simulador con datos reales.
+            </p>
+          </Link>
+          <Link
+            href="/ratio-oro-plata"
+            className="bg-surface-1 border border-border rounded-DEFAULT p-6 hover:border-border-hover hover:shadow-card transition-all group"
+          >
+            <div className="text-brand-gold mb-3">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                <line x1="12" y1="1" x2="12" y2="23" /><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+              </svg>
+            </div>
+            <h3 className="text-base font-semibold text-content-0 mb-1 group-hover:text-brand-gold transition-colors">
+              Ratio Oro/Plata
+            </h3>
+            <p className="text-sm text-content-2 leading-relaxed">
+              Ratio en tiempo real con barra visual, zonas históricas y análisis de inversión.
+            </p>
+          </Link>
         </div>
 
         {/* Upcoming tools */}
