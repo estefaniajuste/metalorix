@@ -4,6 +4,7 @@ import "@/styles/globals.css";
 import { ThemeProvider } from "@/components/layout/ThemeProvider";
 import { Nav } from "@/components/layout/Nav";
 import { Footer } from "@/components/layout/Footer";
+import { ScrollToTop } from "@/components/layout/ScrollToTop";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -59,9 +60,16 @@ export default function RootLayout({
     <html lang="es" suppressHydrationWarning>
       <body className={`${inter.variable} font-sans`}>
         <ThemeProvider>
+          <a
+            href="#main-content"
+            className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[100] focus:bg-brand-gold focus:text-[#0B0F17] focus:px-4 focus:py-2 focus:rounded-sm focus:text-sm focus:font-semibold"
+          >
+            Saltar al contenido
+          </a>
           <Nav />
-          <main>{children}</main>
+          <main id="main-content">{children}</main>
           <Footer />
+          <ScrollToTop />
         </ThemeProvider>
       </body>
     </html>

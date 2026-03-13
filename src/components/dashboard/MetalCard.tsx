@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { METALS, type MetalSpot, type MetalSymbol } from "@/lib/providers/metals";
+import { Sparkline } from "./Sparkline";
 
 const SLUG_MAP: Record<string, string> = {
   XAU: "oro",
@@ -35,9 +36,10 @@ interface MetalCardProps {
   spot: MetalSpot;
   active: boolean;
   onClick: () => void;
+  sparklineData?: number[];
 }
 
-export function MetalCard({ spot, active, onClick }: MetalCardProps) {
+export function MetalCard({ spot, active, onClick, sparklineData }: MetalCardProps) {
   const metal = METALS[spot.symbol as MetalSymbol];
   const isUp = spot.change >= 0;
 
@@ -82,8 +84,18 @@ export function MetalCard({ spot, active, onClick }: MetalCardProps) {
         </div>
       </div>
 
-      <div className="text-[32px] font-bold text-content-0 tracking-tight tabular-nums mb-1">
-        ${formatPrice(spot.price)}
+      <div className="flex items-end justify-between gap-3 mb-1">
+        <div className="text-[32px] font-bold text-content-0 tracking-tight tabular-nums leading-none">
+          ${formatPrice(spot.price)}
+        </div>
+        {sparklineData && sparklineData.length > 1 && (
+          <Sparkline
+            data={sparklineData}
+            color={isUp ? "#34D399" : "#F87171"}
+            width={72}
+            height={28}
+          />
+        )}
       </div>
 
       <div

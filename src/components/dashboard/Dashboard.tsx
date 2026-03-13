@@ -107,14 +107,22 @@ export function Dashboard() {
         {/* Metal Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-10">
           {prices
-            ? prices.map((spot) => (
-                <MetalCard
-                  key={spot.symbol}
-                  spot={spot}
-                  active={spot.symbol === activeMetal}
-                  onClick={() => setActiveMetal(spot.symbol as MetalSymbol)}
-                />
-              ))
+            ? prices.map((spot) => {
+                const key1D = `${spot.symbol}_1D`;
+                const histData = history[key1D]?.data;
+                const sparkline = histData
+                  ? histData.map((d) => d.price)
+                  : undefined;
+                return (
+                  <MetalCard
+                    key={spot.symbol}
+                    spot={spot}
+                    active={spot.symbol === activeMetal}
+                    onClick={() => setActiveMetal(spot.symbol as MetalSymbol)}
+                    sparklineData={sparkline}
+                  />
+                );
+              })
             : (Object.keys(METALS) as MetalSymbol[]).map((symbol) => (
                 <div
                   key={symbol}

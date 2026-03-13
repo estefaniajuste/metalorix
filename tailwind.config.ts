@@ -62,11 +62,16 @@ const config: Config = {
           from: { opacity: "0", transform: "translateY(24px)" },
           to: { opacity: "1", transform: "translateY(0)" },
         },
+        "fade-in": {
+          from: { opacity: "0" },
+          to: { opacity: "1" },
+        },
       },
       animation: {
         "pulse-dot": "pulse-dot 2s ease infinite",
         shimmer: "shimmer 1.5s infinite",
         "fade-in-up": "fade-in-up 0.6s cubic-bezier(.4,0,.2,1) both",
+        "fade-in": "fade-in 0.2s ease both",
       },
     },
   },
