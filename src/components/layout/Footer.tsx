@@ -15,6 +15,7 @@ const sections = [
     links: [
       { href: "/", label: "Dashboard" },
       { href: "/herramientas", label: "Herramientas" },
+      { href: "/guia-inversion", label: "Guía de inversión" },
       { href: "/noticias", label: "Noticias" },
       { href: "/alertas", label: "Alertas" },
       { href: "/glosario", label: "Glosario" },

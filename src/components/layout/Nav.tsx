@@ -15,6 +15,7 @@ const navItems = [
   { href: "/", label: "Dashboard" },
   { href: "#precios", label: "Precios", hasDropdown: true },
   { href: "/herramientas", label: "Herramientas" },
+  { href: "/guia-inversion", label: "Guía" },
   { href: "/noticias", label: "Noticias" },
   { href: "/alertas", label: "Alertas" },
 ];
