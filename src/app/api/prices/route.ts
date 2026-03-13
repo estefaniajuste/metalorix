@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getDb } from "@/lib/db";
 import { metalPrices } from "@/lib/db/schema";
+import { fetchAllSpotPrices as fetchFromYahoo } from "@/lib/providers/yahoo-finance";
 import { fetchAllSpotPrices as fetchFromGoldApi } from "@/lib/providers/gold-api";
 import {
   fetchAllSpotPrices as fetchFromTwelveData,
@@ -63,8 +64,22 @@ export async function GET() {
     return NextResponse.json({ source: "database", prices: dbPrices });
   }
 
-  // 2. Try Gold API + merge with DB data
-  const goldApiPrices = await fetchFromGoldApi();
+  // 2. Try Yahoo Finance (most reliable, covers all 3 metals)
+  const yahooPrices = await fetchFromYahoo().catch(() => null);
+  if (yahooPrices && yahooPrices.length > 0) {
+    const merged = dbSource
+      ? ensureAllMetals(dbPrices, yahooPrices)
+      : yahooPrices;
+    if (merged.length >= 3) {
+      return NextResponse.json({
+        source: dbSource ? "database+yahoo" : "yahoo",
+        prices: merged,
+      });
+    }
+  }
+
+  // 3. Try Gold API + merge with DB data
+  const goldApiPrices = await fetchFromGoldApi().catch(() => null);
   if (goldApiPrices && goldApiPrices.length > 0) {
     const merged = dbSource
       ? ensureAllMetals(dbPrices, goldApiPrices)
@@ -77,9 +92,9 @@ export async function GET() {
     }
   }
 
-  // 3. Try Twelve Data + merge
+  // 4. Try Twelve Data + merge
   if (hasTwelveData()) {
-    const tdPrices = await fetchFromTwelveData();
+    const tdPrices = await fetchFromTwelveData().catch(() => null);
     if (tdPrices && tdPrices.length > 0) {
       const merged = ensureAllMetals(
         dbPrices.length > 0 ? dbPrices : tdPrices,
@@ -94,7 +109,7 @@ export async function GET() {
     }
   }
 
-  // 4. Fallback: fill remaining with mock
+  // 5. Fallback: fill remaining with mock
   const mockPrices = await MockProvider.getSpotPrices();
   const merged = ensureAllMetals(
     dbPrices.length > 0 ? dbPrices : mockPrices,
