@@ -148,6 +148,22 @@ export default function HerramientasPage() {
               Compara el rendimiento histórico de los tres metales en un solo gráfico.
             </p>
           </Link>
+          <Link
+            href="/calendario-economico"
+            className="bg-surface-1 border border-border rounded-DEFAULT p-6 hover:border-border-hover hover:shadow-card transition-all group"
+          >
+            <div className="text-brand-gold mb-3">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                <rect x="3" y="4" width="18" height="18" rx="2" /><line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" />
+              </svg>
+            </div>
+            <h3 className="text-base font-semibold text-content-0 mb-1 group-hover:text-brand-gold transition-colors">
+              Calendario económico
+            </h3>
+            <p className="text-sm text-content-2 leading-relaxed">
+              Próximos eventos clave: FOMC, BCE, IPC, NFP y su impacto en metales.
+            </p>
+          </Link>
         </div>
 
         {/* Upcoming tools */}

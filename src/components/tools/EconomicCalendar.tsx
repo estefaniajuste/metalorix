@@ -1,0 +1,297 @@
+"use client";
+
+import { useState, useMemo } from "react";
+import {
+  ECONOMIC_EVENTS,
+  type EconomicEvent,
+} from "@/lib/data/economic-events";
+
+type FilterImpact = "all" | "high" | "medium" | "low";
+type ViewMode = "upcoming" | "all-events";
+
+const IMPACT_COLORS: Record<string, string> = {
+  high: "bg-signal-down",
+  medium: "bg-brand-gold",
+  low: "bg-content-3",
+};
+
+const IMPACT_LABELS: Record<string, string> = {
+  high: "Alto",
+  medium: "Medio",
+  low: "Bajo",
+};
+
+const CATEGORY_LABELS: Record<string, string> = {
+  "monetary-policy": "Política monetaria",
+  inflation: "Inflación",
+  employment: "Empleo",
+  gdp: "PIB",
+  trade: "Comercio",
+  sentiment: "Sentimiento",
+};
+
+function formatDate(dateStr: string): string {
+  const d = new Date(dateStr + "T00:00:00Z");
+  return d.toLocaleDateString("es-ES", {
+    weekday: "short",
+    day: "numeric",
+    month: "short",
+  });
+}
+
+function daysUntil(dateStr: string): number {
+  const now = new Date();
+  now.setHours(0, 0, 0, 0);
+  const d = new Date(dateStr + "T00:00:00Z");
+  return Math.ceil((d.getTime() - now.getTime()) / 86400000);
+}
+
+function daysLabel(n: number): string {
+  if (n === 0) return "Hoy";
+  if (n === 1) return "Mañana";
+  if (n < 0) return `Hace ${Math.abs(n)}d`;
+  return `En ${n}d`;
+}
+
+export function EconomicCalendar() {
+  const [filter, setFilter] = useState<FilterImpact>("all");
+  const [view, setView] = useState<ViewMode>("upcoming");
+  const [expanded, setExpanded] = useState<string | null>(null);
+
+  const upcomingEvents = useMemo(() => {
+    const now = new Date();
+    now.setHours(0, 0, 0, 0);
+    const cutoff = new Date(now.getTime() + 60 * 86400000);
+
+    const events: Array<
+      EconomicEvent & { nextDate: string; daysUntilEvent: number }
+    > = [];
+
+    for (const ev of ECONOMIC_EVENTS) {
+      if (filter !== "all" && ev.impact !== filter) continue;
+
+      for (const dateStr of ev.dates2026) {
+        const d = new Date(dateStr + "T00:00:00Z");
+        if (d >= now && d <= cutoff) {
+          events.push({
+            ...ev,
+            nextDate: dateStr,
+            daysUntilEvent: daysUntil(dateStr),
+          });
+          break;
+        }
+      }
+    }
+
+    events.sort((a, b) => a.daysUntilEvent - b.daysUntilEvent);
+    return events;
+  }, [filter]);
+
+  const allEvents = useMemo(() => {
+    return ECONOMIC_EVENTS.filter(
+      (ev) => filter === "all" || ev.impact === filter
+    );
+  }, [filter]);
+
+  return (
+    <div className="space-y-6">
+      {/* Controls */}
+      <div className="flex flex-wrap items-center gap-3">
+        <div className="flex bg-surface-1 border border-border rounded-sm overflow-hidden">
+          <button
+            onClick={() => setView("upcoming")}
+            className={`px-4 py-2 text-sm font-semibold transition-colors ${
+              view === "upcoming"
+                ? "bg-brand-gold text-[#0B0F17]"
+                : "text-content-3 hover:text-content-1"
+            }`}
+          >
+            Próximos eventos
+          </button>
+          <button
+            onClick={() => setView("all-events")}
+            className={`px-4 py-2 text-sm font-semibold transition-colors ${
+              view === "all-events"
+                ? "bg-brand-gold text-[#0B0F17]"
+                : "text-content-3 hover:text-content-1"
+            }`}
+          >
+            Todos los eventos
+          </button>
+        </div>
+
+        <div className="flex bg-surface-1 border border-border rounded-sm overflow-hidden">
+          {(["all", "high", "medium"] as FilterImpact[]).map((f) => (
+            <button
+              key={f}
+              onClick={() => setFilter(f)}
+              className={`px-3 py-2 text-sm font-semibold transition-colors ${
+                filter === f
+                  ? "bg-brand-gold text-[#0B0F17]"
+                  : "text-content-3 hover:text-content-1"
+              }`}
+            >
+              {f === "all"
+                ? "Todos"
+                : f === "high"
+                  ? "Impacto alto"
+                  : "Impacto medio"}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {view === "upcoming" ? (
+        <div className="space-y-3">
+          {upcomingEvents.length === 0 ? (
+            <div className="bg-surface-1 border border-border rounded-DEFAULT p-8 text-center text-content-3 text-sm">
+              No hay eventos próximos con los filtros seleccionados.
+            </div>
+          ) : (
+            upcomingEvents.map((ev) => (
+              <button
+                key={`${ev.id}-${ev.nextDate}`}
+                onClick={() =>
+                  setExpanded(
+                    expanded === `${ev.id}-${ev.nextDate}`
+                      ? null
+                      : `${ev.id}-${ev.nextDate}`
+                  )
+                }
+                className="w-full text-left bg-surface-1 border border-border rounded-DEFAULT p-4 hover:border-border-hover transition-all"
+              >
+                <div className="flex items-center gap-3">
+                  <div
+                    className={`w-2 h-2 rounded-full flex-shrink-0 ${IMPACT_COLORS[ev.impact]}`}
+                  />
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <span className="text-sm font-semibold text-content-0">
+                        {ev.nameShort}
+                      </span>
+                      <span className="text-xs text-content-3 bg-surface-0 px-2 py-0.5 rounded">
+                        {ev.region}
+                      </span>
+                      <span className="text-xs text-content-3 bg-surface-0 px-2 py-0.5 rounded">
+                        {CATEGORY_LABELS[ev.category]}
+                      </span>
+                    </div>
+                    <div className="text-xs text-content-3 mt-1">
+                      {ev.name}
+                    </div>
+                  </div>
+                  <div className="text-right flex-shrink-0">
+                    <div className="text-sm font-semibold text-content-0">
+                      {formatDate(ev.nextDate)}
+                    </div>
+                    <div
+                      className={`text-xs font-medium ${
+                        ev.daysUntilEvent <= 1
+                          ? "text-signal-down"
+                          : ev.daysUntilEvent <= 7
+                            ? "text-brand-gold"
+                            : "text-content-3"
+                      }`}
+                    >
+                      {daysLabel(ev.daysUntilEvent)}
+                    </div>
+                  </div>
+                </div>
+
+                {expanded === `${ev.id}-${ev.nextDate}` && (
+                  <div className="mt-4 pt-4 border-t border-border space-y-3 text-sm">
+                    <p className="text-content-2 leading-relaxed">
+                      {ev.description}
+                    </p>
+                    <div className="flex items-start gap-2">
+                      <span className="text-brand-gold font-medium flex-shrink-0">
+                        Impacto en metales:
+                      </span>
+                      <span className="text-content-2">
+                        {ev.metalImpact}
+                      </span>
+                    </div>
+                    <div className="flex gap-4 text-xs text-content-3">
+                      <span>
+                        Impacto:{" "}
+                        <span className="font-medium text-content-1">
+                          {IMPACT_LABELS[ev.impact]}
+                        </span>
+                      </span>
+                      <span>
+                        Frecuencia:{" "}
+                        <span className="font-medium text-content-1">
+                          {ev.frequency}
+                        </span>
+                      </span>
+                    </div>
+                  </div>
+                )}
+              </button>
+            ))
+          )}
+        </div>
+      ) : (
+        <div className="bg-surface-1 border border-border rounded-DEFAULT overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-border bg-surface-0">
+                  <th className="text-left text-content-3 font-medium py-3 px-4">
+                    Evento
+                  </th>
+                  <th className="text-left text-content-3 font-medium py-3 px-4 hidden sm:table-cell">
+                    Categoría
+                  </th>
+                  <th className="text-center text-content-3 font-medium py-3 px-4">
+                    Impacto
+                  </th>
+                  <th className="text-left text-content-3 font-medium py-3 px-4">
+                    Frecuencia
+                  </th>
+                  <th className="text-left text-content-3 font-medium py-3 px-4 hidden md:table-cell">
+                    Efecto en metales
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {allEvents.map((ev) => (
+                  <tr
+                    key={ev.id}
+                    className="border-b border-border/50 last:border-0 hover:bg-surface-0/50"
+                  >
+                    <td className="py-3 px-4">
+                      <div className="font-medium text-content-0">
+                        {ev.nameShort}
+                      </div>
+                      <div className="text-xs text-content-3">{ev.region}</div>
+                    </td>
+                    <td className="py-3 px-4 text-content-2 hidden sm:table-cell">
+                      {CATEGORY_LABELS[ev.category]}
+                    </td>
+                    <td className="py-3 px-4 text-center">
+                      <div className="flex items-center justify-center gap-1.5">
+                        <span
+                          className={`w-2 h-2 rounded-full ${IMPACT_COLORS[ev.impact]}`}
+                        />
+                        <span className="text-xs text-content-2">
+                          {IMPACT_LABELS[ev.impact]}
+                        </span>
+                      </div>
+                    </td>
+                    <td className="py-3 px-4 text-content-2 text-xs">
+                      {ev.frequency}
+                    </td>
+                    <td className="py-3 px-4 text-content-2 text-xs leading-relaxed hidden md:table-cell max-w-[250px]">
+                      {ev.metalImpact}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
