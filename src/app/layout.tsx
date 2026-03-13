@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import Script from "next/script";
 import "@/styles/globals.css";
@@ -13,6 +13,7 @@ import { WebVitals } from "./web-vitals";
 
 const inter = Inter({
   subsets: ["latin"],
+  display: "swap",
   variable: "--font-inter",
 });
 
@@ -22,11 +23,10 @@ export const metadata: Metadata = {
     "Precios spot en tiempo real y analítica para Oro (XAU), Plata (XAG) y Platino (XPT). Datos limpios, gráficos profesionales, cero ruido.",
   metadataBase: new URL("https://metalorix.com"),
   icons: {
-    icon: "/favicon.svg",
+    icon: "/favicon.png",
     apple: "/icon-192.png",
   },
   manifest: "/manifest.json",
-  themeColor: "#D6B35A",
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
@@ -56,6 +56,10 @@ export const metadata: Metadata = {
   },
 };
 
+export const viewport: Viewport = {
+  themeColor: "#D6B35A",
+};
+
 export default async function RootLayout({
   children,
 }: {
@@ -66,6 +70,12 @@ export default async function RootLayout({
 
   return (
     <html lang={locale} suppressHydrationWarning>
+      <head>
+        <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+        <link rel="preconnect" href="https://www.googletagmanager.com" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://www.gold-api.com" />
+        <link rel="dns-prefetch" href="https://api.twelvedata.com" />
+      </head>
       <body className={`${inter.variable} font-sans`}>
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-9K1MTS78FF"

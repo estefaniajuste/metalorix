@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { InvestmentComparison } from "@/components/guide/InvestmentComparison";
+
+export const revalidate = 86400;
 import {
   InvestmentMethodCard,
   INVESTMENT_METHODS,
