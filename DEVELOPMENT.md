@@ -365,18 +365,31 @@ metalorix/
 
 ---
 
-## 9. Pendiente (Infraestructura)
+## 9. Infraestructura (Estado)
 
-Todas las fases de código están completadas. Lo que queda es configuración de infraestructura:
+Todas las fases de código e infraestructura están operativas:
 
-| Tarea | Requiere | Estado |
-|-------|----------|--------|
-| **Cron job scrape-news** | Cloud Scheduler | Pendiente — crear job cada 2h llamando a `POST /api/cron/scrape-news` |
-| **Cron job generate-content** | Cloud Scheduler + GEMINI_API_KEY | Pendiente — crear job diario (20:00 CET) con `?type=auto` |
-| **Cron job check-alerts** | Cloud Scheduler + RESEND_API_KEY | Pendiente — crear job cada 15 min llamando a `POST /api/cron/check-alerts` |
-| **Verificar GEMINI_API_KEY** | Secret en Cloud Run | Pendiente — asegurar que el secret está configurado |
-| **Verificar RESEND_API_KEY** | Secret en Cloud Run | Pendiente — asegurar que el secret está configurado |
-| **Dominio email** | Resend + DNS | Pendiente — verificar `metalorix.com` en Resend para enviar desde `alertas@metalorix.com` |
+| Tarea | Estado |
+|-------|--------|
+| **Cron scrape-prices** (`*/15 * * * *`) | COMPLETADO — cada 15 min, code=0 |
+| **Cron scrape-news** (`0 */2 * * *`) | COMPLETADO — cada 2h, code=0 |
+| **Cron generate-content** (`0 20 * * *`) | COMPLETADO — diario 20:00 CET, code=0 |
+| **Cron check-alerts** (`*/15 * * * *`) | COMPLETADO — cada 15 min, code=0 |
+| **GEMINI_API_KEY** | COMPLETADO — configurado en Cloud Run |
+| **RESEND_API_KEY** | COMPLETADO — configurado en Cloud Run |
+| **TWELVE_DATA_API_KEY** | COMPLETADO — configurado en Cloud Run |
+| **CRON_SECRET** | COMPLETADO — configurado en Cloud Run |
+| **Dominio email** | Pendiente — verificar `metalorix.com` en Resend para enviar desde `alertas@metalorix.com` |
+
+### Verificación de datos en producción (13 marzo 2026, 21:00 CET)
+
+| Dato | Estado |
+|------|--------|
+| Precios spot (XAU, XAG, XPT) | Actualizándose desde BD cada 15 min |
+| Historial de precios | 27 puntos XAU, 22 puntos XAG (crecerá con el tiempo) |
+| Artículos IA (Gemini) | 1 resumen diario generado con precios reales |
+| Noticias RSS scrapeadas | Funcionando (alimenta al generador de contenido) |
+| metalorix.com | HTTP 200, SSL activo |
 
 ---
 
