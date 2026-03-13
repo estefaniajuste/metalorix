@@ -3,30 +3,31 @@ import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import { MetalPageContent } from "@/components/dashboard/MetalPageContent";
 
-export const metadata: Metadata = {
-  title: "Precio del oro hoy en tiempo real — Cotización XAU/USD | Metalorix",
-  description:
-    "Precio del oro hoy actualizado en tiempo real. Cotización XAU/USD, gráfico interactivo, variación diaria, precio por gramo y kilogramo en dólares y euros.",
-  keywords: [
-    "precio oro hoy",
-    "cotización oro hoy",
-    "precio oro tiempo real",
-    "gold price today",
-    "xau usd hoy",
-    "precio onza oro hoy",
-    "valor del oro hoy",
-  ],
-  alternates: {
-    canonical: "https://metalorix.com/precio-oro-hoy",
-  },
-  openGraph: {
-    title: "Precio del oro hoy — Metalorix",
-    description:
-      "Cotización del oro en tiempo real. Gráfico, precio por gramo y variación diaria.",
-    type: "website",
-    url: "https://metalorix.com/precio-oro-hoy",
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("pages");
+  return {
+    title: t("precioOroHoy.title"),
+    description: t("precioOroHoy.description"),
+    keywords: [
+      "precio oro hoy",
+      "cotización oro hoy",
+      "precio oro tiempo real",
+      "gold price today",
+      "xau usd hoy",
+      "precio onza oro hoy",
+      "valor del oro hoy",
+    ],
+    alternates: {
+      canonical: "https://metalorix.com/precio-oro-hoy",
+    },
+    openGraph: {
+      title: t("precioOroHoy.ogTitle"),
+      description: t("precioOroHoy.ogDescription"),
+      type: "website",
+      url: "https://metalorix.com/precio-oro-hoy",
+    },
+  };
+}
 
 export default async function PrecioOroHoyPage() {
   const t = await getTranslations("goldToday");

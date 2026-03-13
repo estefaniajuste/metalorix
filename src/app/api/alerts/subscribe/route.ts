@@ -11,7 +11,7 @@ export async function POST(request: NextRequest) {
   const { allowed } = rateLimit(`subscribe:${ip}`, { maxRequests: 5, windowMs: 300_000 });
   if (!allowed) {
     return NextResponse.json(
-      { error: "Demasiados intentos. Espera unos minutos." },
+      { error: "Too many attempts. Please try again later." },
       { status: 429 }
     );
   }
@@ -33,7 +33,7 @@ export async function POST(request: NextRequest) {
 
   const email = body.email?.trim().toLowerCase();
   if (!email || !email.includes("@")) {
-    return NextResponse.json({ error: "Email inválido" }, { status: 400 });
+    return NextResponse.json({ error: "Invalid email" }, { status: 400 });
   }
 
   try {
@@ -84,15 +84,15 @@ export async function POST(request: NextRequest) {
       isNew,
       alertsCreated,
       message: isNew
-        ? "¡Suscripción completada! Revisa tu correo."
+        ? "Subscription complete!"
         : alertsCreated > 0
-          ? `${alertsCreated} alerta(s) creada(s)`
-          : "Ya estás suscrito a las alertas inteligentes.",
+          ? `${alertsCreated} alert(s) created`
+          : "You are already subscribed to smart alerts.",
     });
   } catch (err) {
     console.error("Subscribe error:", err);
     return NextResponse.json(
-      { error: "Error al procesar la suscripción" },
+      { error: "Failed to process subscription" },
       { status: 500 }
     );
   }

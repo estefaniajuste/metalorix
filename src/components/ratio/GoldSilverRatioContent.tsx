@@ -1,42 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useTranslations } from "next-intl";
 import type { MetalSpot } from "@/lib/providers/metals";
 
-function getRatioZone(ratio: number): {
-  label: string;
-  color: string;
-  bgColor: string;
-  interpretation: string;
-} {
-  if (ratio >= 80) {
-    return {
-      label: "Plata infravalorada",
-      color: "text-signal-up",
-      bgColor: "bg-signal-up-bg",
-      interpretation:
-        "El ratio está en zona alta. Históricamente, ratios superiores a 80 indican que la plata puede estar infravalorada respecto al oro.",
-    };
-  }
-  if (ratio >= 60) {
-    return {
-      label: "Zona neutral",
-      color: "text-brand-gold",
-      bgColor: "bg-[rgba(214,179,90,0.12)]",
-      interpretation:
-        "El ratio está en zona normal. No hay una señal extrema de sobrevaloración o infravaloración relativa.",
-    };
-  }
-  return {
-    label: "Oro infravalorado",
-    color: "text-signal-down",
-    bgColor: "bg-signal-down-bg",
-    interpretation:
-      "El ratio está en zona baja. Podría indicar que el oro está relativamente barato respecto a la plata.",
-  };
-}
-
 export function GoldSilverRatioContent() {
+  const t = useTranslations("ratioContent");
   const [goldPrice, setGoldPrice] = useState<number | null>(null);
   const [silverPrice, setSilverPrice] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
@@ -68,9 +37,15 @@ export function GoldSilverRatioContent() {
   }
 
   const ratio = goldPrice / silverPrice;
-  const zone = getRatioZone(ratio);
 
-  // Visual ratio bar (range 20-120)
+  function getZone(r: number) {
+    if (r >= 80) return { label: t("silverUndervalued"), color: "text-signal-up", bgColor: "bg-signal-up-bg", interpretation: t("silverUndervaluedDesc") };
+    if (r >= 60) return { label: t("neutralZone"), color: "text-brand-gold", bgColor: "bg-[rgba(214,179,90,0.12)]", interpretation: t("neutralZoneDesc") };
+    return { label: t("goldUndervalued"), color: "text-signal-down", bgColor: "bg-signal-down-bg", interpretation: t("goldUndervaluedDesc") };
+  }
+
+  const zone = getZone(ratio);
+
   const barMin = 20;
   const barMax = 120;
   const barPct = Math.min(
@@ -85,7 +60,7 @@ export function GoldSilverRatioContent() {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
           <div>
             <div className="text-sm text-content-3 font-medium mb-1">
-              Ratio Oro/Plata actual
+              {t("currentRatio")}
             </div>
             <div className="text-5xl font-extrabold text-content-0 tabular-nums">
               {ratio.toFixed(1)}
@@ -102,7 +77,7 @@ export function GoldSilverRatioContent() {
           <div className="grid grid-cols-2 gap-4 sm:gap-6">
             <div className="bg-surface-0 border border-border rounded-sm p-4 text-center">
               <div className="text-xs text-content-3 font-medium mb-1">
-                Oro (XAU)
+                {t("goldXau")}
               </div>
               <div className="text-xl font-bold text-brand-gold tabular-nums">
                 ${goldPrice.toLocaleString("en-US", { minimumFractionDigits: 2 })}
@@ -110,7 +85,7 @@ export function GoldSilverRatioContent() {
             </div>
             <div className="bg-surface-0 border border-border rounded-sm p-4 text-center">
               <div className="text-xs text-content-3 font-medium mb-1">
-                Plata (XAG)
+                {t("silverXag")}
               </div>
               <div className="text-xl font-bold text-[#A7B0BE] tabular-nums">
                 ${silverPrice.toFixed(2)}
@@ -130,7 +105,6 @@ export function GoldSilverRatioContent() {
             <span>120</span>
           </div>
           <div className="relative h-3 bg-surface-0 rounded-full border border-border overflow-hidden">
-            {/* Zone coloring */}
             <div
               className="absolute inset-y-0 left-0 bg-signal-down/20"
               style={{ width: `${((60 - barMin) / (barMax - barMin)) * 100}%` }}
@@ -148,20 +122,18 @@ export function GoldSilverRatioContent() {
                 left: `${((80 - barMin) / (barMax - barMin)) * 100}%`,
               }}
             />
-            {/* Current position */}
             <div
               className="absolute top-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-brand-gold border-2 border-surface-1 shadow-lg transition-all"
               style={{ left: `calc(${barPct}% - 8px)` }}
             />
           </div>
           <div className="flex justify-between text-[10px] mt-1.5">
-            <span className="text-signal-down font-medium">Oro barato</span>
-            <span className="text-content-3">Neutral</span>
-            <span className="text-signal-up font-medium">Plata barata</span>
+            <span className="text-signal-down font-medium">{t("goldCheap")}</span>
+            <span className="text-content-3">{t("neutral")}</span>
+            <span className="text-signal-up font-medium">{t("silverCheap")}</span>
           </div>
         </div>
 
-        {/* Interpretation */}
         <p className="mt-4 text-sm text-content-2 leading-relaxed">
           {zone.interpretation}
         </p>
@@ -171,19 +143,19 @@ export function GoldSilverRatioContent() {
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         {[
           {
-            label: "1 oz Oro equivale a",
-            value: `${ratio.toFixed(1)} oz de Plata`,
+            label: t("oneOzGoldEquals"),
+            value: t("ozOfSilver", { n: ratio.toFixed(1) }),
             sub: `$${goldPrice.toLocaleString("en-US", { minimumFractionDigits: 2 })} = ${ratio.toFixed(1)} × $${silverPrice.toFixed(2)}`,
           },
           {
-            label: "Para igualar 1 oz de Oro",
-            value: `${(goldPrice / silverPrice).toFixed(0)} oz Plata`,
-            sub: `${((goldPrice / silverPrice) * 31.1035).toFixed(0)} gramos de plata`,
+            label: t("toMatchOneOzGold"),
+            value: `${(goldPrice / silverPrice).toFixed(0)} oz`,
+            sub: t("gramsOfSilver", { n: ((goldPrice / silverPrice) * 31.1035).toFixed(0) }),
           },
           {
-            label: "Paridad histórica (ratio 16)",
-            value: `$${(goldPrice / 16).toFixed(2)}/oz Plata`,
-            sub: `Si el ratio volviera a 16, la plata valdría ${(goldPrice / 16 / silverPrice * 100 - 100).toFixed(0)}% más`,
+            label: t("historicalParity"),
+            value: `$${(goldPrice / 16).toFixed(2)}/oz`,
+            sub: t("silverWouldBeWorthMore", { pct: (goldPrice / 16 / silverPrice * 100 - 100).toFixed(0) }),
           },
         ].map((card) => (
           <div

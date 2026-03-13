@@ -10,6 +10,7 @@ export default defineConfig({
   timeout: 30_000,
   use: {
     baseURL: "http://localhost:3000",
+    locale: "es-ES",
     trace: "on-first-retry",
     screenshot: "only-on-failure",
   },

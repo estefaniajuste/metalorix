@@ -16,6 +16,7 @@ on:
           - prices
           - content
           - news
+          - alerts
 
 env:
   SERVICE_URL: https://metalorix.com
@@ -81,6 +82,34 @@ jobs:
           body=$(echo "$response" | head -n -1)
           echo "Status: $http_code"
           echo "Response: $body"
+
+  check-alerts:
+    if: >
+      github.event_name == 'schedule' ||
+      github.event.inputs.job == 'all' ||
+      github.event.inputs.job == 'alerts'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check price alerts
+        run: |
+          hour=$(date -u +%H)
+          minute=$(date -u +%M)
+          # Run every hour (at minute 0-14) or on manual trigger
+          if [ "$minute" -lt "15" ] || [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            response=$(curl -s -w "\n%{http_code}" -X POST \
+              -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+              "${{ env.SERVICE_URL }}/api/cron/check-alerts")
+            http_code=$(echo "$response" | tail -1)
+            body=$(echo "$response" | head -n -1)
+            echo "Status: $http_code"
+            echo "Response: $body"
+            if [ "$http_code" -ge 400 ]; then
+              echo "::error::Check alerts failed with status $http_code"
+              exit 1
+            fi
+          else
+            echo "Skipping: not an hourly window"
+          fi
 
   scrape-news:
     if: >

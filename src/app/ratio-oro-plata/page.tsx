@@ -1,83 +1,50 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { getTranslations } from "next-intl/server";
+import { getTranslations, getLocale } from "next-intl/server";
 import { GoldSilverRatioContent } from "@/components/ratio/GoldSilverRatioContent";
+import { breadcrumbSchema, webPageSchema } from "@/lib/seo/schemas";
 
-export const metadata: Metadata = {
-  title: "Ratio Oro/Plata hoy — Gráfico histórico y análisis | Metalorix",
-  description:
-    "Ratio oro/plata en tiempo real con gráfico histórico. Descubre si el oro está sobrevalorado respecto a la plata y cuándo es mejor momento para invertir.",
-  keywords: [
-    "ratio oro plata",
-    "gold silver ratio",
-    "ratio oro plata histórico",
-    "oro vs plata",
-    "proporción oro plata",
-    "invertir oro o plata",
-  ],
-  alternates: {
-    canonical: "https://metalorix.com/ratio-oro-plata",
-  },
-  openGraph: {
-    title: "Ratio Oro/Plata hoy — Metalorix",
-    description:
-      "Ratio oro/plata en tiempo real con gráfico histórico y zonas de sobrevaloración.",
-    type: "website",
-    url: "https://metalorix.com/ratio-oro-plata",
-  },
-};
-
-function JsonLd() {
-  const schemas = [
-    {
-      "@context": "https://schema.org",
-      "@type": "WebPage",
-      name: "Ratio Oro/Plata — Metalorix",
-      description:
-        "Ratio oro/plata en tiempo real con gráfico histórico y análisis de zonas extremas.",
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("pages");
+  return {
+    title: t("ratio.title"),
+    description: t("ratio.description"),
+    keywords: [
+      "ratio oro plata",
+      "gold silver ratio",
+      "ratio oro plata histórico",
+      "oro vs plata",
+      "proporción oro plata",
+      "invertir oro o plata",
+    ],
+    alternates: {
+      canonical: "https://metalorix.com/ratio-oro-plata",
+    },
+    openGraph: {
+      title: t("ratio.ogTitle"),
+      description: t("ratio.ogDescription"),
+      type: "website",
       url: "https://metalorix.com/ratio-oro-plata",
-      publisher: {
-        "@type": "Organization",
-        name: "Metalorix",
-        url: "https://metalorix.com",
-      },
     },
-    {
-      "@context": "https://schema.org",
-      "@type": "BreadcrumbList",
-      itemListElement: [
-        {
-          "@type": "ListItem",
-          position: 1,
-          name: "Inicio",
-          item: "https://metalorix.com",
-        },
-        {
-          "@type": "ListItem",
-          position: 2,
-          name: "Ratio Oro/Plata",
-          item: "https://metalorix.com/ratio-oro-plata",
-        },
-      ],
-    },
-  ];
-
-  return (
-    <>
-      {schemas.map((schema, i) => (
-        <script
-          key={i}
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
-        />
-      ))}
-    </>
-  );
+  };
 }
 
 export default async function RatioOroPlataPage() {
   const t = await getTranslations("ratioPage");
   const tc = await getTranslations("common");
+  const tp = await getTranslations("pages");
+  const locale = await getLocale();
+
+  const bc = breadcrumbSchema(
+    [{ name: t("breadcrumb"), path: "/ratio-oro-plata" }],
+    tc("breadcrumbHome"),
+  );
+  const page = webPageSchema({
+    name: tp("ratio.ogTitle"),
+    description: tp("ratio.description"),
+    path: "/ratio-oro-plata",
+    locale,
+  });
 
   const zones = [
     {
@@ -117,7 +84,8 @@ export default async function RatioOroPlataPage() {
 
   return (
     <>
-      <JsonLd />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(bc) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(page) }} />
 
       <section className="py-[var(--section-py)]">
         <div className="mx-auto max-w-[1200px] px-6">

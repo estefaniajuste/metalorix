@@ -19,7 +19,7 @@ export async function POST(request: NextRequest) {
 
   const email = body.email?.trim().toLowerCase();
   if (!email || !email.includes("@")) {
-    return NextResponse.json({ error: "Email inválido" }, { status: 400 });
+    return NextResponse.json({ error: "Invalid email" }, { status: 400 });
   }
 
   const existing = await db
@@ -30,7 +30,7 @@ export async function POST(request: NextRequest) {
 
   if (existing.length === 0) {
     return NextResponse.json(
-      { error: "No existe una cuenta con ese email. Suscríbete primero en /alertas." },
+      { error: "No account found with this email. Subscribe first at /alertas." },
       { status: 404 }
     );
   }
@@ -40,13 +40,13 @@ export async function POST(request: NextRequest) {
 
   if (!sent) {
     return NextResponse.json(
-      { error: "Error al enviar el email" },
+      { error: "Failed to send email" },
       { status: 500 }
     );
   }
 
   return NextResponse.json({
     ok: true,
-    message: "Enlace enviado a tu email. Revisa tu bandeja de entrada.",
+    message: "Link sent. Check your inbox.",
   });
 }

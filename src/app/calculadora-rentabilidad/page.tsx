@@ -4,43 +4,48 @@ import { getTranslations } from "next-intl/server";
 import { RoiCalculator } from "@/components/tools/RoiCalculator";
 import { breadcrumbSchema, softwareAppSchema } from "@/lib/seo/schemas";
 
-export const metadata: Metadata = {
-  title:
-    "Calculadora de rentabilidad del oro, plata y platino — Metalorix",
-  description:
-    "Calcula cuánto habrías ganado invirtiendo en oro, plata o platino. Simulador con datos reales desde el año 2000.",
-  keywords: [
-    "calculadora rentabilidad oro",
-    "simulador inversión oro",
-    "cuanto habría ganado invirtiendo en oro",
-    "rentabilidad histórica oro",
-    "invertir en oro rentabilidad",
-    "calculadora inversión metales preciosos",
-  ],
-  alternates: {
-    canonical: "https://metalorix.com/calculadora-rentabilidad",
-  },
-  openGraph: {
-    title: "Calculadora de rentabilidad — Metalorix",
-    description:
-      "¿Cuánto habrías ganado invirtiendo en oro? Calcula la rentabilidad con datos reales.",
-    type: "website",
-    url: "https://metalorix.com/calculadora-rentabilidad",
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("pages");
+  return {
+    title: t("calculadora.title"),
+    description: t("calculadora.description"),
+    keywords: [
+      "calculadora rentabilidad oro",
+      "simulador inversión oro",
+      "cuanto habría ganado invirtiendo en oro",
+      "rentabilidad histórica oro",
+      "invertir en oro rentabilidad",
+      "calculadora inversión metales preciosos",
+    ],
+    alternates: {
+      canonical: "https://metalorix.com/calculadora-rentabilidad",
+    },
+    openGraph: {
+      title: t("calculadora.ogTitle"),
+      description: t("calculadora.ogDescription"),
+      type: "website",
+      url: "https://metalorix.com/calculadora-rentabilidad",
+    },
+  };
+}
 
 export default async function CalculadoraRentabilidadPage() {
   const t = await getTranslations("roiCalc");
   const tc = await getTranslations("common");
   const tt = await getTranslations("tools");
 
-  const bc = breadcrumbSchema([
-    { name: "Herramientas", path: "/herramientas" },
-    { name: "Calculadora de rentabilidad", path: "/calculadora-rentabilidad" },
-  ]);
+  const tp = await getTranslations("pages");
+
+  const bc = breadcrumbSchema(
+    [
+      { name: tt("title"), path: "/herramientas" },
+      { name: tt("roiCalculator"), path: "/calculadora-rentabilidad" },
+    ],
+    tc("breadcrumbHome"),
+  );
   const app = softwareAppSchema({
-    name: "Calculadora de rentabilidad — Metalorix",
-    description: "Calcula cuánto habrías ganado invirtiendo en oro, plata o platino con datos reales.",
+    name: tp("calculadora.ogTitle"),
+    description: tp("calculadora.description"),
     path: "/calculadora-rentabilidad",
   });
 

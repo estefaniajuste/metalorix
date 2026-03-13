@@ -1,6 +1,16 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import { CookieConsent } from "@/components/layout/CookieConsent";
 
+jest.mock("next-intl", () => ({
+  useTranslations: (ns: string) => (key: string) => {
+    const map: Record<string, Record<string, string>> = {
+      cookie: { message: "Usamos cookies esenciales.", essentialOnly: "Solo esenciales", accept: "Aceptar" },
+      footer: { privacy: "Privacidad" },
+    };
+    return map[ns]?.[key] ?? key;
+  },
+}));
+
 const localStorageMock = (() => {
   let store: Record<string, string> = {};
   return {
@@ -61,7 +71,7 @@ describe("CookieConsent", () => {
 
   it("contains link to privacy page", () => {
     render(<CookieConsent />);
-    const link = screen.getByText("Más información");
+    const link = screen.getByText("Privacidad");
     expect(link).toHaveAttribute("href", "/privacidad");
   });
 });

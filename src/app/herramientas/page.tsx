@@ -32,6 +32,11 @@ const DcaCalculator = dynamic(
   { ssr: false, loading: () => toolSkeleton("h-[400px]") }
 );
 
+const ToolsTechnicalIndicators = dynamic(
+  () => import("@/components/tools/ToolsTechnicalIndicators").then((m) => m.ToolsTechnicalIndicators),
+  { ssr: false, loading: () => toolSkeleton("h-[500px]") }
+);
+
 export async function generateMetadata() {
   const t = await getTranslations("metadata");
   return {
@@ -76,8 +81,12 @@ export default async function HerramientasPage() {
             <UnitConverter />
           </div>
 
-          <div className="mb-16">
+          <div className="mb-6">
             <DcaCalculator />
+          </div>
+
+          <div className="mb-16">
+            <ToolsTechnicalIndicators />
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-16">
@@ -118,17 +127,6 @@ export default async function HerramientasPage() {
             </Link>
           </div>
 
-          <div>
-            <h2 className="text-xl font-bold text-content-0 mb-6">
-              {t("upcoming")}
-            </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-              <div className="bg-surface-1 border border-border rounded-DEFAULT p-6 opacity-60">
-                <h3 className="text-base font-semibold text-content-0 mb-2">{t("technicalIndicators")}</h3>
-                <p className="text-sm text-content-2 leading-relaxed mb-3">{t("technicalDesc")}</p>
-              </div>
-            </div>
-          </div>
         </div>
       </section>
     </>

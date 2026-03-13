@@ -10,6 +10,8 @@ import {
 
 interface TechnicalIndicatorsProps {
   history: HistoryResult | null;
+  /** Hide the section title when embedded in another layout (e.g. tools page) */
+  hideTitle?: boolean;
 }
 
 function drawRSI(
@@ -238,7 +240,7 @@ function drawBollinger(
   }
 }
 
-export function TechnicalIndicators({ history }: TechnicalIndicatorsProps) {
+export function TechnicalIndicators({ history, hideTitle }: TechnicalIndicatorsProps) {
   const rsiRef = useRef<HTMLCanvasElement>(null);
   const macdRef = useRef<HTMLCanvasElement>(null);
   const bollRef = useRef<HTMLCanvasElement>(null);
@@ -286,9 +288,11 @@ export function TechnicalIndicators({ history }: TechnicalIndicatorsProps) {
 
   return (
     <div className="space-y-4 mb-6">
-      <h3 className="text-base font-semibold text-content-0">
-        Indicadores técnicos
-      </h3>
+      {!hideTitle && (
+        <h3 className="text-base font-semibold text-content-0">
+          Indicadores técnicos
+        </h3>
+      )}
 
       {/* RSI */}
       <div className="bg-surface-1 border border-border rounded-DEFAULT p-4">

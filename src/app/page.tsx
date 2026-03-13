@@ -1,36 +1,38 @@
 import { Hero } from "@/components/dashboard/Hero";
 import { Dashboard } from "@/components/dashboard/Dashboard";
+import { getTranslations, getLocale } from "next-intl/server";
 
-const organizationSchema = {
-  "@context": "https://schema.org",
-  "@type": "Organization",
-  name: "Metalorix",
-  url: "https://metalorix.com",
-  logo: "https://metalorix.com/icon-512.png",
-  description:
-    "Plataforma de seguimiento de precios de metales preciosos en tiempo real. Oro, plata y platino con gráficos profesionales y herramientas de análisis.",
-  sameAs: [],
-};
+export default async function HomePage() {
+  const t = await getTranslations("metadata");
+  const locale = await getLocale();
 
-const websiteSchema = {
-  "@context": "https://schema.org",
-  "@type": "WebSite",
-  name: "Metalorix",
-  url: "https://metalorix.com",
-  description:
-    "Precios spot en tiempo real para Oro (XAU), Plata (XAG) y Platino (XPT). Gráficos profesionales, herramientas de trading y análisis del mercado de metales preciosos.",
-  inLanguage: "es",
-  potentialAction: {
-    "@type": "SearchAction",
-    target: {
-      "@type": "EntryPoint",
-      urlTemplate: "https://metalorix.com/precio/{search_term_string}",
+  const organizationSchema = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: "Metalorix",
+    url: "https://metalorix.com",
+    logo: "https://metalorix.com/icon-512.png",
+    description: t("description"),
+    sameAs: [],
+  };
+
+  const websiteSchema = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: "Metalorix",
+    url: "https://metalorix.com",
+    description: t("description"),
+    inLanguage: locale,
+    potentialAction: {
+      "@type": "SearchAction",
+      target: {
+        "@type": "EntryPoint",
+        urlTemplate: "https://metalorix.com/precio/{search_term_string}",
+      },
+      "query-input": "required name=search_term_string",
     },
-    "query-input": "required name=search_term_string",
-  },
-};
+  };
 
-export default function HomePage() {
   return (
     <>
       <script

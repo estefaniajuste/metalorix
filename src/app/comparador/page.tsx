@@ -4,29 +4,30 @@ import { getTranslations } from "next-intl/server";
 import { MetalComparator } from "@/components/tools/MetalComparator";
 import { breadcrumbSchema, softwareAppSchema } from "@/lib/seo/schemas";
 
-export const metadata: Metadata = {
-  title: "Comparador Oro vs Plata vs Platino — Rendimiento histórico | Metalorix",
-  description:
-    "Compara el rendimiento histórico del oro, plata y platino. Gráfico interactivo con periodos de 1 mes a 10+ años. ¿Qué metal ha subido más?",
-  keywords: [
-    "oro vs plata",
-    "comparar oro plata platino",
-    "rendimiento oro vs plata",
-    "gold vs silver performance",
-    "mejor inversión metales preciosos",
-    "comparativa metales preciosos",
-  ],
-  alternates: {
-    canonical: "https://metalorix.com/comparador",
-  },
-  openGraph: {
-    title: "Comparador Oro vs Plata vs Platino — Metalorix",
-    description:
-      "¿Qué metal ha rendido más? Compara oro, plata y platino en un gráfico interactivo.",
-    type: "website",
-    url: "https://metalorix.com/comparador",
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("pages");
+  return {
+    title: t("comparador.title"),
+    description: t("comparador.description"),
+    keywords: [
+      "oro vs plata",
+      "comparar oro plata platino",
+      "rendimiento oro vs plata",
+      "gold vs silver performance",
+      "mejor inversión metales preciosos",
+      "comparativa metales preciosos",
+    ],
+    alternates: {
+      canonical: "https://metalorix.com/comparador",
+    },
+    openGraph: {
+      title: t("comparador.ogTitle"),
+      description: t("comparador.ogDescription"),
+      type: "website",
+      url: "https://metalorix.com/comparador",
+    },
+  };
+}
 
 export default async function ComparadorPage() {
   const t = await getTranslations("comparatorPage");
@@ -34,13 +35,18 @@ export default async function ComparadorPage() {
   const tt = await getTranslations("tools");
   const tm = await getTranslations("metals");
 
-  const bc = breadcrumbSchema([
-    { name: "Herramientas", path: "/herramientas" },
-    { name: "Comparador", path: "/comparador" },
-  ]);
+  const tp = await getTranslations("pages");
+
+  const bc = breadcrumbSchema(
+    [
+      { name: tt("title"), path: "/herramientas" },
+      { name: t("breadcrumb"), path: "/comparador" },
+    ],
+    tc("breadcrumbHome"),
+  );
   const app = softwareAppSchema({
-    name: "Comparador Oro vs Plata vs Platino — Metalorix",
-    description: "Compara el rendimiento histórico del oro, plata y platino en un gráfico interactivo.",
+    name: tp("comparador.ogTitle"),
+    description: tp("comparador.description"),
     path: "/comparador",
   });
 

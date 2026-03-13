@@ -28,9 +28,9 @@ test.describe("Navigation dropdown", () => {
       await trigger.click();
       const menu = page.getByRole("menu", { name: /metales/i });
       await expect(menu).toBeVisible();
-      await expect(menu.getByText("Oro", { exact: true })).toBeVisible();
-      await expect(menu.getByText("Plata", { exact: true })).toBeVisible();
-      await expect(menu.getByText("Platino", { exact: true })).toBeVisible();
+      await expect(menu.getByRole("menuitem", { name: /Oro.*XAU/i })).toBeVisible();
+      await expect(menu.getByRole("menuitem", { name: /Plata.*XAG/i })).toBeVisible();
+      await expect(menu.getByRole("menuitem", { name: /Platino.*XPT/i })).toBeVisible();
     }
   });
 
@@ -79,7 +79,7 @@ test.describe("Mobile navigation", () => {
     await expect(menuButton).toBeVisible();
     await menuButton.click();
 
-    const dialog = page.getByRole("dialog", { name: /navegación/i });
+    const dialog = page.getByRole("dialog", { name: /menú/i });
     await expect(dialog).toBeVisible();
 
     await page.keyboard.press("Escape");

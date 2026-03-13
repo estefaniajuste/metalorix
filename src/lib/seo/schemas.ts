@@ -5,12 +5,15 @@ export interface BreadcrumbItem {
   path: string;
 }
 
-export function breadcrumbSchema(items: BreadcrumbItem[]) {
+export function breadcrumbSchema(
+  items: BreadcrumbItem[],
+  homeName = "Inicio",
+) {
   return {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: [
-      { "@type": "ListItem", position: 1, name: "Inicio", item: BASE_URL },
+      { "@type": "ListItem", position: 1, name: homeName, item: BASE_URL },
       ...items.map((item, i) => ({
         "@type": "ListItem",
         position: i + 2,
@@ -25,6 +28,7 @@ export function webPageSchema(opts: {
   name: string;
   description: string;
   path: string;
+  locale?: string;
 }) {
   return {
     "@context": "https://schema.org",
@@ -33,7 +37,7 @@ export function webPageSchema(opts: {
     description: opts.description,
     url: `${BASE_URL}${opts.path}`,
     isPartOf: { "@type": "WebSite", name: "Metalorix", url: BASE_URL },
-    inLanguage: "es",
+    inLanguage: opts.locale ?? "es",
   };
 }
 

@@ -3,32 +3,32 @@ import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import { GramPriceContent } from "@/components/seo/GramPriceContent";
 
-export const metadata: Metadata = {
-  title:
-    "Precio del gramo de oro hoy en euros y dólares — Metalorix",
-  description:
-    "Precio del gramo de oro hoy actualizado en tiempo real en euros (EUR) y dólares (USD). También precio por onza y kilogramo de oro, plata y platino.",
-  keywords: [
-    "precio gramo oro",
-    "precio gramo oro hoy",
-    "precio gramo oro euros",
-    "cuanto vale un gramo de oro",
-    "precio gramo oro 18 kilates",
-    "precio gramo oro 24 kilates",
-    "valor gramo oro",
-    "cotización gramo oro",
-  ],
-  alternates: {
-    canonical: "https://metalorix.com/precio-gramo-oro",
-  },
-  openGraph: {
-    title: "Precio del gramo de oro hoy — Metalorix",
-    description:
-      "¿Cuánto vale un gramo de oro? Precio actualizado en EUR y USD.",
-    type: "website",
-    url: "https://metalorix.com/precio-gramo-oro",
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("pages");
+  return {
+    title: t("precioGramoOro.title"),
+    description: t("precioGramoOro.description"),
+    keywords: [
+      "precio gramo oro",
+      "precio gramo oro hoy",
+      "precio gramo oro euros",
+      "cuanto vale un gramo de oro",
+      "precio gramo oro 18 kilates",
+      "precio gramo oro 24 kilates",
+      "valor gramo oro",
+      "cotización gramo oro",
+    ],
+    alternates: {
+      canonical: "https://metalorix.com/precio-gramo-oro",
+    },
+    openGraph: {
+      title: t("precioGramoOro.ogTitle"),
+      description: t("precioGramoOro.ogDescription"),
+      type: "website",
+      url: "https://metalorix.com/precio-gramo-oro",
+    },
+  };
+}
 
 export default async function PrecioGramoOroPage() {
   const t = await getTranslations("gramPrice");

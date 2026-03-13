@@ -33,8 +33,8 @@ export function CookieConsent() {
   if (state !== "pending") return null;
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-50 p-4 animate-fade-in">
-      <div className="mx-auto max-w-[720px] bg-surface-1 border border-border rounded-DEFAULT shadow-card p-5 flex flex-col sm:flex-row items-start sm:items-center gap-4">
+    <div className="fixed bottom-0 left-0 right-0 z-50 p-4 animate-fade-in pointer-events-none">
+      <div className="mx-auto max-w-[720px] bg-surface-1 border border-border rounded-DEFAULT shadow-card p-5 flex flex-col sm:flex-row items-start sm:items-center gap-4 pointer-events-auto">
         <div className="flex-1 min-w-0">
           <p className="text-sm text-content-1 leading-relaxed">
             {t("message")}{" "}

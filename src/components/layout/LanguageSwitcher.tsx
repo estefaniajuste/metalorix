@@ -41,7 +41,7 @@ export function LanguageSwitcher() {
       <button
         onClick={() => setOpen(!open)}
         className="flex items-center gap-1.5 px-2 py-1.5 text-xs font-semibold text-content-2 hover:text-content-0 transition-colors rounded-sm hover:bg-surface-2"
-        aria-label={t("toggleTheme")}
+        aria-label={t("changeLanguage")}
       >
         <span>{current.flag}</span>
         <span>{current.label}</span>

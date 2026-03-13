@@ -6,6 +6,11 @@ let _db: ReturnType<typeof drizzle<typeof schema>> | null = null;
 
 function buildConnection() {
   const socketPath = process.env.DB_SOCKET_PATH;
+  const poolOptions = {
+    max: 5,
+    idle_timeout: 20,
+    connect_timeout: 10,
+  };
 
   if (socketPath) {
     return postgres({
@@ -14,12 +19,13 @@ function buildConnection() {
       database: process.env.DB_NAME || "metalorix",
       username: process.env.DB_USER || "postgres",
       password: process.env.DB_PASSWORD || "",
+      ...poolOptions,
     });
   }
 
   const url = process.env.DATABASE_URL;
   if (!url) return null;
-  return postgres(url);
+  return postgres(url, poolOptions);
 }
 
 export function getDb() {

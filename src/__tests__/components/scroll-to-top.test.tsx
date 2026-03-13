@@ -1,6 +1,13 @@
 import { render, screen, fireEvent, act } from "@testing-library/react";
 import { ScrollToTop } from "@/components/layout/ScrollToTop";
 
+jest.mock("next-intl", () => ({
+  useTranslations: () => (key: string) => {
+    const map: Record<string, string> = { scrollToTop: "Volver arriba" };
+    return map[key] ?? key;
+  },
+}));
+
 describe("ScrollToTop", () => {
   beforeEach(() => {
     Object.defineProperty(window, "scrollY", { value: 0, writable: true });

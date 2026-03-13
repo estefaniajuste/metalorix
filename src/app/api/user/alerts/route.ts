@@ -13,7 +13,7 @@ function getUserId(request: NextRequest): number | null {
 export async function GET(request: NextRequest) {
   const userId = getUserId(request);
   if (!userId) {
-    return NextResponse.json({ error: "No autenticado" }, { status: 401 });
+    return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
   }
 
   const db = getDb();
@@ -32,7 +32,7 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   const userId = getUserId(request);
   if (!userId) {
-    return NextResponse.json({ error: "No autenticado" }, { status: 401 });
+    return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
   }
 
   const db = getDb();
@@ -48,7 +48,7 @@ export async function POST(request: NextRequest) {
   }
 
   if (!body.symbol || !body.alertType || !body.threshold) {
-    return NextResponse.json({ error: "Faltan campos" }, { status: 400 });
+    return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
   }
 
   const inserted = await db
@@ -67,7 +67,7 @@ export async function POST(request: NextRequest) {
 export async function DELETE(request: NextRequest) {
   const userId = getUserId(request);
   if (!userId) {
-    return NextResponse.json({ error: "No autenticado" }, { status: 401 });
+    return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
   }
 
   const db = getDb();
@@ -77,7 +77,7 @@ export async function DELETE(request: NextRequest) {
 
   const alertId = request.nextUrl.searchParams.get("id");
   if (!alertId) {
-    return NextResponse.json({ error: "ID requerido" }, { status: 400 });
+    return NextResponse.json({ error: "ID required" }, { status: 400 });
   }
 
   await db

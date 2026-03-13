@@ -1,18 +1,11 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import { useTranslations } from "next-intl";
 import { PRODUCTS, type Product } from "@/lib/data/products";
 import { ProductCard } from "./ProductCard";
 
 type Filter = "todos" | "oro" | "plata" | "moneda" | "lingote";
-
-const FILTERS: { value: Filter; label: string }[] = [
-  { value: "todos", label: "Todos" },
-  { value: "oro", label: "Oro" },
-  { value: "plata", label: "Plata" },
-  { value: "moneda", label: "Monedas" },
-  { value: "lingote", label: "Lingotes" },
-];
 
 function filterProducts(products: Product[], filter: Filter): Product[] {
   switch (filter) {
@@ -28,12 +21,21 @@ function filterProducts(products: Product[], filter: Filter): Product[] {
 }
 
 export function ProductFilter() {
+  const t = useTranslations("productFilter");
   const [active, setActive] = useState<Filter>("todos");
   const filtered = useMemo(() => filterProducts(PRODUCTS, active), [active]);
 
+  const FILTERS: { value: Filter; label: string }[] = [
+    { value: "todos", label: t("all") },
+    { value: "oro", label: t("gold") },
+    { value: "plata", label: t("silver") },
+    { value: "moneda", label: t("coins") },
+    { value: "lingote", label: t("bars") },
+  ];
+
   return (
     <>
-      <div className="flex flex-wrap gap-2 mb-8" role="group" aria-label="Filtrar productos">
+      <div className="flex flex-wrap gap-2 mb-8" role="group" aria-label={t("filterProducts")}>
         {FILTERS.map((f) => (
           <button
             key={f.value}
@@ -57,7 +59,7 @@ export function ProductFilter() {
 
       {filtered.length === 0 && (
         <p className="text-sm text-content-3 text-center py-12">
-          No hay productos para este filtro.
+          {t("noProducts")}
         </p>
       )}
     </>

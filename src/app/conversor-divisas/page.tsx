@@ -4,43 +4,49 @@ import { getTranslations } from "next-intl/server";
 import { MultiCurrencyTable } from "@/components/tools/MultiCurrencyTable";
 import { breadcrumbSchema, softwareAppSchema } from "@/lib/seo/schemas";
 
-export const metadata: Metadata = {
-  title: "Precio del oro en euros, libras, francos y más divisas — Metalorix",
-  description:
-    "Precio del oro, plata y platino en 11 divisas: EUR, GBP, CHF, JPY, AUD, CAD, CNY, INR, MXN, BRL. Por onza, gramo y kilogramo.",
-  keywords: [
-    "precio oro en euros",
-    "precio oro en libras",
-    "precio gramo oro euros",
-    "gold price eur",
-    "precio platino euros",
-    "precio plata euros",
-    "conversor divisas oro",
-  ],
-  alternates: {
-    canonical: "https://metalorix.com/conversor-divisas",
-  },
-  openGraph: {
-    title: "Precio del oro en diferentes divisas — Metalorix",
-    description:
-      "Consulta el precio del oro, plata y platino en EUR, GBP, CHF, JPY y más divisas.",
-    type: "website",
-    url: "https://metalorix.com/conversor-divisas",
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("pages");
+  return {
+    title: t("conversor.title"),
+    description: t("conversor.description"),
+    keywords: [
+      "precio oro en euros",
+      "precio oro en libras",
+      "precio gramo oro euros",
+      "gold price eur",
+      "precio platino euros",
+      "precio plata euros",
+      "conversor divisas oro",
+    ],
+    alternates: {
+      canonical: "https://metalorix.com/conversor-divisas",
+    },
+    openGraph: {
+      title: t("conversor.ogTitle"),
+      description: t("conversor.ogDescription"),
+      type: "website",
+      url: "https://metalorix.com/conversor-divisas",
+    },
+  };
+}
 
 export default async function ConversorDivisasPage() {
   const t = await getTranslations("currencyConverter");
   const tc = await getTranslations("common");
   const tt = await getTranslations("tools");
 
-  const bc = breadcrumbSchema([
-    { name: "Herramientas", path: "/herramientas" },
-    { name: "Conversor divisas", path: "/conversor-divisas" },
-  ]);
+  const tp = await getTranslations("pages");
+
+  const bc = breadcrumbSchema(
+    [
+      { name: tt("title"), path: "/herramientas" },
+      { name: t("breadcrumb"), path: "/conversor-divisas" },
+    ],
+    tc("breadcrumbHome"),
+  );
   const app = softwareAppSchema({
-    name: "Conversor multi-divisa — Metalorix",
-    description: "Precio del oro, plata y platino en EUR, GBP, CHF, JPY y más divisas. Por onza, gramo y kilogramo.",
+    name: tp("conversor.ogTitle"),
+    description: tp("conversor.description"),
     path: "/conversor-divisas",
   });
 

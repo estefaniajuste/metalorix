@@ -2,63 +2,50 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import { ProductFilter } from "@/components/products/ProductFilter";
+import { breadcrumbSchema } from "@/lib/seo/schemas";
 
-export const metadata: Metadata = {
-  title:
-    "Monedas y lingotes de inversión — Guía de productos | Metalorix",
-  description:
-    "Fichas completas de las monedas y lingotes de oro y plata más populares: Krugerrand, Maple Leaf, Filarmónica, Britannia, Eagle y lingotes LBMA. Pureza, prima, liquidez y fiscalidad en España.",
-  keywords: [
-    "monedas oro inversión",
-    "lingotes oro inversión",
-    "Krugerrand",
-    "Maple Leaf oro",
-    "Filarmónica Viena oro",
-    "comprar oro España",
-    "monedas plata inversión",
-    "lingote oro 1 oz",
-    "lingote plata 1 kg",
-  ],
-  openGraph: {
-    title: "Monedas y lingotes de inversión — Metalorix",
-    description:
-      "Fichas de las principales monedas y lingotes de oro y plata: pureza, prima sobre spot, liquidez y fiscalidad en España.",
-    type: "website",
-    url: "https://metalorix.com/productos",
-  },
-  alternates: {
-    canonical: "https://metalorix.com/productos",
-  },
-};
-
-const breadcrumbSchema = {
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  itemListElement: [
-    {
-      "@type": "ListItem",
-      position: 1,
-      name: "Inicio",
-      item: "https://metalorix.com",
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("pages");
+  return {
+    title: t("productos.title"),
+    description: t("productos.description"),
+    keywords: [
+      "monedas oro inversión",
+      "lingotes oro inversión",
+      "Krugerrand",
+      "Maple Leaf oro",
+      "Filarmónica Viena oro",
+      "comprar oro España",
+      "monedas plata inversión",
+      "lingote oro 1 oz",
+      "lingote plata 1 kg",
+    ],
+    openGraph: {
+      title: t("productos.ogTitle"),
+      description: t("productos.ogDescription"),
+      type: "website",
+      url: "https://metalorix.com/productos",
     },
-    {
-      "@type": "ListItem",
-      position: 2,
-      name: "Productos",
-      item: "https://metalorix.com/productos",
+    alternates: {
+      canonical: "https://metalorix.com/productos",
     },
-  ],
-};
+  };
+}
 
 export default async function ProductosPage() {
   const t = await getTranslations("products");
   const tc = await getTranslations("common");
 
+  const bc = breadcrumbSchema(
+    [{ name: t("breadcrumb"), path: "/productos" }],
+    tc("breadcrumbHome"),
+  );
+
   return (
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(bc) }}
       />
 
       <section className="py-[var(--section-py)]">

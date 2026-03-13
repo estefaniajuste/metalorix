@@ -11,6 +11,10 @@ import {
 import { EtfTable } from "@/components/guide/EtfTable";
 import { FaqSection } from "@/components/guide/FaqSection";
 import { FAQ_ITEMS } from "@/lib/data/faq-items";
+import {
+  breadcrumbSchema as breadcrumbSchemaFn,
+  faqSchema as faqSchemaFn,
+} from "@/lib/seo/schemas";
 
 const seoKeywords = [
   "cómo invertir en oro",
@@ -44,51 +48,27 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-const faqSchema = {
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  mainEntity: FAQ_ITEMS.map((item) => ({
-    "@type": "Question",
-    name: item.question,
-    acceptedAnswer: {
-      "@type": "Answer",
-      text: item.answer,
-    },
-  })),
-};
-
-const breadcrumbSchema = {
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  itemListElement: [
-    {
-      "@type": "ListItem",
-      position: 1,
-      name: "Inicio",
-      item: "https://metalorix.com",
-    },
-    {
-      "@type": "ListItem",
-      position: 2,
-      name: "Guía de inversión",
-      item: "https://metalorix.com/guia-inversion",
-    },
-  ],
-};
-
 export default async function GuiaInversionPage() {
   const t = await getTranslations("guide");
   const tc = await getTranslations("common");
+
+  const bc = breadcrumbSchemaFn(
+    [{ name: t("breadcrumb"), path: "/guia-inversion" }],
+    tc("breadcrumbHome"),
+  );
+  const faq = faqSchemaFn(
+    FAQ_ITEMS.map((item) => ({ question: item.question, answer: item.answer })),
+  );
 
   return (
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faq) }}
       />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(bc) }}
       />
 
       <section className="py-[var(--section-py)]">

@@ -30,56 +30,56 @@ export default async function TerminosPage() {
         <div className="prose-metalorix space-y-6 text-content-2 text-sm leading-relaxed">
           <div>
             <h2 className="text-lg font-bold text-content-0 mb-2">1. {t("acceptance")}</h2>
-            <p>Al acceder y utilizar metalorix.com (en adelante, &quot;la Plataforma&quot;), aceptas estos Términos de Servicio. Si no estás de acuerdo, te rogamos que no utilices la Plataforma.</p>
+            <p>{t("terms.acceptanceContent")}</p>
           </div>
 
           <div>
             <h2 className="text-lg font-bold text-content-0 mb-2">2. {t("serviceDescription")}</h2>
-            <p>Metalorix ofrece de forma gratuita:</p>
+            <p>{t("terms.serviceIntro")}</p>
             <ul className="list-disc pl-6 mt-2 space-y-1">
-              <li>Precios de metales preciosos (oro, plata, platino) con actualización periódica</li>
-              <li>Gráficos interactivos y datos históricos</li>
-              <li>Herramientas de análisis (ratio, conversores, calculadoras)</li>
-              <li>Artículos y análisis generados por inteligencia artificial</li>
-              <li>Alertas de precio por email</li>
-              <li>Newsletter semanal</li>
+              <li>{t("terms.servicePrices")}</li>
+              <li>{t("terms.serviceCharts")}</li>
+              <li>{t("terms.serviceTools")}</li>
+              <li>{t("terms.serviceArticles")}</li>
+              <li>{t("terms.serviceAlerts")}</li>
+              <li>{t("terms.serviceNewsletter")}</li>
             </ul>
           </div>
 
           <div>
             <h2 className="text-lg font-bold text-content-0 mb-2">3. {t("registration")}</h2>
-            <p>Para recibir alertas de precio y la newsletter, solo necesitas proporcionar tu dirección de email. No se requiere contraseña ni datos personales adicionales.</p>
+            <p>{t("terms.registrationContent")}</p>
           </div>
 
           <div>
             <h2 className="text-lg font-bold text-content-0 mb-2">4. {t("acceptableUse")}</h2>
-            <p>El usuario se compromete a:</p>
+            <p>{t("terms.useIntro")}</p>
             <ul className="list-disc pl-6 mt-2 space-y-1">
-              <li>No utilizar la Plataforma para fines ilegales</li>
-              <li>No intentar acceder a áreas restringidas del sistema</li>
-              <li>No realizar scraping masivo o automatizado sin autorización</li>
-              <li>No reproducir o distribuir el contenido sin citar la fuente</li>
+              <li>{t("terms.useNoIllegal")}</li>
+              <li>{t("terms.useNoAccess")}</li>
+              <li>{t("terms.useNoScraping")}</li>
+              <li>{t("terms.useNoReproduce")}</li>
             </ul>
           </div>
 
           <div>
             <h2 className="text-lg font-bold text-content-0 mb-2">5. {t("dataAccuracy")}</h2>
-            <p>Los precios y datos mostrados se obtienen de fuentes públicas y pueden tener un retraso. <strong>Metalorix no garantiza la exactitud ni la disponibilidad continua de los datos.</strong></p>
+            <p>{t("terms.dataAccuracyP1")} <strong>{t("terms.dataAccuracyBold")}</strong></p>
           </div>
 
           <div>
             <h2 className="text-lg font-bold text-content-0 mb-2">6. {t("disclaimer")}</h2>
-            <p>La Plataforma se proporciona &quot;tal cual&quot; (&quot;as is&quot;). Metalorix no ofrece garantías de ningún tipo. En ningún caso Metalorix será responsable de pérdidas financieras derivadas del uso de la información proporcionada.</p>
+            <p>{t("terms.disclaimerContent")}</p>
           </div>
 
           <div>
             <h2 className="text-lg font-bold text-content-0 mb-2">7. {t("modifications")}</h2>
-            <p>Metalorix se reserva el derecho de modificar estos Términos de Servicio en cualquier momento.</p>
+            <p>{t("terms.modificationsContent")}</p>
           </div>
 
           <div>
             <h2 className="text-lg font-bold text-content-0 mb-2">8. {t("contact")}</h2>
-            <p>Para cualquier consulta: <a href="mailto:hello@metalorix.com" className="text-brand-gold hover:underline">hello@metalorix.com</a></p>
+            <p>{t("terms.contactContent")} <a href="mailto:hello@metalorix.com" className="text-brand-gold hover:underline">hello@metalorix.com</a></p>
           </div>
 
           <div className="pt-4 border-t border-border">
