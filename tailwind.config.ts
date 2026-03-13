@@ -66,12 +66,22 @@ const config: Config = {
           from: { opacity: "0" },
           to: { opacity: "1" },
         },
+        "flash-up": {
+          "0%": { backgroundColor: "rgba(52,211,153,0.15)" },
+          "100%": { backgroundColor: "transparent" },
+        },
+        "flash-down": {
+          "0%": { backgroundColor: "rgba(248,113,113,0.15)" },
+          "100%": { backgroundColor: "transparent" },
+        },
       },
       animation: {
         "pulse-dot": "pulse-dot 2s ease infinite",
         shimmer: "shimmer 1.5s infinite",
         "fade-in-up": "fade-in-up 0.6s cubic-bezier(.4,0,.2,1) both",
         "fade-in": "fade-in 0.2s ease both",
+        "flash-up": "flash-up 1s ease-out",
+        "flash-down": "flash-down 1s ease-out",
       },
     },
   },

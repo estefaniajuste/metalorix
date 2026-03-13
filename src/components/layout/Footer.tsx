@@ -17,6 +17,7 @@ const sections = [
       { href: "/herramientas", label: "Herramientas" },
       { href: "/noticias", label: "Noticias" },
       { href: "/alertas", label: "Alertas" },
+      { href: "/glosario", label: "Glosario" },
     ],
   },
   {

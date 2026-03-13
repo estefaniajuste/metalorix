@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
 import { METALS, type MetalSpot, type MetalSymbol } from "@/lib/providers/metals";
 import { Sparkline } from "./Sparkline";
 
@@ -42,6 +43,18 @@ interface MetalCardProps {
 export function MetalCard({ spot, active, onClick, sparklineData }: MetalCardProps) {
   const metal = METALS[spot.symbol as MetalSymbol];
   const isUp = spot.change >= 0;
+  const prevPrice = useRef(spot.price);
+  const [flash, setFlash] = useState<"up" | "down" | null>(null);
+
+  useEffect(() => {
+    if (prevPrice.current !== spot.price && prevPrice.current > 0) {
+      setFlash(spot.price > prevPrice.current ? "up" : "down");
+      const timer = setTimeout(() => setFlash(null), 1000);
+      prevPrice.current = spot.price;
+      return () => clearTimeout(timer);
+    }
+    prevPrice.current = spot.price;
+  }, [spot.price]);
 
   const accentColors: Record<string, string> = {
     XAU: "border-t-brand-gold",
@@ -64,6 +77,7 @@ export function MetalCard({ spot, active, onClick, sparklineData }: MetalCardPro
         border-t-[3px] ${active ? accentColors[spot.symbol] : "border-t-transparent"}
         ${active ? "border-brand-gold" : ""}
         hover:border-border-hover hover:shadow-card-hover hover:-translate-y-0.5
+        ${flash === "up" ? "animate-flash-up" : flash === "down" ? "animate-flash-down" : ""}
       `}
     >
       <div className="flex items-center justify-between mb-4">
