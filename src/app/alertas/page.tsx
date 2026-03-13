@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { SubscribeForm } from "@/components/alerts/SubscribeForm";
 
 export const metadata: Metadata = {
   title: "Alertas de precio — Metalorix",
@@ -18,40 +19,64 @@ export const metadata: Metadata = {
 
 const alertTypes = [
   {
-    icon: "📊",
     title: "Nivel de precio",
     description:
       "Recibe un aviso cuando el oro, plata o platino alcance el precio que definas.",
+    icon: (
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+        <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+      </svg>
+    ),
   },
   {
-    icon: "⚡",
     title: "Movimiento brusco",
     description:
-      "Alerta automática cuando un metal se mueve más de un 3% en pocas horas.",
+      "Alerta automática cuando un metal se mueve más de un 2% en pocas horas.",
+    icon: (
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+        <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+      </svg>
+    ),
   },
   {
-    icon: "📈",
     title: "Máximos y mínimos",
     description:
       "Notificación cuando se alcancen nuevos máximos o mínimos de 52 semanas.",
+    icon: (
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+        <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" /><polyline points="17 6 23 6 23 12" />
+      </svg>
+    ),
   },
   {
-    icon: "⚖️",
     title: "Ratio oro/plata",
     description:
-      "Aviso cuando el ratio oro/plata entre en zonas extremas de sobrevaloración o infravaloración.",
+      "Aviso cuando el ratio oro/plata entre en zonas extremas históricas.",
+    icon: (
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+        <line x1="12" y1="1" x2="12" y2="23" /><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+      </svg>
+    ),
   },
   {
-    icon: "📉",
     title: "Cruces técnicos",
     description:
-      "Alertas cuando se produzcan cruces de medias móviles u otras señales técnicas.",
+      "Alertas de cruces de medias móviles y señales técnicas relevantes.",
+    icon: (
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+        <line x1="18" y1="20" x2="18" y2="10" /><line x1="12" y1="20" x2="12" y2="4" /><line x1="6" y1="20" x2="6" y2="14" />
+      </svg>
+    ),
   },
   {
-    icon: "✉️",
-    title: "Por email",
+    title: "Email instantáneo",
     description:
-      "Todas las alertas se envían directamente a tu correo electrónico de forma instantánea.",
+      "Todas las alertas llegan directamente a tu correo. Sin app, sin notificaciones push.",
+    icon: (
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" />
+      </svg>
+    ),
   },
 ];
 
@@ -60,10 +85,7 @@ export default function AlertasPage() {
     <section className="py-[var(--section-py)]">
       <div className="mx-auto max-w-[1200px] px-6">
         {/* Header */}
-        <div className="text-center max-w-2xl mx-auto mb-16">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-semibold bg-[rgba(214,179,90,0.12)] text-brand-gold uppercase tracking-wider mb-5">
-            Próximamente
-          </div>
+        <div className="text-center max-w-2xl mx-auto mb-12">
           <h1 className="text-3xl sm:text-4xl font-extrabold text-content-0 tracking-tight mb-4">
             Alertas inteligentes de precio
           </h1>
@@ -74,93 +96,38 @@ export default function AlertasPage() {
           </p>
         </div>
 
-        {/* Alert types grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-16">
-          {alertTypes.map((type) => (
-            <div
-              key={type.title}
-              className="bg-surface-1 border border-border rounded-DEFAULT p-6 hover:border-border-hover transition-colors"
-            >
-              <div className="text-2xl mb-3">{type.icon}</div>
-              <h3 className="text-base font-semibold text-content-0 mb-2">
-                {type.title}
-              </h3>
-              <p className="text-sm text-content-2 leading-relaxed">
-                {type.description}
-              </p>
-            </div>
-          ))}
+        {/* Subscribe form */}
+        <div className="mb-16">
+          <SubscribeForm />
         </div>
 
-        {/* Preview mockup */}
-        <div className="bg-surface-1 border border-border rounded-DEFAULT p-8 max-w-2xl mx-auto mb-16">
-          <h2 className="text-lg font-bold text-content-0 mb-6 text-center">
-            Así funcionará
+        {/* Alert types grid */}
+        <div className="mb-16">
+          <h2 className="text-xl font-bold text-content-0 mb-6 text-center">
+            Tipos de alertas disponibles
           </h2>
-          <div className="space-y-3">
-            {[
-              {
-                metal: "Oro",
-                color: "#D6B35A",
-                condition: "Precio ≥ $2.500",
-                status: "Activa",
-              },
-              {
-                metal: "Plata",
-                color: "#A7B0BE",
-                condition: "Cambio diario > 3%",
-                status: "Activa",
-              },
-              {
-                metal: "Platino",
-                color: "#8B9DC3",
-                condition: "Mínimo 52 semanas",
-                status: "Activa",
-              },
-            ].map((alert) => (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            {alertTypes.map((type) => (
               <div
-                key={alert.metal}
-                className="flex items-center gap-4 bg-surface-0 border border-border rounded-sm p-4"
+                key={type.title}
+                className="bg-surface-1 border border-border rounded-DEFAULT p-6 hover:border-border-hover transition-colors"
               >
-                <span
-                  className="w-3 h-3 rounded-full flex-shrink-0"
-                  style={{ backgroundColor: alert.color }}
-                />
-                <div className="flex-1 min-w-0">
-                  <div className="text-sm font-semibold text-content-0">
-                    {alert.metal}
-                  </div>
-                  <div className="text-xs text-content-3">{alert.condition}</div>
-                </div>
-                <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-signal-up-bg text-signal-up">
-                  {alert.status}
-                </span>
-                <div className="flex gap-1">
-                  <div className="w-7 h-7 rounded-xs bg-surface-2 flex items-center justify-center">
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-content-3">
-                      <path d="M12 20h9" /><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
-                    </svg>
-                  </div>
-                  <div className="w-7 h-7 rounded-xs bg-surface-2 flex items-center justify-center">
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-content-3">
-                      <polyline points="3 6 5 6 21 6" /><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" />
-                    </svg>
-                  </div>
-                </div>
+                <div className="text-brand-gold mb-3">{type.icon}</div>
+                <h3 className="text-base font-semibold text-content-0 mb-2">
+                  {type.title}
+                </h3>
+                <p className="text-sm text-content-2 leading-relaxed">
+                  {type.description}
+                </p>
               </div>
             ))}
-          </div>
-          <div className="mt-4 text-center">
-            <div className="text-[10px] text-content-3 uppercase tracking-wider font-medium">
-              Vista previa — no funcional aún
-            </div>
           </div>
         </div>
 
         {/* CTA */}
         <div className="text-center">
           <p className="text-content-2 mb-4">
-            Mientras tanto, consulta los precios en tiempo real:
+            Consulta los precios en tiempo real:
           </p>
           <div className="flex justify-center gap-3 flex-wrap">
             <Link

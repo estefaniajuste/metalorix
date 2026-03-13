@@ -158,12 +158,8 @@ export const alertHistory = pgTable(
   "alert_history",
   {
     id: serial("id").primaryKey(),
-    alertId: integer("alert_id")
-      .notNull()
-      .references(() => alerts.id),
-    userId: integer("user_id")
-      .notNull()
-      .references(() => users.id),
+    alertId: integer("alert_id").references(() => alerts.id),
+    userId: integer("user_id").references(() => users.id),
     message: text("message").notNull(),
     priceAtTrigger: decimal("price_at_trigger", {
       precision: 12,
