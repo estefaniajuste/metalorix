@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import type { MetalSpot, MetalSymbol } from "@/lib/providers/metals";
 import { METALS } from "@/lib/providers/metals";
 import { usePrices } from "@/lib/hooks/use-prices";
@@ -13,7 +14,7 @@ const SLUG_MAP: Record<string, string> = {
 
 function formatPrice(val: number) {
   return val >= 100
-    ? val.toLocaleString("es-ES", { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+    ? val.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })
     : val.toFixed(2);
 }
 
@@ -60,6 +61,7 @@ function TickerSkeleton() {
 
 export function Hero() {
   const { prices } = usePrices();
+  const t = useTranslations("home");
 
   return (
     <section
@@ -70,14 +72,12 @@ export function Hero() {
 
       <div className="relative z-10 max-w-[720px] mx-auto px-6">
         <h1 className="text-[clamp(36px,6vw,64px)] font-extrabold text-content-0 tracking-tight leading-[1.1] mb-5">
-          Metales preciosos, <span className="text-brand-gold">al detalle.</span>
+          {t("title")} <span className="text-brand-gold">{t("titleAccent")}</span>
         </h1>
         <p className="text-[clamp(16px,2.2vw,20px)] text-content-2 max-w-[560px] mx-auto mb-9 leading-relaxed">
-          Precios spot en tiempo real y analítica limpia para Oro (XAU), Plata
-          (XAG) y Platino (XPT).
+          {t("subtitle")}
         </p>
 
-        {/* Live mini-tickers */}
         <div className="flex justify-center gap-3 flex-wrap mb-10">
           {prices
             ? prices.map((spot) => (
@@ -93,7 +93,7 @@ export function Hero() {
             href="#dashboard"
             className="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-sm text-sm font-semibold bg-brand-gold text-[#0B0F17] hover:bg-brand-gold-hover hover:-translate-y-px hover:shadow-[0_4px_12px_rgba(214,179,90,0.3)] transition-all"
           >
-            Ver Dashboard
+            {t("viewDashboard")}
             <svg
               width="14"
               height="14"
@@ -111,7 +111,7 @@ export function Hero() {
             href="/herramientas"
             className="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-sm text-sm font-semibold bg-surface-1/60 backdrop-blur-sm border border-border/50 text-content-1 hover:bg-surface-1/80 hover:border-border-hover hover:-translate-y-px transition-all"
           >
-            Herramientas
+            {t("tools")}
           </Link>
         </div>
       </div>

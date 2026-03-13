@@ -9,7 +9,13 @@
     "tools": "Herramientas",
     "news": "Noticias",
     "alerts": "Alertas",
-    "panel": "Mi panel"
+    "panel": "Mi panel",
+    "products": "Productos",
+    "guide": "Guía",
+    "toggleTheme": "Cambiar tema",
+    "openMenu": "Abrir menú",
+    "closeMenu": "Cerrar menú",
+    "metalPrices": "Precios de metales"
   },
   "footer": {
     "prices": "Precios",
@@ -20,11 +26,18 @@
     "legalNotice": "Aviso legal",
     "contact": "Contacto",
     "description": "Precios de metales preciosos en tiempo real. Datos limpios, gráficos profesionales.",
-    "status": "Operativo"
+    "status": "Operativo",
+    "disclaimer": "Los datos mostrados son informativos y no constituyen asesoramiento financiero. Los precios pueden tener un retraso de hasta 15 minutos.",
+    "glossary": "Glosario",
+    "investmentGuide": "Guía de inversión"
   },
   "home": {
-    "title": "Precios de metales preciosos en tiempo real",
-    "subtitle": "Datos limpios, gráficos profesionales, cero ruido"
+    "title": "Metales preciosos,",
+    "titleAccent": "al detalle.",
+    "subtitle": "Precios spot en tiempo real y analítica limpia para Oro (XAU), Plata (XAG) y Platino (XPT).",
+    "viewDashboard": "Ver Dashboard",
+    "tools": "Herramientas",
+    "skipToContent": "Saltar al contenido"
   },
   "metals": {
     "gold": "Oro",
@@ -40,21 +53,95 @@
     "priceChange": "Variación",
     "period": "Periodo",
     "max": "Máximo",
-    "min": "Mínimo"
+    "min": "Mínimo",
+    "viewDetail": "Ver detalle",
+    "backToDashboard": "Volver al Dashboard",
+    "moreInfo": "Más información",
+    "accept": "Aceptar",
+    "cancel": "Cancelar",
+    "save": "Guardar",
+    "delete": "Eliminar",
+    "retry": "Reintentar",
+    "live": "En vivo",
+    "demo": "Demo",
+    "breadcrumbHome": "Inicio"
+  },
+  "dashboard": {
+    "spotPrices": "Precios Spot",
+    "noData": "No hay datos disponibles",
+    "time": "Hora",
+    "price": "Precio (USD)",
+    "change": "Cambio",
+    "changePercent": "% Cambio",
+    "timeRange": "Rango temporal",
+    "recentPrices": "Datos de precios recientes"
   },
   "tools": {
     "title": "Herramientas",
+    "subtitle": "Herramientas prácticas para analizar y valorar metales preciosos. Datos actualizados en tiempo real.",
     "roiCalculator": "Calculadora de rentabilidad",
+    "roiDesc": "¿Cuánto habrías ganado invirtiendo en oro hace 5 años? Simulador con datos reales.",
     "ratio": "Ratio Oro/Plata",
+    "ratioDesc": "Ratio en tiempo real con barra visual, zonas históricas y análisis de inversión.",
     "converter": "Conversor multi-divisa",
-    "comparator": "Comparador",
-    "calendar": "Calendario económico"
+    "converterDesc": "Precio del oro, plata y platino en EUR, GBP, CHF, JPY y 7 divisas más.",
+    "comparator": "Comparador Oro vs Plata vs Platino",
+    "comparatorDesc": "Compara el rendimiento histórico de los tres metales en un solo gráfico.",
+    "calendar": "Calendario económico",
+    "calendarDesc": "Próximos eventos clave: FOMC, BCE, IPC, NFP y su impacto en metales.",
+    "upcoming": "Próximamente",
+    "technicalIndicators": "Indicadores técnicos",
+    "technicalDesc": "RSI, MACD y Bandas de Bollinger sobre los gráficos de precios de metales preciosos."
   },
   "alerts": {
-    "title": "Alertas de precio",
+    "title": "Alertas inteligentes de precio",
+    "subtitle": "Configura alertas personalizadas para oro, plata y platino. Te avisamos por email cuando se cumplan las condiciones que definas. Sin spam, solo lo que importa.",
     "subscribe": "Suscribirse",
     "emailPlaceholder": "tu@email.com",
     "priceAbove": "Precio por encima de",
-    "priceBelow": "Precio por debajo de"
+    "priceBelow": "Precio por debajo de",
+    "typesTitle": "Tipos de alertas disponibles",
+    "priceLevel": "Nivel de precio",
+    "priceLevelDesc": "Recibe un aviso cuando el oro, plata o platino alcance el precio que definas.",
+    "sharpMove": "Movimiento brusco",
+    "sharpMoveDesc": "Alerta automática cuando un metal se mueve más de un 2% en pocas horas.",
+    "highLow": "Máximos y mínimos",
+    "highLowDesc": "Notificación cuando se alcancen nuevos máximos o mínimos de 52 semanas.",
+    "ratioAlert": "Ratio oro/plata",
+    "ratioAlertDesc": "Aviso cuando el ratio oro/plata entre en zonas extremas históricas.",
+    "technicalCross": "Cruces técnicos",
+    "technicalCrossDesc": "Alertas de cruces de medias móviles y señales técnicas relevantes.",
+    "instantEmail": "Email instantáneo",
+    "instantEmailDesc": "Todas las alertas llegan directamente a tu correo. Sin app, sin notificaciones push.",
+    "checkPrices": "Consulta los precios en tiempo real:",
+    "goldPrice": "Precio del Oro"
+  },
+  "cookie": {
+    "message": "Usamos cookies esenciales y Google Analytics para entender cómo se usa el sitio. No usamos cookies de publicidad.",
+    "essentialOnly": "Solo esenciales",
+    "accept": "Aceptar"
+  },
+  "errors": {
+    "somethingWrong": "Algo salió mal",
+    "unexpectedError": "Se ha producido un error inesperado. Puedes intentar recargar la página o volver al dashboard.",
+    "retry": "Reintentar",
+    "notFound": "Página no encontrada",
+    "notFoundDesc": "La página que buscas no existe o ha sido movida. Prueba a volver al dashboard o consulta los precios de metales.",
+    "goldPrice": "Precio del Oro",
+    "silverPrice": "Precio de la Plata",
+    "goldPriceDesc": "XAU/USD en tiempo real",
+    "silverPriceDesc": "XAG/USD en tiempo real",
+    "toolsDesc": "Ratio, conversor y más",
+    "viewGoldPrice": "Ver precio del Oro"
+  },
+  "scrollToTop": "Volver arriba",
+  "metadata": {
+    "title": "Metalorix — Precios de Oro, Plata y Platino",
+    "description": "Precios spot en tiempo real y analítica para Oro (XAU), Plata (XAG) y Platino (XPT). Datos limpios, gráficos profesionales, cero ruido.",
+    "alertsTitle": "Alertas de precio — Metalorix",
+    "alertsDesc": "Configura alertas inteligentes de precio para oro, plata y platino. Recibe notificaciones por email cuando se alcancen niveles clave.",
+    "toolsTitle": "Herramientas de trading — Metalorix",
+    "toolsDesc": "Ratio oro/plata en tiempo real, conversor de unidades, calculadora DCA y más herramientas para invertir en metales preciosos.",
+    "notFoundTitle": "Página no encontrada — Metalorix"
   }
 }

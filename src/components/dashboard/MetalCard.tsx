@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 import { METALS, type MetalSpot, type MetalSymbol } from "@/lib/providers/metals";
 import { Sparkline } from "./Sparkline";
 import {
@@ -51,6 +52,7 @@ export function MetalCard({
   unit = "oz",
   eurUsdRate = 1.08,
 }: MetalCardProps) {
+  const t = useTranslations("common");
   const metal = METALS[spot.symbol as MetalSymbol];
   const isUp = spot.change >= 0;
   const displayPrice = convertPrice(spot.price, unit, currency, eurUsdRate);
@@ -141,7 +143,7 @@ export function MetalCard({
         onClick={(e) => e.stopPropagation()}
         className="mt-4 inline-flex items-center gap-1 text-xs font-medium text-content-3 hover:text-brand-gold transition-colors"
       >
-        Ver detalle
+        {t("viewDetail")}
         <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
           <polyline points="9 18 15 12 9 6" />
         </svg>

@@ -9,7 +9,13 @@
     "tools": "Tools",
     "news": "News",
     "alerts": "Alerts",
-    "panel": "My panel"
+    "panel": "My panel",
+    "products": "Products",
+    "guide": "Guide",
+    "toggleTheme": "Toggle theme",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "metalPrices": "Metal prices"
   },
   "footer": {
     "prices": "Prices",
@@ -20,11 +26,18 @@
     "legalNotice": "Legal notice",
     "contact": "Contact",
     "description": "Real-time precious metals prices. Clean data, professional charts.",
-    "status": "Operational"
+    "status": "Operational",
+    "disclaimer": "The data shown is for informational purposes only and does not constitute financial advice. Prices may be delayed by up to 15 minutes.",
+    "glossary": "Glossary",
+    "investmentGuide": "Investment guide"
   },
   "home": {
-    "title": "Real-time precious metals prices",
-    "subtitle": "Clean data, professional charts, zero noise"
+    "title": "Precious metals,",
+    "titleAccent": "in detail.",
+    "subtitle": "Real-time spot prices and clean analytics for Gold (XAU), Silver (XAG) and Platinum (XPT).",
+    "viewDashboard": "View Dashboard",
+    "tools": "Tools",
+    "skipToContent": "Skip to content"
   },
   "metals": {
     "gold": "Gold",
@@ -40,21 +53,95 @@
     "priceChange": "Change",
     "period": "Period",
     "max": "High",
-    "min": "Low"
+    "min": "Low",
+    "viewDetail": "View detail",
+    "backToDashboard": "Back to Dashboard",
+    "moreInfo": "More info",
+    "accept": "Accept",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "retry": "Retry",
+    "live": "Live",
+    "demo": "Demo",
+    "breadcrumbHome": "Home"
+  },
+  "dashboard": {
+    "spotPrices": "Spot Prices",
+    "noData": "No data available",
+    "time": "Time",
+    "price": "Price (USD)",
+    "change": "Change",
+    "changePercent": "% Change",
+    "timeRange": "Time range",
+    "recentPrices": "Recent price data"
   },
   "tools": {
     "title": "Tools",
+    "subtitle": "Practical tools for analyzing and valuing precious metals. Data updated in real time.",
     "roiCalculator": "ROI Calculator",
+    "roiDesc": "How much would you have earned investing in gold 5 years ago? Simulator with real data.",
     "ratio": "Gold/Silver Ratio",
+    "ratioDesc": "Real-time ratio with visual bar, historical zones and investment analysis.",
     "converter": "Multi-currency converter",
-    "comparator": "Comparator",
-    "calendar": "Economic calendar"
+    "converterDesc": "Gold, silver and platinum prices in EUR, GBP, CHF, JPY and 7 more currencies.",
+    "comparator": "Gold vs Silver vs Platinum Comparator",
+    "comparatorDesc": "Compare the historical performance of all three metals in a single chart.",
+    "calendar": "Economic calendar",
+    "calendarDesc": "Upcoming key events: FOMC, ECB, CPI, NFP and their impact on metals.",
+    "upcoming": "Coming soon",
+    "technicalIndicators": "Technical indicators",
+    "technicalDesc": "RSI, MACD and Bollinger Bands on precious metals price charts."
   },
   "alerts": {
-    "title": "Price alerts",
+    "title": "Smart price alerts",
+    "subtitle": "Set up custom alerts for gold, silver and platinum. We'll notify you by email when your conditions are met. No spam, only what matters.",
     "subscribe": "Subscribe",
     "emailPlaceholder": "your@email.com",
     "priceAbove": "Price above",
-    "priceBelow": "Price below"
+    "priceBelow": "Price below",
+    "typesTitle": "Available alert types",
+    "priceLevel": "Price level",
+    "priceLevelDesc": "Get notified when gold, silver or platinum reaches the price you set.",
+    "sharpMove": "Sharp movement",
+    "sharpMoveDesc": "Automatic alert when a metal moves more than 2% in a few hours.",
+    "highLow": "Highs and lows",
+    "highLowDesc": "Notification when new 52-week highs or lows are reached.",
+    "ratioAlert": "Gold/Silver ratio",
+    "ratioAlertDesc": "Alert when the gold/silver ratio enters extreme historical zones.",
+    "technicalCross": "Technical crossovers",
+    "technicalCrossDesc": "Moving average crossover and relevant technical signal alerts.",
+    "instantEmail": "Instant email",
+    "instantEmailDesc": "All alerts are sent directly to your inbox. No app, no push notifications.",
+    "checkPrices": "Check real-time prices:",
+    "goldPrice": "Gold Price"
+  },
+  "cookie": {
+    "message": "We use essential cookies and Google Analytics to understand how the site is used. We do not use advertising cookies.",
+    "essentialOnly": "Essential only",
+    "accept": "Accept"
+  },
+  "errors": {
+    "somethingWrong": "Something went wrong",
+    "unexpectedError": "An unexpected error occurred. You can try reloading the page or go back to the dashboard.",
+    "retry": "Retry",
+    "notFound": "Page not found",
+    "notFoundDesc": "The page you're looking for doesn't exist or has been moved. Try going back to the dashboard or check metal prices.",
+    "goldPrice": "Gold Price",
+    "silverPrice": "Silver Price",
+    "goldPriceDesc": "XAU/USD in real time",
+    "silverPriceDesc": "XAG/USD in real time",
+    "toolsDesc": "Ratio, converter and more",
+    "viewGoldPrice": "View Gold Price"
+  },
+  "scrollToTop": "Back to top",
+  "metadata": {
+    "title": "Metalorix — Gold, Silver and Platinum Prices",
+    "description": "Real-time spot prices and analytics for Gold (XAU), Silver (XAG) and Platinum (XPT). Clean data, professional charts, zero noise.",
+    "alertsTitle": "Price Alerts — Metalorix",
+    "alertsDesc": "Set up smart price alerts for gold, silver and platinum. Get email notifications when key levels are reached.",
+    "toolsTitle": "Trading Tools — Metalorix",
+    "toolsDesc": "Real-time gold/silver ratio, unit converter, DCA calculator and more tools for investing in precious metals.",
+    "notFoundTitle": "Page not found — Metalorix"
   }
 }

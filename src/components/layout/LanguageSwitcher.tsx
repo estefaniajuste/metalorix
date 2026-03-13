@@ -1,16 +1,20 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 
 const LANGUAGES = [
   { code: "es", label: "ES", flag: "🇪🇸", name: "Español" },
   { code: "en", label: "EN", flag: "🇬🇧", name: "English" },
-  { code: "pt", label: "PT", flag: "🇧🇷", name: "Português" },
+  { code: "zh", label: "中文", flag: "🇨🇳", name: "中文" },
+  { code: "ar", label: "AR", flag: "🇸🇦", name: "العربية" },
+  { code: "tr", label: "TR", flag: "🇹🇷", name: "Türkçe" },
+  { code: "de", label: "DE", flag: "🇩🇪", name: "Deutsch" },
 ];
 
 export function LanguageSwitcher() {
   const locale = useLocale();
+  const t = useTranslations("nav");
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -37,7 +41,7 @@ export function LanguageSwitcher() {
       <button
         onClick={() => setOpen(!open)}
         className="flex items-center gap-1.5 px-2 py-1.5 text-xs font-semibold text-content-2 hover:text-content-0 transition-colors rounded-sm hover:bg-surface-2"
-        aria-label="Cambiar idioma"
+        aria-label={t("toggleTheme")}
       >
         <span>{current.flag}</span>
         <span>{current.label}</span>
@@ -54,7 +58,7 @@ export function LanguageSwitcher() {
       </button>
 
       {open && (
-        <div className="absolute right-0 top-full mt-1 bg-surface-1 border border-border rounded-sm shadow-card py-1 z-50 min-w-[140px]">
+        <div className="absolute end-0 top-full mt-1 bg-surface-1 border border-border rounded-sm shadow-card py-1 z-50 min-w-[160px]">
           {LANGUAGES.map((lang) => (
             <button
               key={lang.code}

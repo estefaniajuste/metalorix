@@ -1,11 +1,16 @@
 import Link from "next/link";
-import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 
-export const metadata: Metadata = {
-  title: "Página no encontrada — Metalorix",
-};
+export async function generateMetadata() {
+  const t = await getTranslations("metadata");
+  return { title: t("notFoundTitle") };
+}
 
-export default function NotFound() {
+export default async function NotFound() {
+  const t = await getTranslations("errors");
+  const tc = await getTranslations("common");
+  const tn = await getTranslations("nav");
+
   return (
     <section className="py-[var(--section-py)]">
       <div className="mx-auto max-w-[1200px] px-6 text-center">
@@ -14,11 +19,10 @@ export default function NotFound() {
         </div>
 
         <h1 className="text-3xl sm:text-4xl font-extrabold text-content-0 tracking-tight mb-4">
-          Página no encontrada
+          {t("notFound")}
         </h1>
         <p className="text-content-2 mb-10 max-w-md mx-auto leading-relaxed">
-          La página que buscas no existe o ha sido movida.
-          Prueba a volver al dashboard o consulta los precios de metales.
+          {t("notFoundDesc")}
         </p>
 
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
@@ -37,26 +41,26 @@ export default function NotFound() {
             >
               <polyline points="15 18 9 12 15 6" />
             </svg>
-            Volver al Dashboard
+            {tc("backToDashboard")}
           </Link>
           <Link
             href="/precio/oro"
             className="inline-flex items-center justify-center gap-2 bg-surface-1 border border-border text-content-0 font-semibold text-sm px-6 py-3 rounded-sm hover:border-border-hover hover:shadow-card transition-all"
           >
-            Ver precio del Oro
+            {t("viewGoldPrice")}
           </Link>
         </div>
 
         <div className="mt-16 grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-2xl mx-auto">
           {[
-            { href: "/precio/oro", label: "Precio del Oro", desc: "XAU/USD en tiempo real" },
-            { href: "/precio/plata", label: "Precio de la Plata", desc: "XAG/USD en tiempo real" },
-            { href: "/herramientas", label: "Herramientas", desc: "Ratio, conversor y más" },
+            { href: "/precio/oro", label: t("goldPrice"), desc: t("goldPriceDesc") },
+            { href: "/precio/plata", label: t("silverPrice"), desc: t("silverPriceDesc") },
+            { href: "/herramientas", label: tn("tools"), desc: t("toolsDesc") },
           ].map((link) => (
             <Link
               key={link.href}
               href={link.href}
-              className="bg-surface-1 border border-border rounded-DEFAULT p-4 hover:border-border-hover hover:shadow-card transition-all text-left"
+              className="bg-surface-1 border border-border rounded-DEFAULT p-4 hover:border-border-hover hover:shadow-card transition-all text-start"
             >
               <div className="text-sm font-semibold text-content-0 mb-1">
                 {link.label}

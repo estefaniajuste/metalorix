@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 import {
   METALS,
   type HistoryResult,
@@ -31,6 +32,8 @@ async function apiFetchHistory(
 }
 
 export function Dashboard() {
+  const t = useTranslations("dashboard");
+  const tc = useTranslations("common");
   const [activeMetal, setActiveMetal] = useState<MetalSymbol>("XAU");
   const [activeRange, setActiveRange] = useState<TimeRange>("1D");
   const { prices, source: dataSource, lastUpdate } = usePrices();
@@ -76,12 +79,21 @@ export function Dashboard() {
 
   const historyKey = `${activeMetal}_${activeRange}`;
 
+  const statusLabel =
+    dataSource === "mock"
+      ? tc("demo")
+      : dataSource === "error"
+        ? tc("error")
+        : dataSource === "loading"
+          ? tc("loading")
+          : tc("live");
+
   return (
     <section className="py-[var(--section-py)]" id="dashboard">
       <div className="mx-auto max-w-[1200px] px-6">
         <div className="flex items-center justify-between mb-9 flex-wrap gap-4">
           <h2 className="text-[28px] font-bold text-content-0 flex items-center gap-2.5">
-            Precios Spot
+            {t("spotPrices")}
             <span
               className={`text-[11px] font-semibold px-2.5 py-0.5 rounded-full uppercase tracking-wider ${
                 dataSource === "mock"
@@ -91,17 +103,11 @@ export function Dashboard() {
                     : "bg-signal-up-bg text-signal-up"
               }`}
             >
-              {dataSource === "mock"
-                ? "Demo"
-                : dataSource === "error"
-                  ? "Error"
-                  : dataSource === "loading"
-                    ? "Cargando"
-                    : "En vivo"}
+              {statusLabel}
             </span>
             {lastUpdate && (
-              <span className="text-[11px] text-content-3 font-normal ml-1 tabular-nums">
-                · {lastUpdate.toLocaleTimeString("es-ES", { hour: "2-digit", minute: "2-digit" })}
+              <span className="text-[11px] text-content-3 font-normal ms-1 tabular-nums">
+                · {lastUpdate.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
               </span>
             )}
           </h2>
@@ -116,15 +122,12 @@ export function Dashboard() {
           </div>
         </div>
 
-        {/* Metal Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-10">
           {prices
             ? prices.map((spot) => {
                 const key1D = `${spot.symbol}_1D`;
                 const histData = history[key1D]?.data;
-                const sparkline = histData
-                  ? histData.map((d) => d.price)
-                  : undefined;
+                const sparkline = histData ? histData.map((d) => d.price) : undefined;
                 return (
                   <MetalCard
                     key={spot.symbol}
@@ -139,10 +142,7 @@ export function Dashboard() {
                 );
               })
             : (Object.keys(METALS) as MetalSymbol[]).map((symbol) => (
-                <div
-                  key={symbol}
-                  className="bg-surface-1 border border-border rounded-DEFAULT p-6"
-                >
+                <div key={symbol} className="bg-surface-1 border border-border rounded-DEFAULT p-6">
                   <div className="flex items-center gap-2.5 mb-4">
                     <div className="w-10 h-10 rounded-xs bg-surface-2 animate-shimmer" />
                     <div>
@@ -156,14 +156,7 @@ export function Dashboard() {
               ))}
         </div>
 
-        {/* Chart */}
-        <PriceChart
-          symbol={activeMetal}
-          range={activeRange}
-          history={history[historyKey] ?? null}
-        />
-
-        {/* Data Table */}
+        <PriceChart symbol={activeMetal} range={activeRange} history={history[historyKey] ?? null} />
         <DataTable history={history[historyKey] ?? null} range={activeRange} />
       </div>
     </section>

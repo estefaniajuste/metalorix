@@ -1,13 +1,11 @@
 "use client";
 
+import { useTranslations, useLocale } from "next-intl";
 import type { HistoryResult } from "@/lib/providers/metals";
 
 function formatPrice(val: number) {
   return val >= 100
-    ? val.toLocaleString("en-US", {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
-      })
+    ? val.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })
     : val.toFixed(2);
 }
 
@@ -16,10 +14,7 @@ function formatChange(val: number) {
   return (
     sign +
     (Math.abs(val) >= 100
-      ? val.toLocaleString("en-US", {
-          minimumFractionDigits: 2,
-          maximumFractionDigits: 2,
-        })
+      ? val.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })
       : val.toFixed(2))
   );
 }
@@ -30,11 +25,14 @@ interface DataTableProps {
 }
 
 export function DataTable({ history, range }: DataTableProps) {
+  const t = useTranslations("dashboard");
+  const locale = useLocale();
+
   if (!history || !history.data.length) {
     return (
       <div className="bg-surface-1 border border-border rounded-DEFAULT overflow-hidden">
         <div className="text-center text-content-3 py-12">
-          No hay datos disponibles
+          {t("noData")}
         </div>
       </div>
     );
@@ -44,20 +42,20 @@ export function DataTable({ history, range }: DataTableProps) {
 
   return (
     <div className="bg-surface-1 border border-border rounded-DEFAULT overflow-hidden">
-      <table className="w-full border-collapse text-sm" aria-label="Datos de precios recientes">
+      <table className="w-full border-collapse text-sm" aria-label={t("recentPrices")}>
         <thead>
           <tr>
-            <th className="text-left px-4 py-3 text-xs font-semibold text-content-3 uppercase tracking-wider bg-surface-2 border-b border-border">
-              Hora
+            <th className="text-start px-4 py-3 text-xs font-semibold text-content-3 uppercase tracking-wider bg-surface-2 border-b border-border">
+              {t("time")}
             </th>
-            <th className="text-left px-4 py-3 text-xs font-semibold text-content-3 uppercase tracking-wider bg-surface-2 border-b border-border">
-              Precio (USD)
+            <th className="text-start px-4 py-3 text-xs font-semibold text-content-3 uppercase tracking-wider bg-surface-2 border-b border-border">
+              {t("price")}
             </th>
-            <th className="text-left px-4 py-3 text-xs font-semibold text-content-3 uppercase tracking-wider bg-surface-2 border-b border-border">
-              Cambio
+            <th className="text-start px-4 py-3 text-xs font-semibold text-content-3 uppercase tracking-wider bg-surface-2 border-b border-border">
+              {t("change")}
             </th>
-            <th className="text-left px-4 py-3 text-xs font-semibold text-content-3 uppercase tracking-wider bg-surface-2 border-b border-border">
-              % Cambio
+            <th className="text-start px-4 py-3 text-xs font-semibold text-content-3 uppercase tracking-wider bg-surface-2 border-b border-border">
+              {t("changePercent")}
             </th>
           </tr>
         </thead>
@@ -70,36 +68,22 @@ export function DataTable({ history, range }: DataTableProps) {
             const dt = new Date(d.timestamp);
             const timeStr =
               range === "1D"
-                ? dt.toLocaleTimeString("es-ES", {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  })
-                : dt.toLocaleDateString("es-ES", {
-                    month: "short",
-                    day: "numeric",
-                  });
+                ? dt.toLocaleTimeString(locale, { hour: "2-digit", minute: "2-digit" })
+                : dt.toLocaleDateString(locale, { month: "short", day: "numeric" });
 
             return (
-              <tr
-                key={d.timestamp}
-                className="hover:bg-surface-2 transition-colors"
-              >
+              <tr key={d.timestamp} className="hover:bg-surface-2 transition-colors">
                 <td className="px-4 py-2.5 border-b border-border text-content-1 tabular-nums">
                   {timeStr}
                 </td>
                 <td className="px-4 py-2.5 border-b border-border text-content-1 tabular-nums">
                   ${formatPrice(d.price)}
                 </td>
-                <td
-                  className={`px-4 py-2.5 border-b border-border tabular-nums ${cls}`}
-                >
+                <td className={`px-4 py-2.5 border-b border-border tabular-nums ${cls}`}>
                   {formatChange(chg)}
                 </td>
-                <td
-                  className={`px-4 py-2.5 border-b border-border tabular-nums ${cls}`}
-                >
-                  {chg >= 0 ? "+" : ""}
-                  {chgPct.toFixed(2)}%
+                <td className={`px-4 py-2.5 border-b border-border tabular-nums ${cls}`}>
+                  {chg >= 0 ? "+" : ""}{chgPct.toFixed(2)}%
                 </td>
               </tr>
             );

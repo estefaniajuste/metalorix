@@ -2,62 +2,26 @@
 
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 import { Logo } from "./Logo";
 import { useTheme } from "./ThemeProvider";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 
-const metalLinks = [
-  { href: "/precio/oro", label: "Oro", symbol: "XAU", color: "#D6B35A" },
-  { href: "/precio/plata", label: "Plata", symbol: "XAG", color: "#A7B0BE" },
-  { href: "/precio/platino", label: "Platino", symbol: "XPT", color: "#8B9DC3" },
-  { href: "/ratio-oro-plata", label: "Ratio Oro/Plata", symbol: "⚖️", color: "#D6B35A" },
-];
-
-const navItems = [
-  { href: "/", label: "Dashboard" },
-  { href: "#precios", label: "Precios", hasDropdown: true },
-  { href: "/productos", label: "Productos" },
-  { href: "/herramientas", label: "Herramientas" },
-  { href: "/guia-inversion", label: "Guía" },
-  { href: "/noticias", label: "Noticias" },
-  { href: "/alertas", label: "Alertas" },
-];
-
 function SunIcon() {
   return (
-    <svg
-      width="20"
-      height="20"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-    >
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
       <circle cx="12" cy="12" r="5" />
-      <line x1="12" y1="1" x2="12" y2="3" />
-      <line x1="12" y1="21" x2="12" y2="23" />
-      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
-      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
-      <line x1="1" y1="12" x2="3" y2="12" />
-      <line x1="21" y1="12" x2="23" y2="12" />
-      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
-      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+      <line x1="12" y1="1" x2="12" y2="3" /><line x1="12" y1="21" x2="12" y2="23" />
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" /><line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+      <line x1="1" y1="12" x2="3" y2="12" /><line x1="21" y1="12" x2="23" y2="12" />
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" /><line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
     </svg>
   );
 }
 
 function MoonIcon() {
   return (
-    <svg
-      width="20"
-      height="20"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-    >
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
       <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
     </svg>
   );
@@ -65,35 +29,16 @@ function MoonIcon() {
 
 function MenuIcon() {
   return (
-    <svg
-      width="20"
-      height="20"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-    >
-      <line x1="3" y1="6" x2="21" y2="6" />
-      <line x1="3" y1="12" x2="21" y2="12" />
-      <line x1="3" y1="18" x2="21" y2="18" />
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+      <line x1="3" y1="6" x2="21" y2="6" /><line x1="3" y1="12" x2="21" y2="12" /><line x1="3" y1="18" x2="21" y2="18" />
     </svg>
   );
 }
 
 function CloseIcon() {
   return (
-    <svg
-      width="20"
-      height="20"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-    >
-      <line x1="18" y1="6" x2="6" y2="18" />
-      <line x1="6" y1="6" x2="18" y2="18" />
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+      <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
     </svg>
   );
 }
@@ -108,9 +53,27 @@ function ChevronDown() {
 
 export function Nav() {
   const { theme, toggle } = useTheme();
+  const t = useTranslations("nav");
   const [mobileOpen, setMobileOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+
+  const metalLinks = [
+    { href: "/precio/oro", label: t("gold"), symbol: "XAU", color: "#D6B35A" },
+    { href: "/precio/plata", label: t("silver"), symbol: "XAG", color: "#A7B0BE" },
+    { href: "/precio/platino", label: t("platinum"), symbol: "XPT", color: "#8B9DC3" },
+    { href: "/ratio-oro-plata", label: t("ratio"), symbol: "⚖️", color: "#D6B35A" },
+  ];
+
+  const navItems = [
+    { href: "/", label: t("dashboard") },
+    { href: "#precios", label: t("prices"), hasDropdown: true },
+    { href: "/productos", label: t("products") },
+    { href: "/herramientas", label: t("tools") },
+    { href: "/guia-inversion", label: t("guide") },
+    { href: "/noticias", label: t("news") },
+    { href: "/alertas", label: t("alerts") },
+  ];
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -159,7 +122,7 @@ export function Nav() {
                   <ChevronDown />
                 </button>
                 {dropdownOpen && (
-                  <div role="menu" aria-label="Precios de metales" className="absolute top-full left-0 mt-1 w-48 bg-surface-1 border border-border rounded-DEFAULT shadow-card py-1.5 z-50">
+                  <div role="menu" aria-label={t("metalPrices")} className="absolute top-full start-0 mt-1 w-48 bg-surface-1 border border-border rounded-DEFAULT shadow-card py-1.5 z-50">
                     {metalLinks.map((metal) => (
                       <Link
                         key={metal.href}
@@ -173,7 +136,7 @@ export function Nav() {
                           style={{ backgroundColor: metal.color }}
                         />
                         <span className="font-medium">{metal.label}</span>
-                        <span className="text-xs text-content-3 ml-auto">{metal.symbol}</span>
+                        <span className="text-xs text-content-3 ms-auto">{metal.symbol}</span>
                       </Link>
                     ))}
                   </div>
@@ -197,7 +160,7 @@ export function Nav() {
           <button
             onClick={toggle}
             className="w-10 h-10 rounded-xs flex items-center justify-center text-content-2 hover:text-brand-gold hover:bg-surface-2 transition-colors"
-            aria-label="Cambiar tema"
+            aria-label={t("toggleTheme")}
           >
             {theme === "dark" ? <SunIcon /> : <MoonIcon />}
           </button>
@@ -205,7 +168,7 @@ export function Nav() {
           <button
             className="md:hidden w-10 h-10 rounded-xs flex items-center justify-center text-content-1 hover:bg-surface-2"
             onClick={() => setMobileOpen(!mobileOpen)}
-            aria-label={mobileOpen ? "Cerrar menú" : "Abrir menú"}
+            aria-label={mobileOpen ? t("closeMenu") : t("openMenu")}
             aria-expanded={mobileOpen}
           >
             {mobileOpen ? <CloseIcon /> : <MenuIcon />}
@@ -215,12 +178,12 @@ export function Nav() {
 
       {/* Mobile nav */}
       {mobileOpen && (
-        <div role="dialog" aria-label="Menú de navegación" className="md:hidden fixed top-16 inset-x-0 bottom-0 bg-surface-1 border-t border-border p-4 z-40 overflow-y-auto">
+        <div role="dialog" aria-label={t("openMenu")} className="md:hidden fixed top-16 inset-x-0 bottom-0 bg-surface-1 border-t border-border p-4 z-40 overflow-y-auto">
           {navItems.map((item) =>
             item.hasDropdown ? (
               <div key={item.href}>
                 <div className="px-4 py-2 text-xs font-semibold text-content-3 uppercase tracking-wider">
-                  Precios
+                  {t("prices")}
                 </div>
                 {metalLinks.map((metal) => (
                   <Link
@@ -234,7 +197,7 @@ export function Nav() {
                       style={{ backgroundColor: metal.color }}
                     />
                     {metal.label}
-                    <span className="text-xs text-content-3 ml-auto">{metal.symbol}</span>
+                    <span className="text-xs text-content-3 ms-auto">{metal.symbol}</span>
                   </Link>
                 ))}
               </div>

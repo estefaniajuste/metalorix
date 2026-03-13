@@ -5,7 +5,10 @@ import { defaultLocale, locales, type Locale } from "./config";
 const messageImports = {
   es: () => import("../../messages/es.json"),
   en: () => import("../../messages/en.json"),
-  pt: () => import("../../messages/pt.json"),
+  zh: () => import("../../messages/zh.json"),
+  ar: () => import("../../messages/ar.json"),
+  tr: () => import("../../messages/tr.json"),
+  de: () => import("../../messages/de.json"),
 } as const;
 
 export default getRequestConfig(async () => {

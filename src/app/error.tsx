@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 
 export default function Error({
   error,
@@ -10,6 +11,9 @@ export default function Error({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
+  const t = useTranslations("errors");
+  const tc = useTranslations("common");
+
   useEffect(() => {
     console.error("App error:", error);
   }, [error]);
@@ -35,11 +39,10 @@ export default function Error({
         </div>
 
         <h1 className="text-3xl sm:text-4xl font-extrabold text-content-0 tracking-tight mb-4">
-          Algo salió mal
+          {t("somethingWrong")}
         </h1>
         <p className="text-content-2 mb-8 max-w-md mx-auto leading-relaxed">
-          Se ha producido un error inesperado. Puedes intentar recargar
-          la página o volver al dashboard.
+          {t("unexpectedError")}
         </p>
 
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
@@ -59,13 +62,13 @@ export default function Error({
               <polyline points="23 4 23 10 17 10" />
               <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10" />
             </svg>
-            Reintentar
+            {t("retry")}
           </button>
           <Link
             href="/"
             className="inline-flex items-center justify-center gap-2 bg-surface-1 border border-border text-content-0 font-semibold text-sm px-6 py-3 rounded-sm hover:border-border-hover transition-all"
           >
-            Volver al Dashboard
+            {tc("backToDashboard")}
           </Link>
         </div>
       </div>

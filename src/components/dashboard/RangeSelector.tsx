@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import type { TimeRange } from "@/lib/providers/metals";
 
 const ranges: TimeRange[] = ["1D", "1W", "1M", "3M", "6M", "1Y", "2Y", "5Y"];
@@ -10,11 +11,12 @@ interface RangeSelectorProps {
 }
 
 export function RangeSelector({ active, onChange }: RangeSelectorProps) {
+  const t = useTranslations("dashboard");
   return (
     <div
       className="flex items-center gap-1 bg-surface-2 rounded-sm p-1 w-fit"
       role="tablist"
-      aria-label="Rango temporal"
+      aria-label={t("timeRange")}
     >
       {ranges.map((range) => (
         <button
