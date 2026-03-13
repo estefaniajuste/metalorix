@@ -11,6 +11,7 @@ import dynamic from "next/dynamic";
 import { METALS } from "@/lib/providers/metals";
 import { RangeSelector } from "./RangeSelector";
 import { DataTable } from "./DataTable";
+import { TechnicalIndicators } from "./TechnicalIndicators";
 import {
   convertPrice,
   formatConvertedPrice,
@@ -215,6 +216,9 @@ export function MetalPageContent({ symbol }: MetalPageContentProps) {
           ))}
         </div>
       )}
+
+      {/* Technical indicators */}
+      <TechnicalIndicators history={currentHistory} />
 
       {/* Conversion table */}
       {spot && (
