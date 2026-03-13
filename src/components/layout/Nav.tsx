@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { Logo } from "./Logo";
 import { useTheme } from "./ThemeProvider";
+import { LanguageSwitcher } from "./LanguageSwitcher";
 
 const metalLinks = [
   { href: "/precio/oro", label: "Oro", symbol: "XAU", color: "#D6B35A" },
@@ -175,6 +176,8 @@ export function Nav() {
         </div>
 
         <div className="flex items-center gap-2.5">
+          <LanguageSwitcher />
+
           <button
             onClick={toggle}
             className="w-10 h-10 rounded-xs flex items-center justify-center text-content-2 hover:text-brand-gold hover:bg-surface-2 transition-colors"

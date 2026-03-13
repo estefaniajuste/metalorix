@@ -1,0 +1,60 @@
+{
+  "nav": {
+    "dashboard": "Dashboard",
+    "prices": "Prices",
+    "gold": "Gold Price",
+    "silver": "Silver Price",
+    "platinum": "Platinum Price",
+    "ratio": "Gold/Silver Ratio",
+    "tools": "Tools",
+    "news": "News",
+    "alerts": "Alerts",
+    "panel": "My panel"
+  },
+  "footer": {
+    "prices": "Prices",
+    "platform": "Platform",
+    "legal": "Legal",
+    "privacy": "Privacy",
+    "terms": "Terms of service",
+    "legalNotice": "Legal notice",
+    "contact": "Contact",
+    "description": "Real-time precious metals prices. Clean data, professional charts.",
+    "status": "Operational"
+  },
+  "home": {
+    "title": "Real-time precious metals prices",
+    "subtitle": "Clean data, professional charts, zero noise"
+  },
+  "metals": {
+    "gold": "Gold",
+    "silver": "Silver",
+    "platinum": "Platinum"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "troyOunce": "Troy ounce",
+    "gram": "Gram",
+    "kilogram": "Kilogram",
+    "priceChange": "Change",
+    "period": "Period",
+    "max": "High",
+    "min": "Low"
+  },
+  "tools": {
+    "title": "Tools",
+    "roiCalculator": "ROI Calculator",
+    "ratio": "Gold/Silver Ratio",
+    "converter": "Multi-currency converter",
+    "comparator": "Comparator",
+    "calendar": "Economic calendar"
+  },
+  "alerts": {
+    "title": "Price alerts",
+    "subscribe": "Subscribe",
+    "emailPlaceholder": "your@email.com",
+    "priceAbove": "Price above",
+    "priceBelow": "Price below"
+  }
+}

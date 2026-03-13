@@ -1,0 +1,60 @@
+{
+  "nav": {
+    "dashboard": "Painel",
+    "prices": "Preços",
+    "gold": "Preço do Ouro",
+    "silver": "Preço da Prata",
+    "platinum": "Preço da Platina",
+    "ratio": "Razão Ouro/Prata",
+    "tools": "Ferramentas",
+    "news": "Notícias",
+    "alerts": "Alertas",
+    "panel": "Meu painel"
+  },
+  "footer": {
+    "prices": "Preços",
+    "platform": "Plataforma",
+    "legal": "Legal",
+    "privacy": "Privacidade",
+    "terms": "Termos de serviço",
+    "legalNotice": "Aviso legal",
+    "contact": "Contato",
+    "description": "Preços de metais preciosos em tempo real. Dados limpos, gráficos profissionais.",
+    "status": "Operacional"
+  },
+  "home": {
+    "title": "Preços de metais preciosos em tempo real",
+    "subtitle": "Dados limpos, gráficos profissionais, sem ruído"
+  },
+  "metals": {
+    "gold": "Ouro",
+    "silver": "Prata",
+    "platinum": "Platina"
+  },
+  "common": {
+    "loading": "Carregando...",
+    "error": "Erro",
+    "troyOunce": "Onça troy",
+    "gram": "Grama",
+    "kilogram": "Quilograma",
+    "priceChange": "Variação",
+    "period": "Período",
+    "max": "Máximo",
+    "min": "Mínimo"
+  },
+  "tools": {
+    "title": "Ferramentas",
+    "roiCalculator": "Calculadora de rentabilidade",
+    "ratio": "Razão Ouro/Prata",
+    "converter": "Conversor de moedas",
+    "comparator": "Comparador",
+    "calendar": "Calendário econômico"
+  },
+  "alerts": {
+    "title": "Alertas de preço",
+    "subscribe": "Inscrever-se",
+    "emailPlaceholder": "seu@email.com",
+    "priceAbove": "Preço acima de",
+    "priceBelow": "Preço abaixo de"
+  }
+}

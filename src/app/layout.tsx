@@ -7,6 +7,8 @@ import { Nav } from "@/components/layout/Nav";
 import { Footer } from "@/components/layout/Footer";
 import { ScrollToTop } from "@/components/layout/ScrollToTop";
 import { CookieConsent } from "@/components/layout/CookieConsent";
+import { NextIntlClientProvider } from "next-intl";
+import { getLocale, getMessages } from "next-intl/server";
 import { WebVitals } from "./web-vitals";
 
 const inter = Inter({
@@ -54,13 +56,16 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const locale = await getLocale();
+  const messages = await getMessages();
+
   return (
-    <html lang="es" suppressHydrationWarning>
+    <html lang={locale} suppressHydrationWarning>
       <body className={`${inter.variable} font-sans`}>
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-9K1MTS78FF"
@@ -69,20 +74,22 @@ export default function RootLayout({
         <Script id="gtag-init" strategy="afterInteractive">
           {`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-9K1MTS78FF');`}
         </Script>
-        <ThemeProvider>
-          <a
-            href="#main-content"
-            className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[100] focus:bg-brand-gold focus:text-[#0B0F17] focus:px-4 focus:py-2 focus:rounded-sm focus:text-sm focus:font-semibold"
-          >
-            Saltar al contenido
-          </a>
-          <Nav />
-          <main id="main-content">{children}</main>
-          <Footer />
-          <ScrollToTop />
-          <CookieConsent />
-          <WebVitals />
-        </ThemeProvider>
+        <NextIntlClientProvider messages={messages}>
+          <ThemeProvider>
+            <a
+              href="#main-content"
+              className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[100] focus:bg-brand-gold focus:text-[#0B0F17] focus:px-4 focus:py-2 focus:rounded-sm focus:text-sm focus:font-semibold"
+            >
+              Saltar al contenido
+            </a>
+            <Nav />
+            <main id="main-content">{children}</main>
+            <Footer />
+            <ScrollToTop />
+            <CookieConsent />
+            <WebVitals />
+          </ThemeProvider>
+        </NextIntlClientProvider>
       </body>
     </html>
   );
