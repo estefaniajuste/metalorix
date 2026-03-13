@@ -162,23 +162,23 @@ export function EtfTable() {
         <table className="w-full border-collapse text-sm" aria-label="ETFs de metales preciosos en Europa">
           <thead>
             <tr>
-              <th className={thBase} onClick={() => handleSort("name")}>
+              <th className={thBase} onClick={() => handleSort("name")} role="button" aria-label="Ordenar por nombre">
                 Nombre <SortIndicator col="name" />
               </th>
-              <th className={thBase} onClick={() => handleSort("ticker")}>
+              <th className={thBase} onClick={() => handleSort("ticker")} role="button" aria-label="Ordenar por ticker">
                 Ticker <SortIndicator col="ticker" />
               </th>
-              <th className={thBase} onClick={() => handleSort("metal")}>
+              <th className={thBase} onClick={() => handleSort("metal")} role="button" aria-label="Ordenar por metal">
                 Metal <SortIndicator col="metal" />
               </th>
-              <th className={thBase} onClick={() => handleSort("ter")}>
+              <th className={thBase} onClick={() => handleSort("ter")} role="button" aria-label="Ordenar por TER">
                 TER <SortIndicator col="ter" />
               </th>
               <th className={`${thBase} hidden sm:table-cell`}>Réplica</th>
-              <th className={thBase} onClick={() => handleSort("size")}>
+              <th className={thBase} onClick={() => handleSort("size")} role="button" aria-label="Ordenar por tamaño">
                 Tamaño <SortIndicator col="size" />
               </th>
-              <th className={thBase} onClick={() => handleSort("currency")}>
+              <th className={thBase} onClick={() => handleSort("currency")} role="button" aria-label="Ordenar por divisa">
                 Divisa <SortIndicator col="currency" />
               </th>
               <th className={`${thBase} cursor-default hover:text-content-3`}>Ficha</th>

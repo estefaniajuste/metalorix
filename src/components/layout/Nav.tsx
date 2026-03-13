@@ -134,13 +134,15 @@ export function Nav() {
               <div key={item.href} className="relative" ref={dropdownRef}>
                 <button
                   onClick={() => setDropdownOpen(!dropdownOpen)}
+                  aria-expanded={dropdownOpen}
+                  aria-haspopup="menu"
                   className="flex items-center gap-1 px-3.5 py-2 rounded-xs text-sm font-medium text-content-2 hover:text-content-0 hover:bg-surface-2 transition-colors"
                 >
                   {item.label}
                   <ChevronDown />
                 </button>
                 {dropdownOpen && (
-                  <div className="absolute top-full left-0 mt-1 w-48 bg-surface-1 border border-border rounded-DEFAULT shadow-card py-1.5 z-50">
+                  <div role="menu" aria-label="Precios de metales" className="absolute top-full left-0 mt-1 w-48 bg-surface-1 border border-border rounded-DEFAULT shadow-card py-1.5 z-50">
                     {metalLinks.map((metal) => (
                       <Link
                         key={metal.href}
@@ -183,7 +185,7 @@ export function Nav() {
           <button
             className="md:hidden w-10 h-10 rounded-xs flex items-center justify-center text-content-1 hover:bg-surface-2"
             onClick={() => setMobileOpen(!mobileOpen)}
-            aria-label="Abrir menú"
+            aria-label={mobileOpen ? "Cerrar menú" : "Abrir menú"}
             aria-expanded={mobileOpen}
           >
             {mobileOpen ? <CloseIcon /> : <MenuIcon />}
@@ -193,7 +195,7 @@ export function Nav() {
 
       {/* Mobile nav */}
       {mobileOpen && (
-        <div className="md:hidden fixed top-16 inset-x-0 bottom-0 bg-surface-1 border-t border-border p-4 z-40 overflow-y-auto">
+        <div role="dialog" aria-label="Menú de navegación" className="md:hidden fixed top-16 inset-x-0 bottom-0 bg-surface-1 border-t border-border p-4 z-40 overflow-y-auto">
           {navItems.map((item) =>
             item.hasDropdown ? (
               <div key={item.href}>

@@ -102,6 +102,7 @@ export function SubscribeForm() {
             onChange={(e) => setEmail(e.target.value)}
             placeholder="tu@email.com"
             required
+            aria-label="Correo electrónico"
             className="w-full bg-surface-0 border border-border rounded-sm px-4 py-3 text-sm text-content-0 placeholder:text-content-3 focus:outline-none focus:border-brand-gold transition-colors"
           />
         </div>
@@ -147,6 +148,7 @@ export function SubscribeForm() {
                 <select
                   value={alert.symbol}
                   onChange={(e) => updateAlert(i, "symbol", e.target.value)}
+                  aria-label="Metal"
                   className="bg-surface-1 border border-border rounded-xs text-xs text-content-0 px-2 py-1.5 focus:outline-none"
                 >
                   {METALS.map((m) => (
@@ -158,6 +160,7 @@ export function SubscribeForm() {
                 <select
                   value={alert.type}
                   onChange={(e) => updateAlert(i, "type", e.target.value)}
+                  aria-label="Tipo de alerta"
                   className="bg-surface-1 border border-border rounded-xs text-xs text-content-0 px-2 py-1.5 focus:outline-none"
                 >
                   <option value="price_above">Sube a</option>
@@ -171,12 +174,14 @@ export function SubscribeForm() {
                     value={alert.threshold}
                     onChange={(e) => updateAlert(i, "threshold", e.target.value)}
                     placeholder="0.00"
+                    aria-label="Umbral de precio (USD)"
                     className="w-full bg-surface-1 border border-border rounded-xs text-xs text-content-0 px-2 py-1.5 focus:outline-none focus:border-brand-gold"
                   />
                 </div>
                 <button
                   type="button"
                   onClick={() => removeAlert(i)}
+                  aria-label="Eliminar alerta"
                   className="text-content-3 hover:text-signal-down transition-colors p-1"
                 >
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">

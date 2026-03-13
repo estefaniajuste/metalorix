@@ -285,6 +285,7 @@ export function DcaCalculator() {
             placeholder="Otra cantidad..."
             value={customAmount}
             onChange={(e) => setCustomAmount(e.target.value)}
+            aria-label="Cantidad mensual personalizada (USD)"
             className="mt-2 w-full bg-surface-2 border border-border rounded-sm px-3 py-1.5 text-sm text-content-0 placeholder:text-content-3 focus:outline-none focus:border-brand-gold transition-colors"
           />
         </div>

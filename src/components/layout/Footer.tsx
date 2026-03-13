@@ -25,6 +25,7 @@ const sections = [
   {
     title: "Legal",
     links: [
+      { href: "/privacidad", label: "Privacidad" },
       { href: "mailto:hello@metalorix.com", label: "Contacto" },
     ],
   },

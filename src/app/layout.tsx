@@ -5,6 +5,7 @@ import { ThemeProvider } from "@/components/layout/ThemeProvider";
 import { Nav } from "@/components/layout/Nav";
 import { Footer } from "@/components/layout/Footer";
 import { ScrollToTop } from "@/components/layout/ScrollToTop";
+import { CookieConsent } from "@/components/layout/CookieConsent";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -70,6 +71,7 @@ export default function RootLayout({
           <main id="main-content">{children}</main>
           <Footer />
           <ScrollToTop />
+          <CookieConsent />
         </ThemeProvider>
       </body>
     </html>

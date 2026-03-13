@@ -4,6 +4,9 @@ const resend = process.env.RESEND_API_KEY
   ? new Resend(process.env.RESEND_API_KEY)
   : null;
 
+const FROM_ADDRESS =
+  process.env.RESEND_FROM || "Metalorix <onboarding@resend.dev>";
+
 export async function sendEmail({
   to,
   subject,
@@ -20,7 +23,7 @@ export async function sendEmail({
 
   try {
     const { error } = await resend.emails.send({
-      from: "Metalorix <alertas@metalorix.com>",
+      from: FROM_ADDRESS,
       to,
       subject,
       html,
