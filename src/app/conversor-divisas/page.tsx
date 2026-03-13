@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { MultiCurrencyTable } from "@/components/tools/MultiCurrencyTable";
+import { breadcrumbSchema, softwareAppSchema } from "@/lib/seo/schemas";
 
 export const metadata: Metadata = {
   title: "Precio del oro en euros, libras, francos y más divisas — Metalorix",
@@ -28,8 +29,21 @@ export const metadata: Metadata = {
 };
 
 export default function ConversorDivisasPage() {
+  const bc = breadcrumbSchema([
+    { name: "Herramientas", path: "/herramientas" },
+    { name: "Conversor divisas", path: "/conversor-divisas" },
+  ]);
+  const app = softwareAppSchema({
+    name: "Conversor multi-divisa — Metalorix",
+    description: "Precio del oro, plata y platino en EUR, GBP, CHF, JPY y más divisas. Por onza, gramo y kilogramo.",
+    path: "/conversor-divisas",
+  });
+
   return (
-    <section className="py-[var(--section-py)]">
+    <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(bc) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(app) }} />
+      <section className="py-[var(--section-py)]">
       <div className="mx-auto max-w-[1200px] px-6">
         {/* Breadcrumb */}
         <nav className="text-sm text-content-3 mb-6" aria-label="Breadcrumb">
@@ -77,5 +91,6 @@ export default function ConversorDivisasPage() {
         </div>
       </div>
     </section>
+    </>
   );
 }

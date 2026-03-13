@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { MetalComparator } from "@/components/tools/MetalComparator";
+import { breadcrumbSchema, softwareAppSchema } from "@/lib/seo/schemas";
 
 export const metadata: Metadata = {
   title: "Comparador Oro vs Plata vs Platino — Rendimiento histórico | Metalorix",
@@ -27,8 +28,21 @@ export const metadata: Metadata = {
 };
 
 export default function ComparadorPage() {
+  const bc = breadcrumbSchema([
+    { name: "Herramientas", path: "/herramientas" },
+    { name: "Comparador", path: "/comparador" },
+  ]);
+  const app = softwareAppSchema({
+    name: "Comparador Oro vs Plata vs Platino — Metalorix",
+    description: "Compara el rendimiento histórico del oro, plata y platino en un gráfico interactivo.",
+    path: "/comparador",
+  });
+
   return (
-    <section className="py-[var(--section-py)]">
+    <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(bc) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(app) }} />
+      <section className="py-[var(--section-py)]">
       <div className="mx-auto max-w-[1200px] px-6">
         <nav className="text-sm text-content-3 mb-6" aria-label="Breadcrumb">
           <Link href="/" className="hover:text-content-1 transition-colors">
@@ -93,5 +107,6 @@ export default function ComparadorPage() {
         </div>
       </div>
     </section>
+    </>
   );
 }

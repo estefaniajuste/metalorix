@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import dynamic from "next/dynamic";
 import Link from "next/link";
+import { breadcrumbSchema, softwareAppSchema } from "@/lib/seo/schemas";
 
 const toolSkeleton = (h = "h-[300px]") => (
   <div className={`w-full ${h} bg-surface-1 border border-border rounded-DEFAULT animate-shimmer`} />
@@ -65,12 +66,22 @@ const upcoming = [
 ];
 
 export default function HerramientasPage() {
+  const breadcrumb = breadcrumbSchema([{ name: "Herramientas", path: "/herramientas" }]);
+  const appSchema = softwareAppSchema({
+    name: "Herramientas Metalorix",
+    description: "Suite gratuita de herramientas para análisis de metales preciosos: ratio oro/plata, conversor de unidades, calculadora DCA y comparador multi-metal.",
+    path: "/herramientas",
+  });
+
   return (
-    <section className="py-[var(--section-py)]">
-      <div className="mx-auto max-w-[1200px] px-6">
-        <h1 className="text-3xl sm:text-4xl font-extrabold text-content-0 tracking-tight mb-3">
-          Herramientas
-        </h1>
+    <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumb) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(appSchema) }} />
+      <section className="py-[var(--section-py)]">
+        <div className="mx-auto max-w-[1200px] px-6">
+          <h1 className="text-3xl sm:text-4xl font-extrabold text-content-0 tracking-tight mb-3">
+            Herramientas
+          </h1>
         <p className="text-content-2 mb-10 max-w-2xl leading-relaxed">
           Herramientas prácticas para analizar y valorar metales preciosos.
           Datos actualizados en tiempo real.
@@ -207,5 +218,6 @@ export default function HerramientasPage() {
         </div>
       </div>
     </section>
+    </>
   );
 }

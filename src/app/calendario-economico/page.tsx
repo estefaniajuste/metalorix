@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { EconomicCalendar } from "@/components/tools/EconomicCalendar";
+import { breadcrumbSchema, webPageSchema } from "@/lib/seo/schemas";
 
 export const metadata: Metadata = {
   title: "Calendario económico para metales preciosos — FOMC, BCE, IPC, NFP | Metalorix",
@@ -28,8 +29,21 @@ export const metadata: Metadata = {
 };
 
 export default function CalendarioEconomicoPage() {
+  const bc = breadcrumbSchema([
+    { name: "Herramientas", path: "/herramientas" },
+    { name: "Calendario económico", path: "/calendario-economico" },
+  ]);
+  const page = webPageSchema({
+    name: "Calendario económico para metales preciosos",
+    description: "Eventos económicos clave que mueven el precio del oro, plata y platino: FOMC, BCE, IPC, NFP.",
+    path: "/calendario-economico",
+  });
+
   return (
-    <section className="py-[var(--section-py)]">
+    <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(bc) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(page) }} />
+      <section className="py-[var(--section-py)]">
       <div className="mx-auto max-w-[1200px] px-6">
         <nav className="text-sm text-content-3 mb-6" aria-label="Breadcrumb">
           <Link href="/" className="hover:text-content-1 transition-colors">
@@ -74,5 +88,6 @@ export default function CalendarioEconomicoPage() {
         </div>
       </div>
     </section>
+    </>
   );
 }

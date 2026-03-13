@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { RoiCalculator } from "@/components/tools/RoiCalculator";
+import { breadcrumbSchema, softwareAppSchema } from "@/lib/seo/schemas";
 
 export const metadata: Metadata = {
   title:
@@ -28,8 +29,21 @@ export const metadata: Metadata = {
 };
 
 export default function CalculadoraRentabilidadPage() {
+  const bc = breadcrumbSchema([
+    { name: "Herramientas", path: "/herramientas" },
+    { name: "Calculadora de rentabilidad", path: "/calculadora-rentabilidad" },
+  ]);
+  const app = softwareAppSchema({
+    name: "Calculadora de rentabilidad — Metalorix",
+    description: "Calcula cuánto habrías ganado invirtiendo en oro, plata o platino con datos reales.",
+    path: "/calculadora-rentabilidad",
+  });
+
   return (
-    <section className="py-[var(--section-py)]">
+    <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(bc) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(app) }} />
+      <section className="py-[var(--section-py)]">
       <div className="mx-auto max-w-[1200px] px-6">
         {/* Breadcrumb */}
         <nav className="text-sm text-content-3 mb-6" aria-label="Breadcrumb">
@@ -83,5 +97,6 @@ export default function CalculadoraRentabilidadPage() {
         </div>
       </div>
     </section>
+    </>
   );
 }

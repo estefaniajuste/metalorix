@@ -42,7 +42,7 @@ export const metadata: Metadata = {
     locale: "es_ES",
   },
   twitter: {
-    card: "summary",
+    card: "summary_large_image",
     title: "Metalorix — Precios de Oro, Plata y Platino",
     description:
       "Precios spot en tiempo real para Oro, Plata y Platino.",
@@ -53,6 +53,12 @@ export const metadata: Metadata = {
   },
   alternates: {
     canonical: "https://metalorix.com",
+    languages: {
+      "es": "https://metalorix.com",
+      "en": "https://metalorix.com",
+      "pt": "https://metalorix.com",
+      "x-default": "https://metalorix.com",
+    },
   },
 };
 
