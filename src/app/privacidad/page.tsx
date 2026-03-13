@@ -106,12 +106,20 @@ export default function PrivacidadPage() {
                     <td className="px-4 py-2.5">localStorage</td>
                     <td className="px-4 py-2.5">Estado del consentimiento</td>
                   </tr>
+                  <tr className="border-b border-border">
+                    <td className="px-4 py-2.5 font-mono text-xs">_ga / _ga_*</td>
+                    <td className="px-4 py-2.5">Cookie</td>
+                    <td className="px-4 py-2.5">
+                      Google Analytics 4 — estadísticas anónimas de uso
+                    </td>
+                  </tr>
                 </tbody>
               </table>
             </div>
             <p className="mt-3 text-sm text-content-3">
-              No utilizamos cookies de terceros, rastreo, publicidad ni
-              analytics de terceros.
+              Utilizamos Google Analytics 4 para obtener estadísticas
+              anónimas de uso. No utilizamos cookies de publicidad ni
+              rastreo con fines comerciales.
             </p>
           </section>
 
@@ -120,6 +128,11 @@ export default function PrivacidadPage() {
               4. Servicios de terceros
             </h2>
             <ul className="list-disc list-inside space-y-2 text-content-2">
+              <li>
+                <strong className="text-content-1">Google Analytics 4</strong>:
+                estadísticas anónimas de visitas y uso del sitio (puede
+                establecer cookies _ga)
+              </li>
               <li>
                 <strong className="text-content-1">Google Cloud</strong>:
                 hosting y base de datos (UE, europe-west1)

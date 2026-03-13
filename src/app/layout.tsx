@@ -59,6 +59,14 @@ export default function RootLayout({
 }) {
   return (
     <html lang="es" suppressHydrationWarning>
+      <head>
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-9K1MTS78FF" />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-9K1MTS78FF');`,
+          }}
+        />
+      </head>
       <body className={`${inter.variable} font-sans`}>
         <ThemeProvider>
           <a

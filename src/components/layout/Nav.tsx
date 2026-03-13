@@ -9,6 +9,7 @@ const metalLinks = [
   { href: "/precio/oro", label: "Oro", symbol: "XAU", color: "#D6B35A" },
   { href: "/precio/plata", label: "Plata", symbol: "XAG", color: "#A7B0BE" },
   { href: "/precio/platino", label: "Platino", symbol: "XPT", color: "#8B9DC3" },
+  { href: "/ratio-oro-plata", label: "Ratio Oro/Plata", symbol: "⚖️", color: "#D6B35A" },
 ];
 
 const navItems = [

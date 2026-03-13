@@ -67,6 +67,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.7,
     },
     {
+      url: `${BASE_URL}/ratio-oro-plata`,
+      lastModified: now,
+      changeFrequency: "hourly",
+      priority: 0.85,
+    },
+    {
       url: `${BASE_URL}/privacidad`,
       lastModified: now,
       changeFrequency: "yearly",
