@@ -48,4 +48,5 @@ jobs:
             --cpu 1 \
             --min-instances 0 \
             --max-instances 3 \
-            --set-env-vars "TWELVE_DATA_API_KEY=${{ secrets.TWELVE_DATA_API_KEY }}"
+            --add-cloudsql-instances=${{ secrets.GCP_PROJECT_ID }}:europe-west1:metalorix-db \
+            --set-env-vars "TWELVE_DATA_API_KEY=${{ secrets.TWELVE_DATA_API_KEY }},CRON_SECRET=${{ secrets.CRON_SECRET }},DATABASE_URL=postgresql://postgres:${{ secrets.DB_PASSWORD }}@/metalorix?host=/cloudsql/${{ secrets.GCP_PROJECT_ID }}:europe-west1:metalorix-db"

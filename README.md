@@ -1,25 +1,61 @@
 # Metalorix
 
-Precious metals spot prices & analytics — Gold (XAU), Silver (XAG) and Platinum (XPT).
+Plataforma de inteligencia sobre metales preciosos — Oro (XAU), Plata (XAG) y Platino (XPT).
 
-## Quick Start
+Precios en tiempo real, gráficos interactivos, alertas inteligentes y noticias generadas por IA. Todo en español.
 
-Open `index.html` in any modern browser. No build step required.
+## Tech Stack
 
-For local development with live-reload, use any static server:
+- **Framework**: Next.js 14 (App Router) + TypeScript
+- **UI**: React 18 + Tailwind CSS
+- **Gráficos**: TradingView Lightweight Charts
+- **Base de datos**: PostgreSQL (Drizzle ORM)
+- **Deploy**: Google Cloud Run (Docker)
+- **CI/CD**: GitHub Actions
+
+## Desarrollo Local
 
 ```bash
-npx serve .          # or python -m http.server 8000
+# Instalar dependencias
+npm install
+
+# Levantar PostgreSQL local
+docker-compose up -d
+
+# Aplicar schema a la BD
+npm run db:push
+
+# Arrancar servidor de desarrollo
+npm run dev
 ```
 
-## Data Provider
+La app estará en [http://localhost:3000](http://localhost:3000).
 
-By default the app runs in **mock mode** with simulated data. To connect a live API:
+## Variables de Entorno
 
-1. Open `index.html` and set `CONFIG.dataProvider = 'live'`.
-2. Implement `getSpotPrices()` and `getHistory()` in `LiveProvider` (see placeholder comments in code).
-3. **Important:** proxy API requests through a backend to protect your API key — never expose keys in client-side code.
+Copia `.env.local.example` a `.env.local` y configura:
 
-## License
+```env
+DATABASE_URL=postgresql://metalorix:metalorix@localhost:5432/metalorix
+TWELVE_DATA_API_KEY=tu_api_key
+CRON_SECRET=tu_secreto
+```
+
+## Scripts
+
+| Script | Descripción |
+|--------|-------------|
+| `npm run dev` | Servidor de desarrollo |
+| `npm run build` | Build de producción |
+| `npm run start` | Servidor de producción |
+| `npm run db:push` | Aplicar schema a la BD |
+| `npm run db:studio` | Interfaz visual de la BD |
+| `npm run db:generate` | Generar migraciones SQL |
+
+## Deploy
+
+El deploy es automático al hacer push a `main`. GitHub Actions construye la imagen Docker y la despliega en Google Cloud Run (europe-west1).
+
+## Licencia
 
 MIT

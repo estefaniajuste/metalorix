@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { GoldSilverRatio } from "@/components/tools/GoldSilverRatio";
 import { UnitConverter } from "@/components/tools/UnitConverter";
+import { MetalComparison } from "@/components/tools/MetalComparison";
 
 export const metadata: Metadata = {
   title: "Herramientas de trading — Metalorix",
@@ -50,7 +51,12 @@ export default function HerramientasPage() {
           Datos actualizados en tiempo real.
         </p>
 
-        {/* Active tools */}
+        {/* Comparison chart — full width */}
+        <div className="mb-8">
+          <MetalComparison />
+        </div>
+
+        {/* Side-by-side tools */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-16">
           <GoldSilverRatio />
           <UnitConverter />

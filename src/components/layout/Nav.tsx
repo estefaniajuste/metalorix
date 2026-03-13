@@ -1,14 +1,21 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Logo } from "./Logo";
 import { useTheme } from "./ThemeProvider";
 
+const metalLinks = [
+  { href: "/precio/oro", label: "Oro", symbol: "XAU", color: "#D6B35A" },
+  { href: "/precio/plata", label: "Plata", symbol: "XAG", color: "#A7B0BE" },
+  { href: "/precio/platino", label: "Platino", symbol: "XPT", color: "#8B9DC3" },
+];
+
 const navItems = [
   { href: "/", label: "Dashboard" },
-  { href: "/noticias", label: "Noticias" },
+  { href: "#precios", label: "Precios", hasDropdown: true },
   { href: "/herramientas", label: "Herramientas" },
+  { href: "/noticias", label: "Noticias" },
   { href: "/alertas", label: "Alertas" },
 ];
 
@@ -87,9 +94,29 @@ function CloseIcon() {
   );
 }
 
+function ChevronDown() {
+  return (
+    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+      <polyline points="6 9 12 15 18 9" />
+    </svg>
+  );
+}
+
 export function Nav() {
   const { theme, toggle } = useTheme();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        setDropdownOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   return (
     <nav className="sticky top-0 z-50 h-16 bg-surface-1 border-b border-border backdrop-blur-xl transition-colors duration-250 ease-smooth">
@@ -100,15 +127,46 @@ export function Nav() {
 
         {/* Desktop nav */}
         <div className="hidden md:flex items-center gap-1.5">
-          {navItems.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="px-3.5 py-2 rounded-xs text-sm font-medium text-content-2 hover:text-content-0 hover:bg-surface-2 transition-colors"
-            >
-              {item.label}
-            </Link>
-          ))}
+          {navItems.map((item) =>
+            item.hasDropdown ? (
+              <div key={item.href} className="relative" ref={dropdownRef}>
+                <button
+                  onClick={() => setDropdownOpen(!dropdownOpen)}
+                  className="flex items-center gap-1 px-3.5 py-2 rounded-xs text-sm font-medium text-content-2 hover:text-content-0 hover:bg-surface-2 transition-colors"
+                >
+                  {item.label}
+                  <ChevronDown />
+                </button>
+                {dropdownOpen && (
+                  <div className="absolute top-full left-0 mt-1 w-48 bg-surface-1 border border-border rounded-DEFAULT shadow-card py-1.5 z-50">
+                    {metalLinks.map((metal) => (
+                      <Link
+                        key={metal.href}
+                        href={metal.href}
+                        onClick={() => setDropdownOpen(false)}
+                        className="flex items-center gap-3 px-4 py-2.5 text-sm text-content-2 hover:text-content-0 hover:bg-surface-2 transition-colors"
+                      >
+                        <span
+                          className="w-2.5 h-2.5 rounded-full flex-shrink-0"
+                          style={{ backgroundColor: metal.color }}
+                        />
+                        <span className="font-medium">{metal.label}</span>
+                        <span className="text-xs text-content-3 ml-auto">{metal.symbol}</span>
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ) : (
+              <Link
+                key={item.href}
+                href={item.href}
+                className="px-3.5 py-2 rounded-xs text-sm font-medium text-content-2 hover:text-content-0 hover:bg-surface-2 transition-colors"
+              >
+                {item.label}
+              </Link>
+            )
+          )}
         </div>
 
         <div className="flex items-center gap-2.5">
@@ -133,17 +191,40 @@ export function Nav() {
 
       {/* Mobile nav */}
       {mobileOpen && (
-        <div className="md:hidden fixed top-16 inset-x-0 bottom-0 bg-surface-1 border-t border-border p-4 z-40">
-          {navItems.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="block px-4 py-3.5 rounded-sm text-base font-medium text-content-2 hover:text-content-0 hover:bg-surface-2 transition-colors"
-              onClick={() => setMobileOpen(false)}
-            >
-              {item.label}
-            </Link>
-          ))}
+        <div className="md:hidden fixed top-16 inset-x-0 bottom-0 bg-surface-1 border-t border-border p-4 z-40 overflow-y-auto">
+          {navItems.map((item) =>
+            item.hasDropdown ? (
+              <div key={item.href}>
+                <div className="px-4 py-2 text-xs font-semibold text-content-3 uppercase tracking-wider">
+                  Precios
+                </div>
+                {metalLinks.map((metal) => (
+                  <Link
+                    key={metal.href}
+                    href={metal.href}
+                    className="flex items-center gap-3 px-4 py-3 rounded-sm text-base font-medium text-content-2 hover:text-content-0 hover:bg-surface-2 transition-colors"
+                    onClick={() => setMobileOpen(false)}
+                  >
+                    <span
+                      className="w-2.5 h-2.5 rounded-full flex-shrink-0"
+                      style={{ backgroundColor: metal.color }}
+                    />
+                    {metal.label}
+                    <span className="text-xs text-content-3 ml-auto">{metal.symbol}</span>
+                  </Link>
+                ))}
+              </div>
+            ) : (
+              <Link
+                key={item.href}
+                href={item.href}
+                className="block px-4 py-3.5 rounded-sm text-base font-medium text-content-2 hover:text-content-0 hover:bg-surface-2 transition-colors"
+                onClick={() => setMobileOpen(false)}
+              >
+                {item.label}
+              </Link>
+            )
+          )}
         </div>
       )}
     </nav>
