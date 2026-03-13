@@ -1,53 +1,48 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import { MetalComparator } from "@/components/tools/MetalComparator";
 import { breadcrumbSchema, softwareAppSchema } from "@/lib/seo/schemas";
 
-export async function generateMetadata() {
-  const t = await getTranslations("comparatorPage");
-  return {
-    title: t("title") + " — Metalorix",
-    description: t("subtitle"),
-    keywords: [
-      "oro vs plata",
-      "comparar oro plata platino",
-      "rendimiento oro vs plata",
-      "gold vs silver performance",
-      "mejor inversión metales preciosos",
-      "comparativa metales preciosos",
-    ],
-    alternates: {
-      canonical: "https://metalorix.com/comparador",
-    },
-    openGraph: {
-      title: t("title") + " — Metalorix",
-      description: t("subtitle"),
-      type: "website",
-      url: "https://metalorix.com/comparador",
-    },
-  };
-}
+export const metadata: Metadata = {
+  title: "Comparador Oro vs Plata vs Platino — Rendimiento histórico | Metalorix",
+  description:
+    "Compara el rendimiento histórico del oro, plata y platino. Gráfico interactivo con periodos de 1 mes a 10+ años. ¿Qué metal ha subido más?",
+  keywords: [
+    "oro vs plata",
+    "comparar oro plata platino",
+    "rendimiento oro vs plata",
+    "gold vs silver performance",
+    "mejor inversión metales preciosos",
+    "comparativa metales preciosos",
+  ],
+  alternates: {
+    canonical: "https://metalorix.com/comparador",
+  },
+  openGraph: {
+    title: "Comparador Oro vs Plata vs Platino — Metalorix",
+    description:
+      "¿Qué metal ha rendido más? Compara oro, plata y platino en un gráfico interactivo.",
+    type: "website",
+    url: "https://metalorix.com/comparador",
+  },
+};
 
 export default async function ComparadorPage() {
   const t = await getTranslations("comparatorPage");
   const tc = await getTranslations("common");
+  const tt = await getTranslations("tools");
   const tm = await getTranslations("metals");
 
   const bc = breadcrumbSchema([
-    { name: t("breadcrumbTools"), path: "/herramientas" },
-    { name: t("breadcrumb"), path: "/comparador" },
+    { name: "Herramientas", path: "/herramientas" },
+    { name: "Comparador", path: "/comparador" },
   ]);
   const app = softwareAppSchema({
-    name: t("title") + " — Metalorix",
-    description: t("subtitle"),
+    name: "Comparador Oro vs Plata vs Platino — Metalorix",
+    description: "Compara el rendimiento histórico del oro, plata y platino en un gráfico interactivo.",
     path: "/comparador",
   });
-
-  const factorItems = [
-    { metal: tm("gold"), desc: t("goldFactors") },
-    { metal: tm("silver"), desc: t("silverFactors") },
-    { metal: tm("platinum"), desc: t("platinumFactors") },
-  ];
 
   return (
     <>
@@ -61,7 +56,7 @@ export default async function ComparadorPage() {
           </Link>
           <span className="mx-2">/</span>
           <Link href="/herramientas" className="hover:text-content-1 transition-colors">
-            {t("breadcrumbTools")}
+            {tt("title")}
           </Link>
           <span className="mx-2">/</span>
           <span className="text-content-1">{t("breadcrumb")}</span>
@@ -79,22 +74,26 @@ export default async function ComparadorPage() {
         <div className="mt-12 grid grid-cols-1 lg:grid-cols-2 gap-6">
           <div className="bg-surface-1 border border-border rounded-DEFAULT p-6">
             <h2 className="text-xl font-bold text-content-0 mb-4">
-              {t("howToRead")}
+              {t("howToInterpret")}
             </h2>
             <p className="text-content-2 text-sm leading-relaxed mb-3">
-              {t("howToReadP1")}
+              {t("interpretP1")}
             </p>
             <p className="text-content-2 text-sm leading-relaxed">
-              {t("howToReadP2")}
+              {t("interpretP2")}
             </p>
           </div>
 
           <div className="bg-surface-1 border border-border rounded-DEFAULT p-6">
             <h2 className="text-xl font-bold text-content-0 mb-4">
-              {t("factorsTitle")}
+              {t("factors")}
             </h2>
             <ul className="space-y-3 text-sm text-content-2 leading-relaxed">
-              {factorItems.map((item) => (
+              {[
+                { metal: tm("gold"), desc: t("goldFactors") },
+                { metal: tm("silver"), desc: t("silverFactors") },
+                { metal: tm("platinum"), desc: t("platinumFactors") },
+              ].map((item) => (
                 <li key={item.metal} className="flex gap-3">
                   <span className="flex-shrink-0 font-semibold text-content-0 w-16">
                     {item.metal}

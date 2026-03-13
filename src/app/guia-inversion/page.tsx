@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { getTranslations } from "next-intl/server";
+import { getTranslations, getLocale } from "next-intl/server";
 import { InvestmentComparison } from "@/components/guide/InvestmentComparison";
 
 export const revalidate = 86400;
@@ -12,23 +12,25 @@ import { EtfTable } from "@/components/guide/EtfTable";
 import { FaqSection } from "@/components/guide/FaqSection";
 import { FAQ_ITEMS } from "@/lib/data/faq-items";
 
+const seoKeywords = [
+  "cómo invertir en oro",
+  "ETF oro Europa",
+  "oro físico vs ETF",
+  "comprar oro seguro",
+  "mejores ETF oro",
+  "invertir en plata",
+  "oro en Suiza",
+  "Xetra-Gold",
+  "Invesco Physical Gold",
+  "guía inversión metales preciosos",
+];
+
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("guide");
   return {
-    title: t("title") + " | Metalorix",
+    title: t("title") + " — Metalorix",
     description: t("subtitle"),
-    keywords: [
-      "cómo invertir en oro",
-      "ETF oro Europa",
-      "oro físico vs ETF",
-      "comprar oro seguro",
-      "mejores ETF oro",
-      "invertir en plata",
-      "oro en Suiza",
-      "Xetra-Gold",
-      "Invesco Physical Gold",
-      "guía inversión metales preciosos",
-    ],
+    keywords: seoKeywords,
     openGraph: {
       title: "Cómo invertir en oro y metales preciosos — Guía completa",
       description:
@@ -55,28 +57,28 @@ const faqSchema = {
   })),
 };
 
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    {
+      "@type": "ListItem",
+      position: 1,
+      name: "Inicio",
+      item: "https://metalorix.com",
+    },
+    {
+      "@type": "ListItem",
+      position: 2,
+      name: "Guía de inversión",
+      item: "https://metalorix.com/guia-inversion",
+    },
+  ],
+};
+
 export default async function GuiaInversionPage() {
   const t = await getTranslations("guide");
   const tc = await getTranslations("common");
-
-  const breadcrumbSchema = {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    itemListElement: [
-      {
-        "@type": "ListItem",
-        position: 1,
-        name: tc("breadcrumbHome"),
-        item: "https://metalorix.com",
-      },
-      {
-        "@type": "ListItem",
-        position: 2,
-        name: t("breadcrumb"),
-        item: "https://metalorix.com/guia-inversion",
-      },
-    ],
-  };
 
   return (
     <>
@@ -157,7 +159,7 @@ export default async function GuiaInversionPage() {
           {/* Section 4: FAQ */}
           <div className="mb-16">
             <h2 className="text-xl font-bold text-content-0 mb-6">
-              {t("faqTitle")}
+              {t("faq")}
             </h2>
             <FaqSection />
           </div>
@@ -165,10 +167,10 @@ export default async function GuiaInversionPage() {
           {/* Legal disclaimer */}
           <div className="bg-surface-1 border border-border rounded-DEFAULT p-6">
             <h3 className="text-base font-semibold text-content-0 mb-3">
-              {t("legalTitle")}
+              {t("disclaimer")}
             </h3>
             <p className="text-xs text-content-3 leading-relaxed">
-              {t("legalText")}
+              {t("disclaimerText")}
             </p>
           </div>
         </div>

@@ -1,36 +1,37 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import { GramPriceContent } from "@/components/seo/GramPriceContent";
 
-export async function generateMetadata() {
-  const t = await getTranslations("gramPricePage");
-  return {
-    title: t("title") + " — Metalorix",
-    description: t("subtitle"),
-    keywords: [
-      "precio gramo oro",
-      "precio gramo oro hoy",
-      "precio gramo oro euros",
-      "cuanto vale un gramo de oro",
-      "precio gramo oro 18 kilates",
-      "precio gramo oro 24 kilates",
-      "valor gramo oro",
-      "cotización gramo oro",
-    ],
-    alternates: {
-      canonical: "https://metalorix.com/precio-gramo-oro",
-    },
-    openGraph: {
-      title: t("title") + " — Metalorix",
-      description: t("subtitle"),
-      type: "website",
-      url: "https://metalorix.com/precio-gramo-oro",
-    },
-  };
-}
+export const metadata: Metadata = {
+  title:
+    "Precio del gramo de oro hoy en euros y dólares — Metalorix",
+  description:
+    "Precio del gramo de oro hoy actualizado en tiempo real en euros (EUR) y dólares (USD). También precio por onza y kilogramo de oro, plata y platino.",
+  keywords: [
+    "precio gramo oro",
+    "precio gramo oro hoy",
+    "precio gramo oro euros",
+    "cuanto vale un gramo de oro",
+    "precio gramo oro 18 kilates",
+    "precio gramo oro 24 kilates",
+    "valor gramo oro",
+    "cotización gramo oro",
+  ],
+  alternates: {
+    canonical: "https://metalorix.com/precio-gramo-oro",
+  },
+  openGraph: {
+    title: "Precio del gramo de oro hoy — Metalorix",
+    description:
+      "¿Cuánto vale un gramo de oro? Precio actualizado en EUR y USD.",
+    type: "website",
+    url: "https://metalorix.com/precio-gramo-oro",
+  },
+};
 
 export default async function PrecioGramoOroPage() {
-  const t = await getTranslations("gramPricePage");
+  const t = await getTranslations("gramPrice");
   const tc = await getTranslations("common");
 
   return (
@@ -69,10 +70,10 @@ export default async function PrecioGramoOroPage() {
 
           <div className="bg-surface-1 border border-border rounded-DEFAULT p-6">
             <h2 className="text-xl font-bold text-content-0 mb-4">
-              {t("karatTitle")}
+              {t("karats")}
             </h2>
             <p className="text-content-2 leading-relaxed mb-4">
-              {t("karatIntro")}
+              {t("karatsDesc")}
             </p>
             <ul className="space-y-2 text-sm text-content-2">
               {[

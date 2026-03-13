@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import { getTranslations } from "next-intl/server";
 import { PRODUCTS, getProduct } from "@/lib/data/products";
 import { ProductSpotPrice } from "@/components/products/ProductSpotPrice";
 import type { MetalSymbol } from "@/lib/providers/metals";
@@ -9,13 +10,14 @@ export function generateStaticParams() {
   return PRODUCTS.map((p) => ({ slug: p.slug }));
 }
 
-export function generateMetadata({
+export async function generateMetadata({
   params,
 }: {
   params: { slug: string };
-}): Metadata {
+}): Promise<Metadata> {
+  const t = await getTranslations("products");
   const product = getProduct(params.slug);
-  if (!product) return { title: "Producto no encontrado — Metalorix" };
+  if (!product) return { title: t("notFound") };
 
   return {
     title: product.seo.title + " | Metalorix",
@@ -107,11 +109,13 @@ function TaxIcon() {
   );
 }
 
-export default function ProductoPage({
+export default async function ProductoPage({
   params,
 }: {
   params: { slug: string };
 }) {
+  const t = await getTranslations("products");
+  const tc = await getTranslations("common");
   const product = getProduct(params.slug);
   if (!product) notFound();
 
@@ -182,22 +186,18 @@ export default function ProductoPage({
   };
 
   const specs = [
-    { label: "Tipo", value: product.type === "moneda" ? "Moneda" : "Lingote" },
-    { label: "Metal", value: product.metal === "oro" ? "Oro" : "Plata" },
-    { label: "País", value: product.country },
-    { label: "Fabricante", value: product.mint },
-    { label: "Acuñación", value: product.year },
-    { label: "Pureza", value: product.purityLabel },
-    { label: "Peso fino", value: `${product.fineWeightOz} oz troy` },
-    { label: "Peso bruto", value: `${product.grossWeightG} g` },
-    ...(product.diameter
-      ? [{ label: "Diámetro", value: `${product.diameter} mm` }]
-      : []),
-    ...(product.thickness
-      ? [{ label: "Grosor", value: `${product.thickness} mm` }]
-      : []),
-    { label: "Prima típica", value: product.premiumRange + " sobre spot" },
-    { label: "Liquidez", value: product.liquidity },
+    { label: t("specType"), value: product.type === "moneda" ? t("typeCoin") : t("typeBar") },
+    { label: t("specMetal"), value: product.metal === "oro" ? t("metalGold") : t("metalSilver") },
+    { label: t("specCountry"), value: product.country },
+    { label: t("specManufacturer"), value: product.mint },
+    { label: t("specMinting"), value: product.year },
+    { label: t("specPurity"), value: product.purityLabel },
+    { label: t("specFineWeight"), value: `${product.fineWeightOz} oz troy` },
+    { label: t("specGrossWeight"), value: `${product.grossWeightG} g` },
+    ...(product.diameter ? [{ label: t("specDiameter"), value: `${product.diameter} mm` }] : []),
+    ...(product.thickness ? [{ label: t("specThickness"), value: `${product.thickness} mm` }] : []),
+    { label: t("specPremium"), value: product.premiumRange + " " + t("specOverSpot") },
+    { label: t("specLiquidity"), value: product.liquidity },
   ];
 
   return (
@@ -222,14 +222,14 @@ export default function ProductoPage({
               href="/"
               className="hover:text-content-1 transition-colors"
             >
-              Inicio
+              {tc("breadcrumbHome")}
             </Link>
             <span className="mx-2">/</span>
             <Link
               href="/productos"
               className="hover:text-content-1 transition-colors"
             >
-              Productos
+              {t("breadcrumb")}
             </Link>
             <span className="mx-2">/</span>
             <span className="text-content-1">{product.shortName}</span>
@@ -255,14 +255,14 @@ export default function ProductoPage({
               {product.metal}
             </span>
             <span className="text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full bg-surface-2 text-content-3">
-              {product.type === "moneda" ? "Moneda" : "Lingote"}
+              {product.type === "moneda" ? t("typeCoin") : t("typeBar")}
             </span>
             <span className="text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full bg-surface-2 text-content-3">
               {product.country}
             </span>
             {product.investmentGold && (
               <span className="text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full bg-signal-up-bg text-signal-up">
-                Oro de inversión — Exento IVA
+                {t("investmentGold")}
               </span>
             )}
           </div>
@@ -274,14 +274,14 @@ export default function ProductoPage({
               {/* Description */}
               <div className="bg-surface-1 border border-border rounded-DEFAULT p-6">
                 <h2 className="text-xl font-bold text-content-0 mb-4">
-                  Descripción
+                  {t("description")}
                 </h2>
                 <p className="text-content-2 leading-relaxed mb-6">
                   {product.description}
                 </p>
 
                 <h3 className="text-base font-semibold text-content-0 mb-3">
-                  Datos destacados
+                  {t("highlights")}
                 </h3>
                 <ul className="space-y-3">
                   {product.highlights.map((h, i) => (
@@ -299,7 +299,7 @@ export default function ProductoPage({
               {/* Specs table */}
               <div className="bg-surface-1 border border-border rounded-DEFAULT p-6">
                 <h2 className="text-xl font-bold text-content-0 mb-4">
-                  Especificaciones
+                  {t("specifications")}
                 </h2>
                 <div className="divide-y divide-border">
                   {specs.map((spec) => (
@@ -322,7 +322,7 @@ export default function ProductoPage({
                   <InfoIcon />
                   <div>
                     <h3 className="text-base font-semibold text-content-0 mb-2">
-                      ¿Para quién es ideal?
+                      {t("idealFor")}
                     </h3>
                     <p className="text-sm text-content-2 leading-relaxed">
                       {product.idealFor}
@@ -338,7 +338,7 @@ export default function ProductoPage({
               <ProductSpotPrice
                 symbol={product.symbol as MetalSymbol}
                 fineWeightOz={product.fineWeightOz}
-                metalName={product.metal === "oro" ? "Oro" : "Plata"}
+                metalName={product.metal === "oro" ? t("metalGold") : t("metalSilver")}
               />
 
               {/* Tax card */}
@@ -346,7 +346,7 @@ export default function ProductoPage({
                 <div className="flex items-center gap-2.5 mb-3">
                   <TaxIcon />
                   <h3 className="text-base font-semibold text-content-0">
-                    Fiscalidad en España
+                    {t("taxTitle")}
                   </h3>
                 </div>
                 <p className="text-sm text-content-2 leading-relaxed">
@@ -356,13 +356,13 @@ export default function ProductoPage({
                   <div className="mt-3 flex items-center gap-2">
                     <ShieldIcon />
                     <span className="text-sm font-medium text-signal-up">
-                      Exento de IVA
+                      {t("vatExempt")}
                     </span>
                   </div>
                 ) : (
                   <div className="mt-3 px-3 py-2 bg-signal-down-bg rounded-xs">
                     <span className="text-sm font-medium text-signal-down">
-                      IVA 21 % aplicable
+                      {t("vatApplicable")}
                     </span>
                   </div>
                 )}
@@ -372,7 +372,7 @@ export default function ProductoPage({
               {relatedProducts.length > 0 && (
                 <div className="bg-surface-1 border border-border rounded-DEFAULT p-6">
                   <h3 className="text-base font-semibold text-content-0 mb-4">
-                    Otros productos de {product.metal}
+                    {t("otherProducts", { metal: product.metal })}
                   </h3>
                   <div className="space-y-3">
                     {relatedProducts.map((rp) => (
@@ -410,7 +410,7 @@ export default function ProductoPage({
                     href="/productos"
                     className="mt-4 inline-flex items-center gap-1 text-xs font-medium text-content-3 hover:text-brand-gold transition-colors"
                   >
-                    Ver todos los productos
+                    {t("viewAll")}
                     <svg
                       className="w-3 h-3"
                       viewBox="0 0 24 24"
@@ -428,14 +428,10 @@ export default function ProductoPage({
               {/* Disclaimer */}
               <div className="bg-surface-1 border border-border rounded-DEFAULT p-6">
                 <h3 className="text-base font-semibold text-content-0 mb-3">
-                  Aviso legal
+                  {t("disclaimer")}
                 </h3>
                 <p className="text-xs text-content-3 leading-relaxed">
-                  Esta ficha tiene carácter informativo y educativo. Los datos de
-                  prima, liquidez y fiscalidad son orientativos y pueden variar
-                  según el dealer, el momento del mercado y la legislación
-                  vigente. No constituye asesoramiento financiero ni fiscal.
-                  Consulta con un asesor cualificado antes de invertir.
+                  {t("disclaimerText")}
                 </p>
               </div>
             </div>

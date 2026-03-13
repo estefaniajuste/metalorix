@@ -336,7 +336,7 @@ const glossaryData: Record<string, GlossaryTerm[]> = {
       term: "金银条块",
       id: "bullion",
       definition:
-        "指以条块或硬币形式存在的贵金属，按其金属含量定价（而非收藏价值）。「Gold bullion」即投资级黄金。",
+        "指以条块或硬币形式存在的贵金属，按其金属含量定价（而非收藏价值）。Gold bullion即投资级黄金。",
     },
     {
       term: "溢价",

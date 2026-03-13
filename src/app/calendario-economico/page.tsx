@@ -4,43 +4,43 @@ import { getTranslations } from "next-intl/server";
 import { EconomicCalendar } from "@/components/tools/EconomicCalendar";
 import { breadcrumbSchema, webPageSchema } from "@/lib/seo/schemas";
 
-export async function generateMetadata(): Promise<Metadata> {
-  const t = await getTranslations("calendarPage");
-  return {
-    title: t("title") + " — Metalorix",
-    description: t("subtitle"),
-    keywords: [
-      "calendario económico oro",
-      "FOMC oro",
-      "reunión Fed tipos interés",
-      "IPC inflación oro",
-      "NFP nóminas no agrícolas",
-      "BCE tipos interés",
-      "eventos económicos metales preciosos",
-    ],
-    alternates: {
-      canonical: "https://metalorix.com/calendario-economico",
-    },
-    openGraph: {
-      title: t("title") + " — Metalorix",
-      description: t("subtitle"),
-      type: "website",
-      url: "https://metalorix.com/calendario-economico",
-    },
-  };
-}
+export const metadata: Metadata = {
+  title: "Calendario económico para metales preciosos — FOMC, BCE, IPC, NFP | Metalorix",
+  description:
+    "Calendario de eventos económicos clave que mueven el precio del oro, plata y platino. Reuniones Fed (FOMC), BCE, datos de inflación (IPC), empleo (NFP) y más.",
+  keywords: [
+    "calendario económico oro",
+    "FOMC oro",
+    "reunión Fed tipos interés",
+    "IPC inflación oro",
+    "NFP nóminas no agrícolas",
+    "BCE tipos interés",
+    "eventos económicos metales preciosos",
+  ],
+  alternates: {
+    canonical: "https://metalorix.com/calendario-economico",
+  },
+  openGraph: {
+    title: "Calendario económico para metales preciosos — Metalorix",
+    description:
+      "Eventos clave que mueven los precios del oro: FOMC, BCE, IPC, NFP y más.",
+    type: "website",
+    url: "https://metalorix.com/calendario-economico",
+  },
+};
 
 export default async function CalendarioEconomicoPage() {
   const t = await getTranslations("calendarPage");
   const tc = await getTranslations("common");
+  const tt = await getTranslations("tools");
 
   const bc = breadcrumbSchema([
-    { name: t("breadcrumbTools"), path: "/herramientas" },
-    { name: t("breadcrumb"), path: "/calendario-economico" },
+    { name: "Herramientas", path: "/herramientas" },
+    { name: "Calendario económico", path: "/calendario-economico" },
   ]);
   const page = webPageSchema({
-    name: t("title"),
-    description: t("subtitle"),
+    name: "Calendario económico para metales preciosos",
+    description: "Eventos económicos clave que mueven el precio del oro, plata y platino: FOMC, BCE, IPC, NFP.",
     path: "/calendario-economico",
   });
 
@@ -56,7 +56,7 @@ export default async function CalendarioEconomicoPage() {
           </Link>
           <span className="mx-2">/</span>
           <Link href="/herramientas" className="hover:text-content-1 transition-colors">
-            {t("breadcrumbTools")}
+            {tt("title")}
           </Link>
           <span className="mx-2">/</span>
           <span className="text-content-1">{t("breadcrumb")}</span>

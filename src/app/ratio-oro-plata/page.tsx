@@ -1,31 +1,31 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import { GoldSilverRatioContent } from "@/components/ratio/GoldSilverRatioContent";
 
-export async function generateMetadata() {
-  const t = await getTranslations("ratioPage");
-  return {
-    title: t("title") + " — Metalorix",
-    description: t("subtitle"),
-    keywords: [
-      "ratio oro plata",
-      "gold silver ratio",
-      "ratio oro plata histórico",
-      "oro vs plata",
-      "proporción oro plata",
-      "invertir oro o plata",
-    ],
-    alternates: {
-      canonical: "https://metalorix.com/ratio-oro-plata",
-    },
-    openGraph: {
-      title: t("title") + " — Metalorix",
-      description: t("subtitle"),
-      type: "website",
-      url: "https://metalorix.com/ratio-oro-plata",
-    },
-  };
-}
+export const metadata: Metadata = {
+  title: "Ratio Oro/Plata hoy — Gráfico histórico y análisis | Metalorix",
+  description:
+    "Ratio oro/plata en tiempo real con gráfico histórico. Descubre si el oro está sobrevalorado respecto a la plata y cuándo es mejor momento para invertir.",
+  keywords: [
+    "ratio oro plata",
+    "gold silver ratio",
+    "ratio oro plata histórico",
+    "oro vs plata",
+    "proporción oro plata",
+    "invertir oro o plata",
+  ],
+  alternates: {
+    canonical: "https://metalorix.com/ratio-oro-plata",
+  },
+  openGraph: {
+    title: "Ratio Oro/Plata hoy — Metalorix",
+    description:
+      "Ratio oro/plata en tiempo real con gráfico histórico y zonas de sobrevaloración.",
+    type: "website",
+    url: "https://metalorix.com/ratio-oro-plata",
+  },
+};
 
 function JsonLd() {
   const schemas = [
@@ -79,6 +79,42 @@ export default async function RatioOroPlataPage() {
   const t = await getTranslations("ratioPage");
   const tc = await getTranslations("common");
 
+  const zones = [
+    {
+      zone: "Ratio > 80",
+      color: "text-signal-up",
+      text: t("above80"),
+    },
+    {
+      zone: "Ratio 60-80",
+      color: "text-brand-gold",
+      text: t("zone6080"),
+    },
+    {
+      zone: "Ratio < 60",
+      color: "text-signal-down",
+      text: t("below60"),
+    },
+  ];
+
+  const stats = [
+    {
+      label: t("historicalAvg"),
+      value: "~60",
+      desc: t("historicalAvgDesc"),
+    },
+    {
+      label: t("historicalMax"),
+      value: "~127",
+      desc: t("historicalMaxDesc"),
+    },
+    {
+      label: t("historicalMin"),
+      value: "~31",
+      desc: t("historicalMinDesc"),
+    },
+  ];
+
   return (
     <>
       <JsonLd />
@@ -120,26 +156,10 @@ export default async function RatioOroPlataPage() {
 
             <div className="bg-surface-1 border border-border rounded-DEFAULT p-6">
               <h2 className="text-xl font-bold text-content-0 mb-4">
-                {t("howToUse")}
+                {t("howToInvest")}
               </h2>
               <ul className="space-y-3">
-                {[
-                  {
-                    zone: "Ratio > 80",
-                    color: "text-signal-up",
-                    text: t("above80"),
-                  },
-                  {
-                    zone: "Ratio 60-80",
-                    color: "text-brand-gold",
-                    text: t("zone6080"),
-                  },
-                  {
-                    zone: "Ratio < 60",
-                    color: "text-signal-down",
-                    text: t("below60"),
-                  },
-                ].map((item) => (
+                {zones.map((item) => (
                   <li key={item.zone} className="flex gap-3 text-sm">
                     <span
                       className={`font-bold whitespace-nowrap ${item.color}`}
@@ -161,23 +181,7 @@ export default async function RatioOroPlataPage() {
               {t("historicalContext")}
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              {[
-                {
-                  label: t("historicalAvg"),
-                  value: "~60",
-                  desc: t("historicalAvgDesc"),
-                },
-                {
-                  label: t("allTimeHigh"),
-                  value: "~127",
-                  desc: t("allTimeHighDesc"),
-                },
-                {
-                  label: t("recentLow"),
-                  value: "~31",
-                  desc: t("recentLowDesc"),
-                },
-              ].map((stat) => (
+              {stats.map((stat) => (
                 <div
                   key={stat.label}
                   className="bg-surface-0 border border-border rounded-sm p-4"

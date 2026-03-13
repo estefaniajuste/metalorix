@@ -3,57 +3,56 @@ import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import { ProductFilter } from "@/components/products/ProductFilter";
 
-export async function generateMetadata(): Promise<Metadata> {
-  const t = await getTranslations("productsPage");
-  return {
-    title: t("title") + " | Metalorix",
-    description: t("subtitle"),
-    keywords: [
-      "monedas oro inversión",
-      "lingotes oro inversión",
-      "Krugerrand",
-      "Maple Leaf oro",
-      "Filarmónica Viena oro",
-      "comprar oro España",
-      "monedas plata inversión",
-      "lingote oro 1 oz",
-      "lingote plata 1 kg",
-    ],
-    openGraph: {
-      title: "Monedas y lingotes de inversión — Metalorix",
-      description:
-        "Fichas de las principales monedas y lingotes de oro y plata: pureza, prima sobre spot, liquidez y fiscalidad en España.",
-      type: "website",
-      url: "https://metalorix.com/productos",
+export const metadata: Metadata = {
+  title:
+    "Monedas y lingotes de inversión — Guía de productos | Metalorix",
+  description:
+    "Fichas completas de las monedas y lingotes de oro y plata más populares: Krugerrand, Maple Leaf, Filarmónica, Britannia, Eagle y lingotes LBMA. Pureza, prima, liquidez y fiscalidad en España.",
+  keywords: [
+    "monedas oro inversión",
+    "lingotes oro inversión",
+    "Krugerrand",
+    "Maple Leaf oro",
+    "Filarmónica Viena oro",
+    "comprar oro España",
+    "monedas plata inversión",
+    "lingote oro 1 oz",
+    "lingote plata 1 kg",
+  ],
+  openGraph: {
+    title: "Monedas y lingotes de inversión — Metalorix",
+    description:
+      "Fichas de las principales monedas y lingotes de oro y plata: pureza, prima sobre spot, liquidez y fiscalidad en España.",
+    type: "website",
+    url: "https://metalorix.com/productos",
+  },
+  alternates: {
+    canonical: "https://metalorix.com/productos",
+  },
+};
+
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    {
+      "@type": "ListItem",
+      position: 1,
+      name: "Inicio",
+      item: "https://metalorix.com",
     },
-    alternates: {
-      canonical: "https://metalorix.com/productos",
+    {
+      "@type": "ListItem",
+      position: 2,
+      name: "Productos",
+      item: "https://metalorix.com/productos",
     },
-  };
-}
+  ],
+};
 
 export default async function ProductosPage() {
-  const t = await getTranslations("productsPage");
+  const t = await getTranslations("products");
   const tc = await getTranslations("common");
-
-  const breadcrumbSchema = {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    itemListElement: [
-      {
-        "@type": "ListItem",
-        position: 1,
-        name: tc("breadcrumbHome"),
-        item: "https://metalorix.com",
-      },
-      {
-        "@type": "ListItem",
-        position: 2,
-        name: t("breadcrumb"),
-        item: "https://metalorix.com/productos",
-      },
-    ],
-  };
 
   return (
     <>

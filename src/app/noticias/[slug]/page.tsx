@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { getTranslations, getLocale } from "next-intl/server";
 import { getDb } from "@/lib/db";
 import { articles } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
@@ -29,7 +30,8 @@ export async function generateMetadata({
   const article = await getArticle(params.slug);
 
   if (!article) {
-    return { title: "Artículo no encontrado — Metalorix" };
+    const t = await getTranslations("article");
+    return { title: t("notFound") };
   }
 
   return {
@@ -48,19 +50,6 @@ export async function generateMetadata({
   };
 }
 
-const CATEGORY_LABELS: Record<string, string> = {
-  daily: "Resumen diario",
-  weekly: "Análisis semanal",
-  event: "Alerta de mercado",
-  educational: "Educativo",
-};
-
-const METAL_NAMES: Record<string, string> = {
-  XAU: "Oro",
-  XAG: "Plata",
-  XPT: "Platino",
-};
-
 const METAL_COLORS: Record<string, string> = {
   XAU: "#D6B35A",
   XAG: "#A7B0BE",
@@ -72,6 +61,31 @@ export default async function ArticlePage({
 }: {
   params: { slug: string };
 }) {
+  const t = await getTranslations("article");
+  const tc = await getTranslations("common");
+  const tn = await getTranslations("metalNames");
+  const tcat = await getTranslations("categories");
+  const locale = await getLocale();
+
+  const categoryLabel = (cat: string) => {
+    const map: Record<string, string> = {
+      daily: tcat("daily"),
+      weekly: tcat("weekly"),
+      event: tcat("event"),
+      educational: tcat("educational"),
+    };
+    return map[cat] ?? cat;
+  };
+
+  const metalName = (symbol: string) => {
+    const map: Record<string, string> = {
+      XAU: tn("XAU"),
+      XAG: tn("XAG"),
+      XPT: tn("XPT"),
+    };
+    return map[symbol] ?? symbol;
+  };
+
   const article = await getArticle(params.slug);
 
   if (!article) {
@@ -117,14 +131,14 @@ export default async function ArticlePage({
               href="/"
               className="hover:text-content-1 transition-colors"
             >
-              Inicio
+              {tc("breadcrumbHome")}
             </Link>
             <span className="mx-2">/</span>
             <Link
               href="/noticias"
               className="hover:text-content-1 transition-colors"
             >
-              Noticias
+              {t("breadcrumbNews")}
             </Link>
             <span className="mx-2">/</span>
             <span className="text-content-1 truncate max-w-[200px] inline-block align-bottom">
@@ -136,7 +150,7 @@ export default async function ArticlePage({
           <header className="mb-10">
             <div className="flex items-center gap-3 mb-4 flex-wrap">
               <span className="text-[10px] font-semibold px-2.5 py-1 rounded-full bg-[rgba(214,179,90,0.12)] text-brand-gold uppercase tracking-wider">
-                {CATEGORY_LABELS[article.category] ?? article.category}
+                {categoryLabel(article.category)}
               </span>
               {article.metals?.map((m) => (
                 <span
@@ -149,7 +163,7 @@ export default async function ArticlePage({
                       backgroundColor: METAL_COLORS[m] ?? "#D6B35A",
                     }}
                   />
-                  {METAL_NAMES[m] ?? m}
+                  {metalName(m)}
                 </span>
               ))}
             </div>
@@ -167,7 +181,7 @@ export default async function ArticlePage({
             <div className="flex items-center gap-4 mt-5 text-xs text-content-3">
               {article.publishedAt && (
                 <time dateTime={article.publishedAt.toISOString()}>
-                  {article.publishedAt.toLocaleDateString("es-ES", {
+                  {article.publishedAt.toLocaleDateString(locale, {
                     weekday: "long",
                     year: "numeric",
                     month: "long",
@@ -201,9 +215,7 @@ export default async function ArticlePage({
           <footer className="mt-12 pt-8 border-t border-border">
             <div className="bg-surface-1 border border-border rounded-DEFAULT p-5">
               <p className="text-xs text-content-3 leading-relaxed">
-                Este artículo ha sido generado automáticamente por Metalorix
-                utilizando inteligencia artificial y datos de mercado en
-                tiempo real. No constituye asesoramiento financiero.
+                {t("aiDisclaimer")}
               </p>
             </div>
 
@@ -223,7 +235,7 @@ export default async function ArticlePage({
                 >
                   <polyline points="15 18 9 12 15 6" />
                 </svg>
-                Todas las noticias
+                {t("allNews")}
               </Link>
               <Link
                 href="/"

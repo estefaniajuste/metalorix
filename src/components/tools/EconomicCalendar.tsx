@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import { useTranslations, useLocale } from "next-intl";
 import {
   ECONOMIC_EVENTS,
   type EconomicEvent,
@@ -15,30 +16,6 @@ const IMPACT_COLORS: Record<string, string> = {
   low: "bg-content-3",
 };
 
-const IMPACT_LABELS: Record<string, string> = {
-  high: "Alto",
-  medium: "Medio",
-  low: "Bajo",
-};
-
-const CATEGORY_LABELS: Record<string, string> = {
-  "monetary-policy": "Política monetaria",
-  inflation: "Inflación",
-  employment: "Empleo",
-  gdp: "PIB",
-  trade: "Comercio",
-  sentiment: "Sentimiento",
-};
-
-function formatDate(dateStr: string): string {
-  const d = new Date(dateStr + "T00:00:00Z");
-  return d.toLocaleDateString("es-ES", {
-    weekday: "short",
-    day: "numeric",
-    month: "short",
-  });
-}
-
 function daysUntil(dateStr: string): number {
   const now = new Date();
   now.setHours(0, 0, 0, 0);
@@ -46,14 +23,41 @@ function daysUntil(dateStr: string): number {
   return Math.ceil((d.getTime() - now.getTime()) / 86400000);
 }
 
-function daysLabel(n: number): string {
-  if (n === 0) return "Hoy";
-  if (n === 1) return "Mañana";
-  if (n < 0) return `Hace ${Math.abs(n)}d`;
-  return `En ${n}d`;
-}
-
 export function EconomicCalendar() {
+  const t = useTranslations("calendarPage");
+  const locale = useLocale();
+
+  const impactLabels: Record<string, string> = {
+    high: t("impactHigh"),
+    medium: t("impactMedium"),
+    low: t("impactLow"),
+  };
+
+  const categoryLabels: Record<string, string> = {
+    "monetary-policy": t("catMonetaryPolicy"),
+    inflation: t("catInflation"),
+    employment: t("catEmployment"),
+    gdp: t("catGDP"),
+    trade: t("catTrade"),
+    sentiment: t("catSentiment"),
+  };
+
+  function formatDate(dateStr: string): string {
+    const d = new Date(dateStr + "T00:00:00Z");
+    return d.toLocaleDateString(locale, {
+      weekday: "short",
+      day: "numeric",
+      month: "short",
+    });
+  }
+
+  function daysLabel(n: number): string {
+    if (n === 0) return t("today");
+    if (n === 1) return t("tomorrow");
+    if (n < 0) return t("daysAgo", { n: Math.abs(n) });
+    return t("inDays", { n });
+  }
+
   const [filter, setFilter] = useState<FilterImpact>("all");
   const [view, setView] = useState<ViewMode>("upcoming");
   const [expanded, setExpanded] = useState<string | null>(null);
@@ -106,7 +110,7 @@ export function EconomicCalendar() {
                 : "text-content-3 hover:text-content-1"
             }`}
           >
-            Próximos eventos
+            {t("upcomingEvents")}
           </button>
           <button
             onClick={() => setView("all-events")}
@@ -116,7 +120,7 @@ export function EconomicCalendar() {
                 : "text-content-3 hover:text-content-1"
             }`}
           >
-            Todos los eventos
+            {t("allEvents")}
           </button>
         </div>
 
@@ -132,10 +136,10 @@ export function EconomicCalendar() {
               }`}
             >
               {f === "all"
-                ? "Todos"
+                ? t("all")
                 : f === "high"
-                  ? "Impacto alto"
-                  : "Impacto medio"}
+                  ? t("highImpact")
+                  : t("mediumImpact")}
             </button>
           ))}
         </div>
@@ -145,7 +149,7 @@ export function EconomicCalendar() {
         <div className="space-y-3">
           {upcomingEvents.length === 0 ? (
             <div className="bg-surface-1 border border-border rounded-DEFAULT p-8 text-center text-content-3 text-sm">
-              No hay eventos próximos con los filtros seleccionados.
+              {t("noEvents")}
             </div>
           ) : (
             upcomingEvents.map((ev) => (
@@ -173,7 +177,7 @@ export function EconomicCalendar() {
                         {ev.region}
                       </span>
                       <span className="text-xs text-content-3 bg-surface-0 px-2 py-0.5 rounded">
-                        {CATEGORY_LABELS[ev.category]}
+                        {categoryLabels[ev.category]}
                       </span>
                     </div>
                     <div className="text-xs text-content-3 mt-1">
@@ -205,7 +209,7 @@ export function EconomicCalendar() {
                     </p>
                     <div className="flex items-start gap-2">
                       <span className="text-brand-gold font-medium flex-shrink-0">
-                        Impacto en metales:
+                        {t("metalImpact")}
                       </span>
                       <span className="text-content-2">
                         {ev.metalImpact}
@@ -213,13 +217,13 @@ export function EconomicCalendar() {
                     </div>
                     <div className="flex gap-4 text-xs text-content-3">
                       <span>
-                        Impacto:{" "}
+                        {t("impact")}{" "}
                         <span className="font-medium text-content-1">
-                          {IMPACT_LABELS[ev.impact]}
+                          {impactLabels[ev.impact]}
                         </span>
                       </span>
                       <span>
-                        Frecuencia:{" "}
+                        {t("frequency")}{" "}
                         <span className="font-medium text-content-1">
                           {ev.frequency}
                         </span>
@@ -238,19 +242,19 @@ export function EconomicCalendar() {
               <thead>
                 <tr className="border-b border-border bg-surface-0">
                   <th className="text-left text-content-3 font-medium py-3 px-4">
-                    Evento
+                    {t("event")}
                   </th>
                   <th className="text-left text-content-3 font-medium py-3 px-4 hidden sm:table-cell">
-                    Categoría
+                    {t("category")}
                   </th>
                   <th className="text-center text-content-3 font-medium py-3 px-4">
-                    Impacto
+                    {t("impact")}
                   </th>
                   <th className="text-left text-content-3 font-medium py-3 px-4">
-                    Frecuencia
+                    {t("frequency")}
                   </th>
                   <th className="text-left text-content-3 font-medium py-3 px-4 hidden md:table-cell">
-                    Efecto en metales
+                    {t("metalEffect")}
                   </th>
                 </tr>
               </thead>
@@ -267,7 +271,7 @@ export function EconomicCalendar() {
                       <div className="text-xs text-content-3">{ev.region}</div>
                     </td>
                     <td className="py-3 px-4 text-content-2 hidden sm:table-cell">
-                      {CATEGORY_LABELS[ev.category]}
+                      {categoryLabels[ev.category]}
                     </td>
                     <td className="py-3 px-4 text-center">
                       <div className="flex items-center justify-center gap-1.5">
@@ -275,7 +279,7 @@ export function EconomicCalendar() {
                           className={`w-2 h-2 rounded-full ${IMPACT_COLORS[ev.impact]}`}
                         />
                         <span className="text-xs text-content-2">
-                          {IMPACT_LABELS[ev.impact]}
+                          {impactLabels[ev.impact]}
                         </span>
                       </div>
                     </td>
