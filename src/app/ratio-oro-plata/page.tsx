@@ -1,30 +1,31 @@
-import type { Metadata } from "next";
 import Link from "next/link";
+import { getTranslations } from "next-intl/server";
 import { GoldSilverRatioContent } from "@/components/ratio/GoldSilverRatioContent";
 
-export const metadata: Metadata = {
-  title: "Ratio Oro/Plata hoy — Gráfico histórico y análisis | Metalorix",
-  description:
-    "Ratio oro/plata en tiempo real con gráfico histórico. Descubre si el oro está sobrevalorado respecto a la plata y cuándo es mejor momento para invertir.",
-  keywords: [
-    "ratio oro plata",
-    "gold silver ratio",
-    "ratio oro plata histórico",
-    "oro vs plata",
-    "proporción oro plata",
-    "invertir oro o plata",
-  ],
-  alternates: {
-    canonical: "https://metalorix.com/ratio-oro-plata",
-  },
-  openGraph: {
-    title: "Ratio Oro/Plata hoy — Metalorix",
-    description:
-      "Ratio oro/plata en tiempo real con gráfico histórico y zonas de sobrevaloración.",
-    type: "website",
-    url: "https://metalorix.com/ratio-oro-plata",
-  },
-};
+export async function generateMetadata() {
+  const t = await getTranslations("ratioPage");
+  return {
+    title: t("title") + " — Metalorix",
+    description: t("subtitle"),
+    keywords: [
+      "ratio oro plata",
+      "gold silver ratio",
+      "ratio oro plata histórico",
+      "oro vs plata",
+      "proporción oro plata",
+      "invertir oro o plata",
+    ],
+    alternates: {
+      canonical: "https://metalorix.com/ratio-oro-plata",
+    },
+    openGraph: {
+      title: t("title") + " — Metalorix",
+      description: t("subtitle"),
+      type: "website",
+      url: "https://metalorix.com/ratio-oro-plata",
+    },
+  };
+}
 
 function JsonLd() {
   const schemas = [
@@ -74,7 +75,10 @@ function JsonLd() {
   );
 }
 
-export default function RatioOroPlataPage() {
+export default async function RatioOroPlataPage() {
+  const t = await getTranslations("ratioPage");
+  const tc = await getTranslations("common");
+
   return (
     <>
       <JsonLd />
@@ -84,19 +88,17 @@ export default function RatioOroPlataPage() {
           {/* Breadcrumb */}
           <nav className="text-sm text-content-3 mb-6" aria-label="Breadcrumb">
             <Link href="/" className="hover:text-content-1 transition-colors">
-              Inicio
+              {tc("breadcrumbHome")}
             </Link>
             <span className="mx-2">/</span>
-            <span className="text-content-1">Ratio Oro/Plata</span>
+            <span className="text-content-1">{t("breadcrumb")}</span>
           </nav>
 
           <h1 className="text-3xl sm:text-4xl font-extrabold text-content-0 tracking-tight mb-4">
-            Ratio Oro/Plata hoy
+            {t("title")}
           </h1>
           <p className="text-content-2 mb-10 max-w-2xl leading-relaxed">
-            El ratio oro/plata indica cuántas onzas de plata se necesitan para
-            comprar una onza de oro. Es una de las métricas más antiguas y
-            seguidas por inversores de metales preciosos.
+            {t("subtitle")}
           </p>
 
           {/* Interactive content */}
@@ -106,40 +108,36 @@ export default function RatioOroPlataPage() {
           <div className="mt-12 grid grid-cols-1 lg:grid-cols-2 gap-6">
             <div className="bg-surface-1 border border-border rounded-DEFAULT p-6">
               <h2 className="text-xl font-bold text-content-0 mb-4">
-                ¿Qué es el ratio oro/plata?
+                {t("whatIs")}
               </h2>
               <p className="text-content-2 leading-relaxed mb-4">
-                El ratio oro/plata (Gold/Silver Ratio) es simplemente el precio
-                del oro dividido entre el precio de la plata. Si el oro vale
-                $2.000/oz y la plata $25/oz, el ratio es 80.
+                {t("whatIsP1")}
               </p>
               <p className="text-content-2 leading-relaxed">
-                Históricamente, este ratio ha fluctuado entre 15 y 120. Un ratio
-                alto sugiere que la plata está &quot;barata&quot; respecto al oro, mientras
-                que un ratio bajo indica que la plata está &quot;cara&quot; en comparación.
+                {t("whatIsP2")}
               </p>
             </div>
 
             <div className="bg-surface-1 border border-border rounded-DEFAULT p-6">
               <h2 className="text-xl font-bold text-content-0 mb-4">
-                ¿Cómo usarlo para invertir?
+                {t("howToUse")}
               </h2>
               <ul className="space-y-3">
                 {[
                   {
                     zone: "Ratio > 80",
                     color: "text-signal-up",
-                    text: "Plata potencialmente infravalorada. Históricamente, buen momento para comprar plata o hacer swap de oro a plata.",
+                    text: t("above80"),
                   },
                   {
                     zone: "Ratio 60-80",
                     color: "text-brand-gold",
-                    text: "Zona normal. No hay una señal clara de sobrevaloración o infravaloración.",
+                    text: t("zone6080"),
                   },
                   {
                     zone: "Ratio < 60",
                     color: "text-signal-down",
-                    text: "Oro potencialmente infravalorado respecto a plata. Considerar aumentar posición en oro.",
+                    text: t("below60"),
                   },
                 ].map((item) => (
                   <li key={item.zone} className="flex gap-3 text-sm">
@@ -160,24 +158,24 @@ export default function RatioOroPlataPage() {
           {/* Historical context */}
           <div className="mt-6 bg-surface-1 border border-border rounded-DEFAULT p-6">
             <h2 className="text-xl font-bold text-content-0 mb-4">
-              Contexto histórico
+              {t("historicalContext")}
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               {[
                 {
-                  label: "Media histórica (50 años)",
+                  label: t("historicalAvg"),
                   value: "~60",
-                  desc: "El ratio medio desde 1970",
+                  desc: t("historicalAvgDesc"),
                 },
                 {
-                  label: "Máximo histórico",
+                  label: t("allTimeHigh"),
                   value: "~127",
-                  desc: "Marzo 2020 (crisis COVID)",
+                  desc: t("allTimeHighDesc"),
                 },
                 {
-                  label: "Mínimo reciente",
+                  label: t("recentLow"),
                   value: "~31",
-                  desc: "Abril 2011 (rally de plata)",
+                  desc: t("recentLowDesc"),
                 },
               ].map((stat) => (
                 <div

@@ -1,41 +1,45 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { getTranslations } from "next-intl/server";
 import { RoiCalculator } from "@/components/tools/RoiCalculator";
 import { breadcrumbSchema, softwareAppSchema } from "@/lib/seo/schemas";
 
-export const metadata: Metadata = {
-  title:
-    "Calculadora de rentabilidad del oro, plata y platino — Metalorix",
-  description:
-    "Calcula cuánto habrías ganado invirtiendo en oro, plata o platino. Simulador con datos reales desde el año 2000.",
-  keywords: [
-    "calculadora rentabilidad oro",
-    "simulador inversión oro",
-    "cuanto habría ganado invirtiendo en oro",
-    "rentabilidad histórica oro",
-    "invertir en oro rentabilidad",
-    "calculadora inversión metales preciosos",
-  ],
-  alternates: {
-    canonical: "https://metalorix.com/calculadora-rentabilidad",
-  },
-  openGraph: {
-    title: "Calculadora de rentabilidad — Metalorix",
-    description:
-      "¿Cuánto habrías ganado invirtiendo en oro? Calcula la rentabilidad con datos reales.",
-    type: "website",
-    url: "https://metalorix.com/calculadora-rentabilidad",
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("calculatorPage");
+  return {
+    title: t("title") + " — Metalorix",
+    description: t("subtitle"),
+    keywords: [
+      "calculadora rentabilidad oro",
+      "simulador inversión oro",
+      "cuanto habría ganado invirtiendo en oro",
+      "rentabilidad histórica oro",
+      "invertir en oro rentabilidad",
+      "calculadora inversión metales preciosos",
+    ],
+    alternates: {
+      canonical: "https://metalorix.com/calculadora-rentabilidad",
+    },
+    openGraph: {
+      title: t("title") + " — Metalorix",
+      description: t("subtitle"),
+      type: "website",
+      url: "https://metalorix.com/calculadora-rentabilidad",
+    },
+  };
+}
 
-export default function CalculadoraRentabilidadPage() {
+export default async function CalculadoraRentabilidadPage() {
+  const t = await getTranslations("calculatorPage");
+  const tc = await getTranslations("common");
+
   const bc = breadcrumbSchema([
-    { name: "Herramientas", path: "/herramientas" },
-    { name: "Calculadora de rentabilidad", path: "/calculadora-rentabilidad" },
+    { name: t("breadcrumbTools"), path: "/herramientas" },
+    { name: t("breadcrumb"), path: "/calculadora-rentabilidad" },
   ]);
   const app = softwareAppSchema({
-    name: "Calculadora de rentabilidad — Metalorix",
-    description: "Calcula cuánto habrías ganado invirtiendo en oro, plata o platino con datos reales.",
+    name: t("title") + " — Metalorix",
+    description: t("subtitle"),
     path: "/calculadora-rentabilidad",
   });
 
@@ -48,26 +52,24 @@ export default function CalculadoraRentabilidadPage() {
         {/* Breadcrumb */}
         <nav className="text-sm text-content-3 mb-6" aria-label="Breadcrumb">
           <Link href="/" className="hover:text-content-1 transition-colors">
-            Inicio
+            {tc("breadcrumbHome")}
           </Link>
           <span className="mx-2">/</span>
           <Link
             href="/herramientas"
             className="hover:text-content-1 transition-colors"
           >
-            Herramientas
+            {t("breadcrumbTools")}
           </Link>
           <span className="mx-2">/</span>
-          <span className="text-content-1">Calculadora de rentabilidad</span>
+          <span className="text-content-1">{t("breadcrumb")}</span>
         </nav>
 
         <h1 className="text-3xl sm:text-4xl font-extrabold text-content-0 tracking-tight mb-4">
-          Calculadora de rentabilidad histórica
+          {t("title")}
         </h1>
         <p className="text-content-2 mb-10 max-w-2xl leading-relaxed">
-          ¿Cuánto habrías ganado si hubieras invertido en oro, plata o platino?
-          Introduce la cantidad, elige el metal y la fecha, y calcula la
-          rentabilidad real con datos históricos.
+          {t("subtitle")}
         </p>
 
         <RoiCalculator />
@@ -75,24 +77,16 @@ export default function CalculadoraRentabilidadPage() {
         {/* SEO content */}
         <div className="mt-12 bg-surface-1 border border-border rounded-DEFAULT p-6">
           <h2 className="text-xl font-bold text-content-0 mb-4">
-            ¿Es rentable invertir en oro?
+            {t("isItWorth")}
           </h2>
           <p className="text-content-2 leading-relaxed mb-4">
-            El oro ha sido históricamente uno de los activos refugio más
-            fiables. En los últimos 20 años, ha pasado de cotizar alrededor de
-            $400/oz a superar los $2.000/oz, ofreciendo una rentabilidad
-            acumulada superior al 400%.
+            {t("isItWorthP1")}
           </p>
           <p className="text-content-2 leading-relaxed mb-4">
-            Sin embargo, la rentabilidad pasada no garantiza resultados futuros.
-            El oro no genera dividendos ni intereses, y su valor depende
-            principalmente de la percepción de riesgo global, la inflación y la
-            política monetaria de los bancos centrales.
+            {t("isItWorthP2")}
           </p>
           <p className="text-content-2 leading-relaxed">
-            Esta calculadora utiliza precios históricos reales de los mercados
-            de futuros para simular cómo habría evolucionado una inversión
-            en el pasado.
+            {t("isItWorthP3")}
           </p>
         </div>
       </div>

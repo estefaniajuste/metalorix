@@ -1,53 +1,54 @@
-import type { Metadata } from "next";
 import Link from "next/link";
+import { getTranslations } from "next-intl/server";
 import { GramPriceContent } from "@/components/seo/GramPriceContent";
 
-export const metadata: Metadata = {
-  title:
-    "Precio del gramo de oro hoy en euros y dólares — Metalorix",
-  description:
-    "Precio del gramo de oro hoy actualizado en tiempo real en euros (EUR) y dólares (USD). También precio por onza y kilogramo de oro, plata y platino.",
-  keywords: [
-    "precio gramo oro",
-    "precio gramo oro hoy",
-    "precio gramo oro euros",
-    "cuanto vale un gramo de oro",
-    "precio gramo oro 18 kilates",
-    "precio gramo oro 24 kilates",
-    "valor gramo oro",
-    "cotización gramo oro",
-  ],
-  alternates: {
-    canonical: "https://metalorix.com/precio-gramo-oro",
-  },
-  openGraph: {
-    title: "Precio del gramo de oro hoy — Metalorix",
-    description:
-      "¿Cuánto vale un gramo de oro? Precio actualizado en EUR y USD.",
-    type: "website",
-    url: "https://metalorix.com/precio-gramo-oro",
-  },
-};
+export async function generateMetadata() {
+  const t = await getTranslations("gramPricePage");
+  return {
+    title: t("title") + " — Metalorix",
+    description: t("subtitle"),
+    keywords: [
+      "precio gramo oro",
+      "precio gramo oro hoy",
+      "precio gramo oro euros",
+      "cuanto vale un gramo de oro",
+      "precio gramo oro 18 kilates",
+      "precio gramo oro 24 kilates",
+      "valor gramo oro",
+      "cotización gramo oro",
+    ],
+    alternates: {
+      canonical: "https://metalorix.com/precio-gramo-oro",
+    },
+    openGraph: {
+      title: t("title") + " — Metalorix",
+      description: t("subtitle"),
+      type: "website",
+      url: "https://metalorix.com/precio-gramo-oro",
+    },
+  };
+}
 
-export default function PrecioGramoOroPage() {
+export default async function PrecioGramoOroPage() {
+  const t = await getTranslations("gramPricePage");
+  const tc = await getTranslations("common");
+
   return (
     <section className="py-[var(--section-py)]">
       <div className="mx-auto max-w-[1200px] px-6">
         <nav className="text-sm text-content-3 mb-6" aria-label="Breadcrumb">
           <Link href="/" className="hover:text-content-1 transition-colors">
-            Inicio
+            {tc("breadcrumbHome")}
           </Link>
           <span className="mx-2">/</span>
-          <span className="text-content-1">Precio del gramo de oro</span>
+          <span className="text-content-1">{t("breadcrumb")}</span>
         </nav>
 
         <h1 className="text-3xl sm:text-4xl font-extrabold text-content-0 tracking-tight mb-4">
-          Precio del gramo de oro hoy
+          {t("title")}
         </h1>
         <p className="text-content-2 mb-10 max-w-2xl leading-relaxed">
-          ¿Cuánto vale un gramo de oro? Precio actualizado en tiempo real en
-          euros y dólares. También mostramos el precio por quilates para
-          joyería.
+          {t("subtitle")}
         </p>
 
         <GramPriceContent />
@@ -56,29 +57,22 @@ export default function PrecioGramoOroPage() {
         <div className="mt-12 grid grid-cols-1 lg:grid-cols-2 gap-6">
           <div className="bg-surface-1 border border-border rounded-DEFAULT p-6">
             <h2 className="text-xl font-bold text-content-0 mb-4">
-              ¿Cómo se calcula el precio del gramo de oro?
+              {t("howCalculated")}
             </h2>
             <p className="text-content-2 leading-relaxed mb-4">
-              El oro se cotiza internacionalmente en <strong>dólares por
-              onza troy</strong>. Una onza troy equivale a 31,1035 gramos.
-              Para obtener el precio por gramo, se divide el precio de la
-              onza entre 31,1035.
+              {t("howCalculatedP1")}
             </p>
             <p className="text-content-2 leading-relaxed">
-              Para convertir a euros, se aplica el tipo de cambio EUR/USD
-              vigente. El precio en euros fluctúa tanto por el precio del
-              oro como por el tipo de cambio.
+              {t("howCalculatedP2")}
             </p>
           </div>
 
           <div className="bg-surface-1 border border-border rounded-DEFAULT p-6">
             <h2 className="text-xl font-bold text-content-0 mb-4">
-              Quilates y pureza
+              {t("karatTitle")}
             </h2>
             <p className="text-content-2 leading-relaxed mb-4">
-              El precio mostrado corresponde a <strong>oro puro de 24
-              quilates</strong> (999 milésimas). El oro de joyería suele
-              tener menor pureza:
+              {t("karatIntro")}
             </p>
             <ul className="space-y-2 text-sm text-content-2">
               {[
@@ -90,7 +84,7 @@ export default function PrecioGramoOroPage() {
               ].map((item) => (
                 <li key={item.k} className="flex justify-between py-1 border-b border-border/30 last:border-0">
                   <span className="font-semibold text-content-0">{item.k}</span>
-                  <span>{item.purity} pureza</span>
+                  <span>{item.purity} {t("purity")}</span>
                   <span className="text-content-3">× {item.factor}</span>
                 </li>
               ))}
