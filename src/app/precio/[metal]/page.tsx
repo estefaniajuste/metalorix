@@ -34,25 +34,50 @@ export function generateMetadata({
 
 function JsonLd({ slug }: { slug: string }) {
   const seo = getMetalSEO(slug)!;
-  const schema = {
-    "@context": "https://schema.org",
-    "@type": "FinancialProduct",
-    name: seo.fullName,
-    description: seo.about,
-    url: `https://metalorix.com/precio/${seo.slug}`,
-    provider: {
-      "@type": "Organization",
-      name: "Metalorix",
-      url: "https://metalorix.com",
+  const schemas = [
+    {
+      "@context": "https://schema.org",
+      "@type": "FinancialProduct",
+      name: seo.fullName,
+      description: seo.about,
+      url: `https://metalorix.com/precio/${seo.slug}`,
+      provider: {
+        "@type": "Organization",
+        name: "Metalorix",
+        url: "https://metalorix.com",
+      },
+      category: "Precious Metals",
     },
-    category: "Precious Metals",
-  };
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Inicio",
+          item: "https://metalorix.com",
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: `Precio del ${seo.name}`,
+          item: `https://metalorix.com/precio/${seo.slug}`,
+        },
+      ],
+    },
+  ];
 
   return (
-    <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
-    />
+    <>
+      {schemas.map((schema, i) => (
+        <script
+          key={i}
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+        />
+      ))}
+    </>
   );
 }
 

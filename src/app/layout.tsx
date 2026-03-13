@@ -15,13 +15,38 @@ export const metadata: Metadata = {
   description:
     "Precios spot en tiempo real y analítica para Oro (XAU), Plata (XAG) y Platino (XPT). Datos limpios, gráficos profesionales, cero ruido.",
   metadataBase: new URL("https://metalorix.com"),
-  icons: { icon: "/favicon.svg" },
+  icons: {
+    icon: "/favicon.svg",
+    apple: "/icon-192.png",
+  },
+  manifest: "/manifest.json",
+  themeColor: "#D6B35A",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: "Metalorix",
+  },
   openGraph: {
     title: "Metalorix — Precios de Oro, Plata y Platino",
     description:
       "Precios spot en tiempo real y analítica para Oro, Plata y Platino. Datos limpios, gráficos profesionales, cero ruido.",
     type: "website",
     url: "https://metalorix.com",
+    siteName: "Metalorix",
+    locale: "es_ES",
+  },
+  twitter: {
+    card: "summary",
+    title: "Metalorix — Precios de Oro, Plata y Platino",
+    description:
+      "Precios spot en tiempo real para Oro, Plata y Platino.",
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
+  alternates: {
+    canonical: "https://metalorix.com",
   },
 };
 

@@ -1,0 +1,31 @@
+{
+  "name": "Metalorix — Precios de Metales Preciosos",
+  "short_name": "Metalorix",
+  "description": "Precios spot en tiempo real para Oro, Plata y Platino. Gráficos profesionales y herramientas de trading.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0B0F17",
+  "theme_color": "#D6B35A",
+  "orientation": "portrait-primary",
+  "categories": ["finance", "business"],
+  "lang": "es",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}
