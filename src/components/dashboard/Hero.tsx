@@ -1,6 +1,79 @@
 "use client";
 
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import type { MetalSpot, MetalSymbol } from "@/lib/providers/metals";
+import { METALS } from "@/lib/providers/metals";
+
+const SLUG_MAP: Record<string, string> = {
+  XAU: "oro",
+  XAG: "plata",
+  XPT: "platino",
+};
+
+function formatPrice(val: number) {
+  return val >= 100
+    ? val.toLocaleString("es-ES", { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+    : val.toFixed(2);
+}
+
+function MiniTicker({ spot }: { spot: MetalSpot }) {
+  const metal = METALS[spot.symbol as MetalSymbol];
+  const isUp = spot.change >= 0;
+
+  return (
+    <Link
+      href={`/precio/${SLUG_MAP[spot.symbol]}`}
+      className="flex items-center gap-3 px-4 py-3 bg-surface-1/60 backdrop-blur-sm border border-border/50 rounded-DEFAULT hover:border-border-hover hover:bg-surface-1/80 transition-all group"
+    >
+      <span
+        className="w-2 h-2 rounded-full flex-shrink-0"
+        style={{ backgroundColor: metal?.color }}
+      />
+      <span className="text-xs font-semibold text-content-3 group-hover:text-content-2 transition-colors">
+        {metal?.name}
+      </span>
+      <span className="text-sm font-bold text-content-0 tabular-nums">
+        ${formatPrice(spot.price)}
+      </span>
+      <span
+        className={`text-xs font-medium tabular-nums ${
+          isUp ? "text-signal-up" : "text-signal-down"
+        }`}
+      >
+        {isUp ? "▲" : "▼"} {isUp ? "+" : ""}{spot.changePct}%
+      </span>
+    </Link>
+  );
+}
+
+function TickerSkeleton() {
+  return (
+    <div className="flex items-center gap-3 px-4 py-3 bg-surface-1/60 border border-border/50 rounded-DEFAULT">
+      <div className="w-2 h-2 rounded-full bg-surface-2 animate-shimmer" />
+      <div className="w-10 h-3 bg-surface-2 rounded-xs animate-shimmer" />
+      <div className="w-16 h-4 bg-surface-2 rounded-xs animate-shimmer" />
+      <div className="w-12 h-3 bg-surface-2 rounded-xs animate-shimmer" />
+    </div>
+  );
+}
+
 export function Hero() {
+  const [prices, setPrices] = useState<MetalSpot[] | null>(null);
+
+  useEffect(() => {
+    async function load() {
+      try {
+        const res = await fetch("/api/prices");
+        const { prices: data } = await res.json();
+        setPrices(data);
+      } catch {}
+    }
+    load();
+    const interval = setInterval(load, 60000);
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <section
       className="relative overflow-hidden text-center py-[100px] max-sm:py-[72px]"
@@ -17,25 +90,15 @@ export function Hero() {
           (XAG) y Platino (XPT).
         </p>
 
+        {/* Live mini-tickers */}
         <div className="flex justify-center gap-3 flex-wrap mb-10">
-          <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-[13px] font-medium bg-surface-2 text-content-2 border border-border">
-            <span className="w-1.5 h-1.5 rounded-full bg-signal-up animate-pulse-dot" />
-            Actualizado ahora
-          </span>
-          <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-[13px] font-medium bg-surface-2 text-content-2 border border-border">
-            <svg
-              width="12"
-              height="12"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2.5"
-            >
-              <circle cx="12" cy="12" r="10" />
-              <polyline points="12 6 12 12 16 14" />
-            </svg>
-            Mercado abierto
-          </span>
+          {prices
+            ? prices.map((spot) => (
+                <MiniTicker key={spot.symbol} spot={spot} />
+              ))
+            : Array.from({ length: 3 }).map((_, i) => (
+                <TickerSkeleton key={i} />
+              ))}
         </div>
 
         <div className="flex justify-center gap-3 flex-wrap">
@@ -57,6 +120,12 @@ export function Hero() {
               <polyline points="12 5 19 12 12 19" />
             </svg>
           </a>
+          <Link
+            href="/herramientas"
+            className="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-sm text-sm font-semibold bg-surface-1/60 backdrop-blur-sm border border-border/50 text-content-1 hover:bg-surface-1/80 hover:border-border-hover hover:-translate-y-px transition-all"
+          >
+            Herramientas
+          </Link>
         </div>
       </div>
     </section>
