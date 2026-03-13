@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { getDb } from "@/lib/db";
 import { metalPrices } from "@/lib/db/schema";
 import { fetchAllSpotPrices as fetchFromYahoo } from "@/lib/providers/yahoo-finance";
@@ -9,6 +9,7 @@ import {
 } from "@/lib/providers/twelve-data";
 import { MockProvider, METALS } from "@/lib/providers/metals";
 import type { MetalSpot } from "@/lib/providers/metals";
+import { rateLimit, getClientIp } from "@/lib/rate-limit";
 
 export const dynamic = "force-dynamic";
 
@@ -29,7 +30,15 @@ function ensureAllMetals(
     .filter((p): p is MetalSpot => !!p);
 }
 
-export async function GET() {
+export async function GET(request: NextRequest) {
+  const ip = getClientIp(request.headers);
+  const { allowed, remaining } = rateLimit(`prices:${ip}`, { maxRequests: 60, windowMs: 60_000 });
+  if (!allowed) {
+    return NextResponse.json(
+      { error: "Too many requests" },
+      { status: 429, headers: { "Retry-After": "60", "X-RateLimit-Remaining": "0" } }
+    );
+  }
   let dbPrices: MetalSpot[] = [];
   let dbSource = false;
 

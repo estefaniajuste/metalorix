@@ -1,6 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
+import { rateLimit, getClientIp } from "@/lib/rate-limit";
 
 export async function POST(request: NextRequest) {
+  const ip = getClientIp(request.headers);
+  const { allowed } = rateLimit(`vitals:${ip}`, { maxRequests: 30, windowMs: 60_000 });
+  if (!allowed) {
+    return NextResponse.json({ ok: true }); // Silently accept but don't process
+  }
+
   try {
     const metric = await request.json();
 

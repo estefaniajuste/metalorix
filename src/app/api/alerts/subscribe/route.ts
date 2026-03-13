@@ -4,8 +4,18 @@ import { users, alerts } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 import { sendEmail } from "@/lib/email/resend";
 import { welcomeEmail } from "@/lib/email/templates";
+import { rateLimit, getClientIp } from "@/lib/rate-limit";
 
 export async function POST(request: NextRequest) {
+  const ip = getClientIp(request.headers);
+  const { allowed } = rateLimit(`subscribe:${ip}`, { maxRequests: 5, windowMs: 300_000 });
+  if (!allowed) {
+    return NextResponse.json(
+      { error: "Demasiados intentos. Espera unos minutos." },
+      { status: 429 }
+    );
+  }
+
   const db = getDb();
   if (!db) {
     return NextResponse.json(
