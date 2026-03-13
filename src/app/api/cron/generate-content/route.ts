@@ -8,6 +8,7 @@ import {
   saveArticle,
 } from "@/lib/ai/content-generator";
 import { isConfigured } from "@/lib/ai/gemini";
+import { sendWeeklyNewsletter } from "@/lib/email/newsletter";
 
 const CRON_SECRET = process.env.CRON_SECRET;
 const EVENT_THRESHOLD_PCT = 2.0;
@@ -84,10 +85,20 @@ export async function POST(request: NextRequest) {
     }
   }
 
+  // Newsletter: send on Sundays or when explicitly requested
+  let newsletterResult = null;
+  if (type === "newsletter" || (type === "auto" && new Date().getDay() === 0)) {
+    newsletterResult = await sendWeeklyNewsletter();
+    if (newsletterResult.sent > 0) {
+      generated.push(`newsletter: ${newsletterResult.sent} emails sent`);
+    }
+  }
+
   return NextResponse.json({
     ok: true,
     type,
     generated,
+    newsletter: newsletterResult,
     timestamp: new Date().toISOString(),
   });
 }
