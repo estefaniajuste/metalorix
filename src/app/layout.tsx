@@ -10,6 +10,7 @@ import { CookieConsent } from "@/components/layout/CookieConsent";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
 import { WebVitals } from "./web-vitals";
+import { ServiceWorkerRegistration } from "@/components/layout/ServiceWorker";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -104,6 +105,7 @@ export default async function RootLayout({
             <ScrollToTop />
             <CookieConsent />
             <WebVitals />
+            <ServiceWorkerRegistration />
           </ThemeProvider>
         </NextIntlClientProvider>
       </body>
