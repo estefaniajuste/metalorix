@@ -35,3 +35,9 @@ pgdata/
 
 # Drizzle
 drizzle/meta/
+
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
