@@ -1,9 +1,26 @@
 import type { MetadataRoute } from "next";
-import { PRODUCTS } from "@/lib/data/products";
+import { getDb } from "@/lib/db";
+import { articles } from "@/lib/db/schema";
+import { eq, desc } from "drizzle-orm";
 
 const BASE_URL = "https://metalorix.com";
 
-export default function sitemap(): MetadataRoute.Sitemap {
+async function getPublishedArticles() {
+  const db = getDb();
+  if (!db) return [];
+  try {
+    return await db
+      .select({ slug: articles.slug, updatedAt: articles.updatedAt })
+      .from(articles)
+      .where(eq(articles.published, true))
+      .orderBy(desc(articles.publishedAt))
+      .limit(100);
+  } catch {
+    return [];
+  }
+}
+
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date();
 
   const staticPages: MetadataRoute.Sitemap = [
@@ -12,12 +29,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: now,
       changeFrequency: "hourly",
       priority: 1,
-    },
-    {
-      url: `${BASE_URL}/productos`,
-      lastModified: now,
-      changeFrequency: "weekly",
-      priority: 0.85,
     },
     {
       url: `${BASE_URL}/noticias`,
@@ -37,18 +48,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "weekly",
       priority: 0.6,
     },
-    {
-      url: `${BASE_URL}/guia-inversion`,
-      lastModified: now,
-      changeFrequency: "monthly",
-      priority: 0.8,
-    },
-    {
-      url: `${BASE_URL}/glosario`,
-      lastModified: now,
-      changeFrequency: "monthly",
-      priority: 0.7,
-    },
   ];
 
   const metalPages: MetadataRoute.Sitemap = ["oro", "plata", "platino"].map(
@@ -60,12 +59,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
     })
   );
 
-  const productPages: MetadataRoute.Sitemap = PRODUCTS.map((product) => ({
-    url: `${BASE_URL}/productos/${product.slug}`,
-    lastModified: now,
-    changeFrequency: "monthly" as const,
-    priority: 0.8,
+  const publishedArticles = await getPublishedArticles();
+  const articlePages: MetadataRoute.Sitemap = publishedArticles.map((a) => ({
+    url: `${BASE_URL}/noticias/${a.slug}`,
+    lastModified: a.updatedAt,
+    changeFrequency: "weekly" as const,
+    priority: 0.75,
   }));
 
-  return [...staticPages, ...metalPages, ...productPages];
+  return [...staticPages, ...metalPages, ...articlePages];
 }
