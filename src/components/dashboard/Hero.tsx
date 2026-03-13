@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import Link from "next/link";
 import type { MetalSpot, MetalSymbol } from "@/lib/providers/metals";
 import { METALS } from "@/lib/providers/metals";
+import { usePrices } from "@/lib/hooks/use-prices";
 
 const SLUG_MAP: Record<string, string> = {
   XAU: "oro",
@@ -59,20 +59,7 @@ function TickerSkeleton() {
 }
 
 export function Hero() {
-  const [prices, setPrices] = useState<MetalSpot[] | null>(null);
-
-  useEffect(() => {
-    async function load() {
-      try {
-        const res = await fetch("/api/prices");
-        const { prices: data } = await res.json();
-        setPrices(data);
-      } catch {}
-    }
-    load();
-    const interval = setInterval(load, 60000);
-    return () => clearInterval(interval);
-  }, []);
+  const { prices } = usePrices();
 
   return (
     <section

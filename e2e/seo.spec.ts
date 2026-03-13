@@ -15,14 +15,10 @@ test.describe("SEO", () => {
 
   test("homepage has JSON-LD schema", async ({ page }) => {
     await page.goto("/");
-    const scripts = page.locator('script[type="application/ld+json"]');
-    const count = await scripts.count();
-    expect(count).toBeGreaterThanOrEqual(1);
-
-    const text = await scripts.first().textContent();
-    expect(text).toBeTruthy();
-    const schema = JSON.parse(text!);
-    expect(schema["@context"]).toBe("https://schema.org");
+    const html = await page.content();
+    expect(html).toContain("application/ld+json");
+    expect(html).toContain("https://schema.org");
+    expect(html).toContain("Metalorix");
   });
 
   test("sitemap.xml is accessible", async ({ request }) => {

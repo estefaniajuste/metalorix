@@ -1,19 +1,34 @@
 import type { Metadata } from "next";
 import dynamic from "next/dynamic";
 import Link from "next/link";
-import { GoldSilverRatio } from "@/components/tools/GoldSilverRatio";
-import { UnitConverter } from "@/components/tools/UnitConverter";
-import { CurrencyConverter } from "@/components/tools/CurrencyConverter";
-import { DcaCalculator } from "@/components/tools/DcaCalculator";
+
+const toolSkeleton = (h = "h-[300px]") => (
+  <div className={`w-full ${h} bg-surface-1 border border-border rounded-DEFAULT animate-shimmer`} />
+);
 
 const MetalComparison = dynamic(
   () => import("@/components/tools/MetalComparison").then((m) => m.MetalComparison),
-  {
-    ssr: false,
-    loading: () => (
-      <div className="w-full h-[420px] bg-surface-1 border border-border rounded-DEFAULT animate-shimmer" />
-    ),
-  }
+  { ssr: false, loading: () => toolSkeleton("h-[420px]") }
+);
+
+const GoldSilverRatio = dynamic(
+  () => import("@/components/tools/GoldSilverRatio").then((m) => m.GoldSilverRatio),
+  { ssr: false, loading: () => toolSkeleton() }
+);
+
+const CurrencyConverter = dynamic(
+  () => import("@/components/tools/CurrencyConverter").then((m) => m.CurrencyConverter),
+  { ssr: false, loading: () => toolSkeleton() }
+);
+
+const UnitConverter = dynamic(
+  () => import("@/components/tools/UnitConverter").then((m) => m.UnitConverter),
+  { ssr: false, loading: () => toolSkeleton() }
+);
+
+const DcaCalculator = dynamic(
+  () => import("@/components/tools/DcaCalculator").then((m) => m.DcaCalculator),
+  { ssr: false, loading: () => toolSkeleton("h-[400px]") }
 );
 
 export const metadata: Metadata = {

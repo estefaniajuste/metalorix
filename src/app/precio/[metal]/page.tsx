@@ -5,6 +5,8 @@ import { MetalPageContent } from "@/components/dashboard/MetalPageContent";
 import { ShareButton } from "@/components/dashboard/ShareButton";
 import Link from "next/link";
 
+export const revalidate = 60;
+
 export function generateStaticParams() {
   return Object.keys(METAL_SEO).map((metal) => ({ metal }));
 }

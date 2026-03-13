@@ -4,7 +4,6 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import {
   METALS,
   type HistoryResult,
-  type MetalSpot,
   type MetalSymbol,
   type TimeRange,
 } from "@/lib/providers/metals";
@@ -14,6 +13,7 @@ import { RangeSelector } from "./RangeSelector";
 import { DataTable } from "./DataTable";
 import { CurrencyUnitToggle } from "./CurrencyUnitToggle";
 import type { Currency, PriceUnit } from "@/lib/utils/units";
+import { usePrices } from "@/lib/hooks/use-prices";
 
 const PriceChart = dynamic(() => import("./PriceChart").then((m) => m.PriceChart), {
   ssr: false,
@@ -21,11 +21,6 @@ const PriceChart = dynamic(() => import("./PriceChart").then((m) => m.PriceChart
     <div className="w-full h-[400px] bg-surface-1 border border-border rounded-DEFAULT animate-shimmer" />
   ),
 });
-
-async function apiFetchPrices(): Promise<{ source: string; prices: MetalSpot[] }> {
-  const res = await fetch("/api/prices");
-  return res.json();
-}
 
 async function apiFetchHistory(
   symbol: string,
@@ -38,26 +33,13 @@ async function apiFetchHistory(
 export function Dashboard() {
   const [activeMetal, setActiveMetal] = useState<MetalSymbol>("XAU");
   const [activeRange, setActiveRange] = useState<TimeRange>("1D");
-  const [prices, setPrices] = useState<MetalSpot[] | null>(null);
+  const { prices, source: dataSource, lastUpdate } = usePrices();
   const [history, setHistory] = useState<Record<string, HistoryResult>>({});
-  const [dataSource, setDataSource] = useState<string>("loading");
-  const [lastUpdate, setLastUpdate] = useState<Date | null>(null);
   const [currency, setCurrency] = useState<Currency>("USD");
   const [unit, setUnit] = useState<PriceUnit>("oz");
   const [eurUsdRate, setEurUsdRate] = useState(1.08);
   const historyRef = useRef(history);
   historyRef.current = history;
-
-  const loadPrices = useCallback(async () => {
-    try {
-      const { source, prices: data } = await apiFetchPrices();
-      setPrices(data);
-      setDataSource(source);
-      setLastUpdate(new Date());
-    } catch {
-      setDataSource("error");
-    }
-  }, []);
 
   const loadHistory = useCallback(
     async (symbol: MetalSymbol, range: TimeRange) => {
@@ -72,12 +54,6 @@ export function Dashboard() {
     },
     []
   );
-
-  useEffect(() => {
-    loadPrices();
-    const interval = setInterval(loadPrices, 60000);
-    return () => clearInterval(interval);
-  }, [loadPrices]);
 
   useEffect(() => {
     fetch("/api/forex")
