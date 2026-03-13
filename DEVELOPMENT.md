@@ -287,7 +287,7 @@ metalorix/
 
 ### FASE 2 — Motor de Contenido e IA (Próxima)
 
-1. **Configurar Cloud SQL (PostgreSQL)** — Crear instancia en Google Cloud, conectar con `DATABASE_URL`, ejecutar `npm run db:push` para crear las tablas
+1. ~~**Configurar Cloud SQL (PostgreSQL)**~~ — COMPLETADO
 2. **Scraper de noticias** — Implementar recolección de RSS/web cada 2h desde Reuters, Kitco, Investing.com, BullionVault, World Gold Council. Guardar en tabla `news_sources` con deduplicación
 3. **Generador de contenido con Gemini** — Conectar Gemini API para generar:
    - Resumen diario del mercado (automatizado a las 20:00 CET)
@@ -320,12 +320,17 @@ metalorix/
 15. **Calculadora DCA** — Simulación de inversión periódica con gráfico de rendimiento
 16. **Comparador histórico** — Oro vs Plata vs Platino a lo largo del tiempo
 
-### Mejoras Pendientes de Fase 1
+### Completado en Sesión 3 (13 marzo 2026 — tarde)
 
-17. **Actualizar `README.md`** — El README actual describe la web legacy; hay que actualizarlo para el proyecto Next.js
-18. **Configurar Cloud SQL en producción** — Actualmente funciona con mock data; falta conectar la BD real
-19. **Activar Cloud Scheduler** — Programar el cron de scraping de precios cada 15 min
-20. **Verificar certificado SSL** — Confirmar que HTTPS funciona en `metalorix.com`
+- [x] **Cloud SQL PostgreSQL** creado en europe-west1 (db-f1-micro)
+- [x] **Base de datos `metalorix`** con 7 tablas creadas via `db:push`
+- [x] **Cloud Run conectado a Cloud SQL** via Auth Proxy (Unix socket)
+- [x] **Yahoo Finance** como proveedor principal (cubre XAU, XAG, XPT sin límites)
+- [x] **Cloud Scheduler** configurado: scraping cada 15 min (Europe/Madrid)
+- [x] **3 metales con datos reales** en producción: Oro $5,044, Plata $80.61, Platino $2,044
+- [x] **HTTPS funcionando** en metalorix.com con SSL auto-provisionado
+- [x] **README.md** actualizado para el proyecto Next.js
+- [x] **GitHub Secrets** configurados: DB_PASSWORD, CRON_SECRET
 
 ---
 
