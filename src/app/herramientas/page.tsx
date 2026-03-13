@@ -116,6 +116,22 @@ export default function HerramientasPage() {
               Ratio en tiempo real con barra visual, zonas históricas y análisis de inversión.
             </p>
           </Link>
+          <Link
+            href="/conversor-divisas"
+            className="bg-surface-1 border border-border rounded-DEFAULT p-6 hover:border-border-hover hover:shadow-card transition-all group"
+          >
+            <div className="text-brand-gold mb-3">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                <circle cx="12" cy="12" r="10" /><line x1="2" y1="12" x2="22" y2="12" /><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+              </svg>
+            </div>
+            <h3 className="text-base font-semibold text-content-0 mb-1 group-hover:text-brand-gold transition-colors">
+              Conversor multi-divisa
+            </h3>
+            <p className="text-sm text-content-2 leading-relaxed">
+              Precio del oro, plata y platino en EUR, GBP, CHF, JPY y 7 divisas más.
+            </p>
+          </Link>
         </div>
 
         {/* Upcoming tools */}

@@ -1,12 +1,13 @@
 import { NextResponse } from "next/server";
-import { getEurUsdRate } from "@/lib/providers/forex";
+import { getAllForexRates } from "@/lib/providers/forex";
 
 export const dynamic = "force-dynamic";
 
 export async function GET() {
-  const eurUsd = await getEurUsdRate();
+  const rates = await getAllForexRates();
   return NextResponse.json({
-    EURUSD: eurUsd,
+    rates,
+    EURUSD: rates.EUR ?? 1.08,
     updatedAt: new Date().toISOString(),
   });
 }

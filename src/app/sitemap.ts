@@ -79,6 +79,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.8,
     },
     {
+      url: `${BASE_URL}/conversor-divisas`,
+      lastModified: now,
+      changeFrequency: "hourly",
+      priority: 0.8,
+    },
+    {
       url: `${BASE_URL}/privacidad`,
       lastModified: now,
       changeFrequency: "yearly",
