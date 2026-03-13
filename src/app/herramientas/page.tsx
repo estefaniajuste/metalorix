@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { GoldSilverRatio } from "@/components/tools/GoldSilverRatio";
 import { UnitConverter } from "@/components/tools/UnitConverter";
 import { MetalComparison } from "@/components/tools/MetalComparison";
+import { CurrencyConverter } from "@/components/tools/CurrencyConverter";
 
 export const metadata: Metadata = {
   title: "Herramientas de trading — Metalorix",
@@ -10,6 +11,7 @@ export const metadata: Metadata = {
   keywords: [
     "ratio oro plata",
     "conversor onza troy gramos",
+    "precio oro en euros",
     "herramientas trading metales",
     "calculadora oro plata platino",
   ],
@@ -56,9 +58,14 @@ export default function HerramientasPage() {
           <MetalComparison />
         </div>
 
-        {/* Side-by-side tools */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-16">
+        {/* Row 1: ratio + currency */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
           <GoldSilverRatio />
+          <CurrencyConverter />
+        </div>
+
+        {/* Row 2: unit converter full width */}
+        <div className="mb-16">
           <UnitConverter />
         </div>
 
