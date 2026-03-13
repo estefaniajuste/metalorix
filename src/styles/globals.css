@@ -1,0 +1,102 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ==========================================================
+   Metalorix — Theme CSS Custom Properties
+   ========================================================== */
+
+:root {
+  --gold-glow: rgba(214, 179, 90, 0.15);
+
+  --nav-h: 64px;
+  --section-py: 96px;
+}
+
+/* Dark (default) */
+:root,
+.dark {
+  --bg-0: #0b0f17;
+  --bg-1: #121826;
+  --bg-2: #1a2035;
+  --bg-3: #232b3e;
+  --border: rgba(255, 255, 255, 0.06);
+  --border-h: rgba(255, 255, 255, 0.12);
+  --text-0: #f1f3f7;
+  --text-1: #c8cdd8;
+  --text-2: #8891a5;
+  --text-3: #5a6478;
+  --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.4), 0 8px 24px rgba(0, 0, 0, 0.25);
+  --card-shadow-h: 0 4px 12px rgba(0, 0, 0, 0.5),
+    0 16px 48px rgba(0, 0, 0, 0.35);
+  --hero-grad: linear-gradient(170deg, #0b0f17 0%, #141c2e 40%, #1a1a10 100%);
+}
+
+/* Light */
+.light {
+  --bg-0: #f6f7f9;
+  --bg-1: #ffffff;
+  --bg-2: #eef0f4;
+  --bg-3: #e2e5eb;
+  --border: rgba(0, 0, 0, 0.07);
+  --border-h: rgba(0, 0, 0, 0.13);
+  --text-0: #111827;
+  --text-1: #374151;
+  --text-2: #6b7280;
+  --text-3: #9ca3af;
+  --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.06), 0 4px 16px rgba(0, 0, 0, 0.06);
+  --card-shadow-h: 0 4px 12px rgba(0, 0, 0, 0.08),
+    0 12px 36px rgba(0, 0, 0, 0.1);
+  --hero-grad: linear-gradient(170deg, #f6f7f9 0%, #fff9eb 60%, #f6f7f9 100%);
+}
+
+/* ==========================================================
+   Base layer
+   ========================================================== */
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    @apply bg-surface-0 text-content-1 font-sans antialiased;
+    line-height: 1.6;
+    transition: background 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+      color 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  :focus-visible {
+    @apply outline-2 outline-brand-gold outline-offset-2 rounded;
+  }
+}
+
+/* ==========================================================
+   Scrollbar
+   ========================================================== */
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-0);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--bg-3);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-3);
+}
+
+/* ==========================================================
+   Responsive
+   ========================================================== */
+
+@media (max-width: 640px) {
+  :root {
+    --section-py: 64px;
+  }
+}

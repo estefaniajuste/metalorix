@@ -1,0 +1,14 @@
+node_modules
+.next
+.git
+.github
+.env
+.env.local
+.env*.local
+.firebase
+legacy
+pgdata
+*.log
+.DS_Store
+Thumbs.db
+drizzle/meta
