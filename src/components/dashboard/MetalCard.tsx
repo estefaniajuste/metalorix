@@ -4,21 +4,20 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { METALS, type MetalSpot, type MetalSymbol } from "@/lib/providers/metals";
 import { Sparkline } from "./Sparkline";
+import {
+  convertPrice,
+  formatConvertedPrice,
+  currencySymbol,
+  type Currency,
+  type PriceUnit,
+  UNITS,
+} from "@/lib/utils/units";
 
 const SLUG_MAP: Record<string, string> = {
   XAU: "oro",
   XAG: "plata",
   XPT: "platino",
 };
-
-function formatPrice(val: number) {
-  return val >= 100
-    ? val.toLocaleString("en-US", {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
-      })
-    : val.toFixed(2);
-}
 
 function formatChange(val: number) {
   const sign = val >= 0 ? "+" : "";
@@ -38,11 +37,26 @@ interface MetalCardProps {
   active: boolean;
   onClick: () => void;
   sparklineData?: number[];
+  currency?: Currency;
+  unit?: PriceUnit;
+  eurUsdRate?: number;
 }
 
-export function MetalCard({ spot, active, onClick, sparklineData }: MetalCardProps) {
+export function MetalCard({
+  spot,
+  active,
+  onClick,
+  sparklineData,
+  currency = "USD",
+  unit = "oz",
+  eurUsdRate = 1.08,
+}: MetalCardProps) {
   const metal = METALS[spot.symbol as MetalSymbol];
   const isUp = spot.change >= 0;
+  const displayPrice = convertPrice(spot.price, unit, currency, eurUsdRate);
+  const displayChange = convertPrice(spot.change, unit, currency, eurUsdRate);
+  const sym = currencySymbol(currency);
+  const unitLabel = unit !== "oz" ? `/${unit}` : "";
   const prevPrice = useRef(spot.price);
   const [flash, setFlash] = useState<"up" | "down" | null>(null);
 
@@ -92,7 +106,7 @@ export function MetalCard({ spot, active, onClick, sparklineData }: MetalCardPro
               {metal?.name}
             </div>
             <div className="text-[13px] text-content-3">
-              {spot.symbol}/USD
+              {spot.symbol}/{currency}{unitLabel}
             </div>
           </div>
         </div>
@@ -100,7 +114,7 @@ export function MetalCard({ spot, active, onClick, sparklineData }: MetalCardPro
 
       <div className="flex items-end justify-between gap-3 mb-1">
         <div className="text-[32px] font-bold text-content-0 tracking-tight tabular-nums leading-none">
-          ${formatPrice(spot.price)}
+          {sym}{formatConvertedPrice(displayPrice)}
         </div>
         {sparklineData && sparklineData.length > 1 && (
           <Sparkline
@@ -118,7 +132,7 @@ export function MetalCard({ spot, active, onClick, sparklineData }: MetalCardPro
         }`}
       >
         <span className="text-xs">{isUp ? "▲" : "▼"}</span>
-        {formatChange(spot.change)} ({isUp ? "+" : ""}
+        {sym}{formatChange(displayChange)} ({isUp ? "+" : ""}
         {spot.changePct}%)
       </div>
 

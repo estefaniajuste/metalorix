@@ -11,6 +11,13 @@ import dynamic from "next/dynamic";
 import { METALS } from "@/lib/providers/metals";
 import { RangeSelector } from "./RangeSelector";
 import { DataTable } from "./DataTable";
+import {
+  convertPrice,
+  formatConvertedPrice,
+  currencySymbol,
+  type Currency,
+  type PriceUnit,
+} from "@/lib/utils/units";
 
 const PriceChart = dynamic(() => import("./PriceChart").then((m) => m.PriceChart), {
   ssr: false,
@@ -43,6 +50,7 @@ export function MetalPageContent({ symbol }: MetalPageContentProps) {
   const [activeRange, setActiveRange] = useState<TimeRange>("1M");
   const [spot, setSpot] = useState<MetalSpot | null>(null);
   const [history, setHistory] = useState<Record<string, HistoryResult>>({});
+  const [eurUsdRate, setEurUsdRate] = useState(1.08);
   const historyRef = useRef(history);
   historyRef.current = history;
 
@@ -77,6 +85,15 @@ export function MetalPageContent({ symbol }: MetalPageContentProps) {
     const interval = setInterval(loadSpot, 60000);
     return () => clearInterval(interval);
   }, [loadSpot]);
+
+  useEffect(() => {
+    fetch("/api/forex")
+      .then((r) => r.json())
+      .then((d) => {
+        if (d.EURUSD) setEurUsdRate(d.EURUSD);
+      })
+      .catch(() => {});
+  }, []);
 
   useEffect(() => {
     loadHistory(activeRange);
@@ -192,6 +209,44 @@ export function MetalPageContent({ symbol }: MetalPageContentProps) {
               </div>
             </div>
           ))}
+        </div>
+      )}
+
+      {/* Conversion table */}
+      {spot && (
+        <div className="bg-surface-1 border border-border rounded-DEFAULT p-6 mb-6">
+          <h3 className="text-base font-semibold text-content-0 mb-4">
+            Precio del {metal.name} por unidad
+          </h3>
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-border">
+                  <th className="text-left text-content-3 font-medium py-2 pr-4">Unidad</th>
+                  <th className="text-right text-content-3 font-medium py-2 px-4">USD ($)</th>
+                  <th className="text-right text-content-3 font-medium py-2 pl-4">EUR (€)</th>
+                </tr>
+              </thead>
+              <tbody>
+                {(["oz", "g", "kg"] as PriceUnit[]).map((u) => (
+                  <tr key={u} className="border-b border-border/50 last:border-0">
+                    <td className="py-3 pr-4 text-content-1 font-medium">
+                      {u === "oz" ? "Onza troy (31,1 g)" : u === "g" ? "Gramo" : "Kilogramo"}
+                    </td>
+                    <td className="py-3 px-4 text-right text-content-0 font-semibold tabular-nums">
+                      ${formatConvertedPrice(convertPrice(spot.price, u, "USD", eurUsdRate))}
+                    </td>
+                    <td className="py-3 pl-4 text-right text-content-0 font-semibold tabular-nums">
+                      €{formatConvertedPrice(convertPrice(spot.price, u, "EUR", eurUsdRate))}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <p className="text-[11px] text-content-3 mt-3">
+            Tipo de cambio EUR/USD: {eurUsdRate.toFixed(4)}
+          </p>
         </div>
       )}
 

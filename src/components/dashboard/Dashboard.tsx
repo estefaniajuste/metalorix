@@ -12,6 +12,8 @@ import dynamic from "next/dynamic";
 import { MetalCard } from "./MetalCard";
 import { RangeSelector } from "./RangeSelector";
 import { DataTable } from "./DataTable";
+import { CurrencyUnitToggle } from "./CurrencyUnitToggle";
+import type { Currency, PriceUnit } from "@/lib/utils/units";
 
 const PriceChart = dynamic(() => import("./PriceChart").then((m) => m.PriceChart), {
   ssr: false,
@@ -40,6 +42,9 @@ export function Dashboard() {
   const [history, setHistory] = useState<Record<string, HistoryResult>>({});
   const [dataSource, setDataSource] = useState<string>("loading");
   const [lastUpdate, setLastUpdate] = useState<Date | null>(null);
+  const [currency, setCurrency] = useState<Currency>("USD");
+  const [unit, setUnit] = useState<PriceUnit>("oz");
+  const [eurUsdRate, setEurUsdRate] = useState(1.08);
   const historyRef = useRef(history);
   historyRef.current = history;
 
@@ -73,6 +78,15 @@ export function Dashboard() {
     const interval = setInterval(loadPrices, 60000);
     return () => clearInterval(interval);
   }, [loadPrices]);
+
+  useEffect(() => {
+    fetch("/api/forex")
+      .then((r) => r.json())
+      .then((d) => {
+        if (d.EURUSD) setEurUsdRate(d.EURUSD);
+      })
+      .catch(() => {});
+  }, []);
 
   useEffect(() => {
     loadHistory(activeMetal, activeRange);
@@ -115,7 +129,15 @@ export function Dashboard() {
               </span>
             )}
           </h2>
-          <RangeSelector active={activeRange} onChange={setActiveRange} />
+          <div className="flex items-center gap-3 flex-wrap">
+            <CurrencyUnitToggle
+              currency={currency}
+              unit={unit}
+              onCurrencyChange={setCurrency}
+              onUnitChange={setUnit}
+            />
+            <RangeSelector active={activeRange} onChange={setActiveRange} />
+          </div>
         </div>
 
         {/* Metal Cards */}
@@ -134,6 +156,9 @@ export function Dashboard() {
                     active={spot.symbol === activeMetal}
                     onClick={() => setActiveMetal(spot.symbol as MetalSymbol)}
                     sparklineData={sparkline}
+                    currency={currency}
+                    unit={unit}
+                    eurUsdRate={eurUsdRate}
                   />
                 );
               })
