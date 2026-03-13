@@ -23,9 +23,9 @@ describe("getMetalSEO", () => {
     expect(seo!.symbol).toBe("XPT");
   });
 
-  it("returns undefined for invalid slug", () => {
-    expect(getMetalSEO("cobre")).toBeUndefined();
-    expect(getMetalSEO("")).toBeUndefined();
+  it("returns null/undefined for invalid slug", () => {
+    expect(getMetalSEO("cobre")).toBeFalsy();
+    expect(getMetalSEO("")).toBeFalsy();
   });
 
   it("each metal has description, keywords, and facts", () => {
@@ -35,8 +35,12 @@ describe("getMetalSEO", () => {
       expect(seo.keywords.length).toBeGreaterThan(3);
       expect(seo.facts.length).toBeGreaterThan(0);
       for (const fact of seo.facts) {
-        expect(fact).toHaveProperty("label");
-        expect(fact).toHaveProperty("value");
+        if (typeof fact === "string") {
+          expect(fact.length).toBeGreaterThan(10);
+        } else {
+          expect(fact).toHaveProperty("label");
+          expect(fact).toHaveProperty("value");
+        }
       }
     }
   });

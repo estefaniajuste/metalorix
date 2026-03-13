@@ -132,6 +132,22 @@ export default function HerramientasPage() {
               Precio del oro, plata y platino en EUR, GBP, CHF, JPY y 7 divisas más.
             </p>
           </Link>
+          <Link
+            href="/comparador"
+            className="bg-surface-1 border border-border rounded-DEFAULT p-6 hover:border-border-hover hover:shadow-card transition-all group"
+          >
+            <div className="text-brand-gold mb-3">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+              </svg>
+            </div>
+            <h3 className="text-base font-semibold text-content-0 mb-1 group-hover:text-brand-gold transition-colors">
+              Comparador Oro vs Plata vs Platino
+            </h3>
+            <p className="text-sm text-content-2 leading-relaxed">
+              Compara el rendimiento histórico de los tres metales en un solo gráfico.
+            </p>
+          </Link>
         </div>
 
         {/* Upcoming tools */}
