@@ -7,6 +7,7 @@ import { Nav } from "@/components/layout/Nav";
 import { Footer } from "@/components/layout/Footer";
 import { ScrollToTop } from "@/components/layout/ScrollToTop";
 import { CookieConsent } from "@/components/layout/CookieConsent";
+import { WebVitals } from "./web-vitals";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -80,6 +81,7 @@ export default function RootLayout({
           <Footer />
           <ScrollToTop />
           <CookieConsent />
+          <WebVitals />
         </ThemeProvider>
       </body>
     </html>
