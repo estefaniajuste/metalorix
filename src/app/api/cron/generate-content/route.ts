@@ -1,11 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getDb } from "@/lib/db";
-import { metalPrices } from "@/lib/db/schema";
+import { articles, metalPrices } from "@/lib/db/schema";
+import { eq, desc } from "drizzle-orm";
 import {
   generateDailySummary,
   generateEventArticle,
   generateWeeklySummary,
   saveArticle,
+  translateArticle,
 } from "@/lib/ai/content-generator";
 import {
   generateNewGlossaryTerms,
@@ -46,19 +48,27 @@ export async function POST(request: NextRequest) {
   const type = url.searchParams.get("type") || "daily";
   const generated: string[] = [];
 
+  const articleIdsToTranslate: number[] = [];
+
   if (type === "daily" || type === "auto") {
     const article = await generateDailySummary();
     if (article) {
-      const ok = await saveArticle(article, "daily");
-      if (ok) generated.push(`daily: ${article.slug}`);
+      const articleId = await saveArticle(article, "daily");
+      if (articleId) {
+        generated.push(`daily: ${article.slug}`);
+        articleIdsToTranslate.push(articleId);
+      }
     }
   }
 
   if (type === "weekly" || (type === "auto" && new Date().getDay() === 0)) {
     const article = await generateWeeklySummary();
     if (article) {
-      const ok = await saveArticle(article, "weekly");
-      if (ok) generated.push(`weekly: ${article.slug}`);
+      const articleId = await saveArticle(article, "weekly");
+      if (articleId) {
+        generated.push(`weekly: ${article.slug}`);
+        articleIdsToTranslate.push(articleId);
+      }
     }
   }
 
@@ -68,7 +78,6 @@ export async function POST(request: NextRequest) {
       XAG: "Plata",
       XPT: "Platino",
     };
-    // AI content is generated in Spanish for the news section
 
     try {
       const prices = await db.select().from(metalPrices);
@@ -82,13 +91,39 @@ export async function POST(request: NextRequest) {
             changePct
           );
           if (article) {
-            const ok = await saveArticle(article, "event");
-            if (ok) generated.push(`event: ${article.slug}`);
+            const articleId = await saveArticle(article, "event");
+            if (articleId) {
+              generated.push(`event: ${article.slug}`);
+              articleIdsToTranslate.push(articleId);
+            }
           }
         }
       }
     } catch (err) {
       console.error("Event article check failed:", err);
+    }
+  }
+
+  for (const articleId of articleIdsToTranslate) {
+    const count = await translateArticle(articleId);
+    if (count > 0) generated.push(`translations: ${count} for article ${articleId}`);
+  }
+
+  if (type === "translate") {
+    try {
+      const untranslated = await db
+        .select({ id: articles.id })
+        .from(articles)
+        .where(eq(articles.published, true))
+        .orderBy(desc(articles.publishedAt))
+        .limit(5);
+
+      for (const { id } of untranslated) {
+        const count = await translateArticle(id);
+        if (count > 0) generated.push(`translated article ${id}: ${count} languages`);
+      }
+    } catch (err) {
+      console.error("Bulk translation failed:", err);
     }
   }
 

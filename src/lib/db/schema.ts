@@ -85,6 +85,34 @@ export const articles = pgTable(
 );
 
 /* ==========================================================
+   Article Translations — Localized versions of articles
+   ========================================================== */
+
+export const articleTranslations = pgTable(
+  "article_translations",
+  {
+    id: serial("id").primaryKey(),
+    articleId: integer("article_id")
+      .notNull()
+      .references(() => articles.id, { onDelete: "cascade" }),
+    locale: varchar("locale", { length: 10 }).notNull(),
+    title: varchar("title", { length: 500 }).notNull(),
+    excerpt: text("excerpt"),
+    content: text("content").notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  (table) => ({
+    articleLocaleIdx: uniqueIndex("article_translations_article_locale_idx").on(
+      table.articleId,
+      table.locale
+    ),
+    localeIdx: index("article_translations_locale_idx").on(table.locale),
+  })
+);
+
+/* ==========================================================
    Glossary Terms — Educational content for /aprende
    ========================================================== */
 
@@ -219,6 +247,8 @@ export type NewMetalPrice = typeof metalPrices.$inferInsert;
 export type PriceHistoryRow = typeof priceHistory.$inferSelect;
 export type Article = typeof articles.$inferSelect;
 export type NewArticle = typeof articles.$inferInsert;
+export type ArticleTranslation = typeof articleTranslations.$inferSelect;
+export type NewArticleTranslation = typeof articleTranslations.$inferInsert;
 export type GlossaryTerm = typeof glossaryTerms.$inferSelect;
 export type NewGlossaryTerm = typeof glossaryTerms.$inferInsert;
 export type User = typeof users.$inferSelect;

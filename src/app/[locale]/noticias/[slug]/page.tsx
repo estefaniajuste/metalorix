@@ -3,8 +3,8 @@ import { Link } from "@/i18n/navigation";
 import { notFound } from "next/navigation";
 import { getTranslations, getLocale } from "next-intl/server";
 import { getDb } from "@/lib/db";
-import { articles } from "@/lib/db/schema";
-import { eq } from "drizzle-orm";
+import { articles, articleTranslations } from "@/lib/db/schema";
+import { eq, and } from "drizzle-orm";
 import { injectGlossaryLinks } from "@/lib/ai/glossary-generator";
 
 async function getArticle(slug: string) {
@@ -23,10 +23,33 @@ async function getArticle(slug: string) {
   }
 }
 
+async function getTranslation(articleId: number, locale: string) {
+  if (locale === "es") return null;
+
+  const db = getDb();
+  if (!db) return null;
+
+  try {
+    const result = await db
+      .select()
+      .from(articleTranslations)
+      .where(
+        and(
+          eq(articleTranslations.articleId, articleId),
+          eq(articleTranslations.locale, locale)
+        )
+      )
+      .limit(1);
+    return result[0] ?? null;
+  } catch {
+    return null;
+  }
+}
+
 export async function generateMetadata({
   params,
 }: {
-  params: { slug: string };
+  params: { slug: string; locale: string };
 }): Promise<Metadata> {
   const article = await getArticle(params.slug);
 
@@ -35,12 +58,17 @@ export async function generateMetadata({
     return { title: t("notFound") };
   }
 
+  const locale = params.locale;
+  const translation = await getTranslation(article.id, locale);
+  const title = translation?.title ?? article.title;
+  const description = translation?.excerpt ?? article.excerpt ?? article.title;
+
   return {
-    title: `${article.title} — Metalorix`,
-    description: article.excerpt ?? article.title,
+    title: `${title} — Metalorix`,
+    description,
     openGraph: {
-      title: article.title,
-      description: article.excerpt ?? article.title,
+      title,
+      description,
       type: "article",
       url: `https://metalorix.com/noticias/${article.slug}`,
       publishedTime: article.publishedAt?.toISOString(),
@@ -122,13 +150,18 @@ export default async function ArticlePage({
     notFound();
   }
 
-  const linkedContent = await injectGlossaryLinks(article.content);
+  const translation = await getTranslation(article.id, locale);
+  const displayTitle = translation?.title ?? article.title;
+  const displayExcerpt = translation?.excerpt ?? article.excerpt;
+  const displayContent = translation?.content ?? article.content;
+
+  const linkedContent = await injectGlossaryLinks(displayContent);
 
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "NewsArticle",
-    headline: article.title,
-    description: article.excerpt,
+    headline: displayTitle,
+    description: displayExcerpt,
     url: `https://metalorix.com/noticias/${article.slug}`,
     datePublished: article.publishedAt?.toISOString(),
     dateModified: article.updatedAt.toISOString(),
@@ -174,7 +207,7 @@ export default async function ArticlePage({
             </Link>
             <span className="mx-2">/</span>
             <span className="text-content-1 truncate max-w-[200px] inline-block align-bottom">
-              {article.title}
+              {displayTitle}
             </span>
           </nav>
 
@@ -201,12 +234,12 @@ export default async function ArticlePage({
             </div>
 
             <h1 className="text-2xl sm:text-3xl font-extrabold text-content-0 tracking-tight leading-tight mb-4">
-              {article.title}
+              {displayTitle}
             </h1>
 
-            {article.excerpt && (
+            {displayExcerpt && (
               <p className="text-lg text-content-2 leading-relaxed">
-                {article.excerpt}
+                {displayExcerpt}
               </p>
             )}
 

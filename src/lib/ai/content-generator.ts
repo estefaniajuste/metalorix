@@ -1,7 +1,7 @@
 import { generateText, isConfigured } from "./gemini";
 import { getDb } from "@/lib/db";
-import { articles, newsSources, metalPrices, glossaryTerms } from "@/lib/db/schema";
-import { desc, gte, eq, asc } from "drizzle-orm";
+import { articles, newsSources, metalPrices, glossaryTerms, articleTranslations } from "@/lib/db/schema";
+import { desc, gte, eq, asc, and } from "drizzle-orm";
 
 interface PriceData {
   symbol: string;
@@ -405,9 +405,9 @@ export async function saveArticle(
     metals: string[];
   },
   category: "daily" | "weekly" | "event" | "educational"
-): Promise<boolean> {
+): Promise<number | null> {
   const db = getDb();
-  if (!db) return false;
+  if (!db) return null;
 
   try {
     const existing = await db
@@ -427,8 +427,9 @@ export async function saveArticle(
           updatedAt: new Date(),
         })
         .where(eq(articles.slug, article.slug));
+      return existing[0].id;
     } else {
-      await db.insert(articles).values({
+      const [inserted] = await db.insert(articles).values({
         slug: article.slug,
         title: article.title,
         excerpt: article.excerpt,
@@ -437,11 +438,184 @@ export async function saveArticle(
         metals: article.metals,
         published: true,
         publishedAt: new Date(),
-      });
+      }).returning({ id: articles.id });
+      return inserted.id;
     }
-    return true;
   } catch (err) {
     console.error("Failed to save article:", err);
-    return false;
+    return null;
+  }
+}
+
+/* ==========================================================
+   Article Translation
+   ========================================================== */
+
+const TRANSLATION_LOCALES = ["en", "zh", "ar", "tr", "de"] as const;
+
+const LANGUAGE_NAMES: Record<string, string> = {
+  en: "English",
+  zh: "Simplified Chinese",
+  ar: "Arabic",
+  tr: "Turkish",
+  de: "German",
+};
+
+interface TranslatedArticle {
+  title: string;
+  excerpt: string;
+  content: string;
+}
+
+function parseTranslatedResponse(raw: string): TranslatedArticle | null {
+  try {
+    const jsonMatch = raw.match(/```(?:json)?\s*([\s\S]*?)```/);
+    const jsonStr = jsonMatch ? jsonMatch[1].trim() : raw.trim();
+    const parsed = JSON.parse(jsonStr);
+    if (parsed.title && parsed.content) {
+      return {
+        title: parsed.title,
+        excerpt: parsed.excerpt ?? "",
+        content: parsed.content,
+      };
+    }
+    return null;
+  } catch {
+    return null;
+  }
+}
+
+async function translateArticleToLocale(
+  title: string,
+  excerpt: string,
+  content: string,
+  targetLocale: string
+): Promise<TranslatedArticle | null> {
+  if (!isConfigured()) return null;
+
+  const langName = LANGUAGE_NAMES[targetLocale];
+  if (!langName) return null;
+
+  const prompt = `You are a professional translator specializing in financial and precious metals content.
+
+Translate the following Spanish article about precious metals into ${langName}.
+
+ORIGINAL TITLE (Spanish):
+${title}
+
+ORIGINAL EXCERPT (Spanish):
+${excerpt}
+
+ORIGINAL CONTENT (Spanish):
+${content}
+
+TRANSLATION RULES:
+- Translate naturally into ${langName}, not word-by-word
+- Keep financial/technical terms accurate (gold, silver, platinum, support/resistance levels, etc.)
+- Preserve markdown formatting (## headings, links like [text](/aprende/slug), etc.)
+- Keep numbers, prices, and percentages as-is
+- Do NOT add or remove content, translate faithfully
+- Do NOT include the original Spanish text
+- Keep the same tone: professional, analytical, informative
+
+Return ONLY a valid JSON with this exact structure:
+
+{
+  "title": "Translated title in ${langName}",
+  "excerpt": "Translated excerpt in ${langName}",
+  "content": "Translated full content in ${langName} with ## for section headings"
+}
+
+Return ONLY the JSON, no additional text.`;
+
+  const raw = await generateText(prompt);
+  if (!raw) return null;
+
+  return parseTranslatedResponse(raw);
+}
+
+export async function translateArticle(articleId: number): Promise<number> {
+  const db = getDb();
+  if (!db || !isConfigured()) return 0;
+
+  let translated = 0;
+
+  try {
+    const [article] = await db
+      .select()
+      .from(articles)
+      .where(eq(articles.id, articleId))
+      .limit(1);
+
+    if (!article) return 0;
+
+    for (const locale of TRANSLATION_LOCALES) {
+      try {
+        const existing = await db
+          .select({ id: articleTranslations.id })
+          .from(articleTranslations)
+          .where(
+            and(
+              eq(articleTranslations.articleId, articleId),
+              eq(articleTranslations.locale, locale)
+            )
+          )
+          .limit(1);
+
+        if (existing.length > 0) continue;
+
+        const result = await translateArticleToLocale(
+          article.title,
+          article.excerpt ?? "",
+          article.content,
+          locale
+        );
+
+        if (result) {
+          await db.insert(articleTranslations).values({
+            articleId,
+            locale,
+            title: result.title,
+            excerpt: result.excerpt,
+            content: result.content,
+          });
+          translated++;
+          console.log(`Translated article ${articleId} to ${locale}`);
+        }
+      } catch (err) {
+        console.error(`Failed to translate article ${articleId} to ${locale}:`, err);
+      }
+    }
+  } catch (err) {
+    console.error(`Failed to translate article ${articleId}:`, err);
+  }
+
+  return translated;
+}
+
+export async function getArticleTranslation(
+  articleId: number,
+  locale: string
+) {
+  if (locale === "es") return null;
+
+  const db = getDb();
+  if (!db) return null;
+
+  try {
+    const [translation] = await db
+      .select()
+      .from(articleTranslations)
+      .where(
+        and(
+          eq(articleTranslations.articleId, articleId),
+          eq(articleTranslations.locale, locale)
+        )
+      )
+      .limit(1);
+
+    return translation ?? null;
+  } catch {
+    return null;
   }
 }

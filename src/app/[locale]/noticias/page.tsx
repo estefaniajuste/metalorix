@@ -3,8 +3,8 @@ import { getTranslations, getLocale } from "next-intl/server";
 import { getAlternates } from "@/lib/seo/alternates";
 import { getLocalizedMetalSlug } from "@/lib/utils/metal-slugs";
 import { getDb } from "@/lib/db";
-import { articles } from "@/lib/db/schema";
-import { eq, desc } from "drizzle-orm";
+import { articles, articleTranslations } from "@/lib/db/schema";
+import { eq, desc, and, inArray } from "drizzle-orm";
 
 export async function generateMetadata({
   params,
@@ -43,6 +43,41 @@ async function getPublishedArticles() {
   }
 }
 
+async function getTranslationsForArticles(
+  articleIds: number[],
+  locale: string
+): Promise<Map<number, { title: string; excerpt: string | null }>> {
+  const map = new Map<number, { title: string; excerpt: string | null }>();
+  if (locale === "es" || articleIds.length === 0) return map;
+
+  const db = getDb();
+  if (!db) return map;
+
+  try {
+    const rows = await db
+      .select({
+        articleId: articleTranslations.articleId,
+        title: articleTranslations.title,
+        excerpt: articleTranslations.excerpt,
+      })
+      .from(articleTranslations)
+      .where(
+        and(
+          inArray(articleTranslations.articleId, articleIds),
+          eq(articleTranslations.locale, locale)
+        )
+      );
+
+    for (const row of rows) {
+      map.set(row.articleId, { title: row.title, excerpt: row.excerpt });
+    }
+  } catch {
+    // fallback to original Spanish
+  }
+
+  return map;
+}
+
 const sources = [
   "Reuters Commodities",
   "Kitco News",
@@ -60,6 +95,10 @@ export default async function NoticiasPage() {
   const tn = await getTranslations("nav");
   const publishedArticles = await getPublishedArticles();
   const hasArticles = publishedArticles.length > 0;
+  const translationsMap = await getTranslationsForArticles(
+    publishedArticles.map((a) => a.id),
+    locale
+  );
 
   const contentTypes = [
     { title: t("dailySummary"), description: t("dailySummaryDesc"), frequency: t("dailySummaryFreq") },
@@ -98,6 +137,9 @@ export default async function NoticiasPage() {
               {publishedArticles.map((article) => {
                 const mainMetal = article.metals?.[0] ?? "XAU";
                 const color = METAL_COLORS[mainMetal] ?? "#D6B35A";
+                const tr = translationsMap.get(article.id);
+                const title = tr?.title ?? article.title;
+                const excerpt = tr?.excerpt ?? article.excerpt;
                 return (
                   <Link
                     key={article.id}
@@ -118,10 +160,10 @@ export default async function NoticiasPage() {
                         ))}
                       </div>
                       <h3 className="text-sm font-semibold text-content-0 leading-snug mb-2 line-clamp-2 group-hover:text-brand-gold transition-colors">
-                        {article.title}
+                        {title}
                       </h3>
-                      {article.excerpt && (
-                        <p className="text-xs text-content-2 leading-relaxed line-clamp-2 mb-3">{article.excerpt}</p>
+                      {excerpt && (
+                        <p className="text-xs text-content-2 leading-relaxed line-clamp-2 mb-3">{excerpt}</p>
                       )}
                       <div className="text-[10px] text-content-3">
                         {article.publishedAt?.toLocaleDateString(locale, { day: "numeric", month: "short", year: "numeric" })}
