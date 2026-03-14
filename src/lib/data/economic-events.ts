@@ -193,7 +193,85 @@ export const ECONOMIC_EVENTS: EconomicEvent[] = [
   },
 ];
 
-export function getUpcomingEvents(days: number = 30): Array<EconomicEvent & { nextDate: string; daysUntil: number }> {
+interface EventTexts {
+  name: string;
+  nameShort: string;
+  description: string;
+  metalImpact: string;
+  frequency: string;
+}
+
+const EVENTS_EN: Record<string, EventTexts> = {
+  fomc: {
+    name: "FOMC Meeting (Federal Reserve)",
+    nameShort: "FOMC",
+    description: "The Federal Open Market Committee decides on US interest rates. It is the most important event for precious metals.",
+    metalImpact: "Higher rates → gold falls. Lower rates or pause → gold rises.",
+    frequency: "8 times per year",
+  },
+  ecb: {
+    name: "ECB Decision (European Central Bank)",
+    nameShort: "ECB",
+    description: "The ECB decides interest rates for the eurozone. It affects EUR/USD and therefore the gold price in euros.",
+    metalImpact: "Higher EU rates → EUR rises → gold in EUR falls (and vice versa).",
+    frequency: "6 times per year",
+  },
+  "cpi-us": {
+    name: "US CPI (Inflation)",
+    nameShort: "CPI USA",
+    description: "The Consumer Price Index measures inflation. Gold is traditionally a hedge against inflation.",
+    metalImpact: "Higher than expected inflation → gold rises (hedge). Low inflation → gold falls.",
+    frequency: "Monthly",
+  },
+  nfp: {
+    name: "Non-Farm Payrolls (NFP)",
+    nameShort: "NFP",
+    description: "US employment data. A strong labour market can lead to higher rates, which puts downward pressure on gold.",
+    metalImpact: "Strong employment → USD rises → gold falls. Weak employment → gold rises.",
+    frequency: "First Friday of each month",
+  },
+  pce: {
+    name: "PCE Deflator (Fed's preferred measure)",
+    nameShort: "PCE",
+    description: "The PCE index is the Federal Reserve's preferred inflation measure for making monetary policy decisions.",
+    metalImpact: "High PCE → the Fed could raise rates → bearish pressure on gold.",
+    frequency: "Monthly",
+  },
+  "gdp-us": {
+    name: "US GDP",
+    nameShort: "GDP USA",
+    description: "Gross Domestic Product measures economic growth. A recession is typically bullish for gold.",
+    metalImpact: "Weak GDP → recession fears → gold rises as safe haven.",
+    frequency: "Quarterly",
+  },
+  pmi: {
+    name: "Manufacturing PMI (ISM)",
+    nameShort: "PMI",
+    description: "The PMI index measures manufacturing sector activity. A PMI below 50 indicates contraction.",
+    metalImpact: "Low PMI → economy weakening → gold rises as safe haven.",
+    frequency: "Monthly",
+  },
+  dxy: {
+    name: "Dollar Index (DXY)",
+    nameShort: "DXY",
+    description: "The DXY index measures dollar strength against 6 major currencies. It has an inverse correlation with gold.",
+    metalImpact: "DXY rises → gold falls. DXY falls → gold rises. Inverse correlation.",
+    frequency: "Continuous (reference)",
+  },
+};
+
+function applyEventLocale(event: EconomicEvent, locale: string): EconomicEvent {
+  if (locale === "es") return event;
+  const en = EVENTS_EN[event.id];
+  if (!en) return event;
+  return { ...event, ...en };
+}
+
+export function getLocalizedEvents(locale: string = "es"): EconomicEvent[] {
+  return ECONOMIC_EVENTS.map((e) => applyEventLocale(e, locale));
+}
+
+export function getUpcomingEvents(days: number = 30, locale: string = "es"): Array<EconomicEvent & { nextDate: string; daysUntil: number }> {
   const now = new Date();
   const cutoff = new Date(now.getTime() + days * 86400000);
 
@@ -204,7 +282,7 @@ export function getUpcomingEvents(days: number = 30): Array<EconomicEvent & { ne
       const d = new Date(dateStr + "T00:00:00Z");
       if (d >= now && d <= cutoff) {
         const daysUntil = Math.ceil((d.getTime() - now.getTime()) / 86400000);
-        upcoming.push({ ...event, nextDate: dateStr, daysUntil });
+        upcoming.push({ ...applyEventLocale(event, locale), nextDate: dateStr, daysUntil });
         break;
       }
     }

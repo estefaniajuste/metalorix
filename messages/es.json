@@ -30,6 +30,7 @@
     "status": "Operativo",
     "disclaimer": "Los datos mostrados son informativos y no constituyen asesoramiento financiero. Los precios pueden tener un retraso de hasta 15 minutos.",
     "glossary": "Glosario",
+    "learn": "Aprende",
     "investmentGuide": "Guía de inversión"
   },
   "home": {
@@ -230,6 +231,23 @@
     "ctaTitle": "¿Listo para seguir los precios?",
     "ctaDesc": "Consulta las cotizaciones en tiempo real en nuestro Dashboard.",
     "viewDashboard": "Ver Dashboard"
+  },
+  "learn": {
+    "title": "Aprende",
+    "subtitle": "Formación completa sobre metales preciosos: conceptos, mercados, estrategias de inversión y mucho más.",
+    "categories": "Categorías",
+    "termsCount": "términos",
+    "categoriesCount": "categorías",
+    "readMore": "Leer más",
+    "emptyState": "Próximamente publicaremos contenido formativo aquí.",
+    "ctaTitle": "¿Listo para seguir los precios?",
+    "ctaDesc": "Consulta las cotizaciones en tiempo real en nuestro Dashboard.",
+    "viewDashboard": "Ver Dashboard",
+    "viewTools": "Herramientas",
+    "allTerms": "Todos los términos",
+    "relatedTerms": "Términos relacionados",
+    "moreInCategory": "Más en",
+    "contentComingSoon": "El contenido ampliado de este término se publicará próximamente."
   },
   "news": {
     "title": "Noticias",
@@ -714,6 +732,7 @@
     "addPriceAlerts": "▸ Añadir alertas de nivel de precio",
     "priceAbove": "Sube a",
     "priceBelow": "Baja a",
+    "priceThreshold": "Umbral de precio (USD)",
     "removeAlert": "Eliminar alerta",
     "addAlert": "+ Añadir alerta de precio",
     "subscribing": "Suscribiendo...",

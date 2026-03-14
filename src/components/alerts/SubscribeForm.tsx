@@ -176,7 +176,7 @@ export function SubscribeForm() {
                     value={alert.threshold}
                     onChange={(e) => updateAlert(i, "threshold", e.target.value)}
                     placeholder="0.00"
-                    aria-label="Umbral de precio (USD)"
+                    aria-label={t("priceThreshold")}
                     className="w-full bg-surface-1 border border-border rounded-xs text-xs text-content-0 px-2 py-1.5 focus:outline-none focus:border-brand-gold"
                   />
                 </div>

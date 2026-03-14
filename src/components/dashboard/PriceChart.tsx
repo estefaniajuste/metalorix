@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { useTranslations } from "next-intl";
 import { useTheme } from "@/components/layout/ThemeProvider";
 import type { HistoryResult, MetalSymbol } from "@/lib/providers/metals";
 import { METALS } from "@/lib/providers/metals";
@@ -105,6 +106,7 @@ export function PriceChart({ symbol, range, history }: PriceChartProps) {
   const chartRef = useRef<IChartApi | null>(null);
   const seriesRef = useRef<ISeriesApi<"Area"> | null>(null);
   const { theme } = useTheme();
+  const tm = useTranslations("metalNames");
   const metal = METALS[symbol];
   const isDark = theme === "dark";
 
@@ -170,7 +172,7 @@ export function PriceChart({ symbol, range, history }: PriceChartProps) {
       <div className="flex items-center justify-between mb-5 flex-wrap gap-3">
         <div className="flex items-center gap-3">
           <span className="text-lg font-semibold text-content-0">
-            {metal.name} ({symbol})
+            {tm(symbol)} ({symbol})
           </span>
           <span className="text-sm text-content-3">
             {range}

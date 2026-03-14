@@ -1,11 +1,12 @@
 "use client";
 
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { useEffect, useRef, useState } from "react";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import { Logo } from "./Logo";
 import { useTheme } from "./ThemeProvider";
 import { LanguageSwitcher } from "./LanguageSwitcher";
+import { getLocalizedMetalSlug } from "@/lib/utils/metal-slugs";
 
 function SunIcon() {
   return (
@@ -54,15 +55,16 @@ function ChevronDown() {
 export function Nav() {
   const { theme, toggle } = useTheme();
   const t = useTranslations("nav");
+  const locale = useLocale();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const metalLinks = [
-    { href: "/precio/oro", label: t("gold"), symbol: "XAU", color: "#D6B35A" },
-    { href: "/precio/plata", label: t("silver"), symbol: "XAG", color: "#A7B0BE" },
-    { href: "/precio/platino", label: t("platinum"), symbol: "XPT", color: "#8B9DC3" },
-    { href: "/ratio-oro-plata", label: t("ratio"), symbol: "⚖️", color: "#D6B35A" },
+  const metalLinks: { href: any; label: string; symbol: string; color: string }[] = [
+    { href: { pathname: "/precio/[metal]" as const, params: { metal: getLocalizedMetalSlug("oro", locale) } }, label: t("gold"), symbol: "XAU", color: "#D6B35A" },
+    { href: { pathname: "/precio/[metal]" as const, params: { metal: getLocalizedMetalSlug("plata", locale) } }, label: t("silver"), symbol: "XAG", color: "#A7B0BE" },
+    { href: { pathname: "/precio/[metal]" as const, params: { metal: getLocalizedMetalSlug("platino", locale) } }, label: t("platinum"), symbol: "XPT", color: "#8B9DC3" },
+    { href: "/ratio-oro-plata" as const, label: t("ratio"), symbol: "⚖️", color: "#D6B35A" },
   ];
 
   const navItems = [
@@ -126,8 +128,8 @@ export function Nav() {
                     <div role="menu" aria-label={t("metalPrices")} className="absolute top-full start-0 mt-1 w-48 bg-surface-1 border border-border rounded-DEFAULT shadow-card py-1.5 z-50">
                       {metalLinks.map((metal) => (
                         <Link
-                          key={metal.href}
-                          href={metal.href}
+                          key={typeof metal.href === "string" ? metal.href : metal.href.params.metal}
+                          href={metal.href as any}
                           role="menuitem"
                           onClick={() => setDropdownOpen(false)}
                           className="flex items-center gap-3 px-4 py-2.5 text-sm text-content-2 hover:text-content-0 hover:bg-surface-2 transition-colors"
@@ -146,7 +148,7 @@ export function Nav() {
               ) : (
                 <Link
                   key={item.href}
-                  href={item.href}
+                  href={item.href as any}
                   className="px-3.5 py-2 rounded-xs text-sm font-medium text-content-2 hover:text-content-0 hover:bg-surface-2 transition-colors"
                 >
                   {item.label}
@@ -189,8 +191,8 @@ export function Nav() {
                 </div>
                 {metalLinks.map((metal) => (
                   <Link
-                    key={metal.href}
-                    href={metal.href}
+                    key={typeof metal.href === "string" ? metal.href : metal.href.params.metal}
+                    href={metal.href as any}
                     className="flex items-center gap-3 px-4 py-3 rounded-sm text-base font-medium text-content-2 hover:text-content-0 hover:bg-surface-2 transition-colors"
                     onClick={() => setMobileOpen(false)}
                   >
@@ -206,7 +208,7 @@ export function Nav() {
             ) : (
               <Link
                 key={item.href}
-                href={item.href}
+                href={item.href as any}
                 className="block px-4 py-3.5 rounded-sm text-base font-medium text-content-2 hover:text-content-0 hover:bg-surface-2 transition-colors"
                 onClick={() => setMobileOpen(false)}
               >

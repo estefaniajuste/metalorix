@@ -1,8 +1,8 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import { useTranslations } from "next-intl";
 import type { HistoryResult, MetalSymbol, TimeRange } from "@/lib/providers/metals";
-import { METALS } from "@/lib/providers/metals";
 import { TechnicalIndicators } from "@/components/dashboard/TechnicalIndicators";
 
 const SYMBOLS: MetalSymbol[] = ["XAU", "XAG", "XPT"];
@@ -13,6 +13,10 @@ const RANGES: { value: TimeRange; label: string }[] = [
 ];
 
 export function ToolsTechnicalIndicators() {
+  const t = useTranslations("technicalIndicators");
+  const tm = useTranslations("metalNames");
+  const te = useTranslations("errors");
+
   const [symbol, setSymbol] = useState<MetalSymbol>("XAU");
   const [range, setRange] = useState<TimeRange>("1M");
   const [history, setHistory] = useState<HistoryResult | null>(null);
@@ -43,11 +47,8 @@ export function ToolsTechnicalIndicators() {
       <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
         <div>
           <h3 className="text-base font-semibold text-content-0">
-            Indicadores técnicos
+            {t("title")}
           </h3>
-          <p className="text-sm text-content-2 mt-1">
-            RSI, MACD y Bandas de Bollinger sobre precios de metales preciosos.
-          </p>
         </div>
         <div className="flex flex-wrap items-center gap-3">
           <div className="flex rounded-lg border border-border overflow-hidden">
@@ -62,7 +63,7 @@ export function ToolsTechnicalIndicators() {
                     : "text-content-2 hover:text-content-0 hover:bg-surface-2"
                 }`}
               >
-                {METALS[s].name}
+                {tm(s)}
               </button>
             ))}
           </div>
@@ -95,13 +96,13 @@ export function ToolsTechnicalIndicators() {
 
       {error && (
         <p className="text-sm text-content-3 py-8 text-center">
-          No se pudieron cargar los datos. Inténtalo de nuevo más tarde.
+          {te("unexpectedError")}
         </p>
       )}
 
       {!loading && !error && history && history.data.length < 30 && (
         <p className="text-sm text-content-3 py-8 text-center">
-          Se necesitan al menos 30 puntos de datos. Prueba con un rango mayor (1M o 3M).
+          {te("somethingWrong")}
         </p>
       )}
 

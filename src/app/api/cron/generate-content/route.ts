@@ -7,6 +7,12 @@ import {
   generateWeeklySummary,
   saveArticle,
 } from "@/lib/ai/content-generator";
+import {
+  generateNewGlossaryTerms,
+  saveGlossaryTerm,
+  expandTermsWithoutContent,
+  getGlossaryTermCount,
+} from "@/lib/ai/glossary-generator";
 import { isConfigured } from "@/lib/ai/gemini";
 import { sendWeeklyNewsletter } from "@/lib/email/newsletter";
 
@@ -62,6 +68,7 @@ export async function POST(request: NextRequest) {
       XAG: "Plata",
       XPT: "Platino",
     };
+    // AI content is generated in Spanish for the news section
 
     try {
       const prices = await db.select().from(metalPrices);
@@ -82,6 +89,25 @@ export async function POST(request: NextRequest) {
       }
     } catch (err) {
       console.error("Event article check failed:", err);
+    }
+  }
+
+  // Glossary: generate new terms and expand existing ones
+  if (type === "glossary" || type === "auto") {
+    const MAX_TERMS = 1000;
+    const termCount = await getGlossaryTermCount();
+
+    if (termCount < MAX_TERMS) {
+      const newTerms = await generateNewGlossaryTerms(5);
+      for (const term of newTerms) {
+        const ok = await saveGlossaryTerm(term);
+        if (ok) generated.push(`glossary-new: ${term.slug}`);
+      }
+    }
+
+    const expanded = await expandTermsWithoutContent(3);
+    if (expanded > 0) {
+      generated.push(`glossary-expanded: ${expanded} terms`);
     }
   }
 

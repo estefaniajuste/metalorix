@@ -30,6 +30,7 @@
     "status": "Çalışıyor",
     "disclaimer": "Gösterilen veriler yalnızca bilgilendirme amaçlıdır ve finansal tavsiye niteliği taşımaz. Fiyatlarda 15 dakikaya kadar gecikme olabilir.",
     "glossary": "Sözlük",
+    "learn": "Öğren",
     "investmentGuide": "Yatırım rehberi"
   },
   "home": {
@@ -230,6 +231,23 @@
     "ctaTitle": "Fiyatları takip etmeye hazır mısınız?",
     "ctaDesc": "Panelimizde gerçek zamanlı fiyatları inceleyin.",
     "viewDashboard": "Paneli Görüntüle"
+  },
+  "learn": {
+    "title": "Öğren",
+    "subtitle": "Kıymetli metaller hakkında kapsamlı eğitim: kavramlar, piyasalar, yatırım stratejileri ve daha fazlası.",
+    "categories": "Kategoriler",
+    "termsCount": "terim",
+    "categoriesCount": "kategori",
+    "readMore": "Daha fazla oku",
+    "emptyState": "Eğitim içeriği yakında yayınlanacak.",
+    "ctaTitle": "Fiyatları takip etmeye hazır mısınız?",
+    "ctaDesc": "Panelimizde gerçek zamanlı fiyatları inceleyin.",
+    "viewDashboard": "Paneli Görüntüle",
+    "viewTools": "Araçlar",
+    "allTerms": "Tüm terimler",
+    "relatedTerms": "İlgili terimler",
+    "moreInCategory": "Daha fazla",
+    "contentComingSoon": "Bu terimin genişletilmiş içeriği yakında yayınlanacak."
   },
   "news": {
     "title": "Haberler",

@@ -16,11 +16,15 @@ interface PriceSnapshot {
   changePct: number;
 }
 
-const METAL_NAMES: Record<string, string> = {
-  XAU: "Oro",
-  XAG: "Plata",
-  XPT: "Platino",
+const METAL_NAMES: Record<string, Record<string, string>> = {
+  XAU: { es: "Oro", en: "Gold" },
+  XAG: { es: "Plata", en: "Silver" },
+  XPT: { es: "Platino", en: "Platinum" },
 };
+
+function metalName(symbol: string, locale: string = "es"): string {
+  return METAL_NAMES[symbol]?.[locale] || METAL_NAMES[symbol]?.es || symbol;
+}
 
 async function getPrices(): Promise<PriceSnapshot[]> {
   const db = getDb();
@@ -111,17 +115,19 @@ export async function checkCustomAlerts(): Promise<number> {
     const threshold = parseFloat(alert.threshold);
     if (!shouldTrigger(alert.alertType, threshold, metal.price)) continue;
 
+    const locale: string = "es";
     const conditionText =
       alert.alertType === "price_above"
-        ? `Precio por encima de $${threshold.toFixed(2)}`
-        : `Precio por debajo de $${threshold.toFixed(2)}`;
+        ? (locale === "en" ? `Price above $${threshold.toFixed(2)}` : `Precio por encima de $${threshold.toFixed(2)}`)
+        : (locale === "en" ? `Price below $${threshold.toFixed(2)}` : `Precio por debajo de $${threshold.toFixed(2)}`);
 
     const { subject, html } = priceAlertEmail({
-      metalName: METAL_NAMES[alert.symbol] ?? alert.symbol,
+      metalName: metalName(alert.symbol, locale),
       symbol: alert.symbol,
       currentPrice: metal.price,
       condition: conditionText,
       threshold,
+      locale,
     });
 
     const sent = await sendEmail({ to: alert.email, subject, html });
@@ -153,15 +159,15 @@ export async function checkSmartAlerts(): Promise<number> {
       const moversText = bigMovers
         .map(
           (m) =>
-            `${m.name} ${m.changePct > 0 ? "sube" : "cae"} un ${Math.abs(m.changePct).toFixed(1)}%`
+            `${metalName(m.symbol)} ${m.changePct > 0 ? "+" : ""}${Math.abs(m.changePct).toFixed(1)}%`
         )
         .join(", ");
 
       const { subject, html } = smartAlertEmail({
-        title: `Movimiento importante: ${moversText}`,
-        description: `Se han detectado movimientos significativos en el mercado de metales preciosos. ${bigMovers.length > 1 ? "Varios metales se han movido" : "Un metal se ha movido"} más de un 2% en las últimas 24 horas.`,
+        title: moversText,
+        description: `Significant moves detected in the precious metals market in the last 24 hours.`,
         metals: prices.map((p) => ({
-          name: p.name,
+          name: metalName(p.symbol),
           symbol: p.symbol,
           price: p.price,
           changePct: p.changePct,

@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 import { useTheme } from "@/components/layout/ThemeProvider";
 import { METALS, type MetalSymbol, type TimeRange } from "@/lib/providers/metals";
 import {
@@ -18,9 +19,9 @@ import {
 
 const SYMBOLS: MetalSymbol[] = ["XAU", "XAG", "XPT"];
 const RANGES: { value: TimeRange; label: string }[] = [
-  { value: "1W", label: "1 Sem" },
-  { value: "1M", label: "1 Mes" },
-  { value: "1Y", label: "1 Año" },
+  { value: "1W", label: "1W" },
+  { value: "1M", label: "1M" },
+  { value: "1Y", label: "1Y" },
 ];
 
 interface SeriesData {
@@ -80,6 +81,8 @@ function getChartOptions(
 export function MetalComparison() {
   const { theme } = useTheme();
   const isDark = theme === "dark";
+  const tm = useTranslations("metalNames");
+  const tc = useTranslations("comparatorPage");
 
   const [range, setRange] = useState<TimeRange>("1M");
   const [enabled, setEnabled] = useState<Record<MetalSymbol, boolean>>({
@@ -137,7 +140,7 @@ export function MetalComparison() {
         crosshairMarkerBorderColor: isDark ? "#121826" : "#FFFFFF",
         crosshairMarkerBorderWidth: 2,
         priceFormat: { type: "percent" },
-        title: METALS[sym].name,
+        title: sym,
       });
       seriesMapRef.current[sym] = series;
     });
@@ -212,7 +215,7 @@ export function MetalComparison() {
     <div className="bg-surface-1 border border-border rounded-DEFAULT p-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-5">
         <h3 className="text-lg font-bold text-content-0">
-          Comparador histórico
+          {tc("title")}
         </h3>
 
         {/* Range selector */}
@@ -256,7 +259,7 @@ export function MetalComparison() {
                   : `2px solid ${METALS[sym].color}`,
               }}
             />
-            {METALS[sym].name}
+            {tm(sym)}
             {allData[`${sym}_${range}`] && enabled[sym] && (
               <span
                 className={`text-xs tabular-nums ${
@@ -284,7 +287,7 @@ export function MetalComparison() {
       </div>
 
       <p className="text-[10px] text-content-3 mt-3">
-        Los valores están normalizados al inicio del periodo seleccionado (variación porcentual relativa).
+        {tc("interpretP1")}
       </p>
     </div>
   );

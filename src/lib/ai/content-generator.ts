@@ -1,7 +1,7 @@
 import { generateText, isConfigured } from "./gemini";
 import { getDb } from "@/lib/db";
-import { articles, newsSources, metalPrices } from "@/lib/db/schema";
-import { desc, gte, eq } from "drizzle-orm";
+import { articles, newsSources, metalPrices, glossaryTerms } from "@/lib/db/schema";
+import { desc, gte, eq, asc } from "drizzle-orm";
 
 interface PriceData {
   symbol: string;
@@ -114,11 +114,40 @@ function formatPrices(prices: PriceData[]): string {
 }
 
 function formatNews(news: NewsItem[]): string {
-  if (news.length === 0) return "No hay noticias relevantes recientes.";
+  if (news.length === 0) return "No relevant recent news.";
   return news
     .slice(0, 10)
     .map((n) => `- [${n.source}] ${n.title}: ${n.summary.slice(0, 150)}`)
     .join("\n");
+}
+
+async function getGlossaryTermsForPrompt(): Promise<string> {
+  const db = getDb();
+  if (!db) return "";
+  try {
+    const terms = await db
+      .select({ slug: glossaryTerms.slug, term: glossaryTerms.term })
+      .from(glossaryTerms)
+      .where(eq(glossaryTerms.published, true))
+      .orderBy(asc(glossaryTerms.term))
+      .limit(200);
+    if (terms.length === 0) return "";
+    return terms.map((t) => `- ${t.term} → [${t.term}](/aprende/${t.slug})`).join("\n");
+  } catch {
+    return "";
+  }
+}
+
+function buildGlossaryLinkingInstructions(termList: string): string {
+  if (!termList) return "";
+  return `
+CROSS-LINKING CON SECCIÓN "APRENDE" (IMPORTANTE):
+Cuando menciones alguno de estos términos en tu contenido, incluye un enlace markdown la PRIMERA vez que lo menciones. Formato: [nombre del término](/aprende/slug)
+Máximo 3-5 enlaces por artículo, solo los más relevantes.
+
+TÉRMINOS DISPONIBLES:
+${termList}
+`;
 }
 
 export async function generateDailySummary(): Promise<{
@@ -134,6 +163,8 @@ export async function generateDailySummary(): Promise<{
   const news = await getRecentNews(24);
   const today = new Date();
   const dateStr = formatDate(today);
+  const glossaryContext = await getGlossaryTermsForPrompt();
+  const glossaryInstructions = buildGlossaryLinkingInstructions(glossaryContext);
 
   const prompt = `Eres un analista experto en metales preciosos y SEO que escribe en español para inversores hispanohablantes.
 
@@ -157,6 +188,7 @@ INSTRUCCIONES PARA EL CONTENIDO:
 - Tono: informativo, analítico, útil para quien invierte en metales
 - NO incluyas título ni fecha al inicio (se añaden automáticamente)
 - NO digas "como analista" ni uses primera persona
+${glossaryInstructions}
 
 INSTRUCCIONES SEO (MUY IMPORTANTE):
 Debes devolver tu respuesta como un JSON válido con esta estructura exacta:
@@ -219,6 +251,8 @@ export async function generateEventArticle(
   const absChange = Math.abs(changePct).toFixed(1);
   const today = new Date();
   const dateStr = formatDate(today);
+  const glossaryContext = await getGlossaryTermsForPrompt();
+  const glossaryInstructions = buildGlossaryLinkingInstructions(glossaryContext);
 
   const prompt = `Eres un analista experto en metales preciosos y SEO que escribe en español.
 
@@ -236,6 +270,7 @@ Escribe un artículo de 300-400 palabras explicando:
 
 FORMATO: párrafos normales, ## para secciones. Tono profesional, datos concretos.
 NO incluyas título. NO uses primera persona.
+${glossaryInstructions}
 
 INSTRUCCIONES SEO (MUY IMPORTANTE):
 Debes devolver tu respuesta como un JSON válido con esta estructura exacta:
@@ -291,6 +326,8 @@ export async function generateWeeklySummary(): Promise<{
   const prices = await getCurrentPrices();
   const news = await getRecentNews(168);
   const today = new Date();
+  const glossaryContext = await getGlossaryTermsForPrompt();
+  const glossaryInstructions = buildGlossaryLinkingInstructions(glossaryContext);
 
   const weekStart = new Date(today);
   weekStart.setDate(today.getDate() - 7);
@@ -315,6 +352,7 @@ INSTRUCCIONES PARA EL CONTENIDO:
 - Menciona factores macro: dólar, tipos de interés, geopolítica
 - Tono: profesional, analítico
 - NO incluyas título. NO uses primera persona.
+${glossaryInstructions}
 
 INSTRUCCIONES SEO (MUY IMPORTANTE):
 Debes devolver tu respuesta como un JSON válido con esta estructura exacta:

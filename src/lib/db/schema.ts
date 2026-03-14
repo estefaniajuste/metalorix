@@ -85,6 +85,39 @@ export const articles = pgTable(
 );
 
 /* ==========================================================
+   Glossary Terms — Educational content for /aprende
+   ========================================================== */
+
+export const glossaryTerms = pgTable(
+  "glossary_terms",
+  {
+    id: serial("id").primaryKey(),
+    slug: varchar("slug", { length: 255 }).notNull(),
+    term: varchar("term", { length: 255 }).notNull(),
+    locale: varchar("locale", { length: 10 }).notNull().default("es"),
+    definition: text("definition").notNull(),
+    content: text("content"),
+    category: varchar("category", { length: 100 }),
+    relatedSlugs: varchar("related_slugs", { length: 50 }).array(),
+    published: boolean("published").notNull().default(false),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  (table) => ({
+    slugLocaleIdx: uniqueIndex("glossary_slug_locale_idx").on(
+      table.slug,
+      table.locale
+    ),
+    categoryIdx: index("glossary_category_idx").on(table.category),
+    publishedIdx: index("glossary_published_idx").on(table.published),
+  })
+);
+
+/* ==========================================================
    News Sources — Scraped news for AI content generation
    ========================================================== */
 
@@ -186,5 +219,7 @@ export type NewMetalPrice = typeof metalPrices.$inferInsert;
 export type PriceHistoryRow = typeof priceHistory.$inferSelect;
 export type Article = typeof articles.$inferSelect;
 export type NewArticle = typeof articles.$inferInsert;
+export type GlossaryTerm = typeof glossaryTerms.$inferSelect;
+export type NewGlossaryTerm = typeof glossaryTerms.$inferInsert;
 export type User = typeof users.$inferSelect;
 export type Alert = typeof alerts.$inferSelect;

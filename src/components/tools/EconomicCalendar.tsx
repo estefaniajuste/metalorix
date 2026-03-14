@@ -3,7 +3,7 @@
 import { useState, useMemo } from "react";
 import { useTranslations, useLocale } from "next-intl";
 import {
-  ECONOMIC_EVENTS,
+  getLocalizedEvents,
   type EconomicEvent,
 } from "@/lib/data/economic-events";
 
@@ -62,6 +62,8 @@ export function EconomicCalendar() {
   const [view, setView] = useState<ViewMode>("upcoming");
   const [expanded, setExpanded] = useState<string | null>(null);
 
+  const localizedEvents = useMemo(() => getLocalizedEvents(locale), [locale]);
+
   const upcomingEvents = useMemo(() => {
     const now = new Date();
     now.setHours(0, 0, 0, 0);
@@ -71,7 +73,7 @@ export function EconomicCalendar() {
       EconomicEvent & { nextDate: string; daysUntilEvent: number }
     > = [];
 
-    for (const ev of ECONOMIC_EVENTS) {
+    for (const ev of localizedEvents) {
       if (filter !== "all" && ev.impact !== filter) continue;
 
       for (const dateStr of ev.dates2026) {
@@ -89,13 +91,13 @@ export function EconomicCalendar() {
 
     events.sort((a, b) => a.daysUntilEvent - b.daysUntilEvent);
     return events;
-  }, [filter]);
+  }, [filter, localizedEvents]);
 
   const allEvents = useMemo(() => {
-    return ECONOMIC_EVENTS.filter(
+    return localizedEvents.filter(
       (ev) => filter === "all" || ev.impact === filter
     );
-  }, [filter]);
+  }, [filter, localizedEvents]);
 
   return (
     <div className="space-y-6">

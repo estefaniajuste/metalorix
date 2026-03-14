@@ -1,18 +1,20 @@
-import Link from "next/link";
-import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
+import { useTranslations, useLocale } from "next-intl";
 import { Logo } from "./Logo";
+import { getLocalizedMetalSlug } from "@/lib/utils/metal-slugs";
 
 export function Footer() {
   const t = useTranslations("footer");
   const tn = useTranslations("nav");
+  const locale = useLocale();
 
   const sections = [
     {
       title: t("prices"),
       links: [
-        { href: "/precio/oro", label: tn("gold") },
-        { href: "/precio/plata", label: tn("silver") },
-        { href: "/precio/platino", label: tn("platinum") },
+        { href: { pathname: "/precio/[metal]" as const, params: { metal: getLocalizedMetalSlug("oro", locale) } }, label: tn("gold") },
+        { href: { pathname: "/precio/[metal]" as const, params: { metal: getLocalizedMetalSlug("plata", locale) } }, label: tn("silver") },
+        { href: { pathname: "/precio/[metal]" as const, params: { metal: getLocalizedMetalSlug("platino", locale) } }, label: tn("platinum") },
       ],
     },
     {
@@ -24,7 +26,7 @@ export function Footer() {
         { href: "/guia-inversion", label: t("investmentGuide") },
         { href: "/noticias", label: tn("news") },
         { href: "/alertas", label: tn("alerts") },
-        { href: "/glosario", label: t("glossary") },
+        { href: "/aprende", label: t("learn") },
       ],
     },
     {
@@ -58,13 +60,16 @@ export function Footer() {
               </h4>
               <ul className="space-y-2">
                 {section.links.map((link) => (
-                  <li key={link.href}>
-                    <Link
-                      href={link.href}
-                      className="text-[13px] text-content-3 hover:text-content-1 transition-colors"
-                    >
-                      {link.label}
-                    </Link>
+                  <li key={typeof link.href === "string" ? link.href : link.href.pathname}>
+                    {typeof link.href === "string" && link.href.startsWith("mailto:") ? (
+                      <a href={link.href} className="text-[13px] text-content-3 hover:text-content-1 transition-colors">
+                        {link.label}
+                      </a>
+                    ) : (
+                      <Link href={link.href as any} className="text-[13px] text-content-3 hover:text-content-1 transition-colors">
+                        {link.label}
+                      </Link>
+                    )}
                   </li>
                 ))}
               </ul>

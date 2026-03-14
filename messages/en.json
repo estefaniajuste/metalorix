@@ -30,6 +30,7 @@
     "status": "Operational",
     "disclaimer": "The data shown is for informational purposes only and does not constitute financial advice. Prices may be delayed by up to 15 minutes.",
     "glossary": "Glossary",
+    "learn": "Learn",
     "investmentGuide": "Investment guide"
   },
   "home": {
@@ -230,6 +231,23 @@
     "ctaTitle": "Ready to track prices?",
     "ctaDesc": "Check real-time quotes on our Dashboard.",
     "viewDashboard": "View Dashboard"
+  },
+  "learn": {
+    "title": "Learn",
+    "subtitle": "Complete training on precious metals: concepts, markets, investment strategies and more.",
+    "categories": "Categories",
+    "termsCount": "terms",
+    "categoriesCount": "categories",
+    "readMore": "Read more",
+    "emptyState": "Educational content coming soon.",
+    "ctaTitle": "Ready to track prices?",
+    "ctaDesc": "Check real-time quotes on our Dashboard.",
+    "viewDashboard": "View Dashboard",
+    "viewTools": "Tools",
+    "allTerms": "All terms",
+    "relatedTerms": "Related terms",
+    "moreInCategory": "More in",
+    "contentComingSoon": "Extended content for this term will be published soon."
   },
   "news": {
     "title": "News",
@@ -714,6 +732,7 @@
     "addPriceAlerts": "▸ Add price level alerts",
     "priceAbove": "Goes above",
     "priceBelow": "Goes below",
+    "priceThreshold": "Price threshold (USD)",
     "removeAlert": "Remove alert",
     "addAlert": "+ Add price alert",
     "subscribing": "Subscribing...",

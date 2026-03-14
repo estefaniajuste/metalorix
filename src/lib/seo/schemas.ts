@@ -7,7 +7,7 @@ export interface BreadcrumbItem {
 
 export function breadcrumbSchema(
   items: BreadcrumbItem[],
-  homeName = "Inicio",
+  homeName = "Home",
 ) {
   return {
     "@context": "https://schema.org",

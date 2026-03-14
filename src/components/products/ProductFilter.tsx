@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { useTranslations } from "next-intl";
-import { PRODUCTS, type Product } from "@/lib/data/products";
+import { useTranslations, useLocale } from "next-intl";
+import { getLocalizedProducts, type Product } from "@/lib/data/products";
 import { ProductCard } from "./ProductCard";
 
 type Filter = "todos" | "oro" | "plata" | "moneda" | "lingote";
@@ -22,8 +22,10 @@ function filterProducts(products: Product[], filter: Filter): Product[] {
 
 export function ProductFilter() {
   const t = useTranslations("productFilter");
+  const locale = useLocale();
+  const products = useMemo(() => getLocalizedProducts(locale), [locale]);
   const [active, setActive] = useState<Filter>("todos");
-  const filtered = useMemo(() => filterProducts(PRODUCTS, active), [active]);
+  const filtered = useMemo(() => filterProducts(products, active), [products, active]);
 
   const FILTERS: { value: Filter; label: string }[] = [
     { value: "todos", label: t("all") },

@@ -1,6 +1,63 @@
-function baseTemplate(content: string): string {
+interface EmailI18n {
+  footer: string;
+  manageAlerts: string;
+  priceAlert: string;
+  viewChart: string;
+  viewDashboard: string;
+  welcomeSubject: string;
+  welcomeTitle: string;
+  welcomeDesc: string;
+  welcomeAlertsTitle: string;
+  welcomeAlert1: string;
+  welcomeAlert2: string;
+  welcomeAlert3: string;
+  goToMetalorix: string;
+  reachedPrice: string;
+}
+
+const EMAIL_I18N: Record<string, EmailI18n> = {
+  es: {
+    footer: "Recibes este email porque te suscribiste a alertas en metalorix.com",
+    manageAlerts: "Gestionar alertas",
+    priceAlert: "Alerta de precio",
+    viewChart: "Ver gráfico de",
+    viewDashboard: "Ver Dashboard",
+    welcomeSubject: "Bienvenido a las alertas de Metalorix",
+    welcomeTitle: "Bienvenido a Metalorix!",
+    welcomeDesc: "Te has suscrito a las alertas inteligentes de precios de metales preciosos. Recibirás notificaciones cuando se produzcan movimientos importantes en oro, plata y platino.",
+    welcomeAlertsTitle: "Recibirás alertas de:",
+    welcomeAlert1: "Nuevos máximos y mínimos de 52 semanas",
+    welcomeAlert2: "Movimientos bruscos (>2% en un día)",
+    welcomeAlert3: "Ratio oro/plata en zonas extremas",
+    goToMetalorix: "Ir a Metalorix",
+    reachedPrice: "ha alcanzado",
+  },
+  en: {
+    footer: "You receive this email because you subscribed to alerts on metalorix.com",
+    manageAlerts: "Manage alerts",
+    priceAlert: "Price alert",
+    viewChart: "View chart for",
+    viewDashboard: "View Dashboard",
+    welcomeSubject: "Welcome to Metalorix alerts",
+    welcomeTitle: "Welcome to Metalorix!",
+    welcomeDesc: "You have subscribed to smart precious metals price alerts. You will receive notifications when significant moves occur in gold, silver and platinum.",
+    welcomeAlertsTitle: "You will receive alerts for:",
+    welcomeAlert1: "New 52-week highs and lows",
+    welcomeAlert2: "Sharp movements (>2% in a day)",
+    welcomeAlert3: "Gold/silver ratio in extreme zones",
+    goToMetalorix: "Go to Metalorix",
+    reachedPrice: "has reached",
+  },
+};
+
+function getEmailI18n(locale: string = "es"): EmailI18n {
+  return EMAIL_I18N[locale] || EMAIL_I18N.es;
+}
+
+function baseTemplate(content: string, locale: string = "es"): string {
+  const t = getEmailI18n(locale);
   return `<!DOCTYPE html>
-<html lang="es">
+<html lang="${locale}">
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
 <body style="margin:0;padding:0;background:#0B0F17;font-family:'Inter',system-ui,-apple-system,sans-serif">
 <table width="100%" cellpadding="0" cellspacing="0" style="background:#0B0F17;padding:32px 16px">
@@ -17,8 +74,8 @@ function baseTemplate(content: string): string {
   </td></tr>
   <tr><td style="padding:24px 32px;text-align:center">
     <p style="color:#6B7280;font-size:11px;margin:0;line-height:1.6">
-      Recibes este email porque te suscribiste a alertas en metalorix.com<br>
-      <a href="https://metalorix.com/alertas" style="color:#D6B35A;text-decoration:none">Gestionar alertas</a> · 
+      ${t.footer}<br>
+      <a href="https://metalorix.com/alertas" style="color:#D6B35A;text-decoration:none">${t.manageAlerts}</a> · 
       <a href="https://metalorix.com" style="color:#D6B35A;text-decoration:none">metalorix.com</a>
     </p>
   </td></tr>
@@ -35,18 +92,21 @@ export function priceAlertEmail({
   currentPrice,
   condition,
   threshold,
+  locale = "es",
 }: {
   metalName: string;
   symbol: string;
   currentPrice: number;
   condition: string;
   threshold: number;
+  locale?: string;
 }): { subject: string; html: string } {
-  const subject = `⚡ ${metalName} ha alcanzado $${currentPrice.toFixed(2)} — Alerta Metalorix`;
+  const t = getEmailI18n(locale);
+  const subject = `⚡ ${metalName} ${t.reachedPrice} $${currentPrice.toFixed(2)} — Metalorix`;
   const html = baseTemplate(`
     <div style="text-align:center;margin-bottom:24px">
       <div style="font-size:32px;margin-bottom:8px">⚡</div>
-      <h1 style="color:#F9FAFB;font-size:22px;font-weight:700;margin:0 0 8px">Alerta de precio: ${metalName}</h1>
+      <h1 style="color:#F9FAFB;font-size:22px;font-weight:700;margin:0 0 8px">${t.priceAlert}: ${metalName}</h1>
       <p style="color:#9CA3AF;font-size:14px;margin:0">${condition}: $${threshold.toFixed(2)}</p>
     </div>
     <div style="background:#0B0F17;border-radius:8px;padding:20px;text-align:center;margin-bottom:24px">
@@ -55,10 +115,10 @@ export function priceAlertEmail({
     </div>
     <div style="text-align:center">
       <a href="https://metalorix.com/precio/${metalName.toLowerCase()}" style="display:inline-block;background:#D6B35A;color:#0B0F17;font-size:14px;font-weight:600;padding:12px 28px;border-radius:8px;text-decoration:none">
-        Ver gráfico de ${metalName}
+        ${t.viewChart} ${metalName}
       </a>
     </div>
-  `);
+  `, locale);
   return { subject, html };
 }
 
@@ -66,11 +126,14 @@ export function smartAlertEmail({
   title,
   description,
   metals,
+  locale = "es",
 }: {
   title: string;
   description: string;
   metals: Array<{ name: string; symbol: string; price: number; changePct: number }>;
+  locale?: string;
 }): { subject: string; html: string } {
+  const t = getEmailI18n(locale);
   const subject = `📊 ${title} — Metalorix`;
 
   const metalRows = metals
@@ -94,37 +157,37 @@ export function smartAlertEmail({
     </table>
     <div style="text-align:center">
       <a href="https://metalorix.com" style="display:inline-block;background:#D6B35A;color:#0B0F17;font-size:14px;font-weight:600;padding:12px 28px;border-radius:8px;text-decoration:none">
-        Ver Dashboard
+        ${t.viewDashboard}
       </a>
     </div>
-  `);
+  `, locale);
   return { subject, html };
 }
 
-export function welcomeEmail(): { subject: string; html: string } {
-  const subject = "Bienvenido a las alertas de Metalorix";
+export function welcomeEmail(locale: string = "es"): { subject: string; html: string } {
+  const t = getEmailI18n(locale);
+  const subject = t.welcomeSubject;
   const html = baseTemplate(`
     <div style="text-align:center;margin-bottom:24px">
       <div style="font-size:32px;margin-bottom:8px">👋</div>
-      <h1 style="color:#F9FAFB;font-size:22px;font-weight:700;margin:0 0 12px">¡Bienvenido a Metalorix!</h1>
+      <h1 style="color:#F9FAFB;font-size:22px;font-weight:700;margin:0 0 12px">${t.welcomeTitle}</h1>
       <p style="color:#9CA3AF;font-size:14px;line-height:1.6;margin:0">
-        Te has suscrito a las alertas inteligentes de precios de metales preciosos.
-        Recibirás notificaciones cuando se produzcan movimientos importantes en oro, plata y platino.
+        ${t.welcomeDesc}
       </p>
     </div>
     <div style="background:#0B0F17;border-radius:8px;padding:20px;margin-bottom:24px">
-      <h2 style="color:#F9FAFB;font-size:14px;font-weight:600;margin:0 0 12px">Recibirás alertas de:</h2>
+      <h2 style="color:#F9FAFB;font-size:14px;font-weight:600;margin:0 0 12px">${t.welcomeAlertsTitle}</h2>
       <ul style="color:#9CA3AF;font-size:13px;line-height:2;margin:0;padding-left:20px">
-        <li>Nuevos máximos y mínimos de 52 semanas</li>
-        <li>Movimientos bruscos (>2% en un día)</li>
-        <li>Ratio oro/plata en zonas extremas</li>
+        <li>${t.welcomeAlert1}</li>
+        <li>${t.welcomeAlert2}</li>
+        <li>${t.welcomeAlert3}</li>
       </ul>
     </div>
     <div style="text-align:center">
       <a href="https://metalorix.com" style="display:inline-block;background:#D6B35A;color:#0B0F17;font-size:14px;font-weight:600;padding:12px 28px;border-radius:8px;text-decoration:none">
-        Ir a Metalorix
+        ${t.goToMetalorix}
       </a>
     </div>
-  `);
+  `, locale);
   return { subject, html };
 }

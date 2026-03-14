@@ -1,9 +1,10 @@
 "use client";
 
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { useEffect, useRef, useState } from "react";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import { METALS, type MetalSpot, type MetalSymbol } from "@/lib/providers/metals";
+import { getLocalizedMetalSlug } from "@/lib/utils/metal-slugs";
 import { Sparkline } from "./Sparkline";
 import {
   convertPrice,
@@ -53,6 +54,8 @@ export function MetalCard({
   eurUsdRate = 1.08,
 }: MetalCardProps) {
   const t = useTranslations("common");
+  const tm = useTranslations("metalNames");
+  const locale = useLocale();
   const metal = METALS[spot.symbol as MetalSymbol];
   const isUp = spot.change >= 0;
   const displayPrice = convertPrice(spot.price, unit, currency, eurUsdRate);
@@ -105,7 +108,7 @@ export function MetalCard({
           </div>
           <div>
             <div className="text-base font-semibold text-content-0">
-              {metal?.name}
+              {tm(spot.symbol as MetalSymbol)}
             </div>
             <div className="text-[13px] text-content-3">
               {spot.symbol}/{currency}{unitLabel}
@@ -139,7 +142,7 @@ export function MetalCard({
       </div>
 
       <Link
-        href={`/precio/${SLUG_MAP[spot.symbol]}`}
+        href={{ pathname: "/precio/[metal]" as const, params: { metal: getLocalizedMetalSlug(SLUG_MAP[spot.symbol], locale) } }}
         onClick={(e) => e.stopPropagation()}
         className="mt-4 inline-flex items-center gap-1 text-xs font-medium text-content-3 hover:text-brand-gold transition-colors"
       >

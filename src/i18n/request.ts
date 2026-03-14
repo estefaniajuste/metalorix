@@ -1,6 +1,5 @@
 import { getRequestConfig } from "next-intl/server";
-import { cookies, headers } from "next/headers";
-import { defaultLocale, locales, type Locale } from "./config";
+import { routing } from "./routing";
 
 const messageImports = {
   es: () => import("../../messages/es.json"),
@@ -11,30 +10,14 @@ const messageImports = {
   de: () => import("../../messages/de.json"),
 } as const;
 
-export default getRequestConfig(async () => {
-  const cookieStore = await cookies();
-  const cookieLocale = cookieStore.get("locale")?.value as Locale | undefined;
+export default getRequestConfig(async ({ requestLocale }) => {
+  let locale = await requestLocale;
 
-  let locale: Locale = defaultLocale;
-
-  if (cookieLocale && locales.includes(cookieLocale)) {
-    locale = cookieLocale;
-  } else {
-    const headerStore = await headers();
-    const acceptLang = headerStore.get("accept-language") || "";
-    const preferred = acceptLang
-      .split(",")
-      .map((l) => l.split(";")[0].trim().substring(0, 2).toLowerCase());
-
-    for (const lang of preferred) {
-      if (locales.includes(lang as Locale)) {
-        locale = lang as Locale;
-        break;
-      }
-    }
+  if (!locale || !routing.locales.includes(locale as typeof routing.locales[number])) {
+    locale = routing.defaultLocale;
   }
 
-  const messages = (await messageImports[locale]()).default;
+  const messages = (await messageImports[locale as keyof typeof messageImports]()).default;
 
   return { locale, messages };
 });

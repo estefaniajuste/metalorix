@@ -1,10 +1,11 @@
 "use client";
 
-import Link from "next/link";
-import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
+import { useTranslations, useLocale } from "next-intl";
 import type { MetalSpot, MetalSymbol } from "@/lib/providers/metals";
 import { METALS } from "@/lib/providers/metals";
 import { usePrices } from "@/lib/hooks/use-prices";
+import { getLocalizedMetalSlug } from "@/lib/utils/metal-slugs";
 
 const SLUG_MAP: Record<string, string> = {
   XAU: "oro",
@@ -19,12 +20,14 @@ function formatPrice(val: number) {
 }
 
 function MiniTicker({ spot }: { spot: MetalSpot }) {
+  const tm = useTranslations("metalNames");
+  const locale = useLocale();
   const metal = METALS[spot.symbol as MetalSymbol];
   const isUp = spot.change >= 0;
 
   return (
     <Link
-      href={`/precio/${SLUG_MAP[spot.symbol]}`}
+      href={{ pathname: "/precio/[metal]" as const, params: { metal: getLocalizedMetalSlug(SLUG_MAP[spot.symbol], locale) } }}
       className="flex items-center gap-3 px-4 py-3 bg-surface-1/60 backdrop-blur-sm border border-border/50 rounded-DEFAULT hover:border-border-hover hover:bg-surface-1/80 transition-all group"
     >
       <span
@@ -32,7 +35,7 @@ function MiniTicker({ spot }: { spot: MetalSpot }) {
         style={{ backgroundColor: metal?.color }}
       />
       <span className="text-xs font-semibold text-content-3 group-hover:text-content-2 transition-colors">
-        {metal?.name}
+        {tm(spot.symbol as MetalSymbol)}
       </span>
       <span className="text-sm font-bold text-content-0 tabular-nums">
         ${formatPrice(spot.price)}

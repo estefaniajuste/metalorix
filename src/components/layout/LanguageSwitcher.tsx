@@ -2,8 +2,10 @@
 
 import { useState, useRef, useEffect } from "react";
 import { useLocale, useTranslations } from "next-intl";
+import { useRouter, usePathname } from "@/i18n/navigation";
+import type { Locale } from "@/i18n/routing";
 
-const LANGUAGES = [
+const LANGUAGES: { code: Locale; label: string; flag: string; name: string }[] = [
   { code: "es", label: "ES", flag: "🇪🇸", name: "Español" },
   { code: "en", label: "EN", flag: "🇬🇧", name: "English" },
   { code: "zh", label: "中文", flag: "🇨🇳", name: "中文" },
@@ -15,6 +17,8 @@ const LANGUAGES = [
 export function LanguageSwitcher() {
   const locale = useLocale();
   const t = useTranslations("nav");
+  const router = useRouter();
+  const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -28,10 +32,9 @@ export function LanguageSwitcher() {
     return () => document.removeEventListener("mousedown", handleClick);
   }, []);
 
-  const switchLocale = (code: string) => {
-    document.cookie = `locale=${code};path=/;max-age=${365 * 86400};samesite=lax`;
+  const switchLocale = (code: Locale) => {
     setOpen(false);
-    window.location.reload();
+    router.replace(pathname as any, { locale: code });
   };
 
   const current = LANGUAGES.find((l) => l.code === locale) ?? LANGUAGES[0];

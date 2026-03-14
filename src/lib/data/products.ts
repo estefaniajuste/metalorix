@@ -4,6 +4,23 @@ export type ProductType = "moneda" | "lingote";
 export type MetalType = "oro" | "plata";
 export type LiquidityLevel = "Muy alta" | "Alta" | "Media";
 
+export interface ProductTexts {
+  name: string;
+  shortName: string;
+  country: string;
+  purityLabel: string;
+  liquidity: string;
+  vatNote: string;
+  idealFor: string;
+  description: string;
+  highlights: string[];
+  seo: {
+    title: string;
+    description: string;
+    keywords: string[];
+  };
+}
+
 export interface Product {
   slug: string;
   name: string;
@@ -21,7 +38,7 @@ export interface Product {
   diameter?: number;
   thickness?: number;
   premiumRange: string;
-  liquidity: LiquidityLevel;
+  liquidity: LiquidityLevel | string;
   investmentGold: boolean;
   vatNote: string;
   idealFor: string;
@@ -664,14 +681,350 @@ export const PRODUCTS: Product[] = [
   },
 ];
 
-export function getProduct(slug: string): Product | null {
-  return PRODUCTS.find((p) => p.slug === slug) ?? null;
+const PRODUCTS_EN: Record<string, ProductTexts> = {
+  "krugerrand-oro": {
+    name: "Krugerrand 1 oz Gold",
+    shortName: "Krugerrand",
+    country: "South Africa",
+    purityLabel: "916.7 millesimal (22 karats)",
+    liquidity: "Very high",
+    vatNote: "VAT exempt in the EU as investment gold (fineness ≥ 900, minted after 1800, legal tender in country of origin).",
+    idealFor: "Investors seeking the world's most recognized gold coin, with maximum liquidity on the secondary market.",
+    description: "The Krugerrand was the first modern investment gold coin, launched in 1967 by South Africa to promote the sale of South African gold in international markets. It quickly became the industry standard. Its 22-karat alloy (with copper) gives it greater wear resistance than pure gold coins, while maintaining exactly 1 troy ounce of fine gold.",
+    highlights: [
+      "First bullion coin in history — defined the category",
+      "Contains exactly 1 oz of fine gold despite being a 22k alloy",
+      "The world's most traded gold coin, with over 50 million units sold",
+      "Its distinctive reddish colour comes from the copper alloy",
+      "No face value — its nominal value is the price of its gold content",
+    ],
+    seo: {
+      title: "Krugerrand 1 oz Gold — Profile, Price & Specs",
+      description: "Complete profile of the Gold Krugerrand 1 oz: purity, fine weight, premium over spot, liquidity, tax treatment and ideal investor profile.",
+      keywords: ["Krugerrand gold", "Krugerrand price", "South Africa gold coin", "buy Krugerrand", "Krugerrand 1 oz"],
+    },
+  },
+  "maple-leaf-oro": {
+    name: "Maple Leaf 1 oz Gold",
+    shortName: "Maple Leaf Gold",
+    country: "Canada",
+    purityLabel: "999.9 millesimal (24 karats)",
+    liquidity: "Very high",
+    vatNote: "VAT exempt in the EU as investment gold (fineness ≥ 900, legal tender in Canada).",
+    idealFor: "Investors who prioritize maximum purity (24k gold) combined with high global liquidity and advanced anti-counterfeiting technology.",
+    description: "The Canadian Maple Leaf is one of the purest investment gold coins in the world, with a gold content of 999.9 millesimal fineness. It was the first bullion coin to reach this purity in 1982. The Royal Canadian Mint incorporates advanced security technology (laser micro-engraving, DNA mark) making it virtually impossible to counterfeit.",
+    highlights: [
+      "One of the purest coins on the market: 999.9 millesimal (four nines)",
+      "MintShield anti-counterfeiting technology and laser micro-engraving",
+      "Face value of 50 CAD (symbolic, backed by Canada)",
+      "Recognized and accepted by dealers worldwide",
+      "Brighter finish than the Krugerrand due to higher purity",
+    ],
+    seo: {
+      title: "Maple Leaf 1 oz Gold — Profile, Price & Specs",
+      description: "Complete profile of the Gold Maple Leaf 1 oz: 999.9 purity, weight, premium over spot, liquidity, tax treatment and ideal investor profile.",
+      keywords: ["Maple Leaf gold", "Maple Leaf price", "Canada gold coin", "buy Maple Leaf", "Maple Leaf 1 oz gold"],
+    },
+  },
+  "filarmonica-oro": {
+    name: "Philharmonic 1 oz Gold",
+    shortName: "Philharmonic Gold",
+    country: "Austria",
+    purityLabel: "999.9 millesimal (24 karats)",
+    liquidity: "Very high",
+    vatNote: "VAT exempt in the EU as investment gold. Included in the official EU list of investment gold coins.",
+    idealFor: "European investors looking for a maximum-purity coin issued within the eurozone, with high liquidity and broad acceptance across Europe.",
+    description: "The Vienna Philharmonic (Wiener Philharmoniker) is the best-selling investment gold coin in Europe and one of the most popular worldwide. Issued by the Austrian Mint (one of the oldest in the world, founded in 1194), it combines maximum purity with an iconic design honouring the Vienna Philharmonic Orchestra. Its face value is denominated in euros.",
+    highlights: [
+      "Best-selling investment gold coin in Europe",
+      "Face value of €100 — denominated in the local currency",
+      "Iconic design: instruments of the Vienna Philharmonic",
+      "Issued by one of the world's oldest mints (1194)",
+      "Included in the official EU list of VAT-exempt investment gold coins",
+    ],
+    seo: {
+      title: "Vienna Philharmonic 1 oz Gold — Profile, Price & Specs",
+      description: "Complete profile of the Vienna Philharmonic 1 oz Gold: 999.9 purity, weight, premium, liquidity, tax treatment and ideal investor profile.",
+      keywords: ["Philharmonic gold", "Philharmoniker gold", "Austria gold coin", "buy Philharmonic gold", "Vienna Philharmonic 1 oz"],
+    },
+  },
+  "britannia-oro": {
+    name: "Britannia 1 oz Gold",
+    shortName: "Britannia Gold",
+    country: "United Kingdom",
+    purityLabel: "999.9 millesimal (24 karats, since 2013)",
+    liquidity: "High",
+    vatNote: "VAT exempt in the EU as investment gold. Included in the official EU list.",
+    idealFor: "Investors seeking a maximum-purity coin backed by The Royal Mint with good international liquidity.",
+    description: "The Britannia is the United Kingdom's investment gold coin, issued by The Royal Mint since 1987. Since 2013 it has been minted in 999.9 gold (previously 916.7). It incorporates four advanced security features, including a latent image and micro-text. It is legal tender in the UK with a face value of 100 GBP.",
+    highlights: [
+      "Issued by The Royal Mint — one of the most prestigious mints in the world",
+      "999.9 purity since 2013 (previously 22k like the Krugerrand)",
+      "Four security features integrated into the design",
+      "Face value of 100 GBP — legal tender in the UK",
+      "Design based on the allegorical figure of Britannia, symbol of the United Kingdom",
+    ],
+    seo: {
+      title: "Britannia 1 oz Gold — Profile, Price & Specs",
+      description: "Complete profile of the Britannia Gold 1 oz: purity, fine weight, premium over spot, liquidity, tax treatment and investor profile.",
+      keywords: ["Britannia gold", "Britannia gold price", "UK gold coin", "buy Britannia gold", "Britannia 1 oz gold"],
+    },
+  },
+  "eagle-oro": {
+    name: "American Eagle 1 oz Gold",
+    shortName: "Eagle Gold",
+    country: "United States",
+    purityLabel: "916.7 millesimal (22 karats)",
+    liquidity: "Very high",
+    vatNote: "VAT exempt in the EU as investment gold (fineness ≥ 900, minted after 1800, legal tender in the US).",
+    idealFor: "Investors who value maximum global liquidity, especially in American markets, and the backing of the US government.",
+    description: "The American Gold Eagle is the official investment gold coin of the United States, minted by the U.S. Mint since 1986. Like the Krugerrand, it uses a 22-karat alloy (gold, copper, and silver) for greater durability, but contains exactly 1 troy ounce of pure gold. In 2021, the reverse was redesigned for the first time in 35 years, improving security features.",
+    highlights: [
+      "Official US gold coin — backed by the federal government",
+      "Contains exactly 1 oz of fine gold in a 22k alloy (with silver and copper)",
+      "Face value of 50 USD (symbolic)",
+      "Reverse redesigned in 2021 with new anti-counterfeiting measures",
+      "Maximum liquidity in American and international markets",
+    ],
+    seo: {
+      title: "American Eagle 1 oz Gold — Profile, Price & Specs",
+      description: "Complete profile of the American Gold Eagle 1 oz: purity, weight, premium over spot, liquidity, tax treatment and ideal investor profile.",
+      keywords: ["American Eagle gold", "Gold Eagle price", "US gold coin", "buy American Eagle", "Eagle 1 oz gold"],
+    },
+  },
+  "maple-leaf-plata": {
+    name: "Maple Leaf 1 oz Silver",
+    shortName: "Maple Leaf Silver",
+    country: "Canada",
+    purityLabel: "999.9 millesimal",
+    liquidity: "Very high",
+    vatNote: "Subject to VAT (rate varies by country). Silver does not benefit from the investment gold VAT exemption. Some European dealers offer storage in Germany with differential VAT.",
+    idealFor: "Silver investors who want the market reference: maximum purity, maximum liquidity and anti-counterfeiting technology.",
+    description: "The Silver Maple Leaf is the purest investment silver coin on the market (999.9 millesimal) and one of the most traded worldwide. It shares the security technology of its gold version, including laser micro-engraving and the radial mark. It is the standard choice for silver stackers around the world.",
+    highlights: [
+      "The purest silver coin on the market: 999.9 millesimal",
+      "Royal Canadian Mint MintShield anti-counterfeiting technology",
+      "Face value of 5 CAD — legal tender in Canada",
+      "One of the most liquid silver coins in the world",
+      "Premiums over spot are higher than for gold — inherent to the silver market",
+    ],
+    seo: {
+      title: "Maple Leaf 1 oz Silver — Profile, Price & Specs",
+      description: "Complete profile of the Silver Maple Leaf 1 oz: 999.9 purity, weight, premium over spot, liquidity, tax treatment and investor profile.",
+      keywords: ["Maple Leaf silver", "Maple Leaf silver price", "Canada silver coin", "buy Maple Leaf silver", "Maple Leaf 1 oz silver"],
+    },
+  },
+  "filarmonica-plata": {
+    name: "Philharmonic 1 oz Silver",
+    shortName: "Philharmonic Silver",
+    country: "Austria",
+    purityLabel: "999 millesimal",
+    liquidity: "Very high",
+    vatNote: "Subject to VAT (rate varies by country). Many European investors buy in Estonia (0% VAT on legal tender coins) or store in Germany with differential VAT.",
+    idealFor: "European investors looking to accumulate silver in euro-denominated coins with high continental liquidity.",
+    description: "The Vienna Philharmonic in silver shares the iconic design of its gold version and is the best-selling silver coin in Europe. With a face value of €1.50, it is legal tender in Austria and the entire eurozone. Its popularity in Europe makes it especially easy to sell on the continental secondary market.",
+    highlights: [
+      "Best-selling silver coin in Europe",
+      "Face value of €1.50 — legal tender in the eurozone",
+      "Same iconic design as the gold version",
+      "Especially liquid in European markets",
+      "Also available in 1/25 oz (miniature) versions and tubes of 20 units",
+    ],
+    seo: {
+      title: "Vienna Philharmonic 1 oz Silver — Profile, Price & Specs",
+      description: "Complete profile of the Silver Vienna Philharmonic 1 oz: purity, weight, premium, liquidity, tax treatment and ideal investor profile.",
+      keywords: ["Philharmonic silver", "Philharmoniker silver", "Austria silver coin", "buy Philharmonic silver", "Vienna Philharmonic silver"],
+    },
+  },
+  "britannia-plata": {
+    name: "Britannia 1 oz Silver",
+    shortName: "Britannia Silver",
+    country: "United Kingdom",
+    purityLabel: "999 millesimal",
+    liquidity: "High",
+    vatNote: "Subject to VAT (rate varies by country). After Brexit, the Silver Britannia no longer has tax advantages within the EU.",
+    idealFor: "Investors who value The Royal Mint's prestige and seek to diversify with a high-quality silver coin.",
+    description: "The Silver Britannia is the United Kingdom's investment silver coin, issued by The Royal Mint. It incorporates the same advanced security features as the gold version, with four anti-counterfeiting elements. Since 2021, it has been minted in 999 millesimal silver (previously 958).",
+    highlights: [
+      "Issued by The Royal Mint with four advanced security measures",
+      "Face value of 2 GBP — legal tender in the United Kingdom",
+      "Purity improved to 999 millesimal since 2021",
+      "Britannia design with high-quality finish",
+      "Premiums slightly higher than Maple Leaf and Philharmonic",
+    ],
+    seo: {
+      title: "Britannia 1 oz Silver — Profile, Price & Specs",
+      description: "Complete profile of the Silver Britannia 1 oz: purity, fine weight, premium over spot, liquidity, tax treatment and investor profile.",
+      keywords: ["Britannia silver", "Britannia silver price", "UK silver coin", "buy Britannia silver", "Britannia 1 oz silver"],
+    },
+  },
+  "eagle-plata": {
+    name: "American Eagle 1 oz Silver",
+    shortName: "Eagle Silver",
+    country: "United States",
+    purityLabel: "999 millesimal",
+    liquidity: "Very high",
+    vatNote: "Subject to VAT (rate varies by country). In the US, it may be exempt from sales tax depending on the state.",
+    idealFor: "Investors wanting the world's most recognized silver coin, with maximum liquidity especially in American markets.",
+    description: "The American Silver Eagle is the world's best-selling investment silver coin. Issued by the U.S. Mint since 1986 with the iconic Walking Liberty design, it was redesigned in 2021 with a new reverse (landing eagle) and security improvements. Its premiums tend to be higher than European competitors, but its liquidity is unmatched.",
+    highlights: [
+      "The world's best-selling silver coin — millions of units per year",
+      "Iconic Walking Liberty design (obverse) since 1986",
+      "Reverse redesigned in 2021 with new anti-counterfeiting measures",
+      "Face value of 1 USD — backed by the US government",
+      "Higher premiums than European competitors, offset by global liquidity",
+    ],
+    seo: {
+      title: "American Eagle 1 oz Silver — Profile, Price & Specs",
+      description: "Complete profile of the American Silver Eagle 1 oz: purity, weight, premium over spot, liquidity, tax treatment and ideal investor profile.",
+      keywords: ["American Eagle silver", "Silver Eagle price", "US silver coin", "buy Silver Eagle", "Eagle 1 oz silver"],
+    },
+  },
+  "krugerrand-plata": {
+    name: "Krugerrand 1 oz Silver",
+    shortName: "Krugerrand Silver",
+    country: "South Africa",
+    purityLabel: "999 millesimal",
+    liquidity: "High",
+    vatNote: "Subject to VAT (rate varies by country).",
+    idealFor: "Investors who already know the Gold Krugerrand and want to diversify into silver while keeping the same recognized brand.",
+    description: "The Silver Krugerrand was launched in 2017 for the 50th anniversary of the original Gold Krugerrand. It retains the iconic springbok and Paul Kruger design in 999 millesimal silver. Although newer than its competitors, it benefits from the enormous brand recognition of the Krugerrand.",
+    highlights: [
+      "Launched in 2017 for the 50th anniversary of the Gold Krugerrand",
+      "Same iconic design: Paul Kruger and springbok",
+      "Benefits from the global brand recognition of the Krugerrand",
+      "Face value of 1 Rand — legal tender in South Africa",
+      "Relatively new to the market, with growing liquidity",
+    ],
+    seo: {
+      title: "Krugerrand 1 oz Silver — Profile, Price & Specs",
+      description: "Complete profile of the Silver Krugerrand 1 oz: purity, fine weight, premium over spot, liquidity, tax treatment and investor profile.",
+      keywords: ["Krugerrand silver", "Krugerrand silver price", "South Africa silver coin", "buy Krugerrand silver", "Krugerrand 1 oz silver"],
+    },
+  },
+  "lingote-oro-1oz": {
+    name: "Gold Bar 1 oz (31.1 g)",
+    shortName: "Gold Bar 1 oz",
+    country: "Various",
+    purityLabel: "999.9 millesimal",
+    liquidity: "Very high",
+    vatNote: "VAT exempt in the EU as investment gold (bar with fineness ≥ 995 millesimal).",
+    idealFor: "Investors seeking the lowest possible premium per ounce of gold. Ideal as a standard unit for accumulation.",
+    description: "The 1 troy ounce gold bar is the standard format for physical gold investment. Manufactured by LBMA-accredited refineries (London Bullion Market Association), it offers the lowest market premiums for 1 oz quantities. The most common come from PAMP Suisse, Heraeus, Argor-Heraeus and Valcambi, and usually come in a sealed blister with an assay certificate.",
+    highlights: [
+      "Standard investment format — 1 troy ounce (31.1 g) of pure gold",
+      "Lower premiums than coins for the same weight",
+      "Manufactured by LBMA refineries (PAMP, Heraeus, Valcambi, etc.)",
+      "Includes assay certificate and factory-sealed blister",
+      "Easy to store due to its compact, standardized shape",
+    ],
+    seo: {
+      title: "Gold Bar 1 oz — Profile, Price & Specs",
+      description: "Complete profile of the 1 oz gold bar: purity, weight, premium over spot, LBMA refineries, tax treatment and investor profile.",
+      keywords: ["gold bar 1 oz", "gold bar price", "buy gold bar", "PAMP gold bar", "gold bar investment"],
+    },
+  },
+  "lingote-oro-100g": {
+    name: "Gold Bar 100 g",
+    shortName: "Gold Bar 100 g",
+    country: "Various",
+    purityLabel: "999.9 millesimal",
+    liquidity: "High",
+    vatNote: "VAT exempt in the EU as investment gold (bar with fineness ≥ 995 millesimal).",
+    idealFor: "Investors with higher capital seeking to optimize the premium per gram. Good balance between cost, liquidity and storage.",
+    description: "The 100 gram gold bar is a very popular intermediate format among serious investors. It offers a significantly lower premium per gram than 1 oz bars and coins, while maintaining high liquidity in the secondary market. It is the preferred format for many European investors seeking the balance between entry cost and ease of resale.",
+    highlights: [
+      "Excellent premium-to-weight ratio — more efficient than 1 oz",
+      "Equivalent to approximately 3.22 troy ounces",
+      "Very popular format in continental Europe",
+      "Easy to resell on the European secondary market",
+      "Usually includes engraved serial number and assay certificate",
+    ],
+    seo: {
+      title: "Gold Bar 100 g — Profile, Price & Specs",
+      description: "Complete profile of the 100 g gold bar: purity, weight, premium over spot, refineries, tax treatment and ideal investor profile.",
+      keywords: ["gold bar 100g", "gold bar 100 grams price", "buy gold bar 100g", "gold bar investment", "PAMP 100g"],
+    },
+  },
+  "lingote-oro-1kg": {
+    name: "Gold Bar 1 kg",
+    shortName: "Gold Bar 1 kg",
+    country: "Various",
+    purityLabel: "999.9 millesimal",
+    liquidity: "Medium",
+    vatNote: "VAT exempt in the EU as investment gold (bar with fineness ≥ 995 millesimal).",
+    idealFor: "Large investors seeking the lowest possible premium who prioritize total cost over immediate liquidity.",
+    description: "The 1 kilogram gold bar is the large investment format with the lowest premium over spot. It contains 32.15 troy ounces of pure gold and its price usually exceeds €70,000 (variable depending on the spot price). The trade-off is lower liquidity than smaller formats: not all dealers can absorb a 1 kg sale immediately, and the buyer pool is smaller.",
+    highlights: [
+      "Minimum premium over spot — the most cost-efficient format",
+      "Contains 32.15 troy ounces (1,000 g of fine gold)",
+      "Institutional format — also used by central banks in the 12.4 kg (400 oz) version",
+      "Limited liquidity: selling may take longer than smaller formats",
+      "Requires professional storage or safe deposit box due to its high value",
+    ],
+    seo: {
+      title: "Gold Bar 1 kg — Profile, Price & Specs",
+      description: "Complete profile of the 1 kg gold bar: purity, weight, premium over spot, LBMA refineries, tax treatment and investor profile.",
+      keywords: ["gold bar 1 kg", "gold bar kilo price", "buy gold bar 1kg", "gold bar investment", "gold bar LBMA"],
+    },
+  },
+  "lingote-plata-1kg": {
+    name: "Silver Bar 1 kg",
+    shortName: "Silver Bar 1 kg",
+    country: "Various",
+    purityLabel: "999 millesimal",
+    liquidity: "High",
+    vatNote: "Subject to VAT (rate varies by country). Silver does not benefit from the investment gold exemption. Some dealers offer bonded warehouse storage or storage in countries with differential VAT.",
+    idealFor: "Silver investors looking to minimize the premium per ounce who don't mind weight/volume. The most efficient format for accumulating silver.",
+    description: "The 1 kilogram silver bar is the most popular format for serious physical silver investment. It contains 32.15 troy ounces of silver and offers the best premium-to-weight ratio in the silver market (excluding larger 5 or 15 kg bars). The main drawback is VAT which significantly increases the entry cost in many countries. Many investors buy from dealers in tax-advantaged jurisdictions or use bonded storage to optimize taxation.",
+    highlights: [
+      "Standard silver investment format — better premium-to-weight ratio than coins",
+      "32.15 troy ounces per bar — much more efficient than buying coin by coin",
+      "Manufactured by LBMA refineries with assay certificate",
+      "VAT is the main disadvantage vs. gold (which is exempt)",
+      "Consider bonded warehouse storage to defer VAT",
+    ],
+    seo: {
+      title: "Silver Bar 1 kg — Profile, Price & Specs",
+      description: "Complete profile of the 1 kg silver bar: purity, weight, premium over spot, tax treatment, LBMA refineries and investor profile.",
+      keywords: ["silver bar 1 kg", "silver bar kilo price", "buy silver bar", "silver bar investment", "silver bar LBMA"],
+    },
+  },
+};
+
+function applyLocale(product: Product, locale: string): Product {
+  if (locale === "es") return product;
+  const texts = PRODUCTS_EN[product.slug];
+  if (!texts) return product;
+  return {
+    ...product,
+    name: texts.name,
+    shortName: texts.shortName,
+    country: texts.country,
+    purityLabel: texts.purityLabel,
+    liquidity: texts.liquidity as LiquidityLevel,
+    vatNote: texts.vatNote,
+    idealFor: texts.idealFor,
+    description: texts.description,
+    highlights: texts.highlights,
+    seo: texts.seo,
+  };
 }
 
-export function getProductsByMetal(metal: MetalType): Product[] {
-  return PRODUCTS.filter((p) => p.metal === metal);
+export function getProduct(slug: string, locale: string = "es"): Product | null {
+  const product = PRODUCTS.find((p) => p.slug === slug) ?? null;
+  if (!product) return null;
+  return applyLocale(product, locale);
 }
 
-export function getProductsByType(type: ProductType): Product[] {
-  return PRODUCTS.filter((p) => p.type === type);
+export function getProductsByMetal(metal: MetalType, locale: string = "es"): Product[] {
+  return PRODUCTS.filter((p) => p.metal === metal).map((p) => applyLocale(p, locale));
+}
+
+export function getProductsByType(type: ProductType, locale: string = "es"): Product[] {
+  return PRODUCTS.filter((p) => p.type === type).map((p) => applyLocale(p, locale));
+}
+
+export function getLocalizedProducts(locale: string = "es"): Product[] {
+  return PRODUCTS.map((p) => applyLocale(p, locale));
 }

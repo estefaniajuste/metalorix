@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
-import { FAQ_ITEMS } from "@/lib/data/faq-items";
+import { useState, useMemo } from "react";
+import { useLocale } from "next-intl";
+import { getFaqItems } from "@/lib/data/faq-items";
 
 function ChevronIcon({ open }: { open: boolean }) {
   return (
@@ -21,11 +22,13 @@ function ChevronIcon({ open }: { open: boolean }) {
 }
 
 export function FaqSection() {
+  const locale = useLocale();
+  const faqItems = useMemo(() => getFaqItems(locale), [locale]);
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   return (
     <div className="space-y-2">
-      {FAQ_ITEMS.map((item, i) => {
+      {faqItems.map((item, i) => {
         const isOpen = openIndex === i;
         return (
           <div

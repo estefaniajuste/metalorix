@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import type { Product } from "@/lib/data/products";
 
 const metalColors: Record<string, { dot: string; badge: string }> = {
@@ -37,7 +37,7 @@ export function ProductCard({ product }: { product: Product }) {
 
   return (
     <Link
-      href={`/productos/${product.slug}`}
+      href={{ pathname: "/productos/[slug]" as const, params: { slug: product.slug } }}
       className="group bg-surface-1 border border-border rounded-DEFAULT p-6 flex flex-col transition-all duration-250 ease-smooth hover:border-border-hover hover:shadow-card-hover hover:-translate-y-0.5"
     >
       <div className="flex items-start justify-between gap-3 mb-3">

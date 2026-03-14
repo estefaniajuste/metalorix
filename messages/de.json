@@ -30,6 +30,7 @@
     "status": "Aktiv",
     "disclaimer": "Die angezeigten Daten dienen nur zu Informationszwecken und stellen keine Finanzberatung dar. Preise können bis zu 15 Minuten verzögert sein.",
     "glossary": "Glossar",
+    "learn": "Lernen",
     "investmentGuide": "Investitionsleitfaden"
   },
   "home": {
@@ -230,6 +231,23 @@
     "ctaTitle": "Bereit, die Preise zu verfolgen?",
     "ctaDesc": "Sehen Sie sich die Echtzeit-Kurse auf unserem Dashboard an.",
     "viewDashboard": "Dashboard anzeigen"
+  },
+  "learn": {
+    "title": "Lernen",
+    "subtitle": "Umfassende Schulung zu Edelmetallen: Konzepte, Märkte, Anlagestrategien und mehr.",
+    "categories": "Kategorien",
+    "termsCount": "Begriffe",
+    "categoriesCount": "Kategorien",
+    "readMore": "Mehr lesen",
+    "emptyState": "Bildungsinhalte erscheinen in Kürze.",
+    "ctaTitle": "Bereit, die Preise zu verfolgen?",
+    "ctaDesc": "Sehen Sie sich die Echtzeit-Kurse auf unserem Dashboard an.",
+    "viewDashboard": "Dashboard anzeigen",
+    "viewTools": "Werkzeuge",
+    "allTerms": "Alle Begriffe",
+    "relatedTerms": "Verwandte Begriffe",
+    "moreInCategory": "Mehr in",
+    "contentComingSoon": "Der erweiterte Inhalt für diesen Begriff wird in Kürze veröffentlicht."
   },
   "news": {
     "title": "Nachrichten",
