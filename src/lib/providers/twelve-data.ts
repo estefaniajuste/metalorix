@@ -6,6 +6,8 @@ const SYMBOL_MAP: Record<string, { apiSymbol: string; name: string }> = {
   XAU: { apiSymbol: "XAU/USD", name: "Oro" },
   XAG: { apiSymbol: "XAG/USD", name: "Plata" },
   XPT: { apiSymbol: "XPT/USD", name: "Platino" },
+  XPD: { apiSymbol: "XPD/USD", name: "Paladio" },
+  HG:  { apiSymbol: "HG/USD", name: "Cobre" },
 };
 
 const RANGE_CONFIG: Record<TimeRange, { interval: string; outputsize: number }> = {

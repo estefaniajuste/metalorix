@@ -4,6 +4,8 @@ const SYMBOLS: Record<string, { ticker: string; name: string }> = {
   XAU: { ticker: "GC=F", name: "Oro" },
   XAG: { ticker: "SI=F", name: "Plata" },
   XPT: { ticker: "PL=F", name: "Platino" },
+  XPD: { ticker: "PA=F", name: "Paladio" },
+  HG:  { ticker: "HG=F", name: "Cobre" },
 };
 
 interface YahooChartResponse {

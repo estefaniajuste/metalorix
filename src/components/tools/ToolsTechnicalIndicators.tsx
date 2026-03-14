@@ -5,7 +5,7 @@ import { useTranslations } from "next-intl";
 import type { HistoryResult, MetalSymbol, TimeRange } from "@/lib/providers/metals";
 import { TechnicalIndicators } from "@/components/dashboard/TechnicalIndicators";
 
-const SYMBOLS: MetalSymbol[] = ["XAU", "XAG", "XPT"];
+const SYMBOLS: MetalSymbol[] = ["XAU", "XAG", "XPT", "XPD", "HG"];
 const RANGES: { value: TimeRange; label: string }[] = [
   { value: "1M", label: "1M" },
   { value: "3M", label: "3M" },

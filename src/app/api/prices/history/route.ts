@@ -8,7 +8,7 @@ import { MockProvider, type MetalSymbol, type TimeRange } from "@/lib/providers/
 
 export const dynamic = "force-dynamic";
 
-const VALID_SYMBOLS = ["XAU", "XAG", "XPT"];
+const VALID_SYMBOLS = ["XAU", "XAG", "XPT", "XPD", "HG"];
 const VALID_RANGES = ["1D", "1W", "1M", "3M", "6M", "1Y", "2Y", "5Y"];
 
 const RANGE_LOOKBACK: Record<string, number> = {
@@ -37,6 +37,8 @@ const YAHOO_TICKERS: Record<string, string> = {
   XAU: "GC=F",
   XAG: "SI=F",
   XPT: "PL=F",
+  XPD: "PA=F",
+  HG:  "HG=F",
 };
 
 const YAHOO_RANGE_MAP: Record<string, { range: string; interval: string }> = {

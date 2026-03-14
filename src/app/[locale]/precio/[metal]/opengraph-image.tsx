@@ -19,12 +19,22 @@ const METAL_I18N: Record<string, Record<string, { name: string; title: string; s
     es: { name: "Platino", title: "Precio del Platino", subtitle: "Cotización en tiempo real, gráfico interactivo y análisis" },
     en: { name: "Platinum", title: "Platinum Price", subtitle: "Real-time quote, interactive chart and analysis" },
   },
+  paladio: {
+    es: { name: "Paladio", title: "Precio del Paladio", subtitle: "Cotización en tiempo real, gráfico interactivo y análisis" },
+    en: { name: "Palladium", title: "Palladium Price", subtitle: "Real-time quote, interactive chart and analysis" },
+  },
+  cobre: {
+    es: { name: "Cobre", title: "Precio del Cobre", subtitle: "Cotización en tiempo real, gráfico interactivo y análisis" },
+    en: { name: "Copper", title: "Copper Price", subtitle: "Real-time quote, interactive chart and analysis" },
+  },
 };
 
 const METAL_DATA: Record<string, { symbol: string; color: string }> = {
   oro: { symbol: "XAU", color: "#D6B35A" },
   plata: { symbol: "XAG", color: "#A7B0BE" },
   platino: { symbol: "XPT", color: "#8B9DC3" },
+  paladio: { symbol: "XPD", color: "#CED0CE" },
+  cobre: { symbol: "HG", color: "#B87333" },
 };
 
 export function generateImageMetadata({ params }: { params: { locale: string; metal: string } }) {

@@ -21,6 +21,8 @@ export function SubscribeForm() {
     { symbol: "XAU", name: t("gold"), color: "#D6B35A" },
     { symbol: "XAG", name: t("silver"), color: "#A7B0BE" },
     { symbol: "XPT", name: t("platinum"), color: "#8B9DC3" },
+    { symbol: "XPD", name: t("palladium"), color: "#CED0CE" },
+    { symbol: "HG", name: t("copper"), color: "#B87333" },
   ];
 
   function addCustomAlert() {

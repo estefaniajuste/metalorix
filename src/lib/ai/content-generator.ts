@@ -168,7 +168,7 @@ export async function generateDailySummary(): Promise<{
 
   const prompt = `Eres un analista experto en metales preciosos y SEO que escribe en español para inversores hispanohablantes.
 
-Escribe un RESUMEN DIARIO del mercado de metales preciosos para hoy, ${dateStr}.
+Escribe un RESUMEN DIARIO del mercado de metales preciosos e industriales para hoy, ${dateStr}.
 
 DATOS DE PRECIOS ACTUALES:
 ${formatPrices(prices)}
@@ -215,20 +215,20 @@ Devuelve SOLO el JSON, sin texto adicional antes o después. No envuelvas en blo
       title: parsed.titulo_seo,
       excerpt: parsed.meta_descripcion,
       content: parsed.contenido.trim(),
-      metals: ["XAU", "XAG", "XPT"],
+      metals: ["XAU", "XAG", "XPT", "XPD", "HG"],
     };
   }
 
   const fallbackSlug = `resumen-diario-metales-preciosos-${dateSlug}`;
-  const fallbackTitle = `Resumen del mercado de metales preciosos — ${dateStr}`;
-  const fallbackExcerpt = `Oro a $${prices.find((p) => p.symbol === "XAU")?.price.toFixed(0) ?? "N/A"}, Plata a $${prices.find((p) => p.symbol === "XAG")?.price.toFixed(2) ?? "N/A"}, Platino a $${prices.find((p) => p.symbol === "XPT")?.price.toFixed(0) ?? "N/A"}. Análisis del día.`;
+  const fallbackTitle = `Resumen del mercado de metales — ${dateStr}`;
+  const fallbackExcerpt = `Oro a $${prices.find((p) => p.symbol === "XAU")?.price.toFixed(0) ?? "N/A"}, Plata a $${prices.find((p) => p.symbol === "XAG")?.price.toFixed(2) ?? "N/A"}, Platino a $${prices.find((p) => p.symbol === "XPT")?.price.toFixed(0) ?? "N/A"}, Paladio a $${prices.find((p) => p.symbol === "XPD")?.price.toFixed(0) ?? "N/A"}, Cobre a $${prices.find((p) => p.symbol === "HG")?.price.toFixed(2) ?? "N/A"}/lb. Análisis del día.`;
 
   return {
     slug: fallbackSlug,
     title: fallbackTitle,
     excerpt: fallbackExcerpt,
     content: raw.trim(),
-    metals: ["XAU", "XAG", "XPT"],
+    metals: ["XAU", "XAG", "XPT", "XPD", "HG"],
   };
 }
 
@@ -379,20 +379,20 @@ Devuelve SOLO el JSON, sin texto adicional antes o después. No envuelvas en blo
       title: parsed.titulo_seo,
       excerpt: parsed.meta_descripcion,
       content: parsed.contenido.trim(),
-      metals: ["XAU", "XAG", "XPT"],
+      metals: ["XAU", "XAG", "XPT", "XPD", "HG"],
     };
   }
 
   const fallbackSlug = `analisis-semanal-metales-preciosos-${dateSlug}`;
   const fallbackTitle = `Análisis semanal — ${weekRange}`;
-  const fallbackExcerpt = `Repaso completo de la semana en el mercado de metales preciosos. Oro, plata y platino: tendencias, niveles clave y perspectivas.`;
+  const fallbackExcerpt = `Repaso completo de la semana en el mercado de metales. Oro, plata, platino, paladio y cobre: tendencias, niveles clave y perspectivas.`;
 
   return {
     slug: fallbackSlug,
     title: fallbackTitle,
     excerpt: fallbackExcerpt,
     content: raw.trim(),
-    metals: ["XAU", "XAG", "XPT"],
+    metals: ["XAU", "XAG", "XPT", "XPD", "HG"],
   };
 }
 

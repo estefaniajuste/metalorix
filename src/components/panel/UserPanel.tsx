@@ -258,7 +258,7 @@ export function UserPanel() {
                       }`}
                     />
                     <span className="text-sm font-medium text-content-0">
-                      {alert.symbol === "XAU" ? tm("gold") : alert.symbol === "XAG" ? tm("silver") : alert.symbol === "XPT" ? tm("platinum") : alert.symbol}
+                      {tm(alert.symbol as "XAU" | "XAG" | "XPT" | "XPD" | "HG") ?? alert.symbol}
                     </span>
                     <span className="text-xs text-content-3 bg-surface-0 px-2 py-0.5 rounded">
                       {alert.symbol}
@@ -309,6 +309,8 @@ export function UserPanel() {
               <option value="XAU">{tm("gold")} (XAU)</option>
               <option value="XAG">{tm("silver")} (XAG)</option>
               <option value="XPT">{tm("platinum")} (XPT)</option>
+              <option value="XPD">{tm("palladium")} (XPD)</option>
+              <option value="HG">{tm("copper")} (HG)</option>
             </select>
           </div>
           <div>

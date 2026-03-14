@@ -5,6 +5,8 @@
     "gold": "Gold Price",
     "silver": "Silver Price",
     "platinum": "Platinum Price",
+    "palladium": "Palladium Price",
+    "copper": "Copper Price",
     "ratio": "Gold/Silver Ratio",
     "tools": "Tools",
     "news": "News",
@@ -44,7 +46,9 @@
   "metals": {
     "gold": "Gold",
     "silver": "Silver",
-    "platinum": "Platinum"
+    "platinum": "Platinum",
+    "palladium": "Palladium",
+    "copper": "Copper"
   },
   "common": {
     "loading": "Loading...",
@@ -382,7 +386,9 @@
   "metalNames": {
     "XAU": "Gold",
     "XAG": "Silver",
-    "XPT": "Platinum"
+    "XPT": "Platinum",
+    "XPD": "Palladium",
+    "HG": "Copper"
   },
   "categories": {
     "daily": "Daily",
@@ -640,6 +646,7 @@
     "priceByUnit": "{metal} price per unit",
     "unit": "Unit",
     "troyOunce31": "Troy ounce (31.1 g)",
+    "pound": "Pound (453.6 g)",
     "gram": "Gram",
     "kilogram": "Kilogram",
     "exchangeRate": "EUR/USD exchange rate"
@@ -657,7 +664,8 @@
     "karat24": "24K (pure)",
     "gold": "Gold",
     "silver": "Silver",
-    "platinum": "Platinum"
+    "platinum": "Platinum",
+    "palladium": "Palladium"
   },
   "productFilter": {
     "all": "All",
@@ -742,7 +750,9 @@
     "errorConnection": "Connection error. Please try again.",
     "gold": "Gold",
     "silver": "Silver",
-    "platinum": "Platinum"
+    "platinum": "Platinum",
+    "palladium": "Palladium",
+    "copper": "Copper"
   },
   "dcaCalculator": {
     "title": "DCA Calculator",

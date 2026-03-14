@@ -64,6 +64,8 @@ export function Nav() {
     { href: { pathname: "/precio/[metal]" as const, params: { metal: getLocalizedMetalSlug("oro", locale) } }, label: t("gold"), symbol: "XAU", color: "#D6B35A" },
     { href: { pathname: "/precio/[metal]" as const, params: { metal: getLocalizedMetalSlug("plata", locale) } }, label: t("silver"), symbol: "XAG", color: "#A7B0BE" },
     { href: { pathname: "/precio/[metal]" as const, params: { metal: getLocalizedMetalSlug("platino", locale) } }, label: t("platinum"), symbol: "XPT", color: "#8B9DC3" },
+    { href: { pathname: "/precio/[metal]" as const, params: { metal: getLocalizedMetalSlug("paladio", locale) } }, label: t("palladium"), symbol: "XPD", color: "#CED0CE" },
+    { href: { pathname: "/precio/[metal]" as const, params: { metal: getLocalizedMetalSlug("cobre", locale) } }, label: t("copper"), symbol: "HG", color: "#B87333" },
     { href: "/ratio-oro-plata" as const, label: t("ratio"), symbol: "⚖️", color: "#D6B35A" },
   ];
 

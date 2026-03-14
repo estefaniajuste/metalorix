@@ -21,9 +21,11 @@ export interface HistoryResult {
 export type TimeRange = "1D" | "1W" | "1M" | "3M" | "6M" | "1Y" | "2Y" | "5Y";
 
 export const METALS = {
-  XAU: { name: "Oro", base: 2342.5, vol: 18, color: "#D6B35A" },
-  XAG: { name: "Plata", base: 28.15, vol: 0.45, color: "#A7B0BE" },
-  XPT: { name: "Platino", base: 982.3, vol: 12, color: "#8B9DC3" },
+  XAU: { name: "Oro", base: 2342.5, vol: 18, color: "#D6B35A", unit: "oz" },
+  XAG: { name: "Plata", base: 28.15, vol: 0.45, color: "#A7B0BE", unit: "oz" },
+  XPT: { name: "Platino", base: 982.3, vol: 12, color: "#8B9DC3", unit: "oz" },
+  XPD: { name: "Paladio", base: 1015.0, vol: 14, color: "#CED0CE", unit: "oz" },
+  HG:  { name: "Cobre", base: 4.25, vol: 0.08, color: "#B87333", unit: "lb" },
 } as const;
 
 export type MetalSymbol = keyof typeof METALS;

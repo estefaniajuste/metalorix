@@ -16,8 +16,10 @@ import {
   convertPrice,
   formatConvertedPrice,
   currencySymbol,
+  getUnitsForMetal,
   type Currency,
   type PriceUnit,
+  type BaseUnit,
 } from "@/lib/utils/units";
 import { useTranslations } from "next-intl";
 
@@ -59,6 +61,7 @@ export function MetalPageContent({ symbol }: MetalPageContentProps) {
   historyRef.current = history;
 
   const metal = METALS[symbol];
+  const metalBaseUnit = (metal.unit ?? "oz") as BaseUnit;
 
   const loadSpot = useCallback(async () => {
     try {
@@ -120,6 +123,8 @@ export function MetalPageContent({ symbol }: MetalPageContentProps) {
     XAU: "bg-[rgba(214,179,90,0.12)] text-brand-gold",
     XAG: "bg-[rgba(167,176,190,0.12)] text-[#A7B0BE]",
     XPT: "bg-[rgba(139,157,195,0.12)] text-[#8B9DC3]",
+    XPD: "bg-[rgba(206,208,206,0.12)] text-[#CED0CE]",
+    HG: "bg-[rgba(184,115,51,0.12)] text-[#B87333]",
   };
 
   return (
@@ -239,16 +244,16 @@ export function MetalPageContent({ symbol }: MetalPageContentProps) {
                 </tr>
               </thead>
               <tbody>
-                {(["oz", "g", "kg"] as PriceUnit[]).map((u) => (
+                {getUnitsForMetal(metalBaseUnit).map((u) => (
                   <tr key={u} className="border-b border-border/50 last:border-0">
                     <td className="py-3 pr-4 text-content-1 font-medium">
-                      {u === "oz" ? t("troyOunce31") : u === "g" ? t("gram") : t("kilogram")}
+                      {u === "oz" ? t("troyOunce31") : u === "lb" ? t("pound") : u === "g" ? t("gram") : t("kilogram")}
                     </td>
                     <td className="py-3 px-4 text-right text-content-0 font-semibold tabular-nums">
-                      ${formatConvertedPrice(convertPrice(spot.price, u, "USD", eurUsdRate))}
+                      ${formatConvertedPrice(convertPrice(spot.price, u, "USD", eurUsdRate, metalBaseUnit))}
                     </td>
                     <td className="py-3 pl-4 text-right text-content-0 font-semibold tabular-nums">
-                      €{formatConvertedPrice(convertPrice(spot.price, u, "EUR", eurUsdRate))}
+                      €{formatConvertedPrice(convertPrice(spot.price, u, "EUR", eurUsdRate, metalBaseUnit))}
                     </td>
                   </tr>
                 ))}

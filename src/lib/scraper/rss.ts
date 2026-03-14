@@ -40,7 +40,9 @@ const FEEDS: FeedConfig[] = [
 const METAL_KEYWORDS: Record<string, string[]> = {
   XAU: ["gold", "oro", "xau", "bullion", "golden"],
   XAG: ["silver", "plata", "xag", "silverware"],
-  XPT: ["platinum", "platino", "xpt", "palladium", "pgm"],
+  XPT: ["platinum", "platino", "xpt", "pgm"],
+  XPD: ["palladium", "paladio", "xpd", "pgm"],
+  HG:  ["copper", "cobre", "hg", "cuprum", "comex copper"],
 };
 
 function detectMetals(text: string): string[] {

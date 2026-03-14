@@ -7,14 +7,14 @@ export const contentType = "image/png";
 
 const i18n: Record<string, { heading: string; subtitle: string; metals: string[] }> = {
   es: {
-    heading: "Metales Preciosos",
-    subtitle: "Precios spot en tiempo real, gráficos profesionales y analítica para Oro, Plata y Platino",
-    metals: ["Oro", "Plata", "Platino"],
+    heading: "Metales Preciosos e Industriales",
+    subtitle: "Precios spot en tiempo real, gráficos profesionales y analítica para Oro, Plata, Platino, Paladio y Cobre",
+    metals: ["Oro", "Plata", "Platino", "Paladio", "Cobre"],
   },
   en: {
-    heading: "Precious Metals",
-    subtitle: "Real-time spot prices, professional charts and analytics for Gold, Silver and Platinum",
-    metals: ["Gold", "Silver", "Platinum"],
+    heading: "Precious & Industrial Metals",
+    subtitle: "Real-time spot prices, professional charts and analytics for Gold, Silver, Platinum, Palladium and Copper",
+    metals: ["Gold", "Silver", "Platinum", "Palladium", "Copper"],
   },
 };
 
@@ -26,6 +26,8 @@ export default async function OgImage({ params }: { params: { locale: string } }
     { symbol: "XAU", name: t.metals[0], color: "#D6B35A" },
     { symbol: "XAG", name: t.metals[1], color: "#A7B0BE" },
     { symbol: "XPT", name: t.metals[2], color: "#8B9DC3" },
+    { symbol: "XPD", name: t.metals[3], color: "#CED0CE" },
+    { symbol: "HG", name: t.metals[4], color: "#B87333" },
   ];
 
   return new ImageResponse(

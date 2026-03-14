@@ -12,6 +12,7 @@ import {
   currencySymbol,
   type Currency,
   type PriceUnit,
+  type BaseUnit,
   UNITS,
 } from "@/lib/utils/units";
 
@@ -19,6 +20,8 @@ const SLUG_MAP: Record<string, string> = {
   XAU: "oro",
   XAG: "plata",
   XPT: "platino",
+  XPD: "paladio",
+  HG: "cobre",
 };
 
 function formatChange(val: number) {
@@ -57,11 +60,13 @@ export function MetalCard({
   const tm = useTranslations("metalNames");
   const locale = useLocale();
   const metal = METALS[spot.symbol as MetalSymbol];
+  const baseUnit = (metal?.unit ?? "oz") as BaseUnit;
+  const effectiveUnit = (unit === "oz" && baseUnit === "lb") ? "lb" : unit;
   const isUp = spot.change >= 0;
-  const displayPrice = convertPrice(spot.price, unit, currency, eurUsdRate);
-  const displayChange = convertPrice(spot.change, unit, currency, eurUsdRate);
+  const displayPrice = convertPrice(spot.price, effectiveUnit, currency, eurUsdRate, baseUnit);
+  const displayChange = convertPrice(spot.change, effectiveUnit, currency, eurUsdRate, baseUnit);
   const sym = currencySymbol(currency);
-  const unitLabel = unit !== "oz" ? `/${unit}` : "";
+  const unitLabel = effectiveUnit !== "oz" && effectiveUnit !== "lb" ? `/${effectiveUnit}` : "";
   const prevPrice = useRef(spot.price);
   const [flash, setFlash] = useState<"up" | "down" | null>(null);
 
@@ -79,12 +84,16 @@ export function MetalCard({
     XAU: "border-t-brand-gold",
     XAG: "border-t-[#A7B0BE]",
     XPT: "border-t-[#8B9DC3]",
+    XPD: "border-t-[#CED0CE]",
+    HG: "border-t-[#B87333]",
   };
 
   const iconColors: Record<string, string> = {
     XAU: "bg-[rgba(214,179,90,0.12)] text-brand-gold",
     XAG: "bg-[rgba(167,176,190,0.12)] text-[#A7B0BE]",
     XPT: "bg-[rgba(139,157,195,0.12)] text-[#8B9DC3]",
+    XPD: "bg-[rgba(206,208,206,0.12)] text-[#CED0CE]",
+    HG: "bg-[rgba(184,115,51,0.12)] text-[#B87333]",
   };
 
   return (

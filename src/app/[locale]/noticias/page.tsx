@@ -26,6 +26,8 @@ const METAL_COLORS: Record<string, string> = {
   XAU: "#D6B35A",
   XAG: "#A7B0BE",
   XPT: "#8B9DC3",
+  XPD: "#CED0CE",
+  HG: "#B87333",
 };
 
 async function getPublishedArticles() {
@@ -155,7 +157,7 @@ export default async function NoticiasPage() {
                         {article.metals?.map((m) => (
                           <span key={m} className="inline-flex items-center gap-1 text-[10px] font-medium text-content-3">
                             <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: METAL_COLORS[m] ?? "#D6B35A" }} />
-                            {tm(m as "XAU" | "XAG" | "XPT")}
+                            {tm(m as "XAU" | "XAG" | "XPT" | "XPD" | "HG")}
                           </span>
                         ))}
                       </div>

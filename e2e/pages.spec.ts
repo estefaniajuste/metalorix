@@ -5,6 +5,8 @@ const publicPages = [
   { path: "/precio/oro", titleMatch: /oro/i },
   { path: "/precio/plata", titleMatch: /plata/i },
   { path: "/precio/platino", titleMatch: /platino/i },
+  { path: "/precio/paladio", titleMatch: /paladio/i },
+  { path: "/precio/cobre", titleMatch: /cobre/i },
   { path: "/herramientas", titleMatch: /herramientas/i },
   { path: "/noticias", titleMatch: /noticias/i },
   { path: "/aprende", titleMatch: /aprende|learn/i },

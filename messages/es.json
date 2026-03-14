@@ -5,6 +5,8 @@
     "gold": "Precio del Oro",
     "silver": "Precio de la Plata",
     "platinum": "Precio del Platino",
+    "palladium": "Precio del Paladio",
+    "copper": "Precio del Cobre",
     "ratio": "Ratio Oro/Plata",
     "tools": "Herramientas",
     "news": "Noticias",
@@ -44,7 +46,9 @@
   "metals": {
     "gold": "Oro",
     "silver": "Plata",
-    "platinum": "Platino"
+    "platinum": "Platino",
+    "palladium": "Paladio",
+    "copper": "Cobre"
   },
   "common": {
     "loading": "Cargando...",
@@ -382,7 +386,9 @@
   "metalNames": {
     "XAU": "Oro",
     "XAG": "Plata",
-    "XPT": "Platino"
+    "XPT": "Platino",
+    "XPD": "Paladio",
+    "HG": "Cobre"
   },
   "categories": {
     "daily": "Diario",
@@ -640,6 +646,7 @@
     "priceByUnit": "Precio del {metal} por unidad",
     "unit": "Unidad",
     "troyOunce31": "Onza troy (31,1 g)",
+    "pound": "Libra (453,6 g)",
     "gram": "Gramo",
     "kilogram": "Kilogramo",
     "exchangeRate": "Tipo de cambio EUR/USD"
@@ -657,7 +664,8 @@
     "karat24": "24K (puro)",
     "gold": "Oro",
     "silver": "Plata",
-    "platinum": "Platino"
+    "platinum": "Platino",
+    "palladium": "Paladio"
   },
   "productFilter": {
     "all": "Todos",
@@ -742,7 +750,9 @@
     "errorConnection": "Error de conexión. Inténtalo de nuevo.",
     "gold": "Oro",
     "silver": "Plata",
-    "platinum": "Platino"
+    "platinum": "Platino",
+    "palladium": "Paladio",
+    "copper": "Cobre"
   },
   "dcaCalculator": {
     "title": "Calculadora DCA",

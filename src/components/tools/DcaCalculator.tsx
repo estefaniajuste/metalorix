@@ -5,7 +5,7 @@ import { useTranslations } from "next-intl";
 import type { MetalSpot } from "@/lib/providers/metals";
 import { METALS } from "@/lib/providers/metals";
 
-type MetalSymbol = "XAU" | "XAG" | "XPT";
+type MetalSymbol = "XAU" | "XAG" | "XPT" | "XPD" | "HG";
 
 interface DcaResult {
   totalInvested: number;
@@ -37,11 +37,15 @@ function generateHistoricalPrices(
     XAU: 0.015,
     XAG: 0.035,
     XPT: 0.025,
+    XPD: 0.030,
+    HG: 0.028,
   };
   const drift: Record<MetalSymbol, number> = {
     XAU: 0.005,
     XAG: 0.003,
     XPT: 0.002,
+    XPD: 0.002,
+    HG: 0.004,
   };
 
   const vol = volatility[symbol];
@@ -242,7 +246,7 @@ export function DcaCalculator() {
             {t("metal")}
           </label>
           <div className="flex gap-1.5">
-            {(["XAU", "XAG", "XPT"] as MetalSymbol[]).map((s) => (
+            {(["XAU", "XAG", "XPT", "XPD", "HG"] as MetalSymbol[]).map((s) => (
               <button
                 key={s}
                 onClick={() => setMetal(s)}

@@ -5,6 +5,8 @@
     "gold": "黄金价格",
     "silver": "白银价格",
     "platinum": "铂金价格",
+    "palladium": "钯金价格",
+    "copper": "铜价",
     "ratio": "金银比",
     "tools": "工具",
     "news": "新闻",
@@ -44,7 +46,9 @@
   "metals": {
     "gold": "黄金",
     "silver": "白银",
-    "platinum": "铂金"
+    "platinum": "铂金",
+    "palladium": "钯金",
+    "copper": "铜"
   },
   "common": {
     "loading": "加载中...",
@@ -382,7 +386,9 @@
   "metalNames": {
     "XAU": "黄金",
     "XAG": "白银",
-    "XPT": "铂金"
+    "XPT": "铂金",
+    "XPD": "钯金",
+    "HG": "铜"
   },
   "categories": {
     "daily": "每日",
@@ -640,6 +646,7 @@
     "priceByUnit": "{metal}单位价格",
     "unit": "单位",
     "troyOunce31": "金衡盎司（31.1克）",
+    "pound": "磅（453.6克）",
     "gram": "克",
     "kilogram": "千克",
     "exchangeRate": "欧元/美元汇率"
@@ -657,7 +664,8 @@
     "karat24": "24K（纯金）",
     "gold": "黄金",
     "silver": "白银",
-    "platinum": "铂金"
+    "platinum": "铂金",
+    "palladium": "钯金"
   },
   "productFilter": {
     "all": "全部",
@@ -741,7 +749,9 @@
     "errorConnection": "连接错误，请重试。",
     "gold": "黄金",
     "silver": "白银",
-    "platinum": "铂金"
+    "platinum": "铂金",
+    "palladium": "钯金",
+    "copper": "铜"
   },
   "dcaCalculator": {
     "title": "定投计算器",

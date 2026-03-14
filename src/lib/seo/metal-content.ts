@@ -84,6 +84,54 @@ export const METAL_SEO: Record<string, MetalSEO> = {
       "Históricamente el platino cotizaba por encima del oro. La inversión del ratio (platino más barato que el oro) es un fenómeno relativamente reciente.",
     ],
   },
+  paladio: {
+    slug: "paladio",
+    symbol: "XPD",
+    name: "Paladio",
+    fullName: "Paladio (XPD/USD)",
+    description:
+      "Precio del paladio hoy en tiempo real. Cotización XPD/USD actualizada, gráfico histórico, máximos, mínimos y análisis del mercado del paladio.",
+    about:
+      "El paladio es un metal precioso del grupo del platino, muy demandado por la industria automotriz para catalizadores de gasolina. También se usa en electrónica, odontología y joyería. Su oferta es limitada, concentrada en Rusia y Sudáfrica.",
+    keywords: [
+      "precio del paladio hoy",
+      "cotización paladio",
+      "XPD/USD",
+      "paladio en tiempo real",
+      "invertir en paladio",
+      "precio paladio onza",
+    ],
+    facts: [
+      "Rusia produce aproximadamente el 40% del paladio mundial, seguida de Sudáfrica con un 35%.",
+      "El paladio se usa principalmente en catalizadores de coches de gasolina, absorbiendo más del 80% de la demanda.",
+      "En 2022 el paladio alcanzó máximos históricos por encima de $3.000/oz debido a sanciones a Rusia y escasez de suministro.",
+      "El paladio es 15 veces más raro que el platino y 30 veces más raro que el oro en la corteza terrestre.",
+    ],
+  },
+  cobre: {
+    slug: "cobre",
+    symbol: "HG",
+    name: "Cobre",
+    fullName: "Cobre (HG/USD)",
+    description:
+      "Precio del cobre hoy en tiempo real. Cotización HG/USD actualizada, gráfico histórico, máximos, mínimos y análisis del mercado del cobre.",
+    about:
+      "El cobre es el metal industrial más importante del mundo. Es esencial para la electrificación, energías renovables, vehículos eléctricos y construcción. Su precio se considera un indicador adelantado de la economía global, conocido como 'Doctor Copper'. Se cotiza en USD por libra (lb).",
+    keywords: [
+      "precio del cobre hoy",
+      "cotización cobre",
+      "HG/USD",
+      "cobre en tiempo real",
+      "invertir en cobre",
+      "precio cobre libra",
+    ],
+    facts: [
+      "Chile es el mayor productor mundial de cobre, representando cerca del 25% de la producción global.",
+      "El cobre es esencial para la transición energética: un vehículo eléctrico usa 3-4 veces más cobre que uno convencional.",
+      "La demanda de cobre para centros de datos de IA ha crecido exponencialmente desde 2024.",
+      "El London Metal Exchange (LME) registró volúmenes récord de negociación de cobre en 2025.",
+    ],
+  },
 };
 
 const METAL_SEO_EN: Record<string, Omit<MetalSEO, "slug" | "symbol">> = {
@@ -124,6 +172,32 @@ const METAL_SEO_EN: Record<string, Omit<MetalSEO, "slug" | "symbol">> = {
       "Platinum is 30 times rarer than gold in the Earth's crust.",
       "The automotive industry consumes about 40% of platinum demand for catalytic converters.",
       "Historically, platinum traded above gold. The inversion of this ratio (platinum cheaper than gold) is a relatively recent phenomenon.",
+    ],
+  },
+  paladio: {
+    name: "Palladium",
+    fullName: "Palladium (XPD/USD)",
+    description: "Palladium price today in real time. Updated XPD/USD quote, historical chart, highs, lows and palladium market analysis.",
+    about: "Palladium is a precious metal in the platinum group, highly demanded by the automotive industry for gasoline catalytic converters. It is also used in electronics, dentistry and jewellery. Supply is limited, concentrated in Russia and South Africa.",
+    keywords: ["palladium price today", "palladium quote", "XPD/USD", "palladium real time", "invest in palladium", "palladium ounce price"],
+    facts: [
+      "Russia produces approximately 40% of the world's palladium, followed by South Africa at 35%.",
+      "Palladium is primarily used in gasoline car catalytic converters, absorbing over 80% of demand.",
+      "In 2022, palladium hit all-time highs above $3,000/oz due to Russian sanctions and supply shortages.",
+      "Palladium is 15 times rarer than platinum and 30 times rarer than gold in the Earth's crust.",
+    ],
+  },
+  cobre: {
+    name: "Copper",
+    fullName: "Copper (HG/USD)",
+    description: "Copper price today in real time. Updated HG/USD quote, historical chart, highs, lows and copper market analysis.",
+    about: "Copper is the most important industrial metal in the world. It is essential for electrification, renewable energy, electric vehicles and construction. Its price is considered a leading indicator of the global economy, known as 'Doctor Copper'. It is quoted in USD per pound (lb).",
+    keywords: ["copper price today", "copper quote", "HG/USD", "copper real time", "invest in copper", "copper pound price"],
+    facts: [
+      "Chile is the world's largest copper producer, accounting for about 25% of global production.",
+      "Copper is essential for the energy transition: an electric vehicle uses 3-4 times more copper than a conventional one.",
+      "Copper demand for AI data centres has grown exponentially since 2024.",
+      "The London Metal Exchange (LME) recorded record copper trading volumes in 2025.",
     ],
   },
 };

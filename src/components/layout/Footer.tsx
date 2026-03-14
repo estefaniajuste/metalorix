@@ -15,6 +15,8 @@ export function Footer() {
         { href: { pathname: "/precio/[metal]" as const, params: { metal: getLocalizedMetalSlug("oro", locale) } }, label: tn("gold") },
         { href: { pathname: "/precio/[metal]" as const, params: { metal: getLocalizedMetalSlug("plata", locale) } }, label: tn("silver") },
         { href: { pathname: "/precio/[metal]" as const, params: { metal: getLocalizedMetalSlug("platino", locale) } }, label: tn("platinum") },
+        { href: { pathname: "/precio/[metal]" as const, params: { metal: getLocalizedMetalSlug("paladio", locale) } }, label: tn("palladium") },
+        { href: { pathname: "/precio/[metal]" as const, params: { metal: getLocalizedMetalSlug("cobre", locale) } }, label: tn("copper") },
       ],
     },
     {

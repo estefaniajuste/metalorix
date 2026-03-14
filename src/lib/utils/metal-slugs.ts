@@ -23,6 +23,22 @@ const INTERNAL_TO_LOCALE: Record<string, Record<string, string>> = {
     ar: "platinum",
     tr: "platin",
   },
+  paladio: {
+    es: "paladio",
+    en: "palladium",
+    de: "palladium",
+    zh: "palladium",
+    ar: "palladium",
+    tr: "paladyum",
+  },
+  cobre: {
+    es: "cobre",
+    en: "copper",
+    de: "kupfer",
+    zh: "copper",
+    ar: "copper",
+    tr: "bakir",
+  },
 };
 
 const LOCALE_TO_INTERNAL: Record<string, string> = {};

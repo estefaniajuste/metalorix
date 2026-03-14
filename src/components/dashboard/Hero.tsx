@@ -11,6 +11,8 @@ const SLUG_MAP: Record<string, string> = {
   XAU: "oro",
   XAG: "plata",
   XPT: "platino",
+  XPD: "paladio",
+  HG: "cobre",
 };
 
 function formatPrice(val: number) {

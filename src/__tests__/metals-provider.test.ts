@@ -2,8 +2,8 @@ import { METALS, MockProvider } from "@/lib/providers/metals";
 import type { MetalSymbol, TimeRange } from "@/lib/providers/metals";
 
 describe("METALS constant", () => {
-  it("contains XAU, XAG, XPT", () => {
-    expect(Object.keys(METALS)).toEqual(["XAU", "XAG", "XPT"]);
+  it("contains all supported metals", () => {
+    expect(Object.keys(METALS)).toEqual(["XAU", "XAG", "XPT", "XPD", "HG"]);
   });
 
   it("each metal has required properties", () => {
@@ -21,9 +21,9 @@ describe("METALS constant", () => {
 });
 
 describe("MockProvider.getSpotPrices", () => {
-  it("returns 3 metals", async () => {
+  it("returns 5 metals", async () => {
     const prices = await MockProvider.getSpotPrices();
-    expect(prices).toHaveLength(3);
+    expect(prices).toHaveLength(5);
   });
 
   it("each price has required fields", async () => {
@@ -42,10 +42,10 @@ describe("MockProvider.getSpotPrices", () => {
 
   it("returns correct symbols in order", async () => {
     const prices = await MockProvider.getSpotPrices();
-    expect(prices.map((p) => p.symbol)).toEqual(["XAU", "XAG", "XPT"]);
+    expect(prices.map((p) => p.symbol)).toEqual(["XAU", "XAG", "XPT", "XPD", "HG"]);
   });
 
-  it("gold is more expensive than silver and platinum", async () => {
+  it("gold is more expensive than silver", async () => {
     const prices = await MockProvider.getSpotPrices();
     const gold = prices.find((p) => p.symbol === "XAU")!;
     const silver = prices.find((p) => p.symbol === "XAG")!;
@@ -55,7 +55,7 @@ describe("MockProvider.getSpotPrices", () => {
 
 describe("MockProvider.getHistory", () => {
   const ranges: TimeRange[] = ["1D", "1W", "1M", "3M", "6M", "1Y", "2Y", "5Y"];
-  const symbols: MetalSymbol[] = ["XAU", "XAG", "XPT"];
+  const symbols: MetalSymbol[] = ["XAU", "XAG", "XPT", "XPD", "HG"];
 
   it.each(symbols)("returns data for %s", async (symbol) => {
     const result = await MockProvider.getHistory(symbol, "1M");

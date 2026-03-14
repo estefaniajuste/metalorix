@@ -26,6 +26,8 @@ export function MetalComparator() {
     { symbol: "XAU", name: tm("gold"), color: "#D6B35A" },
     { symbol: "XAG", name: tm("silver"), color: "#A7B0BE" },
     { symbol: "XPT", name: tm("platinum"), color: "#8B9DC3" },
+    { symbol: "XPD", name: tm("palladium"), color: "#CED0CE" },
+    { symbol: "HG", name: tm("copper"), color: "#B87333" },
   ];
 
   const ranges = [
@@ -43,7 +45,7 @@ export function MetalComparator() {
   const [raw, setRaw] = useState<CompareData | null>(null);
   const [loading, setLoading] = useState(true);
   const [mode, setMode] = useState<"percent" | "absolute">("percent");
-  const [selected, setSelected] = useState<string[]>(["XAU", "XAG", "XPT"]);
+  const [selected, setSelected] = useState<string[]>(["XAU", "XAG", "XPT", "XPD", "HG"]);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {

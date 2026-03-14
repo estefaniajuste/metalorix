@@ -17,6 +17,8 @@ const TICKERS: Record<string, string> = {
   XAU: "GC=F",
   XAG: "SI=F",
   XPT: "PL=F",
+  XPD: "PA=F",
+  HG:  "HG=F",
 };
 
 const RANGE_MAP: Record<string, string> = {

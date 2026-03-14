@@ -5,6 +5,8 @@
     "gold": "سعر الذهب",
     "silver": "سعر الفضة",
     "platinum": "سعر البلاتين",
+    "palladium": "سعر البالاديوم",
+    "copper": "سعر النحاس",
     "ratio": "نسبة الذهب/الفضة",
     "tools": "الأدوات",
     "news": "الأخبار",
@@ -44,7 +46,9 @@
   "metals": {
     "gold": "الذهب",
     "silver": "الفضة",
-    "platinum": "البلاتين"
+    "platinum": "البلاتين",
+    "palladium": "البالاديوم",
+    "copper": "النحاس"
   },
   "common": {
     "loading": "جارٍ التحميل...",
@@ -382,7 +386,9 @@
   "metalNames": {
     "XAU": "الذهب",
     "XAG": "الفضة",
-    "XPT": "البلاتين"
+    "XPT": "البلاتين",
+    "XPD": "البالاديوم",
+    "HG": "النحاس"
   },
   "categories": {
     "daily": "يومي",
@@ -640,6 +646,7 @@
     "priceByUnit": "سعر {metal} لكل وحدة",
     "unit": "الوحدة",
     "troyOunce31": "أونصة تروي (31.1 غ)",
+    "pound": "رطل (453.6 غ)",
     "gram": "غرام",
     "kilogram": "كيلوغرام",
     "exchangeRate": "سعر صرف EUR/USD"
@@ -657,7 +664,8 @@
     "karat24": "24 قيراط (نقي)",
     "gold": "الذهب",
     "silver": "الفضة",
-    "platinum": "البلاتين"
+    "platinum": "البلاتين",
+    "palladium": "البالاديوم"
   },
   "productFilter": {
     "all": "الكل",
@@ -741,7 +749,9 @@
     "errorConnection": "خطأ في الاتصال. يرجى المحاولة مجدداً.",
     "gold": "ذهب",
     "silver": "فضة",
-    "platinum": "بلاتين"
+    "platinum": "بلاتين",
+    "palladium": "البالاديوم",
+    "copper": "النحاس"
   },
   "dcaCalculator": {
     "title": "حاسبة متوسط التكلفة بالدولار (DCA)",

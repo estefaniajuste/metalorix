@@ -77,6 +77,8 @@ export async function POST(request: NextRequest) {
       XAU: "Oro",
       XAG: "Plata",
       XPT: "Platino",
+      XPD: "Paladio",
+      HG: "Cobre",
     };
 
     try {

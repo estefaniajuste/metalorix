@@ -2,12 +2,14 @@ import type { MetalSpot, HistoryPoint, HistoryResult, TimeRange } from "./metals
 
 const BASE_URL = "https://api.gold-api.com";
 
-const SYMBOLS = ["XAU", "XAG", "XPT"] as const;
+const SYMBOLS = ["XAU", "XAG", "XPT", "XPD", "HG"] as const;
 
 const NAMES: Record<string, string> = {
   XAU: "Oro",
   XAG: "Plata",
   XPT: "Platino",
+  XPD: "Paladio",
+  HG: "Cobre",
 };
 
 interface GoldApiPriceResponse {

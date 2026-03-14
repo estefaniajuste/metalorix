@@ -5,6 +5,8 @@
     "gold": "Altın Fiyatı",
     "silver": "Gümüş Fiyatı",
     "platinum": "Platin Fiyatı",
+    "palladium": "Paladyum Fiyatı",
+    "copper": "Bakır Fiyatı",
     "ratio": "Altın/Gümüş Oranı",
     "tools": "Araçlar",
     "news": "Haberler",
@@ -44,7 +46,9 @@
   "metals": {
     "gold": "Altın",
     "silver": "Gümüş",
-    "platinum": "Platin"
+    "platinum": "Platin",
+    "palladium": "Paladyum",
+    "copper": "Bakır"
   },
   "common": {
     "loading": "Yükleniyor...",
@@ -382,7 +386,9 @@
   "metalNames": {
     "XAU": "Altın",
     "XAG": "Gümüş",
-    "XPT": "Platin"
+    "XPT": "Platin",
+    "XPD": "Paladyum",
+    "HG": "Bakır"
   },
   "categories": {
     "daily": "Günlük",
@@ -640,6 +646,7 @@
     "priceByUnit": "Birim başına {metal} fiyatı",
     "unit": "Birim",
     "troyOunce31": "Troy ons (31,1 g)",
+    "pound": "Libre (453,6 g)",
     "gram": "Gram",
     "kilogram": "Kilogram",
     "exchangeRate": "EUR/USD döviz kuru"
@@ -657,7 +664,8 @@
     "karat24": "24 ayar (saf)",
     "gold": "Altın",
     "silver": "Gümüş",
-    "platinum": "Platin"
+    "platinum": "Platin",
+    "palladium": "Paladyum"
   },
   "productFilter": {
     "all": "Tümü",
@@ -741,7 +749,9 @@
     "errorConnection": "Bağlantı hatası. Lütfen tekrar deneyin.",
     "gold": "Altın",
     "silver": "Gümüş",
-    "platinum": "Platin"
+    "platinum": "Platin",
+    "palladium": "Paladyum",
+    "copper": "Bakır"
   },
   "dcaCalculator": {
     "title": "DCA Hesaplayıcı",

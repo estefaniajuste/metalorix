@@ -18,6 +18,7 @@ const METALS_LIST = [
   { symbol: "XAU", nameKey: "gold", color: "#D6B35A" },
   { symbol: "XAG", nameKey: "silver", color: "#A7B0BE" },
   { symbol: "XPT", nameKey: "platinum", color: "#8B9DC3" },
+  { symbol: "XPD", nameKey: "palladium", color: "#CED0CE" },
 ];
 
 function fmt(val: number): string {

@@ -7,6 +7,8 @@ const METAL_NAMES: Record<string, Record<string, string>> = {
   XAU: { es: "Oro", en: "Gold" },
   XAG: { es: "Plata", en: "Silver" },
   XPT: { es: "Platino", en: "Platinum" },
+  XPD: { es: "Paladio", en: "Palladium" },
+  HG:  { es: "Cobre", en: "Copper" },
 };
 
 function mName(symbol: string, locale: string = "es"): string {

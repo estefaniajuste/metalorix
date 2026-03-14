@@ -17,7 +17,7 @@ import {
   LineStyle,
 } from "lightweight-charts";
 
-const SYMBOLS: MetalSymbol[] = ["XAU", "XAG", "XPT"];
+const SYMBOLS: MetalSymbol[] = ["XAU", "XAG", "XPT", "XPD", "HG"];
 const RANGES: { value: TimeRange; label: string }[] = [
   { value: "1W", label: "1W" },
   { value: "1M", label: "1M" },
@@ -89,6 +89,8 @@ export function MetalComparison() {
     XAU: true,
     XAG: true,
     XPT: true,
+    XPD: true,
+    HG: true,
   });
   const [allData, setAllData] = useState<Record<string, SeriesData>>({});
   const [loading, setLoading] = useState(true);

@@ -8,7 +8,7 @@ import { fetchAllSpotPrices as fetchFromTwelveData } from "@/lib/providers/twelv
 import type { MetalSpot } from "@/lib/providers/metals";
 
 const CRON_SECRET = process.env.CRON_SECRET;
-const REQUIRED_SYMBOLS = ["XAU", "XAG", "XPT"];
+const REQUIRED_SYMBOLS = ["XAU", "XAG", "XPT", "XPD", "HG"];
 
 async function fetchAllPrices(): Promise<MetalSpot[]> {
   const [yahoo, goldApi, twelveData] = await Promise.all([

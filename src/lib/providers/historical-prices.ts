@@ -13,6 +13,8 @@ const TICKERS: Record<string, string> = {
   XAU: "GC=F",
   XAG: "SI=F",
   XPT: "PL=F",
+  XPD: "PA=F",
+  HG:  "HG=F",
 };
 
 export async function getHistoricalPrice(
@@ -80,6 +82,8 @@ const METAL_NAMES: Record<string, string> = {
   XAU: "Oro",
   XAG: "Plata",
   XPT: "Platino",
+  XPD: "Paladio",
+  HG: "Cobre",
 };
 
 export function calculateRoi(

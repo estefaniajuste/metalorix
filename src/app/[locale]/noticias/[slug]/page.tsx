@@ -83,6 +83,8 @@ const METAL_COLORS: Record<string, string> = {
   XAU: "#D6B35A",
   XAG: "#A7B0BE",
   XPT: "#8B9DC3",
+  XPD: "#CED0CE",
+  HG: "#B87333",
 };
 
 function renderInlineLinks(text: string) {
@@ -140,6 +142,8 @@ export default async function ArticlePage({
       XAU: tn("XAU"),
       XAG: tn("XAG"),
       XPT: tn("XPT"),
+      XPD: tn("XPD"),
+      HG: tn("HG"),
     };
     return map[symbol] ?? symbol;
   };
