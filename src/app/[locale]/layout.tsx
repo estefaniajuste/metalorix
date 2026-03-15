@@ -69,11 +69,20 @@ export async function generateMetadata({
       url: `https://metalorix.com/${locale}`,
       siteName: "Metalorix",
       locale: localeMap[locale] || "es_ES",
+      images: [
+        {
+          url: `https://metalorix.com/${locale}/opengraph-image`,
+          width: 1200,
+          height: 630,
+          alt: "Metalorix — Precious Metals Prices",
+        },
+      ],
     },
     twitter: {
       card: "summary_large_image" as const,
       title: t("title"),
       description: t("description"),
+      images: [`https://metalorix.com/${locale}/opengraph-image`],
     },
     robots: {
       index: true,
@@ -115,6 +124,7 @@ export default async function LocaleLayout({
   return (
     <html lang={locale} dir={isRtl ? "rtl" : "ltr"} suppressHydrationWarning>
       <head>
+        <link rel="alternate" type="application/rss+xml" title="Metalorix — Noticias" href="/feed.xml" />
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
         <link rel="preconnect" href="https://www.googletagmanager.com" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="https://www.gold-api.com" />

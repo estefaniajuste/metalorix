@@ -17,6 +17,7 @@ import {
 } from "@/lib/ai/glossary-generator";
 import { isConfigured } from "@/lib/ai/gemini";
 import { sendWeeklyNewsletter } from "@/lib/email/newsletter";
+import { pingSearchEngines, pingIndexNow } from "@/lib/seo/ping";
 
 const CRON_SECRET = process.env.CRON_SECRET;
 const EVENT_THRESHOLD_PCT = 2.0;
@@ -126,6 +127,31 @@ export async function POST(request: NextRequest) {
       }
     } catch (err) {
       console.error("Bulk translation failed:", err);
+    }
+  }
+
+  // Ping search engines if new articles were created
+  if (articleIdsToTranslate.length > 0) {
+    try {
+      const { pinged } = await pingSearchEngines();
+      if (pinged.length > 0) generated.push(`pinged: ${pinged.join(", ")}`);
+
+      const articleSlugs = await db
+        .select({ slug: articles.slug })
+        .from(articles)
+        .where(eq(articles.published, true))
+        .orderBy(desc(articles.publishedAt))
+        .limit(articleIdsToTranslate.length);
+
+      const indexUrls = articleSlugs.flatMap((a) =>
+        ["es", "en", "de", "tr", "zh", "ar"].map(
+          (loc) => `https://metalorix.com/${loc}/noticias/${a.slug}`
+        )
+      );
+      const indexed = await pingIndexNow(indexUrls);
+      if (indexed) generated.push(`indexnow: ${indexUrls.length} URLs submitted`);
+    } catch (err) {
+      console.error("Search engine ping failed:", err);
     }
   }
 
