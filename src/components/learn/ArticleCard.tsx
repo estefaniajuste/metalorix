@@ -8,6 +8,9 @@ interface ArticleCardProps {
   difficulty: string;
   articleType: string;
   isPillar?: boolean;
+  difficultyLabel: string;
+  typeLabel: string;
+  pillarLabel?: string;
 }
 
 const DIFFICULTY_STYLES: Record<string, string> = {
@@ -19,26 +22,6 @@ const DIFFICULTY_STYLES: Record<string, string> = {
     "bg-rose-500/10 text-rose-400 border-rose-500/20",
 };
 
-const DIFFICULTY_LABELS: Record<string, string> = {
-  beginner: "Beginner",
-  intermediate: "Intermediate",
-  advanced: "Advanced",
-};
-
-const TYPE_LABELS: Record<string, string> = {
-  glossary: "Glossary",
-  explainer: "Explainer",
-  guide: "Guide",
-  comparison: "Comparison",
-  faq: "FAQ",
-  historical: "Historical",
-  practical: "Practical",
-  macro: "Macro",
-  investment: "Investment",
-  industry: "Industry",
-  pillar: "Overview",
-};
-
 export function ArticleCard({
   slug,
   clusterSlug,
@@ -47,6 +30,9 @@ export function ArticleCard({
   difficulty,
   articleType,
   isPillar,
+  difficultyLabel,
+  typeLabel,
+  pillarLabel,
 }: ArticleCardProps) {
   return (
     <Link
@@ -63,14 +49,14 @@ export function ArticleCard({
             DIFFICULTY_STYLES[difficulty] || DIFFICULTY_STYLES.beginner
           }`}
         >
-          {DIFFICULTY_LABELS[difficulty] || difficulty}
+          {difficultyLabel}
         </span>
         <span className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-surface-2 text-content-3">
-          {TYPE_LABELS[articleType] || articleType}
+          {typeLabel}
         </span>
-        {isPillar && (
+        {isPillar && pillarLabel && (
           <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-[rgba(214,179,90,0.12)] text-brand-gold">
-            Pillar
+            {pillarLabel}
           </span>
         )}
       </div>

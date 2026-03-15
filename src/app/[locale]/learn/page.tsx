@@ -5,6 +5,9 @@ import { getAlternates } from "@/lib/seo/alternates";
 import { TAXONOMY } from "@/lib/learn/taxonomy";
 import { ALL_TOPICS } from "@/lib/learn/topics";
 import { LearnBreadcrumb } from "@/components/learn/LearnBreadcrumb";
+import { getLocalizedCluster } from "@/lib/learn/taxonomy-i18n";
+import { getLocalizedArticleTitles } from "@/lib/learn/article-titles";
+import type { Locale } from "@/i18n/config";
 
 export const revalidate = 86400;
 
@@ -47,7 +50,7 @@ const CLUSTER_ICONS: Record<string, string> = {
 export default async function LearnPage() {
   const tc = await getTranslations("common");
   const t = await getTranslations("learnSection");
-  const locale = await getLocale();
+  const locale = (await getLocale()) as Locale;
 
   const stats = {
     total: ALL_TOPICS.length,
@@ -57,6 +60,11 @@ export default async function LearnPage() {
     advanced: ALL_TOPICS.filter((tp) => tp.difficulty === "advanced").length,
     clusters: TAXONOMY.length,
   };
+
+  const pillarSlugs = ALL_TOPICS.filter((tp) => tp.isPillar && tp.priority === 1)
+    .slice(0, 6)
+    .map((tp) => tp.slug);
+  const localizedTitles = await getLocalizedArticleTitles(pillarSlugs, locale);
 
   const alternates = getAlternates(locale, "/learn");
   const jsonLd = {
@@ -122,6 +130,9 @@ export default async function LearnPage() {
                 (tp) => tp.clusterSlug === cluster.slug
               ).length;
               const icon = CLUSTER_ICONS[cluster.slug] || "📄";
+              const localized = getLocalizedCluster(cluster.slug, locale);
+              const clusterName = localized?.name ?? cluster.nameEn;
+              const clusterDesc = localized?.description ?? cluster.descriptionEn;
               return (
                 <Link
                   key={cluster.slug}
@@ -130,10 +141,10 @@ export default async function LearnPage() {
                 >
                   <div className="text-2xl mb-3">{icon}</div>
                   <h2 className="text-base font-bold text-content-0 group-hover:text-brand-gold transition-colors mb-2">
-                    {cluster.nameEn}
+                    {clusterName}
                   </h2>
                   <p className="text-sm text-content-2 leading-relaxed mb-3 line-clamp-2">
-                    {cluster.descriptionEn}
+                    {clusterDesc}
                   </p>
                   <div className="flex items-center gap-3 text-xs text-content-3">
                     <span>{t("articlesCount", { count })}</span>
@@ -155,15 +166,18 @@ export default async function LearnPage() {
             <div className="flex flex-wrap gap-2">
               {ALL_TOPICS.filter((tp) => tp.isPillar && tp.priority === 1)
                 .slice(0, 6)
-                .map((tp) => (
-                  <Link
-                    key={tp.slug}
-                    href={{ pathname: "/learn/[cluster]/[slug]" as const, params: { cluster: tp.clusterSlug, slug: tp.slug } }}
-                    className="text-sm font-medium px-3 py-1.5 rounded-full border border-brand-gold/20 text-brand-gold hover:bg-brand-gold/10 transition-colors"
-                  >
-                    {tp.titleEn}
-                  </Link>
-                ))}
+                .map((tp) => {
+                  const loc = localizedTitles.get(tp.slug);
+                  return (
+                    <Link
+                      key={tp.slug}
+                      href={{ pathname: "/learn/[cluster]/[slug]" as const, params: { cluster: tp.clusterSlug, slug: tp.slug } }}
+                      className="text-sm font-medium px-3 py-1.5 rounded-full border border-brand-gold/20 text-brand-gold hover:bg-brand-gold/10 transition-colors"
+                    >
+                      {loc?.title ?? tp.titleEn}
+                    </Link>
+                  );
+                })}
             </div>
           </div>
         </div>

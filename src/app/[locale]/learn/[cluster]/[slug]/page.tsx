@@ -15,6 +15,11 @@ import { TAXONOMY } from "@/lib/learn/taxonomy";
 import { suggestInternalLinks } from "@/lib/learn/internal-links";
 import { LearnBreadcrumb } from "@/components/learn/LearnBreadcrumb";
 import { RelatedArticles } from "@/components/learn/RelatedArticles";
+import {
+  getLocalizedCluster,
+  getLocalizedSubcluster,
+} from "@/lib/learn/taxonomy-i18n";
+import type { Locale } from "@/i18n/config";
 
 export const revalidate = 86400;
 
@@ -88,7 +93,7 @@ export async function generateMetadata({
 }: {
   params: { cluster: string; slug: string };
 }): Promise<Metadata> {
-  const locale = await getLocale();
+  const locale = (await getLocale()) as Locale;
   const tl = await getTranslations({ locale, namespace: "learnSection" });
   const topic = getTopicBySlug(params.slug);
   if (!topic) return { title: tl("notFound") };
@@ -128,7 +133,7 @@ export default async function LearnArticlePage({
 }) {
   const tc = await getTranslations("common");
   const t = await getTranslations("learnSection");
-  const locale = await getLocale();
+  const locale = (await getLocale()) as Locale;
   const topic = getTopicBySlug(params.slug);
 
   if (!topic || topic.clusterSlug !== params.cluster) notFound();
@@ -138,9 +143,34 @@ export default async function LearnArticlePage({
     (s) => s.slug === topic.subclusterSlug
   );
 
+  const localizedCluster = getLocalizedCluster(params.cluster, locale);
+  const clusterName = localizedCluster?.name ?? cluster?.nameEn ?? params.cluster;
+  const localizedSub = subcluster
+    ? getLocalizedSubcluster(subcluster.slug, locale)
+    : null;
+  const subclusterName = localizedSub?.name ?? subcluster?.nameEn;
+
+  const DIFFICULTY_KEY: Record<string, string> = {
+    beginner: "difficultyBeginner",
+    intermediate: "difficultyIntermediate",
+    advanced: "difficultyAdvanced",
+  };
+  const TYPE_KEY: Record<string, string> = {
+    glossary: "typeGlossary",
+    explainer: "typeExplainer",
+    guide: "typeGuide",
+    comparison: "typeComparison",
+    faq: "typeFaq",
+    historical: "typeHistorical",
+    practical: "typePractical",
+    macro: "typeMacro",
+    investment: "typeInvestment",
+    industry: "typeIndustry",
+    pillar: "typePillar",
+  };
+
   const data = await getArticleData(params.slug, locale);
 
-  // Get related articles from topic inventory as fallback
   const linkSuggestions = suggestInternalLinks(params.slug, 6);
   const relatedArticles = (data?.links || []).length > 0
     ? data!.links.map((l) => ({
@@ -151,12 +181,12 @@ export default async function LearnArticlePage({
         linkType: l.linkType,
       }))
     : linkSuggestions.map((l) => {
-        const t = getTopicBySlug(l.targetSlug);
+        const tp = getTopicBySlug(l.targetSlug);
         return {
           slug: l.targetSlug,
-          clusterSlug: t?.clusterSlug || params.cluster,
+          clusterSlug: tp?.clusterSlug || params.cluster,
           title: l.suggestedAnchor,
-          difficulty: t?.difficulty || "beginner",
+          difficulty: tp?.difficulty || "beginner",
           linkType: l.linkType,
         };
       });
@@ -232,7 +262,7 @@ export default async function LearnArticlePage({
               { label: tc("breadcrumbHome"), href: "/" },
               { label: t("breadcrumb"), href: "/learn" },
               {
-                label: cluster?.nameEn || params.cluster,
+                label: clusterName,
                 href: `/learn/${params.cluster}`,
               },
               { label: title },
@@ -247,15 +277,14 @@ export default async function LearnArticlePage({
                   DIFFICULTY_STYLES[topic.difficulty] || ""
                 }`}
               >
-                {topic.difficulty.charAt(0).toUpperCase() +
-                  topic.difficulty.slice(1)}
+                {t(DIFFICULTY_KEY[topic.difficulty] ?? "difficultyBeginner")}
               </span>
               <span className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-surface-2 text-content-3">
-                {topic.articleType}
+                {t(TYPE_KEY[topic.articleType] ?? "typePillar")}
               </span>
-              {subcluster && (
+              {subclusterName && (
                 <span className="text-[10px] text-content-3">
-                  {subcluster.nameEn}
+                  {subclusterName}
                 </span>
               )}
             </div>
@@ -304,7 +333,7 @@ export default async function LearnArticlePage({
                 {t("preparingArticle")}
               </p>
               <p className="text-sm text-content-3">
-                {t("preparingArticleHint", { name: cluster?.nameEn || params.cluster })}
+                {t("preparingArticleHint", { name: clusterName })}
               </p>
             </div>
           )}
@@ -356,7 +385,17 @@ export default async function LearnArticlePage({
           )}
 
           {/* Related Articles */}
-          <RelatedArticles articles={relatedArticles} />
+          <RelatedArticles
+            articles={relatedArticles}
+            heading={t("relatedArticles")}
+            linkTypeLabels={{
+              related: t("linkRelated"),
+              prerequisite: t("linkPrerequisite"),
+              deeper_dive: t("linkDeeperDive"),
+              comparison: t("linkComparison"),
+              see_also: t("linkSeeAlso"),
+            }}
+          />
 
           {/* Footer */}
           <footer className="mt-10 pt-6 border-t border-border">
@@ -376,7 +415,7 @@ export default async function LearnArticlePage({
                 >
                   <polyline points="15 18 9 12 15 6" />
                 </svg>
-                {t("backTo", { name: cluster?.nameEn || params.cluster })}
+                {t("backTo", { name: clusterName })}
               </Link>
               <Link
                 href="/learn"
