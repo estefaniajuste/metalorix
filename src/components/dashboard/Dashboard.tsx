@@ -41,6 +41,7 @@ export function Dashboard() {
   const [currency, setCurrency] = useState<Currency>("USD");
   const [unit, setUnit] = useState<PriceUnit>("oz");
   const [eurUsdRate, setEurUsdRate] = useState(1.08);
+  const chartSectionRef = useRef<HTMLDivElement>(null);
   const historyRef = useRef(history);
   historyRef.current = history;
 
@@ -85,7 +86,7 @@ export function Dashboard() {
           : tc("live");
 
   return (
-    <section className="py-[var(--section-py)]" id="dashboard">
+    <section className="pt-6 pb-[var(--section-py)]" id="dashboard">
       <div className="mx-auto max-w-[1200px] px-6">
         <div className="flex items-center justify-between mb-9 flex-wrap gap-4">
           <h2 className="text-[28px] font-bold text-content-0 flex items-center gap-2.5">
@@ -134,7 +135,13 @@ export function Dashboard() {
                     key={spot.symbol}
                     spot={spot}
                     active={spot.symbol === activeMetal}
-                    onClick={() => setActiveMetal(spot.symbol as MetalSymbol)}
+                    onClick={() => {
+                      setActiveMetal(spot.symbol as MetalSymbol);
+                      chartSectionRef.current?.scrollIntoView({
+                        behavior: "smooth",
+                        block: "center",
+                      });
+                    }}
                     sparklineData={sparkline}
                     rangeChange={rangeChange}
                     currency={currency}
@@ -158,7 +165,9 @@ export function Dashboard() {
               ))}
         </div>
 
-        <PriceChart symbol={activeMetal} range={activeRange} history={history[historyKey] ?? null} />
+        <div ref={chartSectionRef}>
+          <PriceChart symbol={activeMetal} range={activeRange} history={history[historyKey] ?? null} />
+        </div>
         <DataTable history={history[historyKey] ?? null} range={activeRange} />
       </div>
     </section>

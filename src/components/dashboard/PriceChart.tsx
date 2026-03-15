@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { useTheme } from "@/components/layout/ThemeProvider";
 import type { HistoryResult, MetalSymbol } from "@/lib/providers/metals";
@@ -75,8 +75,8 @@ function getChartOptions(
       fixLeftEdge: true,
       fixRightEdge: true,
     },
-    handleScroll: { mouseWheel: false, pressedMouseMove: false },
-    handleScale: { mouseWheel: false, pinch: false },
+    handleScroll: { mouseWheel: true, pressedMouseMove: true },
+    handleScale: { mouseWheel: true, pinch: true },
   };
 }
 
@@ -105,6 +105,7 @@ export function PriceChart({ symbol, range, history }: PriceChartProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const chartRef = useRef<IChartApi | null>(null);
   const seriesRef = useRef<ISeriesApi<"Area"> | null>(null);
+  const [zoomed, setZoomed] = useState(false);
   const { theme } = useTheme();
   const tm = useTranslations("metalNames");
   const metal = METALS[symbol];
@@ -130,6 +131,10 @@ export function PriceChart({ symbol, range, history }: PriceChartProps) {
 
     const observer = new ResizeObserver(handleResize);
     observer.observe(container);
+
+    chart.timeScale().subscribeVisibleLogicalRangeChange(() => {
+      setZoomed(true);
+    });
 
     return () => {
       observer.disconnect();
@@ -163,7 +168,13 @@ export function PriceChart({ symbol, range, history }: PriceChartProps) {
 
     seriesRef.current.setData(data);
     chartRef.current.timeScale().fitContent();
+    setZoomed(false);
   }, [history, metal.color, isDark]);
+
+  const handleFit = useCallback(() => {
+    chartRef.current?.timeScale().fitContent();
+    setZoomed(false);
+  }, []);
 
   const isUp = history ? history.change >= 0 : true;
 
@@ -178,25 +189,38 @@ export function PriceChart({ symbol, range, history }: PriceChartProps) {
             {range}
           </span>
         </div>
-        {history && (
-          <div className="flex items-center gap-3">
-            <span className="text-lg font-bold text-content-0 tabular-nums">
-              ${formatPrice(history.data[history.data.length - 1]?.price ?? 0)}
-            </span>
-            <span
-              className={`text-sm font-medium tabular-nums ${
-                isUp ? "text-signal-up" : "text-signal-down"
-              }`}
+        <div className="flex items-center gap-3">
+          {zoomed && (
+            <button
+              onClick={handleFit}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-sm bg-surface-2 text-content-2 hover:text-content-0 hover:bg-surface-3 transition-colors"
             >
-              {isUp ? "+" : ""}
-              {history.changePct}%
-            </span>
-          </div>
-        )}
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" />
+              </svg>
+              Fit
+            </button>
+          )}
+          {history && (
+            <>
+              <span className="text-lg font-bold text-content-0 tabular-nums">
+                ${formatPrice(history.data[history.data.length - 1]?.price ?? 0)}
+              </span>
+              <span
+                className={`text-sm font-medium tabular-nums ${
+                  isUp ? "text-signal-up" : "text-signal-down"
+                }`}
+              >
+                {isUp ? "+" : ""}
+                {history.changePct}%
+              </span>
+            </>
+          )}
+        </div>
       </div>
       <div
         ref={containerRef}
-        className="relative h-[340px] max-sm:h-[260px]"
+        className="relative h-[380px] max-sm:h-[280px]"
       >
         {!history && (
           <div className="absolute inset-0 bg-surface-2 rounded-xs animate-shimmer" />
