@@ -13,6 +13,7 @@ interface FeedConfig {
 }
 
 const FEEDS: FeedConfig[] = [
+  // Metals-specific
   {
     name: "reuters",
     url: "https://www.reutersagency.com/feed/?best-topics=commodities&post_type=best",
@@ -22,7 +23,7 @@ const FEEDS: FeedConfig[] = [
     url: "https://www.kitco.com/feed/rss/news/",
   },
   {
-    name: "investing",
+    name: "investing-commodities",
     url: "https://www.investing.com/rss/news_301.rss",
   },
   {
@@ -34,6 +35,27 @@ const FEEDS: FeedConfig[] = [
     name: "gold-council",
     url: "https://www.gold.org/goldhub/rss",
     metals: ["XAU"],
+  },
+  // Macroeconomics & geopolitics
+  {
+    name: "investing-economy",
+    url: "https://www.investing.com/rss/news_14.rss",
+  },
+  {
+    name: "cnbc-economy",
+    url: "https://search.cnbc.com/rs/search/combinedcms/view.xml?partnerId=wrss01&id=20910258",
+  },
+  {
+    name: "cnbc-commodities",
+    url: "https://search.cnbc.com/rs/search/combinedcms/view.xml?partnerId=wrss01&id=100727362",
+  },
+  {
+    name: "ft-commodities",
+    url: "https://www.ft.com/commodities?format=rss",
+  },
+  {
+    name: "mining-com",
+    url: "https://www.mining.com/feed/",
   },
 ];
 
@@ -167,7 +189,7 @@ export async function scrapeAllFeeds(): Promise<ScrapedNews[]> {
 
     const isMetalRelated =
       metals.length > 0 ||
-      /gold|silver|platinum|palladium|precious|metal|oro|plata|platino/i.test(fullText);
+      /gold|silver|platinum|palladium|precious|metal|oro|plata|platino|commodit|mining|bullion|safe.haven|central.bank|fed\b|interest.rate|inflation|tariff|sanction|geopolit/i.test(fullText);
 
     if (!isMetalRelated) continue;
 

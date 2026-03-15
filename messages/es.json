@@ -31,7 +31,7 @@
     "contact": "Contacto",
     "description": "Precios de metales preciosos en tiempo real. Datos limpios, gráficos profesionales.",
     "status": "Operativo",
-    "disclaimer": "Los datos mostrados son informativos y no constituyen asesoramiento financiero. Los precios pueden tener un retraso de hasta 15 minutos.",
+    "disclaimer": "Información orientativa, puede contener errores, omisiones o retrasos. No constituye asesoramiento financiero ni garantía de exactitud.",
     "glossary": "Glosario",
     "learn": "Aprende",
     "investmentGuide": "Guía de inversión"
@@ -42,7 +42,13 @@
     "subtitle": "Precios spot en tiempo real y analítica limpia para Oro (XAU), Plata (XAG) y Platino (XPT).",
     "viewDashboard": "Ver Dashboard",
     "tools": "Herramientas",
-    "skipToContent": "Saltar al contenido"
+    "skipToContent": "Saltar al contenido",
+    "latestNews": "Últimas noticias",
+    "latestNewsDesc": "Análisis diario del mercado, geopolítica y macroeconomía.",
+    "viewAllNews": "Ver todas las noticias",
+    "learnSection": "Aprende",
+    "learnSectionDesc": "Guías y artículos para entender el mercado de metales preciosos.",
+    "viewAllLearn": "Ver glosario completo"
   },
   "metals": {
     "gold": "Oro",
@@ -81,7 +87,11 @@
     "change": "Cambio",
     "changePercent": "% Cambio",
     "timeRange": "Rango temporal",
-    "recentPrices": "Datos de precios recientes"
+    "recentPrices": "Datos de precios recientes",
+    "marketClosed": "Mercado cerrado",
+    "marketClosedShort": "Cerrado",
+    "futuresData": "Datos de futuros",
+    "lastClose": "Último cierre"
   },
   "tools": {
     "title": "Herramientas",
@@ -95,7 +105,7 @@
     "comparator": "Comparador Oro vs Plata vs Platino",
     "comparatorDesc": "Compara el rendimiento histórico de los tres metales en un solo gráfico.",
     "calendar": "Calendario económico",
-    "calendarDesc": "Próximos eventos clave: FOMC, BCE, IPC, NFP y su impacto en metales.",
+    "calendarDesc": "Próximos eventos clave: FOMC, BCE, PBoC, IPC, NFP y su impacto en metales.",
     "upcoming": "Próximamente",
     "technicalIndicators": "Indicadores técnicos",
     "technicalDesc": "RSI, MACD y Bandas de Bollinger sobre los gráficos de precios de metales preciosos."
@@ -405,7 +415,7 @@
     "quickComparisonDesc": "Resumen de los principales métodos de inversión en metales preciosos.",
     "detailedAnalysis": "Análisis detallado por método",
     "detailedAnalysisDesc": "Ventajas, inconvenientes, nivel de accesibilidad y coste estimado de cada opción.",
-    "etfTitle": "Principales ETFs y ETCs en Europa",
+    "etfTitle": "Principales ETFs y ETCs",
     "etfDesc": "Productos cotizados con respaldo físico disponibles en brókers europeos. Filtra por metal y ordena por cualquier columna.",
     "etfDisclaimer": "Datos orientativos. TER y tamaño del fondo pueden variar. Consulta la ficha del producto antes de invertir.",
     "faq": "Preguntas frecuentes",
@@ -484,7 +494,7 @@
     "breadcrumb": "Precio del oro hoy",
     "whatMoves": "¿Qué mueve el precio del oro hoy?",
     "fedDecisions": "Decisiones de la Reserva Federal (Fed) sobre tipos de interés",
-    "inflationData": "Datos de inflación (IPC) en Estados Unidos y Europa",
+    "inflationData": "Datos de inflación (IPC) en Estados Unidos, Europa y otras grandes economías",
     "geopolitical": "Tensiones geopolíticas y conflictos internacionales",
     "dollarStrength": "Fortaleza o debilidad del dólar estadounidense (DXY)",
     "centralBankDemand": "Demanda de bancos centrales (China, India, Turquía)",
@@ -579,7 +589,7 @@
     "gramUnit": "gramo",
     "kilogramUnit": "kilogramo",
     "whyCurrency": "¿Por qué importa la divisa al invertir en oro?",
-    "whyCurrencyP1": "El oro cotiza internacionalmente en dólares estadounidenses (USD), pero el coste real de tu inversión depende de la divisa en la que operas. Un inversor europeo puede ver cómo el oro sube en USD pero se mantiene estable en EUR si el euro se fortalece frente al dólar.",
+    "whyCurrencyP1": "El oro cotiza internacionalmente en dólares estadounidenses (USD), pero el coste real de tu inversión depende de la divisa en la que operas. Un inversor fuera de EE.UU. puede ver cómo el oro sube en USD pero se mantiene estable en su divisa local si esta se fortalece frente al dólar.",
     "whyCurrencyP2": "Por eso es fundamental consultar el precio en tu divisa local. Esta herramienta te muestra el precio actualizado en EUR, GBP, CHF, JPY, AUD, CAD, CNY, INR, MXN y BRL, por onza troy, gramo y kilogramo.",
     "usDollar": "Dólar estadounidense",
     "euro": "Euro",
@@ -610,7 +620,7 @@
   },
   "calendarPage": {
     "title": "Calendario económico",
-    "subtitle": "Eventos macroeconómicos clave que impactan directamente en el precio del oro, plata y platino. Desde las decisiones de la Fed hasta los datos de inflación.",
+    "subtitle": "Eventos macroeconómicos clave que impactan directamente en el precio del oro, plata y platino. Desde decisiones de bancos centrales hasta datos de inflación.",
     "breadcrumb": "Calendario económico",
     "upcomingEvents": "Próximos eventos",
     "allEvents": "Todos los eventos",
@@ -644,7 +654,7 @@
   "article": {
     "breadcrumbNews": "Noticias",
     "notFound": "Artículo no encontrado — Metalorix",
-    "aiDisclaimer": "Este artículo ha sido generado automáticamente por Metalorix utilizando inteligencia artificial y datos de mercado en tiempo real. No constituye asesoramiento financiero.",
+    "aiDisclaimer": "Este artículo ha sido generado automáticamente por inteligencia artificial a partir de fuentes públicas (Reuters, Kitco, CNBC, Investing.com, entre otras). Metalorix no es autor original de los datos ni noticias citados. No constituye asesoramiento financiero. Consulta las fuentes originales enlazadas al final del artículo.",
     "allNews": "Todas las noticias"
   },
   "ratioContent": {

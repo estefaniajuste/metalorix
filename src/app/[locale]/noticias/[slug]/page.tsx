@@ -88,7 +88,7 @@ const METAL_COLORS: Record<string, string> = {
 };
 
 function renderInlineLinks(text: string) {
-  const linkRegex = /\[([^\]]+)\]\(\/aprende\/([^)]+)\)/g;
+  const linkRegex = /\[([^\]]+)\]\(([^)]+)\)/g;
   const parts: (string | JSX.Element)[] = [];
   let lastIndex = 0;
   let match;
@@ -97,15 +97,44 @@ function renderInlineLinks(text: string) {
     if (match.index > lastIndex) {
       parts.push(text.slice(lastIndex, match.index));
     }
-    parts.push(
-      <Link
-        key={match.index}
-        href={{ pathname: "/aprende/[slug]" as const, params: { slug: match[2] } }}
-        className="text-brand-gold hover:underline font-medium"
-      >
-        {match[1]}
-      </Link>
-    );
+    const linkText = match[1];
+    const href = match[2];
+    const isExternal = href.startsWith("http");
+    const aprendeMatch = href.match(/^\/aprende\/(.+)$/);
+
+    if (aprendeMatch) {
+      parts.push(
+        <Link
+          key={match.index}
+          href={{ pathname: "/aprende/[slug]" as const, params: { slug: aprendeMatch[1] } }}
+          className="text-brand-gold hover:underline font-medium"
+        >
+          {linkText}
+        </Link>
+      );
+    } else if (isExternal) {
+      parts.push(
+        <a
+          key={match.index}
+          href={href}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-brand-gold hover:underline font-medium"
+        >
+          {linkText}
+        </a>
+      );
+    } else {
+      parts.push(
+        <a
+          key={match.index}
+          href={href}
+          className="text-brand-gold hover:underline font-medium"
+        >
+          {linkText}
+        </a>
+      );
+    }
     lastIndex = match.index + match[0].length;
   }
 
@@ -274,6 +303,11 @@ export default async function ArticlePage({
               if (paragraph.startsWith("### ")) {
                 return (
                   <h3 key={i}>{renderInlineLinks(paragraph.replace("### ", ""))}</h3>
+                );
+              }
+              if (paragraph.startsWith("- ")) {
+                return (
+                  <li key={i} className="ml-5 list-disc">{renderInlineLinks(paragraph.slice(2))}</li>
                 );
               }
               return <p key={i}>{renderInlineLinks(paragraph)}</p>;

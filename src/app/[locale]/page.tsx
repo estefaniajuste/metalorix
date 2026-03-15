@@ -1,5 +1,6 @@
 import { Hero } from "@/components/dashboard/Hero";
 import { Dashboard } from "@/components/dashboard/Dashboard";
+import { HomePreview } from "@/components/dashboard/HomePreview";
 import { getTranslations, getLocale } from "next-intl/server";
 
 export default async function HomePage() {
@@ -49,6 +50,7 @@ export default async function HomePage() {
       />
       <Hero />
       <Dashboard />
+      <HomePreview />
     </>
   );
 }

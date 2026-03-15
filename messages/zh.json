@@ -31,7 +31,7 @@
     "contact": "联系我们",
     "description": "实时贵金属价格。简洁数据，专业图表。",
     "status": "运行中",
-    "disclaimer": "所显示的数据仅供参考，不构成投资建议。价格可能延迟最多15分钟。",
+    "disclaimer": "参考性信息，可能包含错误、遗漏或延迟。不构成财务建议，亦不保证准确性。",
     "glossary": "术语表",
     "learn": "学习",
     "investmentGuide": "投资指南"
@@ -42,7 +42,30 @@
     "subtitle": "黄金 (XAU)、白银 (XAG) 和铂金 (XPT) 的实时现货价格与专业分析。",
     "viewDashboard": "查看仪表盘",
     "tools": "工具",
-    "skipToContent": "跳至内容"
+    "skipToContent": "跳至内容",
+    "latestNews": "最新资讯",
+    "latestNewsDesc": "每日市场分析、地缘政治与宏观经济。",
+    "viewAllNews": "查看所有资讯",
+    "learnSection": "学习",
+    "learnSectionDesc": "了解贵金属市场的指南和文章。",
+    "viewAllLearn": "查看完整词汇表",
+    "exploreTitle": "探索 Metalorix",
+    "quickPrices": "实时价格",
+    "quickPricesDesc": "5种金属，带图表和历史数据",
+    "quickTools": "工具",
+    "quickToolsDesc": "比率、转换器、DCA计算器等",
+    "quickNews": "新闻",
+    "quickNewsDesc": "每日金属市场分析",
+    "quickProducts": "产品",
+    "quickProductsDesc": "投资币和金条",
+    "quickLearn": "学习",
+    "quickLearnDesc": "指南、术语表和教育",
+    "quickAlerts": "提醒",
+    "quickAlertsDesc": "通过电子邮件获取价格提醒",
+    "quickGuide": "投资指南",
+    "quickGuideDesc": "如何投资贵金属",
+    "quickCalendar": "日历",
+    "quickCalendarDesc": "影响市场的经济事件"
   },
   "metals": {
     "gold": "黄金",
@@ -81,7 +104,11 @@
     "change": "涨跌",
     "changePercent": "涨跌幅",
     "timeRange": "时间范围",
-    "recentPrices": "近期价格数据"
+    "recentPrices": "近期价格数据",
+    "marketClosed": "市场已关闭",
+    "marketClosedShort": "已关闭",
+    "futuresData": "期货数据",
+    "lastClose": "上次收盘"
   },
   "tools": {
     "title": "工具",
@@ -95,7 +122,7 @@
     "comparator": "黄金 vs 白银 vs 铂金对比",
     "comparatorDesc": "在同一图表中比较三种贵金属的历史表现。",
     "calendar": "经济日历",
-    "calendarDesc": "即将到来的关键事件：美联储、欧央行、CPI、非农就业及其对金属的影响。",
+    "calendarDesc": "即将到来的关键事件：美联储、中国人民银行、欧央行、CPI、非农就业及其对金属的影响。",
     "upcoming": "即将推出",
     "technicalIndicators": "技术指标",
     "technicalDesc": "贵金属价格图表上的RSI、MACD和布林带指标。"
@@ -405,7 +432,7 @@
     "quickComparisonDesc": "贵金属主要投资方式概览。",
     "detailedAnalysis": "按方式详细分析",
     "detailedAnalysisDesc": "每种选项的优势、劣势、准入门槛及预估成本。",
-    "etfTitle": "欧洲主要ETF和ETC",
+    "etfTitle": "主要ETF和ETC",
     "etfDesc": "可通过欧洲券商交易的实物支撑交易所产品。按金属筛选，按任意列排序。",
     "etfDisclaimer": "数据仅供参考。管理费率和基金规模可能变动。投资前请查阅产品说明书。",
     "faq": "常见问题",
@@ -484,7 +511,7 @@
     "breadcrumb": "今日黄金价格",
     "whatMoves": "今天什么在影响金价？",
     "fedDecisions": "美联储 (Fed) 利率决议",
-    "inflationData": "美国和欧洲通胀数据 (CPI)",
+    "inflationData": "美国、中国和欧洲等主要经济体通胀数据 (CPI)",
     "geopolitical": "地缘政治紧张局势与国际冲突",
     "dollarStrength": "美元走强或走弱 (DXY)",
     "centralBankDemand": "央行购金需求（中国、印度、土耳其）",
@@ -579,7 +606,7 @@
     "gramUnit": "克",
     "kilogramUnit": "千克",
     "whyCurrency": "投资黄金为何要关注货币？",
-    "whyCurrencyP1": "黄金以美元 (USD) 在国际市场定价，但您的实际投资成本取决于交易货币。欧洲投资者可能看到美元金价上涨，但若欧元走强，则欧元金价可能保持平稳。",
+    "whyCurrencyP1": "黄金以美元 (USD) 在国际市场定价，但您的实际投资成本取决于交易货币。中国投资者可能看到美元金价上涨，但若人民币走强，则人民币金价可能保持平稳。",
     "whyCurrencyP2": "因此，以本币查看金价至关重要。本工具展示欧元、英镑、瑞士法郎、日元、澳元、加元、人民币、卢比、墨西哥比索和巴西雷亚尔计价的最新价格——按金衡盎司、克和千克显示。",
     "usDollar": "美元",
     "euro": "欧元",
@@ -610,7 +637,7 @@
   },
   "calendarPage": {
     "title": "经济日历",
-    "subtitle": "直接影响黄金、白银和铂金价格的重大宏观经济事件。从美联储决议到通胀数据。",
+    "subtitle": "直接影响黄金、白银和铂金价格的重大宏观经济事件。从各国央行决议到通胀数据。",
     "breadcrumb": "经济日历",
     "upcomingEvents": "即将到来",
     "allEvents": "全部事件",
@@ -644,7 +671,7 @@
   "article": {
     "breadcrumbNews": "新闻",
     "notFound": "文章未找到 — Metalorix",
-    "aiDisclaimer": "本文由Metalorix使用人工智能和实时市场数据自动生成，不构成投资建议。",
+    "aiDisclaimer": "本文由人工智能根据公开来源（Reuters、Kitco、CNBC、Investing.com等）自动生成。Metalorix不是所引用数据或新闻的原始作者。本文不构成投资建议。请查阅文末链接的原始来源。",
     "allNews": "全部新闻"
   },
   "ratioContent": {

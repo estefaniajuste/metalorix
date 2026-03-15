@@ -13,6 +13,7 @@ interface PriceData {
 
 interface NewsItem {
   title: string;
+  url: string;
   source: string;
   summary: string;
   metals: string[] | null;
@@ -49,6 +50,7 @@ async function getRecentNews(hours: number = 24): Promise<NewsItem[]> {
       .limit(20);
     return rows.map((r) => ({
       title: r.title,
+      url: r.url,
       source: r.source,
       summary: r.summary ?? "",
       metals: r.metals,
@@ -74,6 +76,7 @@ interface StructuredArticle {
   meta_descripcion: string;
   palabras_clave_url: string;
   contenido: string;
+  fuentes?: { titulo: string; url: string }[];
 }
 
 function parseStructuredResponse(raw: string): StructuredArticle | null {
@@ -93,6 +96,14 @@ function parseStructuredResponse(raw: string): StructuredArticle | null {
   } catch {
     return null;
   }
+}
+
+function appendSources(content: string, fuentes?: { titulo: string; url: string }[]): string {
+  if (!fuentes || fuentes.length === 0) return content;
+  const sourcesSection = fuentes
+    .map((f) => `- [${f.titulo}](${f.url})`)
+    .join("\n");
+  return `${content}\n\n## Fuentes\n\n${sourcesSection}`;
 }
 
 function formatDate(d: Date): string {
@@ -116,8 +127,8 @@ function formatPrices(prices: PriceData[]): string {
 function formatNews(news: NewsItem[]): string {
   if (news.length === 0) return "No relevant recent news.";
   return news
-    .slice(0, 10)
-    .map((n) => `- [${n.source}] ${n.title}: ${n.summary.slice(0, 150)}`)
+    .slice(0, 15)
+    .map((n) => `- [${n.source}] ${n.title}: ${n.summary.slice(0, 150)} (URL: ${n.url})`)
     .join("\n");
 }
 
@@ -166,7 +177,7 @@ export async function generateDailySummary(): Promise<{
   const glossaryContext = await getGlossaryTermsForPrompt();
   const glossaryInstructions = buildGlossaryLinkingInstructions(glossaryContext);
 
-  const prompt = `Eres un analista experto en metales preciosos y SEO que escribe en español para inversores hispanohablantes.
+  const prompt = `Eres un analista experto en metales preciosos, macroeconomía y geopolítica que escribe en español para inversores hispanohablantes.
 
 Escribe un RESUMEN DIARIO del mercado de metales preciosos e industriales para hoy, ${dateStr}.
 
@@ -178,27 +189,37 @@ ${formatNews(news)}
 
 INSTRUCCIONES PARA EL CONTENIDO:
 - Escribe en español natural, profesional pero accesible
-- Longitud: 400-600 palabras
-- Estructura: Empieza con un párrafo resumen, luego analiza cada metal, luego perspectivas
+- Longitud: 500-700 palabras
+- Estructura:
+  1. Párrafo resumen con lo más importante del día
+  2. Análisis de cada metal con datos concretos
+  3. Contexto geopolítico y macroeconómico: explica cómo los eventos globales del día (conflictos, sanciones, decisiones de bancos centrales, datos de empleo, inflación, políticas comerciales, aranceles, etc.) afectan a los metales
+  4. Perspectivas a corto plazo
+- Conecta SIEMPRE los movimientos de precios con causas reales: decisiones de la Fed, tensiones geopolíticas, datos económicos, demanda industrial, compras de bancos centrales, etc.
 - Usa formato: párrafos normales, encabezados con ## para secciones principales
 - NO uses markdown en exceso, solo ## para títulos de sección
-- Menciona datos concretos (precios, porcentajes)
-- Si hay noticias relevantes, menciona cómo afectan a los precios
-- Incluye una sección "Perspectivas" al final con lo que podría pasar
+- Menciona datos concretos (precios, porcentajes, niveles)
 - Tono: informativo, analítico, útil para quien invierte en metales
 - NO incluyas título ni fecha al inicio (se añaden automáticamente)
 - NO digas "como analista" ni uses primera persona
 ${glossaryInstructions}
 
-INSTRUCCIONES SEO (MUY IMPORTANTE):
+INSTRUCCIONES SEO Y FUENTES (MUY IMPORTANTE):
 Debes devolver tu respuesta como un JSON válido con esta estructura exacta:
 
 {
   "titulo_seo": "Un título optimizado para SEO (50-65 caracteres). Debe captar la esencia de la jornada con palabras clave que la gente busca en Google. Ejemplos de buen título: 'El oro supera los $5000 por tensiones en Oriente Medio', 'Caída del oro y subida de la plata tras datos de empleo en EE.UU.', 'Récord del oro ante debilidad del dólar y compras de bancos centrales'. NO uses títulos genéricos como 'Resumen del mercado'. Incluye la causa principal del movimiento.",
   "meta_descripcion": "Metadescripción atractiva para Google (140-155 caracteres). Resumen con precios concretos y el factor clave del día. Debe invitar al clic.",
   "palabras_clave_url": "3-6 palabras clave separadas por espacios para la URL, sin fecha. Ejemplo: 'oro sube tensiones geopoliticas ormuz' o 'plata maximo anual demanda industrial'. Solo las palabras más relevantes del día.",
-  "contenido": "El artículo completo aquí (400-600 palabras con formato ## para secciones)"
+  "contenido": "El artículo completo aquí (500-700 palabras con formato ## para secciones). NO incluyas la sección de fuentes aquí, va en el campo fuentes.",
+  "fuentes": [{"titulo": "Título descriptivo de la fuente", "url": "URL completa de la noticia original"}]
 }
+
+IMPORTANTE sobre fuentes:
+- Incluye en "fuentes" las noticias originales que hayas utilizado para escribir el artículo
+- Usa las URLs proporcionadas en las noticias de arriba
+- Mínimo 2 fuentes, máximo 6
+- Si no hay URLs de noticias disponibles, incluye fuentes genéricas como {"titulo": "Reuters Commodities", "url": "https://www.reuters.com/business/commodities/"}
 
 Devuelve SOLO el JSON, sin texto adicional antes o después. No envuelvas en bloques de código.`;
 
@@ -214,7 +235,7 @@ Devuelve SOLO el JSON, sin texto adicional antes o después. No envuelvas en blo
       slug: `${keywordSlug}-${dateSlug}`,
       title: parsed.titulo_seo,
       excerpt: parsed.meta_descripcion,
-      content: parsed.contenido.trim(),
+      content: appendSources(parsed.contenido.trim(), parsed.fuentes),
       metals: ["XAU", "XAG", "XPT", "XPD", "HG"],
     };
   }
@@ -254,7 +275,7 @@ export async function generateEventArticle(
   const glossaryContext = await getGlossaryTermsForPrompt();
   const glossaryInstructions = buildGlossaryLinkingInstructions(glossaryContext);
 
-  const prompt = `Eres un analista experto en metales preciosos y SEO que escribe en español.
+  const prompt = `Eres un analista experto en metales preciosos, macroeconomía y geopolítica que escribe en español.
 
 ALERTA DE MERCADO: ${metalName} ${direction} un ${absChange}% hoy (${dateStr}).
 Precio actual: $${price.toFixed(2)} USD/oz
@@ -262,25 +283,31 @@ Precio actual: $${price.toFixed(2)} USD/oz
 NOTICIAS RECIENTES:
 ${formatNews(news)}
 
-Escribe un artículo de 300-400 palabras explicando:
+Escribe un artículo de 400-500 palabras explicando:
 1. Qué ha pasado (el movimiento de precio)
-2. Por qué (contexto de noticias si hay, o factores técnicos/macro)
+2. Por qué: contexto geopolítico (conflictos, sanciones, tensiones comerciales), macroeconómico (decisiones de la Fed, datos de empleo, inflación, dólar) o de mercado (demanda industrial, compras de bancos centrales)
 3. Qué significa para los inversores
-4. Niveles clave a vigilar
+4. Niveles clave a vigilar y perspectivas a corto plazo
 
 FORMATO: párrafos normales, ## para secciones. Tono profesional, datos concretos.
 NO incluyas título. NO uses primera persona.
 ${glossaryInstructions}
 
-INSTRUCCIONES SEO (MUY IMPORTANTE):
+INSTRUCCIONES SEO Y FUENTES (MUY IMPORTANTE):
 Debes devolver tu respuesta como un JSON válido con esta estructura exacta:
 
 {
   "titulo_seo": "Un título optimizado para SEO (50-65 caracteres). Debe explicar qué ha pasado y por qué. Ejemplos: '${metalName} se dispara un ${absChange}% por sanciones a Rusia', '${metalName} cae tras subida de tipos de la Fed', 'Desplome del ${metalName.toLowerCase()}: inversores huyen a bonos del Tesoro'. Incluye la CAUSA del movimiento, no solo el dato.",
   "meta_descripcion": "Metadescripción para Google (140-155 caracteres). Precio actual, cambio porcentual y causa principal. Debe generar clics.",
   "palabras_clave_url": "3-6 palabras clave para la URL sin fecha. Ejemplo: '${metalName.toLowerCase()} ${direction} ${absChange} sanciones rusia' o '${metalName.toLowerCase()} caida tipos interes fed'. Solo palabras relevantes.",
-  "contenido": "El artículo completo aquí (300-400 palabras con formato ## para secciones)"
+  "contenido": "El artículo completo aquí (400-500 palabras con formato ## para secciones). NO incluyas la sección de fuentes aquí.",
+  "fuentes": [{"titulo": "Título descriptivo de la fuente", "url": "URL completa de la noticia original"}]
 }
+
+IMPORTANTE sobre fuentes:
+- Incluye en "fuentes" las noticias originales que hayas utilizado
+- Usa las URLs proporcionadas en las noticias de arriba
+- Mínimo 2 fuentes, máximo 5
 
 Devuelve SOLO el JSON, sin texto adicional antes o después. No envuelvas en bloques de código.`;
 
@@ -296,7 +323,7 @@ Devuelve SOLO el JSON, sin texto adicional antes o después. No envuelvas en blo
       slug: `${keywordSlug}-${dateSlug}`,
       title: parsed.titulo_seo,
       excerpt: parsed.meta_descripcion,
-      content: parsed.contenido.trim(),
+      content: appendSources(parsed.contenido.trim(), parsed.fuentes),
       metals: [metal],
     };
   }
@@ -333,7 +360,7 @@ export async function generateWeeklySummary(): Promise<{
   weekStart.setDate(today.getDate() - 7);
   const weekRange = `${weekStart.toLocaleDateString("es-ES", { day: "numeric", month: "long" })} — ${today.toLocaleDateString("es-ES", { day: "numeric", month: "long", year: "numeric" })}`;
 
-  const prompt = `Eres un analista experto en metales preciosos y SEO que escribe en español.
+  const prompt = `Eres un analista experto en metales preciosos, macroeconomía y geopolítica que escribe en español.
 
 Escribe un ANÁLISIS SEMANAL del mercado de metales preciosos.
 Semana: ${weekRange}
@@ -345,24 +372,34 @@ NOTICIAS DE LA SEMANA:
 ${formatNews(news)}
 
 INSTRUCCIONES PARA EL CONTENIDO:
-- 600-800 palabras
-- Estructura: Resumen de la semana, análisis por metal, factores macro, perspectiva para la próxima semana
+- 700-900 palabras
+- Estructura:
+  1. Resumen ejecutivo de la semana (qué ha dominado)
+  2. Análisis por metal con datos concretos y niveles de soporte/resistencia
+  3. Contexto geopolítico: conflictos, sanciones, tensiones comerciales, aranceles, relaciones entre potencias
+  4. Contexto macroeconómico: decisiones de bancos centrales (Fed, BCE, etc.), datos de empleo, inflación, evolución del dólar, rendimientos de bonos
+  5. Perspectiva para la próxima semana: qué vigilar, eventos clave programados
+- Conecta SIEMPRE los movimientos con causas reales del mundo
 - Usa ## para títulos de sección
-- Datos concretos, tendencias, niveles de soporte/resistencia
-- Menciona factores macro: dólar, tipos de interés, geopolítica
-- Tono: profesional, analítico
+- Tono: profesional, analítico, basado en hechos
 - NO incluyas título. NO uses primera persona.
 ${glossaryInstructions}
 
-INSTRUCCIONES SEO (MUY IMPORTANTE):
+INSTRUCCIONES SEO Y FUENTES (MUY IMPORTANTE):
 Debes devolver tu respuesta como un JSON válido con esta estructura exacta:
 
 {
   "titulo_seo": "Un título optimizado para SEO (50-65 caracteres). Debe resumir el hecho más importante de la semana. Ejemplos: 'Semana alcista para el oro: máximos históricos por compras de China', 'La plata lidera las subidas semanales por demanda industrial', 'Oro y platino caen en semana marcada por la Fed'. NO uses títulos genéricos como 'Análisis semanal'. Destaca el evento o tendencia más relevante.",
   "meta_descripcion": "Metadescripción para Google (140-155 caracteres). Resumen con datos clave de la semana y el factor dominante. Debe invitar al clic.",
   "palabras_clave_url": "3-6 palabras clave para la URL sin fecha. Ejemplo: 'oro maximos historicos compras china' o 'plata sube demanda industrial semana'. Solo palabras relevantes.",
-  "contenido": "El artículo completo aquí (600-800 palabras con formato ## para secciones)"
+  "contenido": "El artículo completo aquí (700-900 palabras con formato ## para secciones). NO incluyas la sección de fuentes aquí.",
+  "fuentes": [{"titulo": "Título descriptivo de la fuente", "url": "URL completa de la noticia original"}]
 }
+
+IMPORTANTE sobre fuentes:
+- Incluye en "fuentes" las noticias originales que hayas utilizado
+- Usa las URLs proporcionadas en las noticias de arriba
+- Mínimo 3 fuentes, máximo 8
 
 Devuelve SOLO el JSON, sin texto adicional antes o después. No envuelvas en bloques de código.`;
 
@@ -378,7 +415,7 @@ Devuelve SOLO el JSON, sin texto adicional antes o después. No envuelvas en blo
       slug: `${keywordSlug}-${dateSlug}`,
       title: parsed.titulo_seo,
       excerpt: parsed.meta_descripcion,
-      content: parsed.contenido.trim(),
+      content: appendSources(parsed.contenido.trim(), parsed.fuentes),
       metals: ["XAU", "XAG", "XPT", "XPD", "HG"],
     };
   }

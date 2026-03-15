@@ -31,7 +31,7 @@
     "contact": "Kontakt",
     "description": "Edelmetallpreise in Echtzeit. Klare Daten, professionelle Charts.",
     "status": "Aktiv",
-    "disclaimer": "Die angezeigten Daten dienen nur zu Informationszwecken und stellen keine Finanzberatung dar. Preise können bis zu 15 Minuten verzögert sein.",
+    "disclaimer": "Orientierungsinformation, kann Fehler, Auslassungen oder Verzögerungen enthalten. Stellt keine Finanzberatung oder Genauigkeitsgarantie dar.",
     "glossary": "Glossar",
     "learn": "Lernen",
     "investmentGuide": "Investitionsleitfaden"
@@ -42,7 +42,30 @@
     "subtitle": "Echtzeit-Spotpreise und professionelle Analysen für Gold (XAU), Silber (XAG) und Platin (XPT).",
     "viewDashboard": "Dashboard anzeigen",
     "tools": "Werkzeuge",
-    "skipToContent": "Zum Inhalt springen"
+    "skipToContent": "Zum Inhalt springen",
+    "latestNews": "Aktuelle Nachrichten",
+    "latestNewsDesc": "Tägliche Marktanalyse, Geopolitik und Makroökonomie.",
+    "viewAllNews": "Alle Nachrichten anzeigen",
+    "learnSection": "Lernen",
+    "learnSectionDesc": "Leitfäden und Artikel zum Verständnis des Edelmetallmarktes.",
+    "viewAllLearn": "Vollständiges Glossar anzeigen",
+    "exploreTitle": "Metalorix entdecken",
+    "quickPrices": "Live-Preise",
+    "quickPricesDesc": "5 Metalle mit Charts und historischen Daten",
+    "quickTools": "Werkzeuge",
+    "quickToolsDesc": "Ratio, Umrechner, DCA-Rechner und mehr",
+    "quickNews": "Nachrichten",
+    "quickNewsDesc": "Tägliche Marktanalyse für Edelmetalle",
+    "quickProducts": "Produkte",
+    "quickProductsDesc": "Anlage-Münzen und -Barren",
+    "quickLearn": "Lernen",
+    "quickLearnDesc": "Leitfäden, Glossar und Bildung",
+    "quickAlerts": "Alarme",
+    "quickAlertsDesc": "Preisalarme per E-Mail",
+    "quickGuide": "Investitionsguide",
+    "quickGuideDesc": "Wie man in Edelmetalle investiert",
+    "quickCalendar": "Kalender",
+    "quickCalendarDesc": "Wirtschaftsereignisse die den Markt bewegen"
   },
   "metals": {
     "gold": "Gold",
@@ -81,7 +104,11 @@
     "change": "Veränderung",
     "changePercent": "% Veränderung",
     "timeRange": "Zeitraum",
-    "recentPrices": "Aktuelle Preisdaten"
+    "recentPrices": "Aktuelle Preisdaten",
+    "marketClosed": "Markt geschlossen",
+    "marketClosedShort": "Geschlossen",
+    "futuresData": "Futures-Daten",
+    "lastClose": "Letzter Schluss"
   },
   "tools": {
     "title": "Werkzeuge",
@@ -95,7 +122,7 @@
     "comparator": "Gold vs Silber vs Platin Vergleich",
     "comparatorDesc": "Vergleichen Sie die historische Wertentwicklung aller drei Metalle in einem einzigen Chart.",
     "calendar": "Wirtschaftskalender",
-    "calendarDesc": "Kommende Schlüsselereignisse: FOMC, EZB, VPI, NFP und ihre Auswirkungen auf Metalle.",
+    "calendarDesc": "Kommende Schlüsselereignisse: FOMC, EZB, PBoC, VPI, NFP und ihre Auswirkungen auf Metalle.",
     "upcoming": "Demnächst",
     "technicalIndicators": "Technische Indikatoren",
     "technicalDesc": "RSI, MACD und Bollinger-Bänder auf Edelmetall-Preischarts."
@@ -405,7 +432,7 @@
     "quickComparisonDesc": "Übersicht der wichtigsten Anlageformen in Edelmetalle.",
     "detailedAnalysis": "Detailanalyse nach Methode",
     "detailedAnalysisDesc": "Vorteile, Nachteile, Zugänglichkeit und geschätzte Kosten jeder Option.",
-    "etfTitle": "Wichtige ETFs und ETCs in Europa",
+    "etfTitle": "Wichtige ETFs und ETCs",
     "etfDesc": "Physisch hinterlegte börsengehandelte Produkte, verfügbar bei europäischen Brokern. Filtern Sie nach Metall und sortieren Sie nach beliebiger Spalte.",
     "etfDisclaimer": "Richtwerte. TER und Fondsgröße können variieren. Lesen Sie das Produktdatenblatt vor einer Anlageentscheidung.",
     "faq": "Häufig gestellte Fragen",
@@ -484,7 +511,7 @@
     "breadcrumb": "Goldpreis heute",
     "whatMoves": "Was bewegt den Goldpreis heute?",
     "fedDecisions": "Zinsentscheidungen der US-Notenbank (Fed)",
-    "inflationData": "Inflationsdaten (VPI) in den USA und Europa",
+    "inflationData": "Inflationsdaten (VPI) in den USA, Europa und anderen großen Volkswirtschaften",
     "geopolitical": "Geopolitische Spannungen und internationale Konflikte",
     "dollarStrength": "Stärke oder Schwäche des US-Dollars (DXY)",
     "centralBankDemand": "Zentralbanknachfrage (China, Indien, Türkei)",
@@ -579,7 +606,7 @@
     "gramUnit": "Gramm",
     "kilogramUnit": "Kilogramm",
     "whyCurrency": "Warum ist die Währung bei der Goldanlage wichtig?",
-    "whyCurrencyP1": "Gold wird international in US-Dollar (USD) gehandelt, doch die tatsächlichen Kosten Ihrer Investition hängen von Ihrer Handelswährung ab. Ein europäischer Anleger kann einen steigenden Goldpreis in USD beobachten, während der Kurs in EUR stabil bleibt, wenn der Euro gegenüber dem Dollar aufwertet.",
+    "whyCurrencyP1": "Gold wird international in US-Dollar (USD) gehandelt, doch die tatsächlichen Kosten Ihrer Investition hängen von Ihrer Handelswährung ab. Ein Anleger im Euroraum kann einen steigenden Goldpreis in USD beobachten, während der Kurs in EUR stabil bleibt, wenn der Euro gegenüber dem Dollar aufwertet.",
     "whyCurrencyP2": "Daher ist es entscheidend, den Preis in Ihrer Landeswährung zu prüfen. Dieses Tool zeigt Ihnen den aktuellen Preis in EUR, GBP, CHF, JPY, AUD, CAD, CNY, INR, MXN und BRL — pro Feinunze, Gramm und Kilogramm.",
     "usDollar": "US-Dollar",
     "euro": "Euro",
@@ -610,7 +637,7 @@
   },
   "calendarPage": {
     "title": "Wirtschaftskalender",
-    "subtitle": "Makroökonomische Schlüsselereignisse mit direktem Einfluss auf den Gold-, Silber- und Platinpreis. Von Fed-Entscheidungen bis zu Inflationsdaten.",
+    "subtitle": "Makroökonomische Schlüsselereignisse mit direktem Einfluss auf den Gold-, Silber- und Platinpreis. Von Zentralbankentscheidungen bis zu Inflationsdaten.",
     "breadcrumb": "Wirtschaftskalender",
     "upcomingEvents": "Nächste Ereignisse",
     "allEvents": "Alle Ereignisse",
@@ -644,7 +671,7 @@
   "article": {
     "breadcrumbNews": "Nachrichten",
     "notFound": "Artikel nicht gefunden — Metalorix",
-    "aiDisclaimer": "Dieser Artikel wurde automatisch von Metalorix mithilfe künstlicher Intelligenz und Echtzeit-Marktdaten erstellt. Er stellt keine Finanzberatung dar.",
+    "aiDisclaimer": "Dieser Artikel wurde automatisch durch künstliche Intelligenz aus öffentlichen Quellen (Reuters, Kitco, CNBC, Investing.com u.a.) erstellt. Metalorix ist nicht der ursprüngliche Autor der zitierten Daten oder Nachrichten. Er stellt keine Finanzberatung dar. Überprüfen Sie die am Ende des Artikels verlinkten Originalquellen.",
     "allNews": "Alle Nachrichten"
   },
   "ratioContent": {

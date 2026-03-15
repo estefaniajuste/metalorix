@@ -31,7 +31,7 @@
     "contact": "İletişim",
     "description": "Gerçek zamanlı kıymetli metal fiyatları. Temiz veriler, profesyonel grafikler.",
     "status": "Çalışıyor",
-    "disclaimer": "Gösterilen veriler yalnızca bilgilendirme amaçlıdır ve finansal tavsiye niteliği taşımaz. Fiyatlarda 15 dakikaya kadar gecikme olabilir.",
+    "disclaimer": "Yönlendirici bilgiler; hata, eksiklik veya gecikme içerebilir. Finansal tavsiye niteliği taşımaz ve doğruluk garantisi vermez.",
     "glossary": "Sözlük",
     "learn": "Öğren",
     "investmentGuide": "Yatırım rehberi"
@@ -42,7 +42,30 @@
     "subtitle": "Altın (XAU), Gümüş (XAG) ve Platin (XPT) için gerçek zamanlı spot fiyatlar ve profesyonel analiz.",
     "viewDashboard": "Paneli Görüntüle",
     "tools": "Araçlar",
-    "skipToContent": "İçeriğe atla"
+    "skipToContent": "İçeriğe atla",
+    "latestNews": "Son haberler",
+    "latestNewsDesc": "Günlük piyasa analizi, jeopolitik ve makroekonomi.",
+    "viewAllNews": "Tüm haberleri görüntüle",
+    "learnSection": "Öğren",
+    "learnSectionDesc": "Değerli metaller piyasasını anlamak için rehberler ve makaleler.",
+    "viewAllLearn": "Tam sözlüğü görüntüle",
+    "exploreTitle": "Metalorix'i Keşfet",
+    "quickPrices": "Canlı fiyatlar",
+    "quickPricesDesc": "Grafikler ve geçmiş verilerle 5 metal",
+    "quickTools": "Araçlar",
+    "quickToolsDesc": "Oran, dönüştürücü, DCA hesaplayıcı ve daha fazlası",
+    "quickNews": "Haberler",
+    "quickNewsDesc": "Günlük metal piyasa analizi",
+    "quickProducts": "Ürünler",
+    "quickProductsDesc": "Yatırım sikkeleri ve külçeler",
+    "quickLearn": "Öğren",
+    "quickLearnDesc": "Kılavuzlar, sözlük ve eğitim",
+    "quickAlerts": "Uyarılar",
+    "quickAlertsDesc": "E-posta ile fiyat uyarıları",
+    "quickGuide": "Yatırım rehberi",
+    "quickGuideDesc": "Kıymetli metallere nasıl yatırım yapılır",
+    "quickCalendar": "Takvim",
+    "quickCalendarDesc": "Piyasayı hareket ettiren ekonomik olaylar"
   },
   "metals": {
     "gold": "Altın",
@@ -81,7 +104,11 @@
     "change": "Değişim",
     "changePercent": "% Değişim",
     "timeRange": "Zaman aralığı",
-    "recentPrices": "Son fiyat verileri"
+    "recentPrices": "Son fiyat verileri",
+    "marketClosed": "Piyasa kapalı",
+    "marketClosedShort": "Kapalı",
+    "futuresData": "Vadeli işlem verileri",
+    "lastClose": "Son kapanış"
   },
   "tools": {
     "title": "Araçlar",
@@ -95,7 +122,7 @@
     "comparator": "Altın vs Gümüş vs Platin Karşılaştırma",
     "comparatorDesc": "Üç metalin tarihsel performansını tek bir grafikte karşılaştırın.",
     "calendar": "Ekonomik takvim",
-    "calendarDesc": "Yaklaşan önemli olaylar: FOMC, ECB, TÜFE, tarım dışı istihdam ve metallere etkileri.",
+    "calendarDesc": "Yaklaşan önemli olaylar: FOMC, TCMB, ECB, TÜFE, tarım dışı istihdam ve metallere etkileri.",
     "upcoming": "Yakında",
     "technicalIndicators": "Teknik göstergeler",
     "technicalDesc": "Kıymetli metal fiyat grafiklerinde RSI, MACD ve Bollinger Bantları."
@@ -405,7 +432,7 @@
     "quickComparisonDesc": "Kıymetli metallere yatırım yöntemlerinin özet karşılaştırması.",
     "detailedAnalysis": "Yönteme göre detaylı analiz",
     "detailedAnalysisDesc": "Her seçeneğin avantajları, dezavantajları, erişilebilirlik düzeyi ve tahmini maliyetleri.",
-    "etfTitle": "Avrupa'daki başlıca ETF ve ETC'ler",
+    "etfTitle": "Başlıca ETF ve ETC'ler",
     "etfDesc": "Avrupa borsalarında işlem gören fiziksel destekli ürünler. Metale göre filtreleyin ve istediğiniz sütuna göre sıralayın.",
     "etfDisclaimer": "Gösterge niteliğinde veriler. TER ve fon büyüklüğü değişebilir. Yatırım yapmadan önce ürün bilgi formunu inceleyin.",
     "faq": "Sıkça sorulan sorular",
@@ -484,7 +511,7 @@
     "breadcrumb": "Bugün altın fiyatı",
     "whatMoves": "Bugün altın fiyatını ne etkiliyor?",
     "fedDecisions": "ABD Merkez Bankası (Fed) faiz kararları",
-    "inflationData": "ABD ve Avrupa enflasyon verileri (TÜFE)",
+    "inflationData": "ABD, Türkiye, Avrupa ve diğer büyük ekonomilerin enflasyon verileri (TÜFE)",
     "geopolitical": "Jeopolitik gerilimler ve uluslararası çatışmalar",
     "dollarStrength": "ABD dolarının güçlenmesi veya zayıflaması (DXY)",
     "centralBankDemand": "Merkez bankası talebi (Çin, Hindistan, Türkiye)",
@@ -579,7 +606,7 @@
     "gramUnit": "gram",
     "kilogramUnit": "kilogram",
     "whyCurrency": "Altına yatırımda para birimi neden önemlidir?",
-    "whyCurrencyP1": "Altın uluslararası piyasalarda ABD doları (USD) cinsinden kote edilir, ancak yatırımınızın gerçek maliyeti işlem yaptığınız para birimine bağlıdır. Avrupalı bir yatırımcı, euro dolar karşısında güçlenirken USD'de altın yükselirken EUR'da sabit kalmasını görebilir.",
+    "whyCurrencyP1": "Altın uluslararası piyasalarda ABD doları (USD) cinsinden kote edilir, ancak yatırımınızın gerçek maliyeti işlem yaptığınız para birimine bağlıdır. Türk yatırımcı, TL dolar karşısında zayıflarken altının TL cinsinden çok daha hızlı yükseldiğini görebilir.",
     "whyCurrencyP2": "Bu nedenle yerel para biriminizde fiyatı kontrol etmek büyük önem taşır. Bu araç, EUR, GBP, CHF, JPY, AUD, CAD, CNY, INR, MXN ve BRL cinsinden — troy ons, gram ve kilogram bazında güncel fiyatları gösterir.",
     "usDollar": "ABD Doları",
     "euro": "Euro",
@@ -610,7 +637,7 @@
   },
   "calendarPage": {
     "title": "Ekonomik takvim",
-    "subtitle": "Altın, gümüş ve platin fiyatlarını doğrudan etkileyen makroekonomik olaylar. Fed kararlarından enflasyon verilerine kadar.",
+    "subtitle": "Altın, gümüş ve platin fiyatlarını doğrudan etkileyen makroekonomik olaylar. Merkez bankası kararlarından enflasyon verilerine kadar.",
     "breadcrumb": "Ekonomik takvim",
     "upcomingEvents": "Yaklaşan olaylar",
     "allEvents": "Tüm olaylar",
@@ -644,7 +671,7 @@
   "article": {
     "breadcrumbNews": "Haberler",
     "notFound": "Makale bulunamadı — Metalorix",
-    "aiDisclaimer": "Bu makale Metalorix tarafından yapay zeka ve gerçek zamanlı piyasa verileri kullanılarak otomatik olarak oluşturulmuştur. Finansal tavsiye niteliği taşımaz.",
+    "aiDisclaimer": "Bu makale, kamuya açık kaynaklardan (Reuters, Kitco, CNBC, Investing.com vb.) yapay zeka tarafından otomatik olarak oluşturulmuştur. Metalorix, alıntılanan veri veya haberlerin orijinal yazarı değildir. Finansal tavsiye niteliği taşımaz. Makalenin sonundaki orijinal kaynaklara başvurun.",
     "allNews": "Tüm haberler"
   },
   "ratioContent": {
