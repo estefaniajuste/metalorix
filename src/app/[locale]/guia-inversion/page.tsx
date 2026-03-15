@@ -77,7 +77,7 @@ export default async function GuiaInversionPage() {
           {/* Breadcrumb */}
           <nav
             className="text-sm text-content-3 mb-6"
-            aria-label="Breadcrumb"
+            aria-label={tc("breadcrumbNav")}
           >
             <Link
               href="/"

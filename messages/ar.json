@@ -17,6 +17,7 @@
     "toggleTheme": "تبديل المظهر",
     "openMenu": "فتح القائمة",
     "closeMenu": "إغلاق القائمة",
+    "homeLink": "الصفحة الرئيسية لـ Metalorix",
     "metalPrices": "أسعار المعادن",
     "learn": "تعلم",
     "changeLanguage": "تغيير اللغة"
@@ -94,7 +95,10 @@
     "retry": "إعادة المحاولة",
     "live": "مباشر",
     "demo": "تجريبي",
-    "breadcrumbHome": "الرئيسية"
+    "breadcrumbHome": "الرئيسية",
+    "share": "مشاركة",
+    "copied": "تم النسخ",
+    "breadcrumbNav": "مسار التنقل"
   },
   "dashboard": {
     "spotPrices": "الأسعار الفورية",

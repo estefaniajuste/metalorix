@@ -48,7 +48,7 @@ export default async function ProductosPage() {
         <div className="mx-auto max-w-[1200px] px-6">
           <nav
             className="text-sm text-content-3 mb-6"
-            aria-label="Breadcrumb"
+            aria-label={tc("breadcrumbNav")}
           >
             <Link
               href="/"

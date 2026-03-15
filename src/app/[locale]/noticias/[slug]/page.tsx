@@ -224,7 +224,7 @@ export default async function ArticlePage({
       <article className="py-[var(--section-py)]">
         <div className="mx-auto max-w-[780px] px-6">
           {/* Breadcrumb */}
-          <nav className="text-sm text-content-3 mb-6" aria-label="Breadcrumb">
+          <nav className="text-sm text-content-3 mb-6" aria-label={tc("breadcrumbNav")}>
             <Link
               href="/"
               className="hover:text-content-1 transition-colors"

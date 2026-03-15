@@ -17,6 +17,7 @@
     "toggleTheme": "Cambiar tema",
     "openMenu": "Abrir menú",
     "closeMenu": "Cerrar menú",
+    "homeLink": "Inicio de Metalorix",
     "metalPrices": "Precios de metales",
     "learn": "Aprender",
     "changeLanguage": "Cambiar idioma"
@@ -94,7 +95,10 @@
     "retry": "Reintentar",
     "live": "En vivo",
     "demo": "Demo",
-    "breadcrumbHome": "Inicio"
+    "breadcrumbHome": "Inicio",
+    "share": "Compartir",
+    "copied": "Copiado",
+    "breadcrumbNav": "Navegación de migas de pan"
   },
   "dashboard": {
     "spotPrices": "Precios Spot",

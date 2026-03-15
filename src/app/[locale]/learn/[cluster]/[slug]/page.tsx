@@ -267,6 +267,7 @@ export default async function LearnArticlePage({
               },
               { label: title },
             ]}
+            ariaLabel={tc("breadcrumbNav")}
           />
 
           {/* Header */}

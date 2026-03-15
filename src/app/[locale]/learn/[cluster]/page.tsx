@@ -102,6 +102,7 @@ export default async function ClusterPage({
             { label: t("breadcrumb"), href: "/learn" },
             { label: clusterName },
           ]}
+          ariaLabel={tc("breadcrumbNav")}
         />
 
         <header className="mb-10">

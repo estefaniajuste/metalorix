@@ -17,6 +17,7 @@
     "toggleTheme": "Tema değiştir",
     "openMenu": "Menüyü aç",
     "closeMenu": "Menüyü kapat",
+    "homeLink": "Metalorix ana sayfa",
     "metalPrices": "Metal fiyatları",
     "learn": "Öğren",
     "changeLanguage": "Dil değiştir"
@@ -94,7 +95,10 @@
     "retry": "Tekrar dene",
     "live": "Canlı",
     "demo": "Demo",
-    "breadcrumbHome": "Ana sayfa"
+    "breadcrumbHome": "Ana sayfa",
+    "share": "Paylaş",
+    "copied": "Kopyalandı",
+    "breadcrumbNav": "İçerik haritası"
   },
   "dashboard": {
     "spotPrices": "Spot Fiyatlar",

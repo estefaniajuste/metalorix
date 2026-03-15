@@ -17,6 +17,7 @@
     "toggleTheme": "Thema wechseln",
     "openMenu": "Menü öffnen",
     "closeMenu": "Menü schließen",
+    "homeLink": "Metalorix Startseite",
     "metalPrices": "Metallpreise",
     "learn": "Lernen",
     "changeLanguage": "Sprache ändern"
@@ -94,7 +95,10 @@
     "retry": "Erneut versuchen",
     "live": "Live",
     "demo": "Demo",
-    "breadcrumbHome": "Startseite"
+    "breadcrumbHome": "Startseite",
+    "share": "Teilen",
+    "copied": "Kopiert",
+    "breadcrumbNav": "Brotkrümel-Navigation"
   },
   "dashboard": {
     "spotPrices": "Spotpreise",

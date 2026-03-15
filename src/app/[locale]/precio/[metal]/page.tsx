@@ -103,7 +103,7 @@ export default async function PrecioMetalPage({
 
       <section className="py-[var(--section-py)]">
         <div className="mx-auto max-w-[1200px] px-6">
-          <nav className="text-sm text-content-3 mb-6" aria-label="Breadcrumb">
+          <nav className="text-sm text-content-3 mb-6" aria-label={tc("breadcrumbNav")}>
             <Link href="/" className="hover:text-content-1 transition-colors">{tc("breadcrumbHome")}</Link>
             <span className="mx-2">/</span>
             <span className="text-content-1">{t("breadcrumbPrice", { metal: seo.name })}</span>

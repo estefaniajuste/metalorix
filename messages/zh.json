@@ -17,6 +17,7 @@
     "toggleTheme": "切换主题",
     "openMenu": "打开菜单",
     "closeMenu": "关闭菜单",
+    "homeLink": "Metalorix 首页",
     "metalPrices": "金属价格",
     "learn": "学习",
     "changeLanguage": "切换语言"
@@ -94,7 +95,10 @@
     "retry": "重试",
     "live": "实时",
     "demo": "演示",
-    "breadcrumbHome": "首页"
+    "breadcrumbHome": "首页",
+    "share": "分享",
+    "copied": "已复制",
+    "breadcrumbNav": "面包屑导航"
   },
   "dashboard": {
     "spotPrices": "现货价格",

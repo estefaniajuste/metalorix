@@ -109,7 +109,7 @@ export function Nav() {
     <>
       <nav className="sticky top-0 z-50 h-16 bg-surface-1 border-b border-border backdrop-blur-xl transition-colors duration-250 ease-smooth">
         <div className="mx-auto max-w-[1200px] px-6 h-full flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2.5" aria-label="Metalorix Home">
+          <Link href="/" className="flex items-center gap-2.5" aria-label={t("homeLink")}>
             <Logo className="h-8 w-auto" />
           </Link>
 

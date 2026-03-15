@@ -53,7 +53,7 @@ export default async function CalendarioEconomicoPage() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(page) }} />
       <section className="py-[var(--section-py)]">
       <div className="mx-auto max-w-[1200px] px-6">
-        <nav className="text-sm text-content-3 mb-6" aria-label="Breadcrumb">
+        <nav className="text-sm text-content-3 mb-6" aria-label={tc("breadcrumbNav")}>
           <Link href="/" className="hover:text-content-1 transition-colors">
             {tc("breadcrumbHome")}
           </Link>

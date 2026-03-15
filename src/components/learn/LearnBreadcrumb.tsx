@@ -5,7 +5,13 @@ interface BreadcrumbItem {
   href?: string;
 }
 
-export function LearnBreadcrumb({ items }: { items: BreadcrumbItem[] }) {
+export function LearnBreadcrumb({
+  items,
+  ariaLabel = "Breadcrumb",
+}: {
+  items: BreadcrumbItem[];
+  ariaLabel?: string;
+}) {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
@@ -23,7 +29,7 @@ export function LearnBreadcrumb({ items }: { items: BreadcrumbItem[] }) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <nav className="text-sm text-content-3 mb-6" aria-label="Breadcrumb">
+      <nav className="text-sm text-content-3 mb-6" aria-label={ariaLabel}>
         {items.map((item, i) => (
           <span key={i}>
             {i > 0 && <span className="mx-2">/</span>}

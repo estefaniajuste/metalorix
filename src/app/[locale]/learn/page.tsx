@@ -95,6 +95,7 @@ export default async function LearnPage() {
               { label: tc("breadcrumbHome"), href: "/" },
               { label: t("breadcrumb") },
             ]}
+            ariaLabel={tc("breadcrumbNav")}
           />
 
           <header className="mb-12">
