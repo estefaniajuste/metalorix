@@ -1,8 +1,16 @@
 import postgres from "postgres";
+import { config } from "dotenv";
 
-const DATABASE_URL = "postgresql://postgres:Mtlx-Pr0d-2026!@35.187.55.67:5432/metalorix";
-const GEMINI_API_KEY = "AIzaSyBO3KmSOAXo7qMag-Q1f8reHTQDOxmw9r8";
+config({ path: ".env.local" });
+
+const DATABASE_URL = process.env.DATABASE_URL;
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 const MODEL = "gemini-2.5-flash-lite";
+
+if (!DATABASE_URL || !GEMINI_API_KEY) {
+  console.error("Missing DATABASE_URL or GEMINI_API_KEY in .env.local");
+  process.exit(1);
+}
 const TARGET_LOCALE = process.argv[2] || "es";
 const BATCH_SIZE = parseInt(process.argv[3] || "50", 10);
 
