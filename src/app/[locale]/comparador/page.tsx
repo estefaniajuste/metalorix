@@ -15,9 +15,9 @@ export async function generateMetadata({
   return {
     title: t("comparador.title"),
     description: t("comparador.description"),
-    keywords: locale === "en"
-      ? ["gold vs silver", "compare gold silver platinum", "gold vs silver performance", "best precious metals investment", "precious metals comparison"]
-      : ["oro vs plata", "comparar oro plata platino", "rendimiento oro vs plata", "gold vs silver performance", "mejor inversión metales preciosos", "comparativa metales preciosos"],
+    keywords: locale === "es"
+      ? ["oro vs plata", "comparar oro plata platino", "rendimiento oro vs plata", "gold vs silver performance", "mejor inversión metales preciosos", "comparativa metales preciosos"]
+      : ["gold vs silver", "compare gold silver platinum", "gold vs silver performance", "best precious metals investment", "precious metals comparison"],
     alternates: getAlternates(locale, "/comparador"),
     openGraph: {
       title: t("comparador.ogTitle"),

@@ -14,9 +14,9 @@ export async function generateMetadata({
   return {
     title: t("precioGramoOro.title"),
     description: t("precioGramoOro.description"),
-    keywords: locale === "en"
-      ? ["gold price per gram", "gold price per gram today", "gold gram price euros", "how much is a gram of gold", "18 karat gold gram price", "24 karat gold gram price", "gold gram value"]
-      : ["precio gramo oro", "precio gramo oro hoy", "precio gramo oro euros", "cuanto vale un gramo de oro", "precio gramo oro 18 kilates", "precio gramo oro 24 kilates", "valor gramo oro", "cotización gramo oro"],
+    keywords: locale === "es"
+      ? ["precio gramo oro", "precio gramo oro hoy", "precio gramo oro euros", "cuanto vale un gramo de oro", "precio gramo oro 18 kilates", "precio gramo oro 24 kilates", "valor gramo oro", "cotización gramo oro"]
+      : ["gold price per gram", "gold price per gram today", "gold gram price euros", "how much is a gram of gold", "18 karat gold gram price", "24 karat gold gram price", "gold gram value"],
     alternates: getAlternates(locale, "/precio-gramo-oro"),
     openGraph: {
       title: t("precioGramoOro.ogTitle"),

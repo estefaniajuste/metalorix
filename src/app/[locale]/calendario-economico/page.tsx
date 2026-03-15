@@ -3,23 +3,24 @@ import { Link } from "@/i18n/navigation";
 import { getTranslations, getLocale } from "next-intl/server";
 import { EconomicCalendar } from "@/components/tools/EconomicCalendar";
 import { breadcrumbSchema, webPageSchema } from "@/lib/seo/schemas";
+import { getAlternates } from "@/lib/seo/alternates";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("pages");
+  const locale = await getLocale();
+  const alternates = getAlternates(locale, "/calendario-economico");
   return {
     title: t("calendario.title"),
     description: t("calendario.description"),
-    keywords: (await getLocale()) === "en"
-      ? ["economic calendar gold", "FOMC gold", "Fed interest rate meeting", "CPI inflation gold", "NFP non-farm payrolls", "ECB interest rates", "economic events precious metals"]
-      : ["calendario económico oro", "FOMC oro", "reunión Fed tipos interés", "IPC inflación oro", "NFP nóminas no agrícolas", "BCE tipos interés", "eventos económicos metales preciosos"],
-    alternates: {
-      canonical: "https://metalorix.com/calendario-economico",
-    },
+    keywords: locale === "es"
+      ? ["calendario económico oro", "FOMC oro", "reunión Fed tipos interés", "IPC inflación oro", "NFP nóminas no agrícolas", "BCE tipos interés", "eventos económicos metales preciosos"]
+      : ["economic calendar gold", "FOMC gold", "Fed interest rate meeting", "CPI inflation gold", "NFP non-farm payrolls", "ECB interest rates", "economic events precious metals"],
+    alternates,
     openGraph: {
       title: t("calendario.ogTitle"),
       description: t("calendario.ogDescription"),
       type: "website",
-      url: "https://metalorix.com/calendario-economico",
+      url: alternates.canonical,
     },
   };
 }

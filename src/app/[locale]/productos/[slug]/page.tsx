@@ -5,6 +5,7 @@ import { getTranslations, getLocale } from "next-intl/server";
 import { getAlternates } from "@/lib/seo/alternates";
 import { PRODUCTS, getProduct, getLocalizedProducts } from "@/lib/data/products";
 import { ProductSpotPrice } from "@/components/products/ProductSpotPrice";
+import { TaxByCountrySelector } from "@/components/products/TaxByCountrySelector";
 import type { MetalSymbol } from "@/lib/providers/metals";
 
 export function generateStaticParams() {
@@ -77,43 +78,6 @@ function InfoIcon() {
   );
 }
 
-function ShieldIcon() {
-  return (
-    <svg
-      width="18"
-      height="18"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className="text-signal-up"
-    >
-      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-    </svg>
-  );
-}
-
-function TaxIcon() {
-  return (
-    <svg
-      width="18"
-      height="18"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className="text-brand-gold"
-    >
-      <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
-      <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
-    </svg>
-  );
-}
-
 export default async function ProductoPage({
   params,
 }: {
@@ -136,6 +100,12 @@ export default async function ProductoPage({
       ? "bg-[rgba(214,179,90,0.12)] text-brand-gold"
       : "bg-[rgba(167,176,190,0.12)] text-[#A7B0BE]";
 
+  const productsAlternates = getAlternates(locale, "/productos");
+  const productAlternates = getAlternates(locale, {
+    pathname: "/productos/[slug]",
+    params: { slug: product.slug },
+  });
+
   const breadcrumbSchema = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
@@ -150,13 +120,13 @@ export default async function ProductoPage({
         "@type": "ListItem",
         position: 2,
         name: t("breadcrumb"),
-        item: "https://metalorix.com/productos",
+        item: productsAlternates.canonical,
       },
       {
         "@type": "ListItem",
         position: 3,
         name: product.name,
-        item: `https://metalorix.com/productos/${product.slug}`,
+        item: productAlternates.canonical,
       },
     ],
   };
@@ -166,7 +136,7 @@ export default async function ProductoPage({
     "@type": "Product",
     name: product.name,
     description: product.description,
-    url: `https://metalorix.com/productos/${product.slug}`,
+    url: productAlternates.canonical,
     brand: {
       "@type": "Brand",
       name: product.mint,
@@ -348,32 +318,11 @@ export default async function ProductoPage({
                 metalName={product.metal === "oro" ? t("metalGold") : t("metalSilver")}
               />
 
-              {/* Tax card */}
-              <div className="bg-surface-1 border border-border rounded-DEFAULT p-6">
-                <div className="flex items-center gap-2.5 mb-3">
-                  <TaxIcon />
-                  <h3 className="text-base font-semibold text-content-0">
-                    {t("taxTitle")}
-                  </h3>
-                </div>
-                <p className="text-sm text-content-2 leading-relaxed">
-                  {product.vatNote}
-                </p>
-                {product.investmentGold ? (
-                  <div className="mt-3 flex items-center gap-2">
-                    <ShieldIcon />
-                    <span className="text-sm font-medium text-signal-up">
-                      {t("vatExempt")}
-                    </span>
-                  </div>
-                ) : (
-                  <div className="mt-3 px-3 py-2 bg-signal-down-bg rounded-xs">
-                    <span className="text-sm font-medium text-signal-down">
-                      {t("vatApplicable")}
-                    </span>
-                  </div>
-                )}
-              </div>
+              {/* Tax card — per-country selector */}
+              <TaxByCountrySelector
+                isInvestmentGold={product.investmentGold}
+                metal={product.metal}
+              />
 
               {/* Related products */}
               {relatedProducts.length > 0 && (

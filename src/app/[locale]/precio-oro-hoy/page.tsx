@@ -14,9 +14,9 @@ export async function generateMetadata({
   return {
     title: t("precioOroHoy.title"),
     description: t("precioOroHoy.description"),
-    keywords: locale === "en"
-      ? ["gold price today", "gold quote today", "gold price real time", "xau usd today", "gold ounce price today", "gold value today"]
-      : ["precio oro hoy", "cotización oro hoy", "precio oro tiempo real", "gold price today", "xau usd hoy", "precio onza oro hoy", "valor del oro hoy"],
+    keywords: locale === "es"
+      ? ["precio oro hoy", "cotización oro hoy", "precio oro tiempo real", "gold price today", "xau usd hoy", "precio onza oro hoy", "valor del oro hoy"]
+      : ["gold price today", "gold quote today", "gold price real time", "xau usd today", "gold ounce price today", "gold value today"],
     alternates: getAlternates(locale, "/precio-oro-hoy"),
     openGraph: {
       title: t("precioOroHoy.ogTitle"),

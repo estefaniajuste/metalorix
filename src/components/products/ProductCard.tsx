@@ -1,4 +1,7 @@
+"use client";
+
 import { Link } from "@/i18n/navigation";
+import { useTranslations } from "next-intl";
 import type { Product } from "@/lib/data/products";
 
 const metalColors: Record<string, { dot: string; badge: string }> = {
@@ -10,11 +13,6 @@ const metalColors: Record<string, { dot: string; badge: string }> = {
     dot: "#A7B0BE",
     badge: "bg-[rgba(167,176,190,0.12)] text-[#A7B0BE]",
   },
-};
-
-const typeLabels: Record<string, string> = {
-  moneda: "Moneda",
-  lingote: "Lingote",
 };
 
 function ArrowIcon() {
@@ -34,6 +32,7 @@ function ArrowIcon() {
 
 export function ProductCard({ product }: { product: Product }) {
   const colors = metalColors[product.metal];
+  const t = useTranslations("products");
 
   return (
     <Link
@@ -59,21 +58,21 @@ export function ProductCard({ product }: { product: Product }) {
 
       <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-xs mb-4">
         <div>
-          <span className="text-content-3">Pureza</span>
+          <span className="text-content-3">{t("cardPurity")}</span>
           <div className="font-medium text-content-1">{product.purityLabel.split(" ")[0]}</div>
         </div>
         <div>
-          <span className="text-content-3">Peso fino</span>
+          <span className="text-content-3">{t("cardFineWeight")}</span>
           <div className="font-medium text-content-1">
             {product.fineWeightOz === 1 ? "1 oz troy" : `${product.grossWeightG} g`}
           </div>
         </div>
         <div>
-          <span className="text-content-3">Prima</span>
+          <span className="text-content-3">{t("cardPremium")}</span>
           <div className="font-medium text-content-1">{product.premiumRange}</div>
         </div>
         <div>
-          <span className="text-content-3">Liquidez</span>
+          <span className="text-content-3">{t("cardLiquidity")}</span>
           <div className="font-medium text-content-1">{product.liquidity}</div>
         </div>
       </div>
@@ -82,14 +81,14 @@ export function ProductCard({ product }: { product: Product }) {
         <span
           className={`text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full ${colors.badge}`}
         >
-          {product.metal}
+          {product.metal === "oro" ? t("metalGold") : t("metalSilver")}
         </span>
         <span className="text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full bg-surface-2 text-content-3">
-          {typeLabels[product.type]}
+          {product.type === "moneda" ? t("typeCoin") : t("typeBar")}
         </span>
         {product.investmentGold && (
           <span className="text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full bg-signal-up-bg text-signal-up">
-            Exento IVA
+            {t("vatExempt")}
           </span>
         )}
       </div>

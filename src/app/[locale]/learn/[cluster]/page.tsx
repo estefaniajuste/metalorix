@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getTranslations } from "next-intl/server";
+import { getTranslations, getLocale } from "next-intl/server";
+import { getAlternates } from "@/lib/seo/alternates";
 import { TAXONOMY } from "@/lib/learn/taxonomy";
 import { ALL_TOPICS } from "@/lib/learn/topics";
 import { LearnBreadcrumb } from "@/components/learn/LearnBreadcrumb";
@@ -17,20 +18,25 @@ export async function generateMetadata({
 }: {
   params: { cluster: string };
 }): Promise<Metadata> {
+  const locale = await getLocale();
+  const t = await getTranslations({ locale, namespace: "learnSection" });
   const cluster = TAXONOMY.find((c) => c.slug === params.cluster);
-  if (!cluster) return { title: "Not Found — Metalorix" };
+  if (!cluster) return { title: t("notFound") };
+
+  const alternates = getAlternates(locale, {
+    pathname: "/learn/[cluster]",
+    params: { cluster: cluster.slug },
+  });
 
   return {
-    title: `${cluster.nameEn} — Learn | Metalorix`,
+    title: `${cluster.nameEn} — ${t("breadcrumb")} | Metalorix`,
     description: cluster.descriptionEn,
     openGraph: {
-      title: `${cluster.nameEn} — Learn | Metalorix`,
+      title: `${cluster.nameEn} — ${t("breadcrumb")} | Metalorix`,
       description: cluster.descriptionEn,
-      url: `https://metalorix.com/learn/${cluster.slug}`,
+      url: alternates.canonical,
     },
-    alternates: {
-      canonical: `https://metalorix.com/learn/${cluster.slug}`,
-    },
+    alternates,
   };
 }
 
@@ -40,13 +46,14 @@ export default async function ClusterPage({
   params: { cluster: string };
 }) {
   const tc = await getTranslations("common");
+  const t = await getTranslations("learnSection");
   const cluster = TAXONOMY.find((c) => c.slug === params.cluster);
   if (!cluster) notFound();
 
   const clusterTopics = ALL_TOPICS.filter(
-    (t) => t.clusterSlug === cluster.slug
+    (tp) => tp.clusterSlug === cluster.slug
   );
-  const pillarTopics = clusterTopics.filter((t) => t.isPillar);
+  const pillarTopics = clusterTopics.filter((tp) => tp.isPillar);
 
   return (
     <section className="py-[var(--section-py)]">
@@ -54,7 +61,7 @@ export default async function ClusterPage({
         <LearnBreadcrumb
           items={[
             { label: tc("breadcrumbHome"), href: "/" },
-            { label: "Learn", href: "/learn" },
+            { label: t("breadcrumb"), href: "/learn" },
             { label: cluster.nameEn },
           ]}
         />
@@ -67,16 +74,16 @@ export default async function ClusterPage({
             {cluster.descriptionEn}
           </p>
           <p className="text-sm text-content-3 mt-3">
-            {clusterTopics.length} articles across{" "}
-            {cluster.subclusters.length} topics
+            {t("articlesCount", { count: clusterTopics.length })}
+            {" · "}
+            {t("topicsCount", { count: cluster.subclusters.length })}
           </p>
         </header>
 
-        {/* Pillar articles */}
         {pillarTopics.length > 0 && (
           <div className="mb-10">
             <h2 className="text-sm font-semibold text-content-3 uppercase tracking-wider mb-4">
-              Start Here
+              {t("startHere")}
             </h2>
             <div className="grid gap-3 sm:grid-cols-2">
               {pillarTopics.map((topic) => (
@@ -95,10 +102,9 @@ export default async function ClusterPage({
           </div>
         )}
 
-        {/* Subclusters */}
         {cluster.subclusters.map((sub) => {
           const subTopics = clusterTopics
-            .filter((t) => t.subclusterSlug === sub.slug && !t.isPillar)
+            .filter((tp) => tp.subclusterSlug === sub.slug && !tp.isPillar)
             .sort((a, b) => a.priority - b.priority);
 
           if (subTopics.length === 0) return null;

@@ -73,7 +73,7 @@ export const PRODUCTS: Product[] = [
     liquidity: "Muy alta",
     investmentGold: true,
     vatNote:
-      "Exenta de IVA en España como oro de inversión (ley ≥ 900 milésimas, acuñada después de 1800, curso legal en país de origen).",
+      "Clasificado como oro de inversión en la mayoría de jurisdicciones (ley ≥ 900 milésimas, acuñada después de 1800, curso legal en país de origen). Consulta la fiscalidad de tu país.",
     idealFor:
       "Inversores que buscan la moneda de oro más reconocida del mundo, con la máxima liquidez en el mercado secundario.",
     description:
@@ -88,12 +88,12 @@ export const PRODUCTS: Product[] = [
     seo: {
       title: "Krugerrand 1 oz Oro — Ficha, precio y características",
       description:
-        "Ficha completa del Krugerrand de oro 1 oz: pureza, peso fino, prima sobre spot, liquidez, fiscalidad en España y para qué perfil de inversor es ideal.",
+        "Ficha completa del Krugerrand de oro 1 oz: pureza, peso fino, prima sobre spot, liquidez, fiscalidad y para qué perfil de inversor es ideal.",
       keywords: [
         "Krugerrand oro",
         "Krugerrand precio",
         "moneda oro Sudáfrica",
-        "comprar Krugerrand España",
+        "comprar Krugerrand",
         "Krugerrand 1 oz",
       ],
     },
@@ -118,7 +118,7 @@ export const PRODUCTS: Product[] = [
     liquidity: "Muy alta",
     investmentGold: true,
     vatNote:
-      "Exenta de IVA en España como oro de inversión (ley ≥ 900 milésimas, curso legal en Canadá).",
+      "Clasificado como oro de inversión en la mayoría de jurisdicciones (ley ≥ 900 milésimas, acuñada después de 1800, curso legal en país de origen). Consulta la fiscalidad de tu país.",
     idealFor:
       "Inversores que priorizan la máxima pureza (oro 24k) combinada con alta liquidez global y tecnología anti-falsificación avanzada.",
     description:
@@ -133,12 +133,12 @@ export const PRODUCTS: Product[] = [
     seo: {
       title: "Maple Leaf 1 oz Oro — Ficha, precio y características",
       description:
-        "Ficha completa de la Maple Leaf de oro 1 oz: pureza 999,9, peso, prima sobre spot, liquidez, fiscalidad en España y para qué inversor es ideal.",
+        "Ficha completa de la Maple Leaf de oro 1 oz: pureza 999,9, peso, prima sobre spot, liquidez, fiscalidad y para qué inversor es ideal.",
       keywords: [
         "Maple Leaf oro",
         "Maple Leaf precio",
         "moneda oro Canadá",
-        "comprar Maple Leaf España",
+        "comprar Maple Leaf",
         "Maple Leaf 1 oz oro",
       ],
     },
@@ -163,7 +163,7 @@ export const PRODUCTS: Product[] = [
     liquidity: "Muy alta",
     investmentGold: true,
     vatNote:
-      "Exenta de IVA en España como oro de inversión. Incluida en la lista oficial de monedas de oro de inversión publicada por la UE.",
+      "Clasificado como oro de inversión en la mayoría de jurisdicciones (ley ≥ 900 milésimas, acuñada después de 1800, curso legal en país de origen). Consulta la fiscalidad de tu país.",
     idealFor:
       "Inversores europeos que quieren una moneda de máxima pureza emitida dentro de la zona euro, con alta liquidez y amplia aceptación en Europa.",
     description:
@@ -178,12 +178,12 @@ export const PRODUCTS: Product[] = [
     seo: {
       title: "Filarmónica de Viena 1 oz Oro — Ficha, precio y características",
       description:
-        "Ficha completa de la Filarmónica de Viena de oro 1 oz: pureza 999,9, peso, prima, liquidez, fiscalidad en España y perfil de inversor ideal.",
+        "Ficha completa de la Filarmónica de Viena de oro 1 oz: pureza 999,9, peso, prima, liquidez, fiscalidad y perfil de inversor ideal.",
       keywords: [
         "Filarmónica oro",
         "Philharmoniker oro",
         "moneda oro Austria",
-        "comprar Filarmónica España",
+        "comprar Filarmónica",
         "Filarmónica Viena 1 oz",
       ],
     },
@@ -208,7 +208,7 @@ export const PRODUCTS: Product[] = [
     liquidity: "Alta",
     investmentGold: true,
     vatNote:
-      "Exenta de IVA en España como oro de inversión. Incluida en la lista oficial de la UE.",
+      "Clasificado como oro de inversión en la mayoría de jurisdicciones (ley ≥ 900 milésimas, acuñada después de 1800, curso legal en país de origen). Consulta la fiscalidad de tu país.",
     idealFor:
       "Inversores que buscan una moneda de máxima pureza con el respaldo de The Royal Mint y buena liquidez internacional.",
     description:
@@ -223,12 +223,12 @@ export const PRODUCTS: Product[] = [
     seo: {
       title: "Britannia 1 oz Oro — Ficha, precio y características",
       description:
-        "Ficha completa de la Britannia de oro 1 oz: pureza, peso fino, prima sobre spot, liquidez, fiscalidad en España y perfil de inversor.",
+        "Ficha completa de la Britannia de oro 1 oz: pureza, peso fino, prima sobre spot, liquidez, fiscalidad y perfil de inversor.",
       keywords: [
         "Britannia oro",
         "Britannia oro precio",
         "moneda oro Reino Unido",
-        "comprar Britannia España",
+        "comprar Britannia",
         "Britannia 1 oz oro",
       ],
     },
@@ -253,7 +253,7 @@ export const PRODUCTS: Product[] = [
     liquidity: "Muy alta",
     investmentGold: true,
     vatNote:
-      "Exenta de IVA en España como oro de inversión (ley ≥ 900 milésimas, acuñada después de 1800, curso legal en EE.UU.).",
+      "Clasificado como oro de inversión en la mayoría de jurisdicciones (ley ≥ 900 milésimas, acuñada después de 1800, curso legal en país de origen). Consulta la fiscalidad de tu país.",
     idealFor:
       "Inversores que valoran la máxima liquidez global, especialmente en mercados americanos, y la garantía del gobierno de EE.UU.",
     description:
@@ -268,12 +268,12 @@ export const PRODUCTS: Product[] = [
     seo: {
       title: "American Eagle 1 oz Oro — Ficha, precio y características",
       description:
-        "Ficha completa del American Gold Eagle 1 oz: pureza, peso, prima sobre spot, liquidez, fiscalidad en España y para qué inversor es ideal.",
+        "Ficha completa del American Gold Eagle 1 oz: pureza, peso, prima sobre spot, liquidez, fiscalidad y para qué inversor es ideal.",
       keywords: [
         "American Eagle oro",
         "Gold Eagle precio",
         "moneda oro Estados Unidos",
-        "comprar American Eagle España",
+        "comprar American Eagle",
         "Eagle 1 oz oro",
       ],
     },
@@ -300,7 +300,7 @@ export const PRODUCTS: Product[] = [
     liquidity: "Muy alta",
     investmentGold: false,
     vatNote:
-      "Sujeta a IVA en España (21 %). La plata NO tiene el régimen especial del oro de inversión. Algunos dealers europeos ofrecen almacenamiento en Alemania con IVA diferencial.",
+      "La plata no se beneficia del régimen especial del oro de inversión en la mayoría de jurisdicciones. Consulta la fiscalidad de tu país.",
     idealFor:
       "Inversores en plata que quieren la referencia del mercado: máxima pureza, máxima liquidez y tecnología anti-falsificación.",
     description:
@@ -315,7 +315,7 @@ export const PRODUCTS: Product[] = [
     seo: {
       title: "Maple Leaf 1 oz Plata — Ficha, precio y características",
       description:
-        "Ficha completa de la Maple Leaf de plata 1 oz: pureza 999,9, peso, prima sobre spot, liquidez, IVA en España y perfil de inversor.",
+        "Ficha completa de la Maple Leaf de plata 1 oz: pureza 999,9, peso, prima sobre spot, liquidez, fiscalidad y perfil de inversor.",
       keywords: [
         "Maple Leaf plata",
         "Maple Leaf plata precio",
@@ -345,7 +345,7 @@ export const PRODUCTS: Product[] = [
     liquidity: "Muy alta",
     investmentGold: false,
     vatNote:
-      "Sujeta a IVA en España (21 %). Muchos inversores europeos compran en Estonia (IVA 0 % en monedas de curso legal) o almacenan en Alemania con IVA diferencial.",
+      "La plata no se beneficia del régimen especial del oro de inversión en la mayoría de jurisdicciones. Consulta la fiscalidad de tu país.",
     idealFor:
       "Inversores europeos que quieren acumular plata en monedas con denominación en euros y alta liquidez en el continente.",
     description:
@@ -361,7 +361,7 @@ export const PRODUCTS: Product[] = [
       title:
         "Filarmónica de Viena 1 oz Plata — Ficha, precio y características",
       description:
-        "Ficha completa de la Filarmónica de Viena de plata 1 oz: pureza, peso, prima, liquidez, IVA en España y perfil de inversor ideal.",
+        "Ficha completa de la Filarmónica de Viena de plata 1 oz: pureza, peso, prima, liquidez, fiscalidad y perfil de inversor ideal.",
       keywords: [
         "Filarmónica plata",
         "Philharmoniker plata",
@@ -391,7 +391,7 @@ export const PRODUCTS: Product[] = [
     liquidity: "Alta",
     investmentGold: false,
     vatNote:
-      "Sujeta a IVA en España (21 %). Tras el Brexit, la Britannia de plata ya no tiene ventajas fiscales dentro de la UE.",
+      "La plata no se beneficia del régimen especial del oro de inversión en la mayoría de jurisdicciones. Consulta la fiscalidad de tu país.",
     idealFor:
       "Inversores que valoran el prestigio de The Royal Mint y buscan diversificar con una moneda de plata de alta calidad.",
     description:
@@ -406,7 +406,7 @@ export const PRODUCTS: Product[] = [
     seo: {
       title: "Britannia 1 oz Plata — Ficha, precio y características",
       description:
-        "Ficha completa de la Britannia de plata 1 oz: pureza, peso fino, prima sobre spot, liquidez, IVA en España y perfil de inversor.",
+        "Ficha completa de la Britannia de plata 1 oz: pureza, peso fino, prima sobre spot, liquidez, fiscalidad y perfil de inversor.",
       keywords: [
         "Britannia plata",
         "Britannia plata precio",
@@ -436,7 +436,7 @@ export const PRODUCTS: Product[] = [
     liquidity: "Muy alta",
     investmentGold: false,
     vatNote:
-      "Sujeta a IVA en España (21 %). En EE.UU. puede estar exenta de sales tax dependiendo del estado.",
+      "La plata no se beneficia del régimen especial del oro de inversión en la mayoría de jurisdicciones. Consulta la fiscalidad de tu país.",
     idealFor:
       "Inversores que quieren la moneda de plata más reconocida del mundo, con máxima liquidez especialmente en mercados americanos.",
     description:
@@ -451,12 +451,12 @@ export const PRODUCTS: Product[] = [
     seo: {
       title: "American Eagle 1 oz Plata — Ficha, precio y características",
       description:
-        "Ficha completa del American Silver Eagle 1 oz: pureza, peso, prima sobre spot, liquidez, IVA en España y perfil de inversor ideal.",
+        "Ficha completa del American Silver Eagle 1 oz: pureza, peso, prima sobre spot, liquidez, fiscalidad y perfil de inversor ideal.",
       keywords: [
         "American Eagle plata",
         "Silver Eagle precio",
         "moneda plata Estados Unidos",
-        "comprar Silver Eagle España",
+        "comprar Silver Eagle",
         "Eagle 1 oz plata",
       ],
     },
@@ -480,7 +480,8 @@ export const PRODUCTS: Product[] = [
     premiumRange: "20–35 %",
     liquidity: "Alta",
     investmentGold: false,
-    vatNote: "Sujeta a IVA en España (21 %).",
+    vatNote:
+      "La plata no se beneficia del régimen especial del oro de inversión en la mayoría de jurisdicciones. Consulta la fiscalidad de tu país.",
     idealFor:
       "Inversores que ya conocen el Krugerrand de oro y quieren diversificar en plata manteniendo la misma marca reconocida.",
     description:
@@ -495,7 +496,7 @@ export const PRODUCTS: Product[] = [
     seo: {
       title: "Krugerrand 1 oz Plata — Ficha, precio y características",
       description:
-        "Ficha completa del Krugerrand de plata 1 oz: pureza, peso fino, prima sobre spot, liquidez, IVA en España y perfil de inversor.",
+        "Ficha completa del Krugerrand de plata 1 oz: pureza, peso fino, prima sobre spot, liquidez, fiscalidad y perfil de inversor.",
       keywords: [
         "Krugerrand plata",
         "Krugerrand plata precio",
@@ -525,7 +526,7 @@ export const PRODUCTS: Product[] = [
     liquidity: "Muy alta",
     investmentGold: true,
     vatNote:
-      "Exento de IVA en España como oro de inversión (lingote de ley igual o superior a 995 milésimas).",
+      "Clasificado como oro de inversión en la mayoría de jurisdicciones (lingote de ley ≥ 995 milésimas). Consulta la fiscalidad de tu país.",
     idealFor:
       "Inversores que quieren la menor prima posible por onza de oro. Ideal como unidad estándar de acumulación.",
     description:
@@ -540,11 +541,11 @@ export const PRODUCTS: Product[] = [
     seo: {
       title: "Lingote de Oro 1 oz — Ficha, precio y características",
       description:
-        "Ficha completa del lingote de oro de 1 oz: pureza, peso, prima sobre spot, refinadoras LBMA, fiscalidad en España y perfil de inversor.",
+        "Ficha completa del lingote de oro de 1 oz: pureza, peso, prima sobre spot, refinadoras LBMA, fiscalidad y perfil de inversor.",
       keywords: [
         "lingote oro 1 oz",
         "lingote oro precio",
-        "comprar lingote oro España",
+        "comprar lingote oro",
         "lingote PAMP oro",
         "lingote oro inversión",
       ],
@@ -568,7 +569,7 @@ export const PRODUCTS: Product[] = [
     liquidity: "Alta",
     investmentGold: true,
     vatNote:
-      "Exento de IVA en España como oro de inversión (lingote ley ≥ 995 milésimas).",
+      "Clasificado como oro de inversión en la mayoría de jurisdicciones (lingote de ley ≥ 995 milésimas). Consulta la fiscalidad de tu país.",
     idealFor:
       "Inversores con mayor capital que buscan optimizar la prima por gramo. Buen equilibrio entre coste, liquidez y almacenamiento.",
     description:
@@ -583,12 +584,12 @@ export const PRODUCTS: Product[] = [
     seo: {
       title: "Lingote de Oro 100 g — Ficha, precio y características",
       description:
-        "Ficha completa del lingote de oro de 100 g: pureza, peso, prima sobre spot, refinadoras, fiscalidad en España y perfil de inversor ideal.",
+        "Ficha completa del lingote de oro de 100 g: pureza, peso, prima sobre spot, refinadoras, fiscalidad y perfil de inversor ideal.",
       keywords: [
         "lingote oro 100g",
         "lingote oro 100 gramos precio",
         "comprar lingote oro 100g",
-        "lingote oro inversión España",
+        "lingote oro inversión",
         "lingote PAMP 100g",
       ],
     },
@@ -611,7 +612,7 @@ export const PRODUCTS: Product[] = [
     liquidity: "Media",
     investmentGold: true,
     vatNote:
-      "Exento de IVA en España como oro de inversión (lingote ley ≥ 995 milésimas).",
+      "Clasificado como oro de inversión en la mayoría de jurisdicciones (lingote de ley ≥ 995 milésimas). Consulta la fiscalidad de tu país.",
     idealFor:
       "Grandes inversores que buscan la menor prima posible y priorizan el coste total sobre la liquidez inmediata.",
     description:
@@ -626,7 +627,7 @@ export const PRODUCTS: Product[] = [
     seo: {
       title: "Lingote de Oro 1 kg — Ficha, precio y características",
       description:
-        "Ficha completa del lingote de oro de 1 kg: pureza, peso, prima sobre spot, refinadoras LBMA, fiscalidad en España y perfil de inversor.",
+        "Ficha completa del lingote de oro de 1 kg: pureza, peso, prima sobre spot, refinadoras LBMA, fiscalidad y perfil de inversor.",
       keywords: [
         "lingote oro 1 kg",
         "lingote oro kilo precio",
@@ -654,26 +655,26 @@ export const PRODUCTS: Product[] = [
     liquidity: "Alta",
     investmentGold: false,
     vatNote:
-      "Sujeto a IVA en España (21 %). La plata no tiene exención como el oro de inversión. Algunos dealers ofrecen almacenamiento en depósito aduanero o en países con IVA diferencial.",
+      "La plata no se beneficia del régimen especial del oro de inversión en la mayoría de jurisdicciones. Consulta la fiscalidad de tu país.",
     idealFor:
       "Inversores en plata que quieren minimizar la prima por onza y no les importa el peso/volumen. El formato más eficiente para acumular plata.",
     description:
-      "El lingote de plata de 1 kilogramo es el formato más popular para inversión seria en plata física. Contiene 32,15 onzas troy de plata y ofrece la mejor relación prima/peso del mercado de plata (excluyendo lingotes mayores de 5 o 15 kg). El principal inconveniente es el IVA del 21 % en España, que encarece significativamente la entrada. Muchos inversores compran a dealers en Estonia o almacenan en Alemania para optimizar fiscalmente.",
+      "El lingote de plata de 1 kilogramo es el formato más popular para inversión seria en plata física. Contiene 32,15 onzas troy de plata y ofrece la mejor relación prima/peso del mercado de plata (excluyendo lingotes mayores de 5 o 15 kg). El principal inconveniente es el impuesto (IVA u otros según la jurisdicción), que encarece significativamente la entrada frente al oro de inversión, que suele estar exento.",
     highlights: [
       "Formato estándar de inversión en plata — mejor prima/peso que monedas",
       "32,15 onzas troy por lingote — mucho más eficiente que comprar moneda a moneda",
       "Fabricados por refinadoras LBMA con certificado de ensayo",
-      "El IVA del 21 % en España es el principal inconveniente vs. el oro (exento)",
-      "Considerar almacenamiento en depósito aduanero para diferir IVA",
+      "El impuesto (IVA u otro según jurisdicción) es el principal inconveniente vs. el oro de inversión (exento en la mayoría de países)",
+      "Considerar opciones de almacenamiento fiscalmente eficientes según tu país",
     ],
     seo: {
       title: "Lingote de Plata 1 kg — Ficha, precio y características",
       description:
-        "Ficha completa del lingote de plata de 1 kg: pureza, peso, prima sobre spot, IVA en España, refinadoras LBMA y perfil de inversor.",
+        "Ficha completa del lingote de plata de 1 kg: pureza, peso, prima sobre spot, fiscalidad, refinadoras LBMA y perfil de inversor.",
       keywords: [
         "lingote plata 1 kg",
         "lingote plata kilo precio",
-        "comprar lingote plata España",
+        "comprar lingote plata",
         "lingote plata inversión",
         "lingote plata LBMA",
       ],
@@ -688,7 +689,7 @@ const PRODUCTS_EN: Record<string, ProductTexts> = {
     country: "South Africa",
     purityLabel: "916.7 millesimal (22 karats)",
     liquidity: "Very high",
-    vatNote: "VAT exempt in the EU as investment gold (fineness ≥ 900, minted after 1800, legal tender in country of origin).",
+    vatNote: "Classified as investment gold in most jurisdictions (fineness ≥ 900, minted after 1800, legal tender). Check the tax treatment in your country.",
     idealFor: "Investors seeking the world's most recognized gold coin, with maximum liquidity on the secondary market.",
     description: "The Krugerrand was the first modern investment gold coin, launched in 1967 by South Africa to promote the sale of South African gold in international markets. It quickly became the industry standard. Its 22-karat alloy (with copper) gives it greater wear resistance than pure gold coins, while maintaining exactly 1 troy ounce of fine gold.",
     highlights: [
@@ -710,7 +711,7 @@ const PRODUCTS_EN: Record<string, ProductTexts> = {
     country: "Canada",
     purityLabel: "999.9 millesimal (24 karats)",
     liquidity: "Very high",
-    vatNote: "VAT exempt in the EU as investment gold (fineness ≥ 900, legal tender in Canada).",
+    vatNote: "Classified as investment gold in most jurisdictions (fineness ≥ 900, minted after 1800, legal tender). Check the tax treatment in your country.",
     idealFor: "Investors who prioritize maximum purity (24k gold) combined with high global liquidity and advanced anti-counterfeiting technology.",
     description: "The Canadian Maple Leaf is one of the purest investment gold coins in the world, with a gold content of 999.9 millesimal fineness. It was the first bullion coin to reach this purity in 1982. The Royal Canadian Mint incorporates advanced security technology (laser micro-engraving, DNA mark) making it virtually impossible to counterfeit.",
     highlights: [
@@ -732,7 +733,7 @@ const PRODUCTS_EN: Record<string, ProductTexts> = {
     country: "Austria",
     purityLabel: "999.9 millesimal (24 karats)",
     liquidity: "Very high",
-    vatNote: "VAT exempt in the EU as investment gold. Included in the official EU list of investment gold coins.",
+    vatNote: "Classified as investment gold in most jurisdictions (fineness ≥ 900, minted after 1800, legal tender). Check the tax treatment in your country.",
     idealFor: "European investors looking for a maximum-purity coin issued within the eurozone, with high liquidity and broad acceptance across Europe.",
     description: "The Vienna Philharmonic (Wiener Philharmoniker) is the best-selling investment gold coin in Europe and one of the most popular worldwide. Issued by the Austrian Mint (one of the oldest in the world, founded in 1194), it combines maximum purity with an iconic design honouring the Vienna Philharmonic Orchestra. Its face value is denominated in euros.",
     highlights: [
@@ -754,7 +755,7 @@ const PRODUCTS_EN: Record<string, ProductTexts> = {
     country: "United Kingdom",
     purityLabel: "999.9 millesimal (24 karats, since 2013)",
     liquidity: "High",
-    vatNote: "VAT exempt in the EU as investment gold. Included in the official EU list.",
+    vatNote: "Classified as investment gold in most jurisdictions (fineness ≥ 900, minted after 1800, legal tender). Check the tax treatment in your country.",
     idealFor: "Investors seeking a maximum-purity coin backed by The Royal Mint with good international liquidity.",
     description: "The Britannia is the United Kingdom's investment gold coin, issued by The Royal Mint since 1987. Since 2013 it has been minted in 999.9 gold (previously 916.7). It incorporates four advanced security features, including a latent image and micro-text. It is legal tender in the UK with a face value of 100 GBP.",
     highlights: [
@@ -776,7 +777,7 @@ const PRODUCTS_EN: Record<string, ProductTexts> = {
     country: "United States",
     purityLabel: "916.7 millesimal (22 karats)",
     liquidity: "Very high",
-    vatNote: "VAT exempt in the EU as investment gold (fineness ≥ 900, minted after 1800, legal tender in the US).",
+    vatNote: "Classified as investment gold in most jurisdictions (fineness ≥ 900, minted after 1800, legal tender). Check the tax treatment in your country.",
     idealFor: "Investors who value maximum global liquidity, especially in American markets, and the backing of the US government.",
     description: "The American Gold Eagle is the official investment gold coin of the United States, minted by the U.S. Mint since 1986. Like the Krugerrand, it uses a 22-karat alloy (gold, copper, and silver) for greater durability, but contains exactly 1 troy ounce of pure gold. In 2021, the reverse was redesigned for the first time in 35 years, improving security features.",
     highlights: [
@@ -798,7 +799,7 @@ const PRODUCTS_EN: Record<string, ProductTexts> = {
     country: "Canada",
     purityLabel: "999.9 millesimal",
     liquidity: "Very high",
-    vatNote: "Subject to VAT (rate varies by country). Silver does not benefit from the investment gold VAT exemption. Some European dealers offer storage in Germany with differential VAT.",
+    vatNote: "Silver does not benefit from the investment gold tax exemption in most jurisdictions. Check the tax treatment in your country.",
     idealFor: "Silver investors who want the market reference: maximum purity, maximum liquidity and anti-counterfeiting technology.",
     description: "The Silver Maple Leaf is the purest investment silver coin on the market (999.9 millesimal) and one of the most traded worldwide. It shares the security technology of its gold version, including laser micro-engraving and the radial mark. It is the standard choice for silver stackers around the world.",
     highlights: [
@@ -820,7 +821,7 @@ const PRODUCTS_EN: Record<string, ProductTexts> = {
     country: "Austria",
     purityLabel: "999 millesimal",
     liquidity: "Very high",
-    vatNote: "Subject to VAT (rate varies by country). Many European investors buy in Estonia (0% VAT on legal tender coins) or store in Germany with differential VAT.",
+    vatNote: "Silver does not benefit from the investment gold tax exemption in most jurisdictions. Check the tax treatment in your country.",
     idealFor: "European investors looking to accumulate silver in euro-denominated coins with high continental liquidity.",
     description: "The Vienna Philharmonic in silver shares the iconic design of its gold version and is the best-selling silver coin in Europe. With a face value of €1.50, it is legal tender in Austria and the entire eurozone. Its popularity in Europe makes it especially easy to sell on the continental secondary market.",
     highlights: [
@@ -842,7 +843,7 @@ const PRODUCTS_EN: Record<string, ProductTexts> = {
     country: "United Kingdom",
     purityLabel: "999 millesimal",
     liquidity: "High",
-    vatNote: "Subject to VAT (rate varies by country). After Brexit, the Silver Britannia no longer has tax advantages within the EU.",
+    vatNote: "Silver does not benefit from the investment gold tax exemption in most jurisdictions. Check the tax treatment in your country.",
     idealFor: "Investors who value The Royal Mint's prestige and seek to diversify with a high-quality silver coin.",
     description: "The Silver Britannia is the United Kingdom's investment silver coin, issued by The Royal Mint. It incorporates the same advanced security features as the gold version, with four anti-counterfeiting elements. Since 2021, it has been minted in 999 millesimal silver (previously 958).",
     highlights: [
@@ -864,7 +865,7 @@ const PRODUCTS_EN: Record<string, ProductTexts> = {
     country: "United States",
     purityLabel: "999 millesimal",
     liquidity: "Very high",
-    vatNote: "Subject to VAT (rate varies by country). In the US, it may be exempt from sales tax depending on the state.",
+    vatNote: "Silver does not benefit from the investment gold tax exemption in most jurisdictions. Check the tax treatment in your country.",
     idealFor: "Investors wanting the world's most recognized silver coin, with maximum liquidity especially in American markets.",
     description: "The American Silver Eagle is the world's best-selling investment silver coin. Issued by the U.S. Mint since 1986 with the iconic Walking Liberty design, it was redesigned in 2021 with a new reverse (landing eagle) and security improvements. Its premiums tend to be higher than European competitors, but its liquidity is unmatched.",
     highlights: [
@@ -886,7 +887,7 @@ const PRODUCTS_EN: Record<string, ProductTexts> = {
     country: "South Africa",
     purityLabel: "999 millesimal",
     liquidity: "High",
-    vatNote: "Subject to VAT (rate varies by country).",
+    vatNote: "Silver does not benefit from the investment gold tax exemption in most jurisdictions. Check the tax treatment in your country.",
     idealFor: "Investors who already know the Gold Krugerrand and want to diversify into silver while keeping the same recognized brand.",
     description: "The Silver Krugerrand was launched in 2017 for the 50th anniversary of the original Gold Krugerrand. It retains the iconic springbok and Paul Kruger design in 999 millesimal silver. Although newer than its competitors, it benefits from the enormous brand recognition of the Krugerrand.",
     highlights: [
@@ -908,7 +909,7 @@ const PRODUCTS_EN: Record<string, ProductTexts> = {
     country: "Various",
     purityLabel: "999.9 millesimal",
     liquidity: "Very high",
-    vatNote: "VAT exempt in the EU as investment gold (bar with fineness ≥ 995 millesimal).",
+    vatNote: "Classified as investment gold in most jurisdictions (bar with fineness ≥ 995). Check the tax treatment in your country.",
     idealFor: "Investors seeking the lowest possible premium per ounce of gold. Ideal as a standard unit for accumulation.",
     description: "The 1 troy ounce gold bar is the standard format for physical gold investment. Manufactured by LBMA-accredited refineries (London Bullion Market Association), it offers the lowest market premiums for 1 oz quantities. The most common come from PAMP Suisse, Heraeus, Argor-Heraeus and Valcambi, and usually come in a sealed blister with an assay certificate.",
     highlights: [
@@ -930,7 +931,7 @@ const PRODUCTS_EN: Record<string, ProductTexts> = {
     country: "Various",
     purityLabel: "999.9 millesimal",
     liquidity: "High",
-    vatNote: "VAT exempt in the EU as investment gold (bar with fineness ≥ 995 millesimal).",
+    vatNote: "Classified as investment gold in most jurisdictions (bar with fineness ≥ 995). Check the tax treatment in your country.",
     idealFor: "Investors with higher capital seeking to optimize the premium per gram. Good balance between cost, liquidity and storage.",
     description: "The 100 gram gold bar is a very popular intermediate format among serious investors. It offers a significantly lower premium per gram than 1 oz bars and coins, while maintaining high liquidity in the secondary market. It is the preferred format for many European investors seeking the balance between entry cost and ease of resale.",
     highlights: [
@@ -952,7 +953,7 @@ const PRODUCTS_EN: Record<string, ProductTexts> = {
     country: "Various",
     purityLabel: "999.9 millesimal",
     liquidity: "Medium",
-    vatNote: "VAT exempt in the EU as investment gold (bar with fineness ≥ 995 millesimal).",
+    vatNote: "Classified as investment gold in most jurisdictions (bar with fineness ≥ 995). Check the tax treatment in your country.",
     idealFor: "Large investors seeking the lowest possible premium who prioritize total cost over immediate liquidity.",
     description: "The 1 kilogram gold bar is the large investment format with the lowest premium over spot. It contains 32.15 troy ounces of pure gold and its price usually exceeds €70,000 (variable depending on the spot price). The trade-off is lower liquidity than smaller formats: not all dealers can absorb a 1 kg sale immediately, and the buyer pool is smaller.",
     highlights: [
@@ -974,7 +975,7 @@ const PRODUCTS_EN: Record<string, ProductTexts> = {
     country: "Various",
     purityLabel: "999 millesimal",
     liquidity: "High",
-    vatNote: "Subject to VAT (rate varies by country). Silver does not benefit from the investment gold exemption. Some dealers offer bonded warehouse storage or storage in countries with differential VAT.",
+    vatNote: "Silver does not benefit from the investment gold tax exemption in most jurisdictions. Check the tax treatment in your country.",
     idealFor: "Silver investors looking to minimize the premium per ounce who don't mind weight/volume. The most efficient format for accumulating silver.",
     description: "The 1 kilogram silver bar is the most popular format for serious physical silver investment. It contains 32.15 troy ounces of silver and offers the best premium-to-weight ratio in the silver market (excluding larger 5 or 15 kg bars). The main drawback is VAT which significantly increases the entry cost in many countries. Many investors buy from dealers in tax-advantaged jurisdictions or use bonded storage to optimize taxation.",
     highlights: [
@@ -982,7 +983,7 @@ const PRODUCTS_EN: Record<string, ProductTexts> = {
       "32.15 troy ounces per bar — much more efficient than buying coin by coin",
       "Manufactured by LBMA refineries with assay certificate",
       "VAT is the main disadvantage vs. gold (which is exempt)",
-      "Consider bonded warehouse storage to defer VAT",
+      "Consider tax-efficient storage options available in your jurisdiction",
     ],
     seo: {
       title: "Silver Bar 1 kg — Profile, Price & Specs",

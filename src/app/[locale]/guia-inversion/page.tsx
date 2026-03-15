@@ -32,18 +32,17 @@ const SEO_KEYWORDS: Record<string, string[]> = {
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("guide");
   const locale = await getLocale();
+  const alternates = getAlternates(locale, "/guia-inversion");
   return {
     title: t("title") + " — Metalorix",
     description: t("subtitle"),
     keywords: SEO_KEYWORDS[locale] || SEO_KEYWORDS.es,
+    alternates,
     openGraph: {
       title: t("title") + " — Metalorix",
       description: t("subtitle"),
       type: "website",
-      url: "https://metalorix.com/guia-inversion",
-    },
-    alternates: {
-      canonical: "https://metalorix.com/guia-inversion",
+      url: alternates.canonical,
     },
   };
 }

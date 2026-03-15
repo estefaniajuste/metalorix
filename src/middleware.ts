@@ -3,7 +3,14 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { routing } from "@/i18n/routing";
 
-const LEGACY_REDIRECTS: Record<string, string> = {
+const CANONICAL_HOST = "metalorix.com";
+
+/**
+ * Path aliases that map non-standard legacy URLs to internal pathnames.
+ * next-intl's handleI18nRouting then detects locale via Accept-Language /
+ * cookie and serves the correct localized URL. We no longer hardcode `/es/`.
+ */
+const PATH_ALIASES: Record<string, string> = {
   "/oro": "/precio/oro",
   "/plata": "/precio/plata",
   "/platino": "/precio/platino",
@@ -18,36 +25,30 @@ const LEGACY_REDIRECTS: Record<string, string> = {
   "/news": "/noticias",
   "/glossary": "/aprende",
   "/glosario": "/aprende",
-  "/education": "/es/learn",
-  "/educacion": "/es/learn",
-  "/aprender": "/es/learn",
-  "/herramientas": "/es/herramientas",
-  "/noticias": "/es/noticias",
-  "/productos": "/es/productos",
-  "/alertas": "/es/alertas",
-  "/precio/oro": "/es/precio/oro",
-  "/precio/plata": "/es/precio/plata",
-  "/precio/platino": "/es/precio/platino",
-  "/precio/paladio": "/es/precio/paladio",
-  "/precio/cobre": "/es/precio/cobre",
-  "/precio-oro-hoy": "/es/precio-oro-hoy",
-  "/precio-gramo-oro": "/es/precio-gramo-oro",
-  "/ratio-oro-plata": "/es/ratio-oro-plata",
-  "/calculadora-rentabilidad": "/es/calculadora-rentabilidad",
-  "/conversor-divisas": "/es/conversor-divisas",
-  "/comparador": "/es/comparador",
-  "/calendario-economico": "/es/calendario-economico",
-  "/guia-inversion": "/es/guia-inversion",
-  "/aprende": "/es/aprende",
-  "/aviso-legal": "/es/aviso-legal",
-  "/terminos": "/es/terminos",
-  "/privacidad": "/es/privacidad",
-  "/panel": "/es/panel",
+  "/education": "/aprende",
+  "/educacion": "/aprende",
+  "/aprender": "/aprende",
+  "/lernen": "/aprende",
+  "/xuexi": "/aprende",
+  "/taallam": "/aprende",
+  "/ogren": "/aprende",
 };
 
 const handleI18nRouting = createMiddleware(routing);
 
 export function middleware(request: NextRequest) {
+  const host = request.headers.get("host")?.replace(/:\d+$/, "");
+
+  if (
+    host &&
+    host !== CANONICAL_HOST &&
+    host !== "localhost" &&
+    !host.startsWith("127.0.0.1")
+  ) {
+    const canonical = new URL(request.nextUrl.pathname + request.nextUrl.search, `https://${CANONICAL_HOST}`);
+    return NextResponse.redirect(canonical, 301);
+  }
+
   const { pathname } = request.nextUrl;
 
   if (pathname.startsWith("/api/")) {
@@ -56,9 +57,11 @@ export function middleware(request: NextRequest) {
     return response;
   }
 
-  const redirect = LEGACY_REDIRECTS[pathname.toLowerCase()];
-  if (redirect) {
-    return NextResponse.redirect(new URL(redirect, request.url), 301);
+  const alias = PATH_ALIASES[pathname.toLowerCase()];
+  if (alias) {
+    const rewritten = new URL(alias, request.url);
+    rewritten.search = request.nextUrl.search;
+    return NextResponse.redirect(rewritten, 301);
   }
 
   return handleI18nRouting(request);

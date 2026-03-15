@@ -15,9 +15,9 @@ export async function generateMetadata({
   return {
     title: t("productos.title"),
     description: t("productos.description"),
-    keywords: locale === "en"
-      ? ["gold investment coins", "gold investment bars", "Krugerrand", "Maple Leaf gold", "Vienna Philharmonic gold", "buy gold", "silver investment coins", "gold bar 1 oz", "silver bar 1 kg"]
-      : ["monedas oro inversión", "lingotes oro inversión", "Krugerrand", "Maple Leaf oro", "Filarmónica Viena oro", "comprar oro España", "monedas plata inversión", "lingote oro 1 oz", "lingote plata 1 kg"],
+    keywords: locale === "es"
+      ? ["monedas oro inversión", "lingotes oro inversión", "Krugerrand", "Maple Leaf oro", "Filarmónica Viena oro", "comprar oro España", "monedas plata inversión", "lingote oro 1 oz", "lingote plata 1 kg"]
+      : ["gold investment coins", "gold investment bars", "Krugerrand", "Maple Leaf gold", "Vienna Philharmonic gold", "buy gold", "silver investment coins", "gold bar 1 oz", "silver bar 1 kg"],
     openGraph: {
       title: t("productos.ogTitle"),
       description: t("productos.ogDescription"),

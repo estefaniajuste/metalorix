@@ -10,7 +10,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Service unavailable" }, { status: 503 });
   }
 
-  let body: { email: string };
+  let body: { email: string; locale?: string };
   try {
     body = await request.json();
   } catch {
@@ -18,6 +18,9 @@ export async function POST(request: NextRequest) {
   }
 
   const email = body.email?.trim().toLowerCase();
+  const locale = ["es", "en", "de", "zh", "ar", "tr"].includes(body.locale ?? "")
+    ? body.locale!
+    : "es";
   if (!email || !email.includes("@")) {
     return NextResponse.json({ error: "Invalid email" }, { status: 400 });
   }
@@ -36,7 +39,7 @@ export async function POST(request: NextRequest) {
   }
 
   const baseUrl = request.nextUrl.origin;
-  const sent = await sendMagicLink(email, baseUrl);
+  const sent = await sendMagicLink(email, baseUrl, locale);
 
   if (!sent) {
     return NextResponse.json(

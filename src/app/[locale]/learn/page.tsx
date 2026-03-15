@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import { getTranslations } from "next-intl/server";
+import { Link } from "@/i18n/navigation";
+import { getTranslations, getLocale } from "next-intl/server";
+import { getAlternates } from "@/lib/seo/alternates";
 import { TAXONOMY } from "@/lib/learn/taxonomy";
 import { ALL_TOPICS } from "@/lib/learn/topics";
 import { LearnBreadcrumb } from "@/components/learn/LearnBreadcrumb";
@@ -8,19 +9,19 @@ import { LearnBreadcrumb } from "@/components/learn/LearnBreadcrumb";
 export const revalidate = 86400;
 
 export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getLocale();
+  const t = await getTranslations({ locale, namespace: "learnSection" });
+  const alternates = getAlternates(locale, "/learn");
+
   return {
-    title: "Learn About Precious Metals — Metalorix",
-    description:
-      "Free educational library on gold, silver, platinum and palladium. Over 1,000 articles covering fundamentals, investing, markets, history and more.",
+    title: `${t("title")} — Metalorix`,
+    description: t("description"),
     openGraph: {
-      title: "Learn About Precious Metals — Metalorix",
-      description:
-        "Comprehensive educational resource on precious metals investing, markets, history, and practical guides.",
-      url: "https://metalorix.com/learn",
+      title: `${t("title")} — Metalorix`,
+      description: t("description"),
+      url: alternates.canonical,
     },
-    alternates: {
-      canonical: "https://metalorix.com/learn",
-    },
+    alternates,
   };
 }
 
@@ -45,23 +46,25 @@ const CLUSTER_ICONS: Record<string, string> = {
 
 export default async function LearnPage() {
   const tc = await getTranslations("common");
+  const t = await getTranslations("learnSection");
+  const locale = await getLocale();
 
   const stats = {
     total: ALL_TOPICS.length,
-    beginner: ALL_TOPICS.filter((t) => t.difficulty === "beginner").length,
-    intermediate: ALL_TOPICS.filter((t) => t.difficulty === "intermediate")
+    beginner: ALL_TOPICS.filter((tp) => tp.difficulty === "beginner").length,
+    intermediate: ALL_TOPICS.filter((tp) => tp.difficulty === "intermediate")
       .length,
-    advanced: ALL_TOPICS.filter((t) => t.difficulty === "advanced").length,
+    advanced: ALL_TOPICS.filter((tp) => tp.difficulty === "advanced").length,
     clusters: TAXONOMY.length,
   };
 
+  const alternates = getAlternates(locale, "/learn");
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
-    name: "Learn About Precious Metals",
-    description:
-      "Comprehensive educational library on gold, silver, platinum and palladium.",
-    url: "https://metalorix.com/learn",
+    name: t("title"),
+    description: t("description"),
+    url: alternates.canonical,
     publisher: {
       "@type": "Organization",
       name: "Metalorix",
@@ -82,51 +85,47 @@ export default async function LearnPage() {
           <LearnBreadcrumb
             items={[
               { label: tc("breadcrumbHome"), href: "/" },
-              { label: "Learn" },
+              { label: t("breadcrumb") },
             ]}
           />
 
-          {/* Hero */}
           <header className="mb-12">
             <h1 className="text-3xl sm:text-4xl font-extrabold text-content-0 tracking-tight mb-4">
-              Learn About Precious Metals
+              {t("title")}
             </h1>
             <p className="text-lg text-content-2 leading-relaxed max-w-[700px]">
-              A comprehensive, free educational library covering everything from
-              the basics of gold and silver to advanced market analysis and
-              investment strategies.
+              {t("description")}
             </p>
             <div className="flex flex-wrap gap-4 mt-6 text-sm text-content-3">
               <span className="flex items-center gap-1.5">
                 <span className="w-2 h-2 rounded-full bg-brand-gold" />
-                {stats.total} articles
+                {stats.total} {t("articles")}
               </span>
               <span className="flex items-center gap-1.5">
                 <span className="w-2 h-2 rounded-full bg-emerald-400" />
-                {stats.beginner} beginner
+                {stats.beginner} {t("beginner")}
               </span>
               <span className="flex items-center gap-1.5">
                 <span className="w-2 h-2 rounded-full bg-amber-400" />
-                {stats.intermediate} intermediate
+                {stats.intermediate} {t("intermediate")}
               </span>
               <span className="flex items-center gap-1.5">
                 <span className="w-2 h-2 rounded-full bg-rose-400" />
-                {stats.advanced} advanced
+                {stats.advanced} {t("advanced")}
               </span>
             </div>
           </header>
 
-          {/* Cluster Grid */}
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {TAXONOMY.map((cluster) => {
               const count = ALL_TOPICS.filter(
-                (t) => t.clusterSlug === cluster.slug
+                (tp) => tp.clusterSlug === cluster.slug
               ).length;
               const icon = CLUSTER_ICONS[cluster.slug] || "📄";
               return (
                 <Link
                   key={cluster.slug}
-                  href={`/learn/${cluster.slug}`}
+                  href={{ pathname: "/learn/[cluster]" as const, params: { cluster: cluster.slug } }}
                   className="group relative rounded-lg border border-border bg-surface-1 p-6 hover:border-brand-gold/40 hover:shadow-md transition-all"
                 >
                   <div className="text-2xl mb-3">{icon}</div>
@@ -137,36 +136,32 @@ export default async function LearnPage() {
                     {cluster.descriptionEn}
                   </p>
                   <div className="flex items-center gap-3 text-xs text-content-3">
-                    <span>{count} articles</span>
+                    <span>{t("articlesCount", { count })}</span>
                     <span>·</span>
-                    <span>
-                      {cluster.subclusters.length} topics
-                    </span>
+                    <span>{t("topicsCount", { count: cluster.subclusters.length })}</span>
                   </div>
                 </Link>
               );
             })}
           </div>
 
-          {/* Quick Start */}
           <div className="mt-12 rounded-lg border border-brand-gold/20 bg-[rgba(214,179,90,0.04)] p-6">
             <h2 className="text-lg font-bold text-content-0 mb-3">
-              New to precious metals?
+              {t("newToMetals")}
             </h2>
             <p className="text-sm text-content-2 mb-4">
-              Start with the fundamentals and work your way up. These pillar
-              articles give you a solid foundation.
+              {t("newToMetalsDescription")}
             </p>
             <div className="flex flex-wrap gap-2">
-              {ALL_TOPICS.filter((t) => t.isPillar && t.priority === 1)
+              {ALL_TOPICS.filter((tp) => tp.isPillar && tp.priority === 1)
                 .slice(0, 6)
-                .map((t) => (
+                .map((tp) => (
                   <Link
-                    key={t.slug}
-                    href={`/learn/${t.clusterSlug}/${t.slug}`}
+                    key={tp.slug}
+                    href={{ pathname: "/learn/[cluster]/[slug]" as const, params: { cluster: tp.clusterSlug, slug: tp.slug } }}
                     className="text-sm font-medium px-3 py-1.5 rounded-full border border-brand-gold/20 text-brand-gold hover:bg-brand-gold/10 transition-colors"
                   >
-                    {t.titleEn}
+                    {tp.titleEn}
                   </Link>
                 ))}
             </div>

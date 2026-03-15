@@ -3,7 +3,7 @@ import { getTranslations, getLocale } from "next-intl/server";
 import { getAlternates } from "@/lib/seo/alternates";
 import { getDb } from "@/lib/db";
 import { glossaryTerms } from "@/lib/db/schema";
-import { eq, asc } from "drizzle-orm";
+import { eq, asc, and } from "drizzle-orm";
 import {
   GLOSSARY_CATEGORIES,
   getCategoryLabel,
@@ -25,7 +25,7 @@ export async function generateMetadata({
   };
 }
 
-async function getPublishedTerms() {
+async function getPublishedTerms(locale: string) {
   const db = getDb();
   if (!db) return [];
   try {
@@ -38,7 +38,7 @@ async function getPublishedTerms() {
         content: glossaryTerms.content,
       })
       .from(glossaryTerms)
-      .where(eq(glossaryTerms.published, true))
+      .where(and(eq(glossaryTerms.published, true), eq(glossaryTerms.locale, locale)))
       .orderBy(asc(glossaryTerms.term));
   } catch {
     return [];
@@ -47,9 +47,10 @@ async function getPublishedTerms() {
 
 export default async function AprendePage() {
   const locale = await getLocale();
+  const alternates = getAlternates(locale, "/aprende");
   const t = await getTranslations("learn");
   const tc = await getTranslations("common");
-  const terms = await getPublishedTerms();
+  const terms = await getPublishedTerms(locale);
 
   const termsByCategory = new Map<string, typeof terms>();
   for (const term of terms) {
@@ -68,12 +69,12 @@ export default async function AprendePage() {
     "@type": "DefinedTermSet",
     name: t("title"),
     description: t("subtitle"),
-    url: "https://metalorix.com/aprende",
+    url: alternates.canonical,
     hasDefinedTerm: terms.map((term) => ({
       "@type": "DefinedTerm",
       name: term.term,
       description: term.definition,
-      url: `https://metalorix.com/aprende/${term.slug}`,
+      url: `${alternates.canonical}/${term.slug}`,
     })),
   };
 

@@ -3,23 +3,24 @@ import { Link } from "@/i18n/navigation";
 import { getTranslations, getLocale } from "next-intl/server";
 import { GoldSilverRatioContent } from "@/components/ratio/GoldSilverRatioContent";
 import { breadcrumbSchema, webPageSchema } from "@/lib/seo/schemas";
+import { getAlternates } from "@/lib/seo/alternates";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("pages");
+  const locale = await getLocale();
+  const alternates = getAlternates(locale, "/ratio-oro-plata");
   return {
     title: t("ratio.title"),
     description: t("ratio.description"),
-    keywords: (await getLocale()) === "en"
-      ? ["gold silver ratio", "gold silver ratio history", "gold vs silver", "gold silver proportion", "invest gold or silver"]
-      : ["ratio oro plata", "gold silver ratio", "ratio oro plata histórico", "oro vs plata", "proporción oro plata", "invertir oro o plata"],
-    alternates: {
-      canonical: "https://metalorix.com/ratio-oro-plata",
-    },
+    keywords: locale === "es"
+      ? ["ratio oro plata", "gold silver ratio", "ratio oro plata histórico", "oro vs plata", "proporción oro plata", "invertir oro o plata"]
+      : ["gold silver ratio", "gold silver ratio history", "gold vs silver", "gold silver proportion", "invest gold or silver"],
+    alternates,
     openGraph: {
       title: t("ratio.ogTitle"),
       description: t("ratio.ogDescription"),
       type: "website",
-      url: "https://metalorix.com/ratio-oro-plata",
+      url: alternates.canonical,
     },
   };
 }

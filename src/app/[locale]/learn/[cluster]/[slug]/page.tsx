@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { notFound } from "next/navigation";
 import { getTranslations, getLocale } from "next-intl/server";
+import { getAlternates } from "@/lib/seo/alternates";
 import { getDb } from "@/lib/db";
 import {
   learnArticles,
@@ -87,28 +88,30 @@ export async function generateMetadata({
 }: {
   params: { cluster: string; slug: string };
 }): Promise<Metadata> {
-  const topic = getTopicBySlug(params.slug);
-  if (!topic) return { title: "Not Found — Metalorix" };
-
   const locale = await getLocale();
-  const data = await getArticleData(params.slug, locale);
+  const tl = await getTranslations({ locale, namespace: "learnSection" });
+  const topic = getTopicBySlug(params.slug);
+  if (!topic) return { title: tl("notFound") };
 
+  const data = await getArticleData(params.slug, locale);
   const title = data?.localization.seoTitle || topic.titleEn;
-  const description =
-    data?.localization.metaDescription || topic.summaryEn;
+  const description = data?.localization.metaDescription || topic.summaryEn;
+
+  const alternates = getAlternates(locale, {
+    pathname: "/learn/[cluster]/[slug]",
+    params: { cluster: params.cluster, slug: params.slug },
+  });
 
   return {
-    title: `${title} — Learn | Metalorix`,
+    title: `${title} — ${tl("breadcrumb")} | Metalorix`,
     description,
     openGraph: {
       title: `${title} — Metalorix`,
       description,
       type: "article",
-      url: `https://metalorix.com/learn/${params.cluster}/${params.slug}`,
+      url: alternates.canonical,
     },
-    alternates: {
-      canonical: `https://metalorix.com/learn/${params.cluster}/${params.slug}`,
-    },
+    alternates,
   };
 }
 
@@ -124,6 +127,7 @@ export default async function LearnArticlePage({
   params: { cluster: string; slug: string };
 }) {
   const tc = await getTranslations("common");
+  const t = await getTranslations("learnSection");
   const locale = await getLocale();
   const topic = getTopicBySlug(params.slug);
 
@@ -176,13 +180,17 @@ export default async function LearnArticlePage({
 
   const hasContent = content.length > 0;
 
-  // JSON-LD
+  const alternates = getAlternates(locale, {
+    pathname: "/learn/[cluster]/[slug]",
+    params: { cluster: params.cluster, slug: params.slug },
+  });
+
   const jsonLd: Record<string, unknown> = {
     "@context": "https://schema.org",
     "@type": "Article",
     headline: title,
     description: summary,
-    url: `https://metalorix.com/learn/${params.cluster}/${params.slug}`,
+    url: alternates.canonical,
     author: {
       "@type": "Organization",
       name: "Metalorix",
@@ -218,7 +226,7 @@ export default async function LearnArticlePage({
           <LearnBreadcrumb
             items={[
               { label: tc("breadcrumbHome"), href: "/" },
-              { label: "Learn", href: "/learn" },
+              { label: t("breadcrumb"), href: "/learn" },
               {
                 label: cluster?.nameEn || params.cluster,
                 href: `/learn/${params.cluster}`,
@@ -260,7 +268,7 @@ export default async function LearnArticlePage({
               <div className="mt-4 p-4 rounded-lg border border-brand-gold/20 bg-[rgba(214,179,90,0.04)]">
                 <p className="text-sm font-medium text-content-1">
                   <span className="text-brand-gold font-semibold">
-                    Key idea:
+                    {t("keyIdea")}:
                   </span>{" "}
                   {keyIdea}
                 </p>
@@ -289,17 +297,10 @@ export default async function LearnArticlePage({
           ) : (
             <div className="p-8 rounded-lg border border-border bg-surface-1 text-center">
               <p className="text-content-2 mb-2">
-                This article is being prepared.
+                {t("preparingArticle")}
               </p>
               <p className="text-sm text-content-3">
-                In the meantime, explore the topic overview for{" "}
-                <Link
-                  href={`/learn/${params.cluster}`}
-                  className="text-brand-gold hover:underline"
-                >
-                  {cluster?.nameEn}
-                </Link>
-                .
+                {t("preparingArticleHint", { name: cluster?.nameEn || params.cluster })}
               </p>
             </div>
           )}
@@ -308,7 +309,7 @@ export default async function LearnArticlePage({
           {keyTakeaways.length > 0 && (
             <div className="mt-10 p-5 rounded-lg bg-surface-1 border border-border">
               <h2 className="text-base font-bold text-content-0 mb-3">
-                Key Takeaways
+                {t("keyTakeaways")}
               </h2>
               <ul className="space-y-2">
                 {keyTakeaways.map((t: string, i: number) => (
@@ -328,7 +329,7 @@ export default async function LearnArticlePage({
           {faq.length > 0 && (
             <div className="mt-10">
               <h2 className="text-xl font-bold text-content-0 mb-4">
-                Frequently Asked Questions
+                {t("faq")}
               </h2>
               <div className="space-y-4">
                 {faq.map(
@@ -357,7 +358,7 @@ export default async function LearnArticlePage({
           <footer className="mt-10 pt-6 border-t border-border">
             <div className="flex justify-between items-center">
               <Link
-                href={`/learn/${params.cluster}`}
+                href={{ pathname: "/learn/[cluster]" as const, params: { cluster: params.cluster } }}
                 className="inline-flex items-center gap-2 text-sm font-medium text-content-2 hover:text-brand-gold transition-colors"
               >
                 <svg
@@ -371,13 +372,13 @@ export default async function LearnArticlePage({
                 >
                   <polyline points="15 18 9 12 15 6" />
                 </svg>
-                Back to {cluster?.nameEn || "cluster"}
+                {t("backTo", { name: cluster?.nameEn || params.cluster })}
               </Link>
               <Link
                 href="/learn"
                 className="text-sm font-medium text-content-2 hover:text-brand-gold transition-colors"
               >
-                All Topics
+                {t("allTopics")}
               </Link>
             </div>
           </footer>

@@ -21,6 +21,7 @@ export async function generateMetadata({
 
 export default async function GlosarioPage() {
   const locale = await getLocale();
+  const alternates = getAlternates(locale, "/aprende");
   const t = await getTranslations("glossary");
   const tc = await getTranslations("common");
   const tn = await getTranslations("nav");
@@ -35,12 +36,12 @@ export default async function GlosarioPage() {
     "@type": "DefinedTermSet",
     name: t("title"),
     description: t("subtitle"),
-    url: "https://metalorix.com/glosario",
+    url: alternates.canonical,
     hasDefinedTerm: sortedTerms.map((term) => ({
       "@type": "DefinedTerm",
       name: term.term,
       description: term.definition,
-      url: `https://metalorix.com/glosario#${term.id}`,
+      url: `${alternates.canonical}#${term.id}`,
     })),
   };
 

@@ -5,8 +5,6 @@ node_modules
 .env
 .env.local
 .env*.local
-.firebase
-legacy
 pgdata
 *.log
 .DS_Store

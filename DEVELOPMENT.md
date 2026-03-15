@@ -144,7 +144,7 @@ Se migró toda la web de un `index.html` estático a una aplicación **Next.js 1
 |---------|-----------|
 | `Dockerfile` | Build multi-stage (deps → build → production) con Node 20 Alpine, standalone Next.js, puerto 8080 |
 | `docker-compose.yml` | PostgreSQL 16 Alpine en puerto 5432 para desarrollo local |
-| `.dockerignore` | Excluye node_modules, .next, .git, .env*, legacy |
+| `.dockerignore` | Excluye node_modules, .next, .git, .env* |
 
 ### 3.9 CI/CD y Despliegue
 
@@ -167,6 +167,7 @@ Se migró `metalorix.com` de Firebase Hosting a Cloud Run:
    - Registro A: `metalorix.com` → IPs de Google (`216.239.32/34/36/38.21`)
    - CNAME: `www.metalorix.com` → `ghs.googlehosted.com`
 5. Certificado SSL auto-provisionado por Google
+6. Eliminado `firebase.json` del repo — Firebase Hosting ya no se usa. La única URL de producción es `metalorix.com` (Cloud Run). Se debe deshabilitar Firebase Hosting desde la consola de Firebase para que `metalorix.web.app` y `metalorix.firebaseapp.com` dejen de servir contenido
 
 ---
 
@@ -231,8 +232,6 @@ metalorix/
 │   └── deploy-cloud-run.yml        # CI/CD → Cloud Run
 ├── assets/
 │   └── favicon.svg
-├── legacy/
-│   └── index.html                  # Web original (preservada)
 ├── public/
 │   └── favicon.svg
 ├── src/
@@ -283,7 +282,6 @@ metalorix/
 ├── docker-compose.yml
 ├── Dockerfile
 ├── drizzle.config.ts
-├── firebase.json                   # Legacy
 ├── next.config.mjs
 ├── next-env.d.ts
 ├── package.json

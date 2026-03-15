@@ -15,9 +15,9 @@ export async function generateMetadata({
   return {
     title: t("calculadora.title"),
     description: t("calculadora.description"),
-    keywords: locale === "en"
-      ? ["gold ROI calculator", "gold investment simulator", "gold historical returns", "gold investment calculator", "precious metals ROI calculator"]
-      : ["calculadora rentabilidad oro", "simulador inversión oro", "cuanto habría ganado invirtiendo en oro", "rentabilidad histórica oro", "invertir en oro rentabilidad", "calculadora inversión metales preciosos"],
+    keywords: locale === "es"
+      ? ["calculadora rentabilidad oro", "simulador inversión oro", "cuanto habría ganado invirtiendo en oro", "rentabilidad histórica oro", "invertir en oro rentabilidad", "calculadora inversión metales preciosos"]
+      : ["gold ROI calculator", "gold investment simulator", "gold historical returns", "gold investment calculator", "precious metals ROI calculator"],
     alternates: getAlternates(locale, "/calculadora-rentabilidad"),
     openGraph: {
       title: t("calculadora.ogTitle"),

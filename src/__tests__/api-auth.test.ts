@@ -157,7 +157,8 @@ describe("POST /api/auth/login", () => {
 
     expect(mockSendMagicLink).toHaveBeenCalledWith(
       "user@test.com",
-      expect.any(String)
+      expect.any(String),
+      "es"
     );
   });
 });

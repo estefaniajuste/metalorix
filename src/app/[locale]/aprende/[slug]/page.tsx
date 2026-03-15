@@ -8,7 +8,7 @@ import { glossaryTerms } from "@/lib/db/schema";
 import { eq, and, ne, inArray, asc } from "drizzle-orm";
 import { getCategoryLabel } from "@/lib/data/glossary-categories";
 
-async function getTerm(slug: string) {
+async function getTerm(slug: string, locale: string) {
   const db = getDb();
   if (!db) return null;
   try {
@@ -18,17 +18,31 @@ async function getTerm(slug: string) {
       .where(
         and(
           eq(glossaryTerms.slug, slug),
-          eq(glossaryTerms.published, true)
+          eq(glossaryTerms.published, true),
+          eq(glossaryTerms.locale, locale)
         )
       )
       .limit(1);
-    return result[0] ?? null;
+    if (result[0]) return result[0];
+    // Fallback to default locale (es)
+    const fallback = await db
+      .select()
+      .from(glossaryTerms)
+      .where(
+        and(
+          eq(glossaryTerms.slug, slug),
+          eq(glossaryTerms.published, true),
+          eq(glossaryTerms.locale, "es")
+        )
+      )
+      .limit(1);
+    return fallback[0] ?? null;
   } catch {
     return null;
   }
 }
 
-async function getRelatedTerms(slugs: string[], excludeSlug: string) {
+async function getRelatedTerms(slugs: string[], excludeSlug: string, locale: string) {
   const db = getDb();
   if (!db || slugs.length === 0) return [];
   try {
@@ -44,6 +58,7 @@ async function getRelatedTerms(slugs: string[], excludeSlug: string) {
         and(
           inArray(glossaryTerms.slug, slugs),
           eq(glossaryTerms.published, true),
+          eq(glossaryTerms.locale, locale),
           ne(glossaryTerms.slug, excludeSlug)
         )
       )
@@ -56,7 +71,8 @@ async function getRelatedTerms(slugs: string[], excludeSlug: string) {
 
 async function getSameCategoryTerms(
   category: string,
-  excludeSlug: string
+  excludeSlug: string,
+  locale: string
 ) {
   const db = getDb();
   if (!db) return [];
@@ -72,6 +88,7 @@ async function getSameCategoryTerms(
         and(
           eq(glossaryTerms.category, category),
           eq(glossaryTerms.published, true),
+          eq(glossaryTerms.locale, locale),
           ne(glossaryTerms.slug, excludeSlug)
         )
       )
@@ -88,7 +105,7 @@ export async function generateMetadata({
   params: { locale: string; slug: string };
 }): Promise<Metadata> {
   const { locale, slug } = params;
-  const term = await getTerm(slug);
+  const term = await getTerm(slug, locale);
   if (!term) {
     const t = await getTranslations({ locale, namespace: "errors" });
     return { title: t("notFound") };
@@ -179,17 +196,17 @@ export default async function TermPage({
   const t = await getTranslations("learn");
   const tc = await getTranslations("common");
 
-  const term = await getTerm(params.slug);
+  const term = await getTerm(params.slug, locale);
   if (!term) notFound();
 
   const relatedTerms =
     term.relatedSlugs && term.relatedSlugs.length > 0
-      ? await getRelatedTerms(term.relatedSlugs, term.slug)
+      ? await getRelatedTerms(term.relatedSlugs, term.slug, locale)
       : [];
 
   const sameCategoryTerms =
     term.category
-      ? await getSameCategoryTerms(term.category, term.slug)
+      ? await getSameCategoryTerms(term.category, term.slug, locale)
       : [];
 
   const jsonLd = {

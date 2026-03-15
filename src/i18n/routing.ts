@@ -136,20 +136,47 @@ export const routing = defineRouting({
 
     "/aprende": {
       es: "/aprende",
-      en: "/learn",
-      de: "/lernen",
-      zh: "/xuexi",
-      ar: "/taallam",
-      tr: "/ogren",
+      en: "/glossary",
+      de: "/glossar",
+      zh: "/cihui",
+      ar: "/mustalah",
+      tr: "/sozluk",
     },
 
     "/aprende/[slug]": {
       es: "/aprende/[slug]",
-      en: "/learn/[slug]",
-      de: "/lernen/[slug]",
-      zh: "/xuexi/[slug]",
-      ar: "/taallam/[slug]",
-      tr: "/ogren/[slug]",
+      en: "/glossary/[slug]",
+      de: "/glossar/[slug]",
+      zh: "/cihui/[slug]",
+      ar: "/mustalah/[slug]",
+      tr: "/sozluk/[slug]",
+    },
+
+    "/learn": {
+      es: "/aprende-inversion",
+      en: "/learn",
+      de: "/lernen-investition",
+      zh: "/xuexi",
+      ar: "/taallam",
+      tr: "/ogren-yatirim",
+    },
+
+    "/learn/[cluster]": {
+      es: "/aprende-inversion/[cluster]",
+      en: "/learn/[cluster]",
+      de: "/lernen-investition/[cluster]",
+      zh: "/xuexi/[cluster]",
+      ar: "/taallam/[cluster]",
+      tr: "/ogren-yatirim/[cluster]",
+    },
+
+    "/learn/[cluster]/[slug]": {
+      es: "/aprende-inversion/[cluster]/[slug]",
+      en: "/learn/[cluster]/[slug]",
+      de: "/lernen-investition/[cluster]/[slug]",
+      zh: "/xuexi/[cluster]/[slug]",
+      ar: "/taallam/[cluster]/[slug]",
+      tr: "/ogren-yatirim/[cluster]/[slug]",
     },
 
     "/alertas": {

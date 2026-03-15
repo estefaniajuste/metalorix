@@ -118,13 +118,14 @@ export default async function LocaleLayout({
 
   const messages = await getMessages();
   const t = await getTranslations("home");
+  const tNav = await getTranslations("nav");
   const isRtl = RTL_LOCALES.includes(locale);
   const isCJK = locale === "zh";
 
   return (
     <html lang={locale} dir={isRtl ? "rtl" : "ltr"} suppressHydrationWarning>
       <head>
-        <link rel="alternate" type="application/rss+xml" title="Metalorix — Noticias" href="/feed.xml" />
+        <link rel="alternate" type="application/rss+xml" title={`Metalorix — ${tNav("news")}`} href="/feed.xml" />
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
         <link rel="preconnect" href="https://www.googletagmanager.com" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="https://www.gold-api.com" />
