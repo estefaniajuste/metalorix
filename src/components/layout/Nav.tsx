@@ -76,6 +76,7 @@ export function Nav() {
     { href: "/herramientas", label: t("tools") },
     { href: "/guia-inversion", label: t("guide") },
     { href: "/noticias", label: t("news") },
+    { href: "/learn", label: t("learn") },
     { href: "/alertas", label: t("alerts") },
   ];
 

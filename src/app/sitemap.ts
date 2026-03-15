@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 import { getDb } from "@/lib/db";
-import { articles, glossaryTerms } from "@/lib/db/schema";
+import { articles, glossaryTerms, learnArticles } from "@/lib/db/schema";
 import { eq, desc, asc } from "drizzle-orm";
 import { getPathname } from "@/i18n/navigation";
 import { routing, type Locale } from "@/i18n/routing";
@@ -41,6 +41,27 @@ async function getPublishedGlossaryTerms() {
   }
 }
 
+async function getPublishedLearnArticles() {
+  const db = getDb();
+  if (!db) return [];
+  try {
+    const { learnClusters } = await import("@/lib/db/schema");
+    const rows = await db
+      .select({
+        slug: learnArticles.slug,
+        clusterSlug: learnClusters.slug,
+        publishedAt: learnArticles.publishedAt,
+      })
+      .from(learnArticles)
+      .innerJoin(learnClusters, eq(learnArticles.clusterId, learnClusters.id))
+      .where(eq(learnArticles.status, "published"))
+      .limit(2000);
+    return rows;
+  } catch {
+    return [];
+  }
+}
+
 function localizedUrl(locale: Locale, href: Parameters<typeof getPathname>[0]["href"]) {
   return `${BASE_URL}${getPathname({ locale, href: href as any })}`;
 }
@@ -65,6 +86,7 @@ const STATIC_ROUTES: StaticRoute[] = [
   { href: "/herramientas", changeFrequency: "weekly", priority: 0.7 },
   { href: "/alertas", changeFrequency: "weekly", priority: 0.6 },
   { href: "/aprende", changeFrequency: "daily", priority: 0.8 },
+  { href: "/learn", changeFrequency: "daily", priority: 0.85 },
   { href: "/guia-inversion", changeFrequency: "monthly", priority: 0.8 },
   { href: "/productos", changeFrequency: "weekly", priority: 0.7 },
   { href: "/ratio-oro-plata", changeFrequency: "hourly", priority: 0.85 },
@@ -140,5 +162,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }
   }
 
-  return [...staticPages, ...metalPages, ...articlePages, ...learnPages];
+  const learnArticleRows = await getPublishedLearnArticles();
+  const learnArticlePages: MetadataRoute.Sitemap = [];
+  for (const a of learnArticleRows) {
+    for (const locale of routing.locales) {
+      learnArticlePages.push({
+        url: `${BASE_URL}/${locale}/learn/${a.clusterSlug}/${a.slug}`,
+        lastModified: a.publishedAt || now,
+        changeFrequency: "monthly",
+        priority: 0.7,
+      });
+    }
+  }
+
+  return [...staticPages, ...metalPages, ...articlePages, ...learnPages, ...learnArticlePages];
 }

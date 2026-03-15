@@ -1,5 +1,5 @@
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
-const MODEL = "gemini-2.5-flash";
+const MODEL = "gemini-2.5-flash-lite";
 
 interface GeminiResponse {
   candidates?: Array<{
@@ -25,7 +25,7 @@ export async function generateText(prompt: string): Promise<string | null> {
           generationConfig: {
             temperature: 0.7,
             topP: 0.9,
-            maxOutputTokens: 4096,
+            maxOutputTokens: 8192,
           },
         }),
       }
