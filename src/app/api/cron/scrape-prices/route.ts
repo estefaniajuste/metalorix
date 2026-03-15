@@ -66,16 +66,12 @@ export async function POST(request: NextRequest) {
       .limit(1);
 
     if (existing.length > 0) {
-      const prev = parseFloat(existing[0].priceUsd);
-      const change = +(p.price - prev).toFixed(4);
-      const changePct = prev !== 0 ? +((change / prev) * 100).toFixed(4) : 0;
-
       await db
         .update(metalPrices)
         .set({
           priceUsd: p.price.toFixed(4),
-          change24h: change.toFixed(4),
-          changePct24h: changePct.toFixed(4),
+          change24h: p.change.toFixed(4),
+          changePct24h: p.changePct.toFixed(4),
           updatedAt: now,
         })
         .where(eq(metalPrices.symbol, p.symbol));
@@ -84,8 +80,8 @@ export async function POST(request: NextRequest) {
         symbol: p.symbol,
         name: p.name,
         priceUsd: p.price.toFixed(4),
-        change24h: "0",
-        changePct24h: "0",
+        change24h: p.change.toFixed(4),
+        changePct24h: p.changePct.toFixed(4),
         updatedAt: now,
       });
     }
