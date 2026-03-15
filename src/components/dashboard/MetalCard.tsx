@@ -42,6 +42,7 @@ interface MetalCardProps {
   active: boolean;
   onClick: () => void;
   sparklineData?: number[];
+  rangeChange?: { change: number; changePct: number };
   currency?: Currency;
   unit?: PriceUnit;
   eurUsdRate?: number;
@@ -52,6 +53,7 @@ export function MetalCard({
   active,
   onClick,
   sparklineData,
+  rangeChange,
   currency = "USD",
   unit = "oz",
   eurUsdRate = 1.08,
@@ -62,9 +64,11 @@ export function MetalCard({
   const metal = METALS[spot.symbol as MetalSymbol];
   const baseUnit = (metal?.unit ?? "oz") as BaseUnit;
   const effectiveUnit = (unit === "oz" && baseUnit === "lb") ? "lb" : unit;
-  const isUp = spot.change >= 0;
+  const change = rangeChange?.change ?? spot.change;
+  const changePct = rangeChange?.changePct ?? spot.changePct;
+  const isUp = change >= 0;
   const displayPrice = convertPrice(spot.price, effectiveUnit, currency, eurUsdRate, baseUnit);
-  const displayChange = convertPrice(spot.change, effectiveUnit, currency, eurUsdRate, baseUnit);
+  const displayChange = convertPrice(change, effectiveUnit, currency, eurUsdRate, baseUnit);
   const sym = currencySymbol(currency);
   const unitLabel = effectiveUnit !== "oz" && effectiveUnit !== "lb" ? `/${effectiveUnit}` : "";
   const prevPrice = useRef(spot.price);
@@ -147,7 +151,7 @@ export function MetalCard({
       >
         <span className="text-xs">{isUp ? "▲" : "▼"}</span>
         {sym}{formatChange(displayChange)} ({isUp ? "+" : ""}
-        {spot.changePct}%)
+        {changePct}%)
       </div>
 
       <Link

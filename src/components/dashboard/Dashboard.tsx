@@ -68,14 +68,10 @@ export function Dashboard() {
   }, []);
 
   useEffect(() => {
-    loadHistory(activeMetal, activeRange);
-  }, [activeMetal, activeRange, loadHistory]);
-
-  useEffect(() => {
     (Object.keys(METALS) as MetalSymbol[]).forEach((symbol) => {
-      loadHistory(symbol, "1D");
+      loadHistory(symbol, activeRange);
     });
-  }, [loadHistory]);
+  }, [activeRange, loadHistory]);
 
   const historyKey = `${activeMetal}_${activeRange}`;
 
@@ -125,9 +121,14 @@ export function Dashboard() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-10">
           {prices
             ? prices.map((spot) => {
-                const key1D = `${spot.symbol}_1D`;
-                const histData = history[key1D]?.data;
-                const sparkline = histData ? histData.map((d) => d.price) : undefined;
+                const rangeKey = `${spot.symbol}_${activeRange}`;
+                const rangeHist = history[rangeKey];
+                const sparkline = rangeHist?.data
+                  ? rangeHist.data.map((d) => d.price)
+                  : undefined;
+                const rangeChange = rangeHist
+                  ? { change: rangeHist.change, changePct: rangeHist.changePct }
+                  : undefined;
                 return (
                   <MetalCard
                     key={spot.symbol}
@@ -135,6 +136,7 @@ export function Dashboard() {
                     active={spot.symbol === activeMetal}
                     onClick={() => setActiveMetal(spot.symbol as MetalSymbol)}
                     sparklineData={sparkline}
+                    rangeChange={rangeChange}
                     currency={currency}
                     unit={unit}
                     eurUsdRate={eurUsdRate}
