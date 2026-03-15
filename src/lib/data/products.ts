@@ -165,15 +165,15 @@ export const PRODUCTS: Product[] = [
     vatNote:
       "Clasificado como oro de inversión en la mayoría de jurisdicciones (ley ≥ 900 milésimas, acuñada después de 1800, curso legal en país de origen). Consulta la fiscalidad de tu país.",
     idealFor:
-      "Inversores europeos que quieren una moneda de máxima pureza emitida dentro de la zona euro, con alta liquidez y amplia aceptación en Europa.",
+      "Inversores que buscan una moneda de máxima pureza denominada en euros, con alta liquidez global y amplia aceptación internacional.",
     description:
       "La Filarmónica de Viena (Wiener Philharmoniker) es la moneda de oro de inversión más vendida en Europa y una de las más populares del mundo. Emitida por la Casa de la Moneda de Austria (una de las más antiguas del mundo, fundada en 1194), combina máxima pureza con un diseño icónico que homenajea a la Orquesta Filarmónica de Viena. Su valor facial está denominado en euros.",
     highlights: [
-      "Moneda de oro de inversión más vendida en Europa",
-      "Valor facial de 100 € — denominada en la divisa local",
+      "Moneda de oro de inversión más vendida en Europa y reconocida mundialmente",
+      "Valor facial de 100 € — denominada en euros",
       "Diseño icónico: instrumentos de la Filarmónica de Viena",
       "Emitida por una de las casas de moneda más antiguas del mundo (1194)",
-      "Incluida en la lista oficial de la UE de monedas de oro de inversión exentas de IVA",
+      "Exenta de IVA como oro de inversión en la UE y reconocida fiscalmente en múltiples jurisdicciones",
     ],
     seo: {
       title: "Filarmónica de Viena 1 oz Oro — Ficha, precio y características",
@@ -347,14 +347,14 @@ export const PRODUCTS: Product[] = [
     vatNote:
       "La plata no se beneficia del régimen especial del oro de inversión en la mayoría de jurisdicciones. Consulta la fiscalidad de tu país.",
     idealFor:
-      "Inversores europeos que quieren acumular plata en monedas con denominación en euros y alta liquidez en el continente.",
+      "Inversores que buscan acumular plata en monedas denominadas en euros, con alta liquidez en Europa y creciente aceptación internacional.",
     description:
-      "La Filarmónica de Viena en plata comparte el diseño icónico de su versión de oro y es la moneda de plata más vendida en Europa. Con un valor facial de 1,50 €, es curso legal en Austria y toda la zona euro. Su popularidad en Europa la hace especialmente fácil de vender en el mercado secundario continental.",
+      "La Filarmónica de Viena en plata comparte el diseño icónico de su versión de oro y es la moneda de plata más vendida en Europa, con creciente presencia en mercados internacionales. Con un valor facial de 1,50 €, es curso legal en Austria y toda la zona euro.",
     highlights: [
-      "Moneda de plata más vendida en Europa",
+      "Moneda de plata más vendida en Europa y popular internacionalmente",
       "Valor facial de 1,50 € — curso legal en la eurozona",
       "Mismo diseño icónico que la versión de oro",
-      "Especialmente líquida en mercados europeos",
+      "Muy líquida en mercados europeos e internacionales",
       "Disponible también en versiones de 1/25 oz (miniatura) y tubos de 20 unidades",
     ],
     seo: {
@@ -446,7 +446,7 @@ export const PRODUCTS: Product[] = [
       "Diseño icónico Walking Liberty (anverso) desde 1986",
       "Reverso rediseñado en 2021 con nuevas medidas anti-falsificación",
       "Valor facial de 1 USD — respaldada por el gobierno de EE.UU.",
-      "Primas más altas que competidores europeos, compensadas por liquidez global",
+      "Primas más altas que otros competidores internacionales, compensadas por su liquidez global",
     ],
     seo: {
       title: "American Eagle 1 oz Plata — Ficha, precio y características",
@@ -573,12 +573,12 @@ export const PRODUCTS: Product[] = [
     idealFor:
       "Inversores con mayor capital que buscan optimizar la prima por gramo. Buen equilibrio entre coste, liquidez y almacenamiento.",
     description:
-      "El lingote de 100 gramos es un formato intermedio muy popular entre inversores serios. Ofrece una prima por gramo significativamente menor que los lingotes de 1 oz y las monedas, manteniendo una liquidez alta en el mercado secundario. Es el formato preferido por muchos inversores europeos que buscan el equilibrio entre coste de entrada y facilidad de reventa.",
+      "El lingote de 100 gramos es un formato intermedio muy popular entre inversores serios. Ofrece una prima por gramo significativamente menor que los lingotes de 1 oz y las monedas, manteniendo una liquidez alta en el mercado secundario. Es el formato preferido por muchos inversores profesionales que buscan el equilibrio entre coste de entrada y facilidad de reventa.",
     highlights: [
       "Excelente relación prima/peso — más eficiente que 1 oz",
       "Equivale a aproximadamente 3,22 onzas troy",
-      "Formato muy popular en Europa continental",
-      "Fácil de revender en el mercado secundario europeo",
+      "Formato muy popular en Europa, Asia y Oriente Medio",
+      "Fácil de revender en mercados secundarios internacionales",
       "Suele incluir número de serie grabado y certificado de ensayo",
     ],
     seo: {
@@ -616,7 +616,7 @@ export const PRODUCTS: Product[] = [
     idealFor:
       "Grandes inversores que buscan la menor prima posible y priorizan el coste total sobre la liquidez inmediata.",
     description:
-      "El lingote de oro de 1 kilogramo es el formato de gran inversión con la menor prima sobre spot. Contiene 32,15 onzas troy de oro puro y su precio suele superar los 70.000 € (variable según cotización). La contrapartida es una liquidez menor que los formatos más pequeños: no todos los dealers pueden absorber una venta de 1 kg inmediatamente, y el pool de compradores es más reducido.",
+      "El lingote de oro de 1 kilogramo es el formato de gran inversión con la menor prima sobre spot. Contiene 32,15 onzas troy de oro puro y su precio suele superar los 70.000 € / ~$75.000 USD (variable según cotización). La contrapartida es una liquidez menor que los formatos más pequeños: no todos los dealers pueden absorber una venta de 1 kg inmediatamente, y el pool de compradores es más reducido.",
     highlights: [
       "Prima mínima sobre spot — el formato más eficiente en coste",
       "Contiene 32,15 onzas troy (1.000 g de oro fino)",
@@ -734,14 +734,14 @@ const PRODUCTS_EN: Record<string, ProductTexts> = {
     purityLabel: "999.9 millesimal (24 karats)",
     liquidity: "Very high",
     vatNote: "Classified as investment gold in most jurisdictions (fineness ≥ 900, minted after 1800, legal tender). Check the tax treatment in your country.",
-    idealFor: "European investors looking for a maximum-purity coin issued within the eurozone, with high liquidity and broad acceptance across Europe.",
+    idealFor: "Investors seeking a maximum-purity coin denominated in euros, with high global liquidity and broad international acceptance.",
     description: "The Vienna Philharmonic (Wiener Philharmoniker) is the best-selling investment gold coin in Europe and one of the most popular worldwide. Issued by the Austrian Mint (one of the oldest in the world, founded in 1194), it combines maximum purity with an iconic design honouring the Vienna Philharmonic Orchestra. Its face value is denominated in euros.",
     highlights: [
-      "Best-selling investment gold coin in Europe",
-      "Face value of €100 — denominated in the local currency",
+      "Best-selling investment gold coin in Europe and recognized worldwide",
+      "Face value of €100 — denominated in euros",
       "Iconic design: instruments of the Vienna Philharmonic",
       "Issued by one of the world's oldest mints (1194)",
-      "Included in the official EU list of VAT-exempt investment gold coins",
+      "VAT-exempt as investment gold in the EU and recognized in multiple jurisdictions",
     ],
     seo: {
       title: "Vienna Philharmonic 1 oz Gold — Profile, Price & Specs",
@@ -822,13 +822,13 @@ const PRODUCTS_EN: Record<string, ProductTexts> = {
     purityLabel: "999 millesimal",
     liquidity: "Very high",
     vatNote: "Silver does not benefit from the investment gold tax exemption in most jurisdictions. Check the tax treatment in your country.",
-    idealFor: "European investors looking to accumulate silver in euro-denominated coins with high continental liquidity.",
-    description: "The Vienna Philharmonic in silver shares the iconic design of its gold version and is the best-selling silver coin in Europe. With a face value of €1.50, it is legal tender in Austria and the entire eurozone. Its popularity in Europe makes it especially easy to sell on the continental secondary market.",
+    idealFor: "Investors looking to accumulate silver in euro-denominated coins with high liquidity in Europe and growing international acceptance.",
+    description: "The Vienna Philharmonic in silver shares the iconic design of its gold version and is the best-selling silver coin in Europe, with growing presence in international markets. With a face value of €1.50, it is legal tender in Austria and the entire eurozone.",
     highlights: [
-      "Best-selling silver coin in Europe",
+      "Best-selling silver coin in Europe and popular internationally",
       "Face value of €1.50 — legal tender in the eurozone",
       "Same iconic design as the gold version",
-      "Especially liquid in European markets",
+      "Highly liquid in European and international markets",
       "Also available in 1/25 oz (miniature) versions and tubes of 20 units",
     ],
     seo: {
@@ -867,13 +867,13 @@ const PRODUCTS_EN: Record<string, ProductTexts> = {
     liquidity: "Very high",
     vatNote: "Silver does not benefit from the investment gold tax exemption in most jurisdictions. Check the tax treatment in your country.",
     idealFor: "Investors wanting the world's most recognized silver coin, with maximum liquidity especially in American markets.",
-    description: "The American Silver Eagle is the world's best-selling investment silver coin. Issued by the U.S. Mint since 1986 with the iconic Walking Liberty design, it was redesigned in 2021 with a new reverse (landing eagle) and security improvements. Its premiums tend to be higher than European competitors, but its liquidity is unmatched.",
+    description: "The American Silver Eagle is the world's best-selling investment silver coin. Issued by the U.S. Mint since 1986 with the iconic Walking Liberty design, it was redesigned in 2021 with a new reverse (landing eagle) and security improvements. Its premiums tend to be higher than other major competitors, but its liquidity is unmatched.",
     highlights: [
       "The world's best-selling silver coin — millions of units per year",
       "Iconic Walking Liberty design (obverse) since 1986",
       "Reverse redesigned in 2021 with new anti-counterfeiting measures",
       "Face value of 1 USD — backed by the US government",
-      "Higher premiums than European competitors, offset by global liquidity",
+      "Higher premiums than other major competitors, offset by unmatched global liquidity",
     ],
     seo: {
       title: "American Eagle 1 oz Silver — Profile, Price & Specs",
@@ -933,12 +933,12 @@ const PRODUCTS_EN: Record<string, ProductTexts> = {
     liquidity: "High",
     vatNote: "Classified as investment gold in most jurisdictions (bar with fineness ≥ 995). Check the tax treatment in your country.",
     idealFor: "Investors with higher capital seeking to optimize the premium per gram. Good balance between cost, liquidity and storage.",
-    description: "The 100 gram gold bar is a very popular intermediate format among serious investors. It offers a significantly lower premium per gram than 1 oz bars and coins, while maintaining high liquidity in the secondary market. It is the preferred format for many European investors seeking the balance between entry cost and ease of resale.",
+    description: "The 100 gram gold bar is a very popular intermediate format among serious investors. It offers a significantly lower premium per gram than 1 oz bars and coins, while maintaining high liquidity in the secondary market. It is the preferred format for many professional investors seeking the balance between entry cost and ease of resale.",
     highlights: [
       "Excellent premium-to-weight ratio — more efficient than 1 oz",
       "Equivalent to approximately 3.22 troy ounces",
-      "Very popular format in continental Europe",
-      "Easy to resell on the European secondary market",
+      "Very popular format in Europe, Asia and the Middle East",
+      "Easy to resell on international secondary markets",
       "Usually includes engraved serial number and assay certificate",
     ],
     seo: {
@@ -955,7 +955,7 @@ const PRODUCTS_EN: Record<string, ProductTexts> = {
     liquidity: "Medium",
     vatNote: "Classified as investment gold in most jurisdictions (bar with fineness ≥ 995). Check the tax treatment in your country.",
     idealFor: "Large investors seeking the lowest possible premium who prioritize total cost over immediate liquidity.",
-    description: "The 1 kilogram gold bar is the large investment format with the lowest premium over spot. It contains 32.15 troy ounces of pure gold and its price usually exceeds €70,000 (variable depending on the spot price). The trade-off is lower liquidity than smaller formats: not all dealers can absorb a 1 kg sale immediately, and the buyer pool is smaller.",
+    description: "The 1 kilogram gold bar is the large investment format with the lowest premium over spot. It contains 32.15 troy ounces of pure gold and its price usually exceeds €70,000 / ~$75,000 USD (variable depending on the spot price). The trade-off is lower liquidity than smaller formats: not all dealers can absorb a 1 kg sale immediately, and the buyer pool is smaller.",
     highlights: [
       "Minimum premium over spot — the most cost-efficient format",
       "Contains 32.15 troy ounces (1,000 g of fine gold)",
@@ -977,7 +977,7 @@ const PRODUCTS_EN: Record<string, ProductTexts> = {
     liquidity: "High",
     vatNote: "Silver does not benefit from the investment gold tax exemption in most jurisdictions. Check the tax treatment in your country.",
     idealFor: "Silver investors looking to minimize the premium per ounce who don't mind weight/volume. The most efficient format for accumulating silver.",
-    description: "The 1 kilogram silver bar is the most popular format for serious physical silver investment. It contains 32.15 troy ounces of silver and offers the best premium-to-weight ratio in the silver market (excluding larger 5 or 15 kg bars). The main drawback is VAT which significantly increases the entry cost in many countries. Many investors buy from dealers in tax-advantaged jurisdictions or use bonded storage to optimize taxation.",
+    description: "The 1 kilogram silver bar is the most popular format for serious physical silver investment. It contains 32.15 troy ounces of silver and offers the best premium-to-weight ratio in the silver market (excluding larger 5 or 15 kg bars). The main drawback is VAT or sales tax, which significantly increases the entry cost in many countries (especially in the EU and UK). Many investors buy from dealers in tax-advantaged jurisdictions or use bonded storage to optimize taxation.",
     highlights: [
       "Standard silver investment format — better premium-to-weight ratio than coins",
       "32.15 troy ounces per bar — much more efficient than buying coin by coin",

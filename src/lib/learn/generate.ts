@@ -527,16 +527,29 @@ export async function translateArticle(
 
   const localeName = localeNames[targetLocale] || targetLocale;
 
+  const culturalAdaptation: Record<string, string> = {
+    es: "- Use natural Latin American/Spanish financial terminology\n- Reference both EUR and USD where relevant",
+    zh: "- Prefer CNY examples alongside USD where relevant\n- Reference Shanghai Gold Exchange (SGE), PBoC, and Chinese gold demand where appropriate\n- Use Simplified Chinese conventions",
+    ar: "- Consider AED/SAR for Gulf readers alongside USD\n- Reference Middle Eastern gold markets and demand where appropriate\n- Use Modern Standard Arabic",
+    tr: "- Consider TRY examples alongside USD where relevant\n- Reference Turkish gold culture, CBRT, and Istanbul gold market where appropriate",
+    de: "- Use standard German financial terminology\n- Reference both EUR and USD where relevant",
+  };
+
+  const adaptationRules = culturalAdaptation[targetLocale] || "";
+
   const prompt = `Translate this educational article about precious metals to ${localeName}.
 
 RULES:
 - Maintain the same structure (## headings, paragraphs, lists)
 - Keep technical terms that are universally recognized (ETF, LBMA, COMEX, DCA, etc.)
-- Adapt units and examples when culturally appropriate
+- Adapt units and examples for the target locale when culturally appropriate
 - Maintain professional, educational tone
 - Do NOT add or remove information
 - Do NOT translate brand names (Metalorix, SPDR Gold Shares, etc.)
 - Translate naturally, not literally
+
+CULTURAL ADAPTATION FOR ${localeName.toUpperCase()}:
+${adaptationRules}
 
 Return a JSON object:
 {

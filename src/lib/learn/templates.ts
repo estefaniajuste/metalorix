@@ -16,6 +16,14 @@ WRITING STYLE:
 - Do NOT repeat the same idea in different words
 - Use active voice when possible
 - Use concrete examples when they add clarity
+
+GLOBAL AUDIENCE:
+- Write for a worldwide readership — avoid assuming Western-only context
+- When giving market examples, include diverse regions (e.g. Shanghai Gold Exchange, Indian demand, Middle East, Turkey, alongside COMEX and LBMA)
+- Mention multiple central banks where relevant (PBoC, RBI, CBRT, alongside the Fed and ECB)
+- Use neutral or multi-currency references (e.g. "USD/local currency") rather than only USD or EUR
+- Avoid framing precious metals markets solely through a US/European lens
+- Keep cultural examples balanced across regions when possible
 `.trim();
 
 const STRUCTURE_RULES = `
