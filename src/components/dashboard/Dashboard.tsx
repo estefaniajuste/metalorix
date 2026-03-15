@@ -8,20 +8,11 @@ import {
   type MetalSymbol,
   type TimeRange,
 } from "@/lib/providers/metals";
-import dynamic from "next/dynamic";
 import { MetalCard } from "./MetalCard";
 import { RangeSelector } from "./RangeSelector";
-import { DataTable } from "./DataTable";
 import { CurrencyUnitToggle } from "./CurrencyUnitToggle";
 import type { Currency, PriceUnit } from "@/lib/utils/units";
 import { usePrices } from "@/lib/hooks/use-prices";
-
-const PriceChart = dynamic(() => import("./PriceChart").then((m) => m.PriceChart), {
-  ssr: false,
-  loading: () => (
-    <div className="w-full h-[400px] bg-surface-1 border border-border rounded-DEFAULT animate-shimmer" />
-  ),
-});
 
 async function apiFetchHistory(
   symbol: string,
@@ -34,14 +25,12 @@ async function apiFetchHistory(
 export function Dashboard() {
   const t = useTranslations("dashboard");
   const tc = useTranslations("common");
-  const [activeMetal, setActiveMetal] = useState<MetalSymbol>("XAU");
   const [activeRange, setActiveRange] = useState<TimeRange>("1D");
   const { prices, source: dataSource, lastUpdate } = usePrices();
   const [history, setHistory] = useState<Record<string, HistoryResult>>({});
   const [currency, setCurrency] = useState<Currency>("USD");
   const [unit, setUnit] = useState<PriceUnit>("oz");
   const [eurUsdRate, setEurUsdRate] = useState(1.08);
-  const chartSectionRef = useRef<HTMLDivElement>(null);
   const historyRef = useRef(history);
   historyRef.current = history;
 
@@ -74,7 +63,10 @@ export function Dashboard() {
     });
   }, [activeRange, loadHistory]);
 
-  const historyKey = `${activeMetal}_${activeRange}`;
+  const allSpotZero = prices
+    ? prices.every((p) => Math.abs(p.changePct) < 0.01 && Math.abs(p.change) < 0.01)
+    : false;
+  const marketClosed = allSpotZero && dataSource !== "mock" && dataSource !== "loading" && dataSource !== "error";
 
   const statusLabel =
     dataSource === "mock"
@@ -83,13 +75,15 @@ export function Dashboard() {
         ? tc("error")
         : dataSource === "loading"
           ? tc("loading")
-          : tc("live");
+          : marketClosed
+            ? t("marketClosedShort")
+            : tc("live");
 
   return (
-    <section className="pt-6 pb-[var(--section-py)]" id="dashboard">
+    <section className="pt-6 pb-8" id="dashboard">
       <div className="mx-auto max-w-[1200px] px-6">
-        <div className="flex items-center justify-between mb-9 flex-wrap gap-4">
-          <h2 className="text-[28px] font-bold text-content-0 flex items-center gap-2.5">
+        <div className="flex items-center justify-between mb-6 flex-wrap gap-3">
+          <h2 className="text-2xl font-bold text-content-0 flex items-center gap-2.5">
             {t("spotPrices")}
             <span
               className={`text-[11px] font-semibold px-2.5 py-0.5 rounded-full uppercase tracking-wider ${
@@ -97,7 +91,9 @@ export function Dashboard() {
                   ? "bg-[rgba(214,179,90,0.12)] text-brand-gold"
                   : dataSource === "error"
                     ? "bg-signal-down-bg text-signal-down"
-                    : "bg-signal-up-bg text-signal-up"
+                    : marketClosed
+                      ? "bg-[rgba(214,179,90,0.12)] text-brand-gold"
+                      : "bg-signal-up-bg text-signal-up"
               }`}
             >
               {statusLabel}
@@ -119,7 +115,7 @@ export function Dashboard() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-10">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
           {prices
             ? prices.map((spot) => {
                 const rangeKey = `${spot.symbol}_${activeRange}`;
@@ -134,41 +130,31 @@ export function Dashboard() {
                   <MetalCard
                     key={spot.symbol}
                     spot={spot}
-                    active={spot.symbol === activeMetal}
-                    onClick={() => {
-                      setActiveMetal(spot.symbol as MetalSymbol);
-                      chartSectionRef.current?.scrollIntoView({
-                        behavior: "smooth",
-                        block: "center",
-                      });
-                    }}
+                    active={false}
+                    onClick={() => {}}
                     sparklineData={sparkline}
                     rangeChange={rangeChange}
                     currency={currency}
                     unit={unit}
                     eurUsdRate={eurUsdRate}
+                    marketClosed={marketClosed}
                   />
                 );
               })
             : (Object.keys(METALS) as MetalSymbol[]).map((symbol) => (
-                <div key={symbol} className="bg-surface-1 border border-border rounded-DEFAULT p-6">
-                  <div className="flex items-center gap-2.5 mb-4">
-                    <div className="w-10 h-10 rounded-xs bg-surface-2 animate-shimmer" />
+                <div key={symbol} className="bg-surface-1 border border-border rounded-DEFAULT p-5">
+                  <div className="flex items-center gap-2.5 mb-3">
+                    <div className="w-9 h-9 rounded-xs bg-surface-2 animate-shimmer" />
                     <div>
-                      <div className="h-4 w-16 bg-surface-2 rounded-xs animate-shimmer mb-1.5" />
+                      <div className="h-4 w-14 bg-surface-2 rounded-xs animate-shimmer mb-1" />
                       <div className="h-3 w-10 bg-surface-2 rounded-xs animate-shimmer" />
                     </div>
                   </div>
-                  <div className="h-9 w-40 bg-surface-2 rounded-xs animate-shimmer mb-2" />
-                  <div className="h-4 w-24 bg-surface-2 rounded-xs animate-shimmer" />
+                  <div className="h-8 w-28 bg-surface-2 rounded-xs animate-shimmer mb-2" />
+                  <div className="h-3 w-20 bg-surface-2 rounded-xs animate-shimmer" />
                 </div>
               ))}
         </div>
-
-        <div ref={chartSectionRef}>
-          <PriceChart symbol={activeMetal} range={activeRange} history={history[historyKey] ?? null} />
-        </div>
-        <DataTable history={history[historyKey] ?? null} range={activeRange} />
       </div>
     </section>
   );
