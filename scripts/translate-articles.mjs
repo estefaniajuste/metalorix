@@ -29,7 +29,7 @@ async function generateText(prompt) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           contents: [{ parts: [{ text: prompt }] }],
-          generationConfig: { temperature: 0.7, topP: 0.9, maxOutputTokens: 4096 },
+          generationConfig: { temperature: 0.7, topP: 0.9, maxOutputTokens: 16384 },
         }),
       }
     );
@@ -45,16 +45,27 @@ async function generateText(prompt) {
   }
 }
 
-function parseTranslated(raw) {
+function parseTranslated(raw, locale) {
   try {
     const jsonMatch = raw.match(/```(?:json)?\s*([\s\S]*?)```/);
-    const jsonStr = jsonMatch ? jsonMatch[1].trim() : raw.trim();
+    let jsonStr = jsonMatch ? jsonMatch[1].trim() : raw.trim();
+    
+    // Remove BOM or other invisible characters
+    jsonStr = jsonStr.replace(/^\uFEFF/, '');
+    
+    // Try to extract JSON object from response if it has extra text
+    const objMatch = jsonStr.match(/\{[\s\S]*\}/);
+    if (objMatch) jsonStr = objMatch[0];
+    
     const parsed = JSON.parse(jsonStr);
     if (parsed.title && parsed.content) {
       return { title: parsed.title, excerpt: parsed.excerpt ?? "", content: parsed.content };
     }
+    console.error(`  [${locale}] parse: missing title/content in parsed JSON`);
     return null;
-  } catch {
+  } catch (err) {
+    console.error(`  [${locale}] parse error: ${err.message}`);
+    console.error(`  [${locale}] raw response (first 300): ${raw?.substring(0, 300)}`);
     return null;
   }
 }
@@ -95,7 +106,7 @@ Return ONLY the JSON, no additional text.`;
 
   const raw = await generateText(prompt);
   if (!raw) return null;
-  return parseTranslated(raw);
+  return parseTranslated(raw, locale);
 }
 
 async function main() {

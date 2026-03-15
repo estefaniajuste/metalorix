@@ -25,7 +25,7 @@ export async function generateText(prompt: string): Promise<string | null> {
           generationConfig: {
             temperature: 0.7,
             topP: 0.9,
-            maxOutputTokens: 8192,
+            maxOutputTokens: 16384,
           },
         }),
       }

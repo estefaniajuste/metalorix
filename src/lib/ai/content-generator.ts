@@ -469,8 +469,15 @@ interface TranslatedArticle {
 
 function parseTranslatedResponse(raw: string): TranslatedArticle | null {
   try {
-    const jsonMatch = raw.match(/```(?:json)?\s*([\s\S]*?)```/);
-    const jsonStr = jsonMatch ? jsonMatch[1].trim() : raw.trim();
+    // Try closed code block first, then unclosed, then raw
+    const closedMatch = raw.match(/```(?:json)?\s*([\s\S]*?)```/);
+    const unclosedMatch = !closedMatch ? raw.match(/```(?:json)?\s*([\s\S]*)/) : null;
+    let jsonStr = (closedMatch?.[1] ?? unclosedMatch?.[1] ?? raw).trim();
+
+    // Extract the outermost JSON object
+    const objMatch = jsonStr.match(/\{[\s\S]*\}/);
+    if (objMatch) jsonStr = objMatch[0];
+
     const parsed = JSON.parse(jsonStr);
     if (parsed.title && parsed.content) {
       return {
