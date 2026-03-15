@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 
 interface ArticleCardProps {
   slug: string;
@@ -50,7 +50,7 @@ export function ArticleCard({
 }: ArticleCardProps) {
   return (
     <Link
-      href={`/learn/${clusterSlug}/${slug}`}
+      href={{ pathname: "/learn/[cluster]/[slug]" as const, params: { cluster: clusterSlug, slug } }}
       className={`group block rounded-lg border transition-all hover:border-brand-gold/40 hover:shadow-md ${
         isPillar
           ? "border-brand-gold/20 bg-[rgba(214,179,90,0.04)]"

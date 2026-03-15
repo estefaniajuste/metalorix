@@ -178,7 +178,11 @@ export default async function LearnArticlePage({
       })()
     : [];
 
-  const hasContent = content.length > 0;
+  const strippedContent = content
+    .replace(/## Key Takeaways[\s\S]*?(?=\n## |\n*$)/, "")
+    .replace(/## Frequently Asked Questions[\s\S]*?(?=\n## |\n*$)/, "")
+    .trim();
+  const hasContent = strippedContent.length > 0;
 
   const alternates = getAlternates(locale, {
     pathname: "/learn/[cluster]/[slug]",
@@ -279,7 +283,7 @@ export default async function LearnArticlePage({
           {/* Content */}
           {hasContent ? (
             <div className="prose-metalorix text-content-1 leading-relaxed text-[15px] [&>p]:mb-5 [&>h2]:text-xl [&>h2]:font-bold [&>h2]:text-content-0 [&>h2]:mt-10 [&>h2]:mb-4 [&>h3]:text-lg [&>h3]:font-semibold [&>h3]:text-content-0 [&>h3]:mt-8 [&>h3]:mb-3 [&>ul]:list-disc [&>ul]:pl-5 [&>ul]:mb-5 [&>ol]:list-decimal [&>ol]:pl-5 [&>ol]:mb-5 [&>blockquote]:border-l-2 [&>blockquote]:border-brand-gold [&>blockquote]:pl-4 [&>blockquote]:italic [&>blockquote]:text-content-2 [&>blockquote]:my-6">
-              {content.split("\n").map((line, i) => {
+              {strippedContent.split("\n").map((line, i) => {
                 if (!line.trim()) return null;
                 if (line.startsWith("## "))
                   return <h2 key={i}>{line.slice(3)}</h2>;
