@@ -12,10 +12,10 @@ export default function robots(): MetadataRoute.Robots {
     rules: [
       {
         userAgent: "*",
-        allow: "/",
+        allow: ["/", "/api/sitemap", "/api/feed"],
         disallow: ["/api/", ...uniquePanelPaths.map((p) => `${p}/`)],
       },
     ],
-    sitemap: "https://metalorix.com/sitemap.xml",
+    sitemap: "https://metalorix.com/api/sitemap",
   };
 }
