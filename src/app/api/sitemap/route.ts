@@ -52,15 +52,6 @@ const PRODUCT_BASE: Record<string, string> = {
   zh: "chanpin", ar: "muntajat", tr: "urunler",
 };
 
-const NEWS_BASE: Record<string, string> = {
-  es: "noticias", en: "news", de: "nachrichten", zh: "xinwen", ar: "akhbar", tr: "haberler",
-};
-
-const LEARN_BASE: Record<string, string> = {
-  es: "aprende-inversion", en: "learn", de: "lernen-investition",
-  zh: "xuexi", ar: "taallam", tr: "ogren-yatirim",
-};
-
 const FREQ_PRIO: Record<string, [string, number]> = {
   "/herramientas": ["weekly", 0.8],
   "/calculadora-rentabilidad": ["monthly", 0.7],
@@ -88,25 +79,22 @@ function urlEntry(
   paths: Record<string, string>,
   changefreq: string,
   priority: number,
-  lastmod?: string,
+  lastmod: string,
 ): string {
   const defaultUrl = `${BASE}${paths[DEFAULT_LOCALE]}`;
-  const mod = lastmod || new Date().toISOString().split("T")[0];
 
   const xhtmlLinks = LOCALES.map(
     (loc) =>
       `    <xhtml:link rel="alternate" hreflang="${loc}" href="${esc(`${BASE}${paths[loc]}`)}" />`
   ).join("\n");
 
-  const xDefault = `    <xhtml:link rel="alternate" hreflang="x-default" href="${esc(defaultUrl)}" />`;
-
   return `  <url>
     <loc>${esc(defaultUrl)}</loc>
-    <lastmod>${mod}</lastmod>
+    <lastmod>${lastmod}</lastmod>
     <changefreq>${changefreq}</changefreq>
     <priority>${priority.toFixed(1)}</priority>
 ${xhtmlLinks}
-${xDefault}
+    <xhtml:link rel="alternate" hreflang="x-default" href="${esc(defaultUrl)}" />
   </url>`;
 }
 
@@ -114,62 +102,22 @@ export async function GET() {
   const today = new Date().toISOString().split("T")[0];
   const urls: string[] = [];
 
-  // Homepage
   urls.push(urlEntry(PATHNAMES["/"], "daily", 1.0, today));
 
-  // Static pages
   for (const [key, [freq, prio]] of Object.entries(FREQ_PRIO)) {
-    if (PATHNAMES[key]) {
-      urls.push(urlEntry(PATHNAMES[key], freq, prio, today));
-    }
+    if (PATHNAMES[key]) urls.push(urlEntry(PATHNAMES[key], freq, prio, today));
   }
 
-  // Metal price pages
   for (const [, slugsByLocale] of Object.entries(METAL_SLUGS)) {
     const paths: Record<string, string> = {};
-    for (const loc of LOCALES) {
-      paths[loc] = `/${loc}/${PRICE_PATHS[loc]}/${slugsByLocale[loc]}`;
-    }
+    for (const loc of LOCALES) paths[loc] = `/${loc}/${PRICE_PATHS[loc]}/${slugsByLocale[loc]}`;
     urls.push(urlEntry(paths, "daily", 0.9, today));
   }
 
-  // Product pages (slugs inlined to avoid imports)
   for (const slug of PRODUCT_SLUGS) {
     const paths: Record<string, string> = {};
-    for (const loc of LOCALES) {
-      paths[loc] = `/${loc}/${PRODUCT_BASE[loc]}/${slug}`;
-    }
+    for (const loc of LOCALES) paths[loc] = `/${loc}/${PRODUCT_BASE[loc]}/${slug}`;
     urls.push(urlEntry(paths, "monthly", 0.6, today));
-  }
-
-  // Dynamic DB content fetched via internal API to avoid import issues
-  try {
-    const baseUrl = process.env.NEXT_PUBLIC_URL || BASE;
-    const res = await fetch(`${baseUrl}/api/sitemap-urls`, {
-      signal: AbortSignal.timeout(8_000),
-      headers: { "x-internal": "1" },
-    });
-    if (res.ok) {
-      const data = await res.json() as { urls: Array<{ slug: string; type: string; cluster?: string; lastmod?: string }> };
-      for (const item of data.urls) {
-        const paths: Record<string, string> = {};
-        if (item.type === "article") {
-          for (const loc of LOCALES) paths[loc] = `/${loc}/${NEWS_BASE[loc]}/${item.slug}`;
-          urls.push(urlEntry(paths, "weekly", 0.6, item.lastmod));
-        } else if (item.type === "glossary") {
-          for (const loc of LOCALES) paths[loc] = `/${loc}/${LEARN_BASE[loc]}/glossary/${item.slug}`;
-          urls.push(urlEntry(paths, "monthly", 0.5, today));
-        } else if (item.type === "cluster") {
-          for (const loc of LOCALES) paths[loc] = `/${loc}/${LEARN_BASE[loc]}/${item.slug}`;
-          urls.push(urlEntry(paths, "weekly", 0.6, today));
-        } else if (item.type === "learn-article") {
-          for (const loc of LOCALES) paths[loc] = `/${loc}/${LEARN_BASE[loc]}/${item.cluster}/${item.slug}`;
-          urls.push(urlEntry(paths, "monthly", 0.5, today));
-        }
-      }
-    }
-  } catch {
-    // DB content unavailable, static sitemap still served
   }
 
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
