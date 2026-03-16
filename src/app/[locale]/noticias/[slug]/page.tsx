@@ -110,7 +110,7 @@ function renderInlineLinks(text: string) {
       parts.push(
         <Link
           key={match.index}
-          href={{ pathname: "/aprende/[slug]" as const, params: { slug: aprendeMatch[1] } }}
+          href="/learn"
           className="text-brand-gold hover:underline font-medium"
         >
           {linkText}

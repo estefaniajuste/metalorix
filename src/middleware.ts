@@ -23,15 +23,15 @@ const PATH_ALIASES: Record<string, string> = {
   "/copper": "/precio/cobre",
   "/tools": "/herramientas",
   "/news": "/noticias",
-  "/glossary": "/aprende",
-  "/glosario": "/aprende",
-  "/education": "/aprende",
-  "/educacion": "/aprende",
-  "/aprender": "/aprende",
-  "/lernen": "/aprende",
-  "/xuexi": "/aprende",
-  "/taallam": "/aprende",
-  "/ogren": "/aprende",
+  "/glossary": "/learn",
+  "/glosario": "/learn",
+  "/education": "/learn",
+  "/educacion": "/learn",
+  "/aprender": "/learn",
+  "/lernen": "/learn",
+  "/xuexi": "/learn",
+  "/taallam": "/learn",
+  "/ogren": "/learn",
 };
 
 const handleI18nRouting = createMiddleware(routing);
@@ -57,7 +57,14 @@ export function middleware(request: NextRequest) {
     return response;
   }
 
-  const alias = PATH_ALIASES[pathname.toLowerCase()];
+  // Redirect old /aprende and /glosario paths to /learn
+  const lower = pathname.toLowerCase();
+  if (lower === "/aprende" || lower.startsWith("/aprende/") ||
+      lower === "/glosario" || lower.startsWith("/glosario/")) {
+    return NextResponse.redirect(new URL("/learn", request.url), 301);
+  }
+
+  const alias = PATH_ALIASES[lower];
   if (alias) {
     const rewritten = new URL(alias, request.url);
     rewritten.search = request.nextUrl.search;

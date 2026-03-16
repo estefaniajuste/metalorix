@@ -28,7 +28,6 @@ export function Footer() {
         { href: "/guia-inversion", label: t("investmentGuide") },
         { href: "/noticias", label: tn("news") },
         { href: "/alertas", label: tn("alerts") },
-        { href: "/aprende", label: t("glossary") },
         { href: "/learn", label: t("learn") },
       ],
     },

@@ -134,24 +134,6 @@ export const routing = defineRouting({
       tr: "/haberler/[slug]",
     },
 
-    "/aprende": {
-      es: "/aprende",
-      en: "/glossary",
-      de: "/glossar",
-      zh: "/cihui",
-      ar: "/mustalah",
-      tr: "/sozluk",
-    },
-
-    "/aprende/[slug]": {
-      es: "/aprende/[slug]",
-      en: "/glossary/[slug]",
-      de: "/glossar/[slug]",
-      zh: "/cihui/[slug]",
-      ar: "/mustalah/[slug]",
-      tr: "/sozluk/[slug]",
-    },
-
     "/learn": {
       es: "/aprende-inversion",
       en: "/learn",

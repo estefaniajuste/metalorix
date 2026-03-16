@@ -4,11 +4,11 @@ import { generateText, isConfigured } from "@/lib/ai/gemini";
 import { sendEmail } from "./resend";
 
 const METAL_NAMES: Record<string, Record<string, string>> = {
-  XAU: { es: "Oro", en: "Gold", ar: "الذهب" },
-  XAG: { es: "Plata", en: "Silver", ar: "الفضة" },
-  XPT: { es: "Platino", en: "Platinum", ar: "البلاتين" },
-  XPD: { es: "Paladio", en: "Palladium", ar: "البلاديوم" },
-  HG:  { es: "Cobre", en: "Copper", ar: "النحاس" },
+  XAU: { es: "Oro", en: "Gold", ar: "الذهب", zh: "黄金", de: "Gold", tr: "Altın" },
+  XAG: { es: "Plata", en: "Silver", ar: "الفضة", zh: "白银", de: "Silber", tr: "Gümüş" },
+  XPT: { es: "Platino", en: "Platinum", ar: "البلاتين", zh: "铂金", de: "Platin", tr: "Platin" },
+  XPD: { es: "Paladio", en: "Palladium", ar: "البلاديوم", zh: "钯金", de: "Palladium", tr: "Paladyum" },
+  HG:  { es: "Cobre", en: "Copper", ar: "النحاس", zh: "铜", de: "Kupfer", tr: "Bakır" },
 };
 
 function mName(symbol: string, locale: string = "es"): string {
@@ -26,6 +26,9 @@ const NL_I18N: Record<string, NlI18n> = {
   es: { viewDashboard: "Ver Dashboard", footer: "Recibes esta newsletter porque te suscribiste en metalorix.com", manageSub: "Gestionar suscripción", weekOf: "Semana del" },
   en: { viewDashboard: "View Dashboard", footer: "You receive this newsletter because you subscribed on metalorix.com", manageSub: "Manage subscription", weekOf: "Week of" },
   ar: { viewDashboard: "عرض لوحة المعلومات", footer: "تتلقى هذه النشرة لأنك اشتركت في metalorix.com", manageSub: "إدارة الاشتراك", weekOf: "أسبوع" },
+  zh: { viewDashboard: "查看仪表板", footer: "您收到此通讯是因为您在 metalorix.com 上订阅了", manageSub: "管理订阅", weekOf: "第...周" },
+  de: { viewDashboard: "Dashboard anzeigen", footer: "Du erhältst diesen Newsletter, weil du dich auf metalorix.com angemeldet hast", manageSub: "Abo verwalten", weekOf: "Woche vom" },
+  tr: { viewDashboard: "Paneli Görüntüle", footer: "Bu bülteni metalorix.com'a abone olduğunuz için alıyorsunuz", manageSub: "Aboneliği yönet", weekOf: "Haftası" },
 };
 
 function newsletterTemplate(content: string, weekLabel: string, locale: string = "es"): string {

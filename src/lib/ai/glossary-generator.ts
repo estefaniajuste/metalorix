@@ -76,9 +76,8 @@ INSTRUCCIONES DE CONTENIDO:
 - NO uses primera persona ni "como experto"
 - NO incluyas título principal (h1), solo h2 y h3
 
-CROSS-LINKING (MUY IMPORTANTE):
-Los siguientes términos existen en nuestra sección de formación. Cuando menciones alguno de ellos en tu texto, DEBES incluir un enlace con formato markdown: [nombre del término](/aprende/slug)
-Solo incluye cada enlace UNA vez (la primera mención).
+TERMINOLOGÍA RELACIONADA:
+Los siguientes términos existen en nuestra base de conocimiento. Menciónalos cuando sea relevante.
 
 TÉRMINOS DISPONIBLES:
 ${termListStr}
@@ -128,14 +127,13 @@ Para CADA término genera:
 1. "term": nombre del término
 2. "slug": URL amigable en minúsculas sin acentos (ej: "soporte-resistencia")
 3. "definition": definición concisa de 1-3 frases (40-80 palabras)
-4. "content": artículo educativo completo de 500-800 palabras con formato markdown (## y ###). NO incluir el título. Incluir cross-links a otros términos existentes con formato [término](/aprende/slug)
+4. "content": artículo educativo completo de 500-800 palabras con formato markdown (## y ###). NO incluir el título.
 5. "category": una de las categorías permitidas
 6. "relatedSlugs": array de 1-3 slugs de términos relacionados (existentes o de los nuevos que generes)
 
 CATEGORÍAS PERMITIDAS: ${categories.join(", ")}
 
-CROSS-LINKING:
-Cuando en el "content" menciones términos existentes, usa [nombre](/aprende/slug).
+TERMINOLOGÍA:
 TÉRMINOS EXISTENTES PARA ENLAZAR:
 ${termListStr}
 
@@ -287,7 +285,7 @@ export async function injectGlossaryLinks(
     if (linked.has(term.slug)) continue;
 
     // Skip if the term is already linked in the content
-    if (result.includes(`(/aprende/${term.slug})`)) continue;
+    if (result.includes(`[${term.term}]`)) continue;
 
     // Case-insensitive match, whole word boundary, not inside existing markdown links
     const escapedTerm = term.term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
@@ -300,7 +298,7 @@ export async function injectGlossaryLinks(
     if (match && match.index !== undefined) {
       const before = result.slice(0, match.index);
       const after = result.slice(match.index + match[0].length);
-      result = `${before}[${match[0]}](/aprende/${term.slug})${after}`;
+      result = `${before}**${match[0]}**${after}`;
       linked.add(term.slug);
     }
   }

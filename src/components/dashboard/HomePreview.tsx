@@ -259,7 +259,7 @@ export async function HomePreview() {
                 </p>
               </div>
               <Link
-                href="/aprende"
+                href="/learn"
                 className="text-sm font-medium text-brand-gold hover:underline flex-shrink-0"
               >
                 {t("viewAllLearn")} →
@@ -270,10 +270,7 @@ export async function HomePreview() {
               {glossary.map((term) => (
                 <Link
                   key={term.slug}
-                  href={{
-                    pathname: "/aprende/[slug]" as const,
-                    params: { slug: term.slug },
-                  }}
+                  href="/learn"
                   className="bg-surface-1 border border-border rounded-DEFAULT p-4 hover:border-border-hover hover:-translate-y-0.5 transition-all group"
                 >
                   {term.category && (

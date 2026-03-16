@@ -9,7 +9,7 @@ const publicPages = [
   { path: "/precio/cobre", titleMatch: /cobre/i },
   { path: "/herramientas", titleMatch: /herramientas/i },
   { path: "/noticias", titleMatch: /noticias/i },
-  { path: "/aprende", titleMatch: /aprende|learn/i },
+  { path: "/aprende-inversion", titleMatch: /aprende|learn/i },
   { path: "/guia-inversion", titleMatch: /inversión|inversion|guía|guia/i },
   { path: "/privacidad", titleMatch: /privacidad/i },
   { path: "/alertas", titleMatch: /alertas/i },

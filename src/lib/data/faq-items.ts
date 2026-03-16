@@ -102,7 +102,106 @@ const FAQ_AR: FaqItem[] = [
   },
 ];
 
-const FAQ_MAP: Record<string, FaqItem[]> = { es: FAQ_ES, en: FAQ_EN, ar: FAQ_AR };
+const FAQ_ZH: FaqItem[] = [
+  {
+    question: "购买实物黄金还是投资ETF更好？",
+    answer:
+      "取决于您的目标。实物黄金让您完全掌控并消除对手方风险，但涉及托管成本和较低流动性。ETF更便宜、流动性更高、更易管理，但您不直接持有金属。许多投资者两者结合：以实物黄金为基础，用ETF进行交易或主动管理投资组合。",
+  },
+  {
+    question: "在瑞士储存黄金有什么优势？",
+    answer:
+      "瑞士提供政治和法律稳定、健全的银行体系以及贵金属托管的悠久传统。在境外储存可分散司法管辖风险（防范没收或限制）。BullionVault或PAMP等服务提供经审计的金库，黄金单独分配。",
+  },
+  {
+    question: "什么是ETF的TER，为什么重要？",
+    answer:
+      "TER（总费用率）是基金管理人收取的年度成本，以投资价值的百分比表示。0.12%的TER意味着每投资10,000欧元，您每年支付12欧元费用。长期来看，0.12%与0.49%的TER差异可能因复利效应而显著。",
+  },
+  {
+    question: "实物黄金与ETF的税务处理是否不同？",
+    answer:
+      "是的，在大多数欧洲国家税务处理不同。例如在西班牙，投资级黄金（纯度>99.5%的金条和认可金币）的买卖免征增值税。资本利得按财产收益征税。ETF作为金融产品征税，可能需在源头预扣。请务必咨询税务顾问。",
+  },
+  {
+    question: "ETF和ETC有什么区别？",
+    answer:
+      "ETF（交易所交易基金）是在欧洲受UCITS法规监管的上市投资基金，必须分散投资。ETC（交易所交易商品）是由大宗商品支持的债务证券。由于UCITS规则不允许单一资产基金，欧洲的黄金产品通常是ETC而非技术意义上的ETF，尽管两者在口语中常混用。",
+  },
+  {
+    question: "我的投资组合中应持有多少黄金？",
+    answer:
+      "没有通用数字，但常见建议为多元化投资组合的5%至15%。黄金可作为通胀和不确定性的对冲。雷·达里奥在其全天候投资组合中建议7.5%。理想配置取决于您的风险承受能力、投资期限和整体财务状况。",
+  },
+];
+
+const FAQ_DE: FaqItem[] = [
+  {
+    question: "Ist es besser, physisches Gold zu kaufen oder in einen ETF zu investieren?",
+    answer:
+      "Es hängt von Ihrem Ziel ab. Physisches Gold gibt Ihnen volle Kontrolle und eliminiert das Kontrahentenrisiko, aber bedeutet Lagerkosten und geringere Liquidität. ETFs sind günstiger, liquider und einfacher zu verwalten, aber Sie besitzen das Metall nicht direkt. Viele Anleger kombinieren beides: eine Basis aus physischem Gold und ETFs für den Handel oder aktives Portfoliomanagement.",
+  },
+  {
+    question: "Welche Vorteile hat die Lagerung von Gold in der Schweiz?",
+    answer:
+      "Die Schweiz bietet politische und rechtliche Stabilität, ein solides Bankensystem und eine lange Tradition in der Verwahrung von Edelmetallen. Die Lagerung außerhalb Ihres Landes diversifiziert das jurisdiktionelle Risiko (Schutz vor Beschlagnahme oder Beschränkungen). Dienste wie BullionVault oder PAMP bieten geprüfte Tresore mit einzeln zugeordnetem Gold.",
+  },
+  {
+    question: "Was ist die TER eines ETFs und warum ist sie wichtig?",
+    answer:
+      "Die TER (Total Expense Ratio) ist die jährliche Kostenquote, die der Fondsmanager berechnet, ausgedrückt als Prozentsatz des investierten Werts. Eine TER von 0,12 % bedeutet, dass Sie bei 10.000 € Anlage 12 € pro Jahr an Gebühren zahlen. Langfristig kann der Unterschied zwischen einer TER von 0,12 % und 0,49 % aufgrund des Zinseszinseffekts erheblich sein.",
+  },
+  {
+    question: "Wird physisches Gold anders besteuert als ein ETF?",
+    answer:
+      "Ja, in den meisten europäischen Ländern unterscheidet sich die steuerliche Behandlung. In Deutschland beispielsweise ist Anlagegold (Barren >99,5 % Reinheit und anerkannte Münzen) von der Mehrwertsteuer befreit. Kursgewinne werden als Kapitalerträge versteuert. ETFs werden als Finanzprodukte besteuert und können Quellensteuer unterliegen. Konsultieren Sie immer einen Steuerberater.",
+  },
+  {
+    question: "Was ist der Unterschied zwischen einem ETF und einem ETC?",
+    answer:
+      "Ein ETF (Exchange-Traded Fund) ist ein börsengehandelter Fonds, der in Europa unter UCITS-Regeln reguliert ist und diversifiziert sein muss. Ein ETC (Exchange-Traded Commodity) ist eine Schuldverschreibung, die durch eine Rohstoffposition besichert ist. Da UCITS keine Einzel-Asset-Fonds erlaubt, sind Goldprodukte in Europa meist ETCs, technisch keine ETFs, obwohl beide Begriffe umgangssprachlich verwendet werden.",
+  },
+  {
+    question: "Wie viel Gold sollte ich in meinem Portfolio haben?",
+    answer:
+      "Es gibt keine universelle Zahl, aber übliche Empfehlungen liegen zwischen 5 % und 15 % eines diversifizierten Portfolios. Gold dient als Absicherung gegen Inflation und Unsicherheit. Ray Dalio empfiehlt 7,5 % in seinem All Weather Portfolio. Die ideale Menge hängt von Ihrer Risikotoleranz, Ihrem Anlagehorizont und Ihrer Gesamtfinanzsituation ab.",
+  },
+];
+
+const FAQ_TR: FaqItem[] = [
+  {
+    question: "Fiziksel altın mı almak daha iyi yoksa ETF'ye yatırım mı?",
+    answer:
+      "Hedefinize bağlıdır. Fiziksel altın size tam kontrol sağlar ve karşı taraf riskini ortadan kaldırır, ancak saklama maliyetleri ve daha düşük likidite içerir. ETF'ler daha ucuz, daha likit ve yönetmesi daha kolaydır, ancak metale doğrudan sahip olmazsınız. Birçok yatırımcı ikisini birleştirir: fiziksel altın tabanı ve işlem veya aktif portföy yönetimi için ETF'ler.",
+  },
+  {
+    question: "Altını İsviçre'de saklamanın avantajları nelerdir?",
+    answer:
+      "İsviçre siyasi ve hukuki istikrar, sağlam bir bankacılık sistemi ve değerli metallerin saklanmasında uzun bir gelenek sunar. Ülkeniz dışında saklamak yargı riskini çeşitlendirir (el koyma veya kısıtlamalara karşı koruma). BullionVault veya PAMP gibi hizmetler bireysel olarak tahsis edilmiş altınla denetlenmiş kasa depoları sunar.",
+  },
+  {
+    question: "Bir ETF'nin TER'i nedir ve neden önemlidir?",
+    answer:
+      "TER (Toplam Gider Oranı), fon yöneticisinin yatırılan değerin yüzdesi olarak ifade edilen yıllık maliyetidir. %0,12 TER, her 10.000 € yatırım için yılda 12 € komisyon ödediğiniz anlamına gelir. Uzun vadede, %0,12 ve %0,49 TER arasındaki fark bileşik faiz etkisi nedeniyle önemli olabilir.",
+  },
+  {
+    question: "Fiziksel altın bir ETF'den farklı mı vergilendirilir?",
+    answer:
+      "Evet, çoğu Avrupa ülkesinde vergi muamelesi farklıdır. Örneğin İspanya'da yatırım altını alım satımı (>%99,5 saflıkta külçeler ve tanınmış paralar) KDV'den muaftır. Sermaye kazançları malvarlığı kazançları olarak vergilendirilir. ETF'ler finansal ürünler olarak vergilendirilir ve kaynakta vergi kesintisine tabi olabilir. Her zaman bir vergi danışmanına başvurun.",
+  },
+  {
+    question: "ETF ile ETC arasındaki fark nedir?",
+    answer:
+      "ETF (Borsa Yatırım Fonu) Avrupa'da UCITS kurallarına göre düzenlenen, çeşitlendirilmiş olması gereken borsada işlem gören bir yatırım fonudur. ETC (Borsada İşlem Gören Emtia) bir emtia tarafından desteklenen bir borç senedidir. UCITS kuralları tek varlıklı fonlara izin vermediği için Avrupa'daki altın ürünleri genellikle teknik olarak ETF değil ETC'dir, her iki terim de günlük kullanımda olsa da.",
+  },
+  {
+    question: "Portföyümde ne kadar altın olmalı?",
+    answer:
+      "Evrensel bir rakam yoktur, ancak yaygın öneriler çeşitlendirilmiş bir portföyün %5 ile %15'i arasında değişir. Altın enflasyona ve belirsizliğe karşı koruma sağlar. Ray Dalio All Weather Portföyünde %7,5 önerir. İdeal miktar risk toleransınıza, zaman ufkunuza ve genel mali durumunuza bağlıdır.",
+  },
+];
+
+const FAQ_MAP: Record<string, FaqItem[]> = { es: FAQ_ES, en: FAQ_EN, ar: FAQ_AR, zh: FAQ_ZH, de: FAQ_DE, tr: FAQ_TR };
 
 export function getFaqItems(locale: string = "es"): FaqItem[] {
   return FAQ_MAP[locale] || FAQ_ES;

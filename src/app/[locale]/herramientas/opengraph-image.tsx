@@ -21,6 +21,21 @@ const i18n: Record<string, { title: string; subtitle: string; tools: string[] }>
     subtitle: "تحليل ومقارنة المعادن الثمينة",
     tools: ["مقارنة", "نسبة ذهب/فضة", "محوّل", "DCA", "وحدات"],
   },
+  de: {
+    title: "Werkzeuge",
+    subtitle: "Edelmetalle analysieren und vergleichen",
+    tools: ["Vergleich", "Au/Ag-Verhältnis", "Umrechner", "DCA", "Einheiten"],
+  },
+  tr: {
+    title: "Araçlar",
+    subtitle: "Değerli metalleri analiz edin ve karşılaştırın",
+    tools: ["Karşılaştırma", "Au/Ag Oranı", "Dönüştürücü", "DCA", "Birimler"],
+  },
+  zh: {
+    title: "工具",
+    subtitle: "分析和比较贵金属",
+    tools: ["比较", "金银比", "换算器", "DCA", "单位"],
+  },
 };
 
 const toolIcons = ["📊", "⚖️", "💱", "📈", "🔄"];

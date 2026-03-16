@@ -315,14 +315,312 @@ const METAL_SEO_AR: Record<string, Omit<MetalSEO, "slug" | "symbol">> = {
   },
 };
 
+const METAL_SEO_DE: Record<string, Omit<MetalSEO, "slug" | "symbol">> = {
+  oro: {
+    name: "Gold",
+    fullName: "Gold (XAU/USD)",
+    description:
+      "Goldpreis heute in Echtzeit. Aktuelle XAU/USD-Kursnotierung, historisches Chart, Höchst- und Tiefststände sowie Goldmarktanalyse.",
+    about:
+      "Gold ist das am meisten gehandelte Edelmetall der Welt. Es wird als Wertaufbewahrungsmittel, Inflationsschutz und sicherer Hafen in Zeiten wirtschaftlicher Unsicherheit genutzt. Der Preis wird in US-Dollar pro Feinunze (31,1 Gramm) gemessen.",
+    keywords: [
+      "Goldpreis heute",
+      "Goldkurs",
+      "XAU/USD",
+      "Gold Echtzeit",
+      "in Gold investieren",
+      "Goldpreis Unze",
+    ],
+    facts: [
+      "Gold wird 24 Stunden am Tag, 5 Tage die Woche an globalen Märkten wie COMEX, LBMA und Shanghai Gold Exchange gehandelt.",
+      "Zentralbanken halten etwa 36.000 Tonnen Gold in Reserven, wobei die USA mit über 8.000 Tonnen der größte Halter sind.",
+      "Die Goldnachfrage kommt aus Schmuck (~50%), Investition (~25%), Zentralbanken (~15%) und Technologie (~10%).",
+      "Das Gold/Silber-Verhältnis misst, wie viele Unzen Silber nötig sind, um eine Unze Gold zu kaufen. Historisch schwankt es zwischen 40x und 90x.",
+    ],
+  },
+  plata: {
+    name: "Silber",
+    fullName: "Silber (XAG/USD)",
+    description:
+      "Silberpreis heute in Echtzeit. Aktuelle XAG/USD-Kursnotierung, historisches Chart, Höchst- und Tiefststände sowie Silbermarktanalyse.",
+    about:
+      "Silber ist ein Edelmetall mit dualem Profil: Es ist sowohl ein Anlagevermögen als auch ein unverzichtbarer Industriemetall. Es wird in Elektronik, Solarpanelen, Medizin und Schmuck verwendet. Seine Volatilität ist höher als die von Gold, was es bei Händlern beliebt macht.",
+    keywords: [
+      "Silberpreis heute",
+      "Silberkurs",
+      "XAG/USD",
+      "Silber Echtzeit",
+      "in Silber investieren",
+      "Silberpreis Unze",
+    ],
+    facts: [
+      "Silber hat die höchste elektrische und thermische Leitfähigkeit aller Metalle und ist in der Elektronik unverzichtbar.",
+      "Die Solarindustrie verbraucht etwa 10% der jährlichen weltweiten Silberproduktion, eine Zahl, die jedes Jahr wächst.",
+      "Mexiko, Peru und China sind die drei größten Silberproduzenten der Welt.",
+      "Silber ist deutlich volatiler als Gold: Die täglichen Bewegungen sind typischerweise 1,5-2x größer in Prozent.",
+    ],
+  },
+  platino: {
+    name: "Platin",
+    fullName: "Platin (XPT/USD)",
+    description:
+      "Platinpreis heute in Echtzeit. Aktuelle XPT/USD-Kursnotierung, historisches Chart, Höchst- und Tiefststände sowie Platinmarktanalyse.",
+    about:
+      "Platin ist ein seltenes Edelmetall mit starkem Industrieanteil. Es wird hauptsächlich in Auto-Katalysatoren, Schmuck, Medizintechnik und der chemischen Industrie verwendet. Sein Preis ist eng mit der Automobilindustrie und dem südafrikanischen Angebot verbunden.",
+    keywords: [
+      "Platinpreis heute",
+      "Platinkurs",
+      "XPT/USD",
+      "Platin Echtzeit",
+      "in Platin investieren",
+      "Platinpreis Unze",
+    ],
+    facts: [
+      "Südafrika produziert etwa 70% des weltweiten Platins, was den Preis anfällig für geopolitische Ereignisse in der Region macht.",
+      "Platin ist 30-mal seltener als Gold in der Erdkruste.",
+      "Die Automobilindustrie verbraucht etwa 40% der Platinnachfrage für Abgaskatalysatoren.",
+      "Historisch handelte Platin über Gold. Die Umkehrung dieses Verhältnisses (Platin günstiger als Gold) ist ein relativ junges Phänomen.",
+    ],
+  },
+  paladio: {
+    name: "Palladium",
+    fullName: "Palladium (XPD/USD)",
+    description:
+      "Palladiumpreis heute in Echtzeit. Aktuelle XPD/USD-Kursnotierung, historisches Chart, Höchst- und Tiefststände sowie Palladiummarktanalyse.",
+    about:
+      "Palladium ist ein Edelmetall der Platingruppe, stark nachgefragt von der Automobilindustrie für Benzin-Katalysatoren. Es wird auch in Elektronik, Zahnmedizin und Schmuck verwendet. Das Angebot ist begrenzt und konzentriert sich auf Russland und Südafrika.",
+    keywords: [
+      "Palladiumpreis heute",
+      "Palladiumkurs",
+      "XPD/USD",
+      "Palladium Echtzeit",
+      "in Palladium investieren",
+      "Palladiumpreis Unze",
+    ],
+    facts: [
+      "Russland produziert etwa 40% des weltweiten Palladiums, gefolgt von Südafrika mit 35%.",
+      "Palladium wird hauptsächlich in Benzin-Auto-Katalysatoren verwendet und absorbiert über 80% der Nachfrage.",
+      "2022 erreichte Palladium historische Höchststände über 3.000 $/oz aufgrund von Russland-Sanktionen und Angebotsknappheit.",
+      "Palladium ist 15-mal seltener als Platin und 30-mal seltener als Gold in der Erdkruste.",
+    ],
+  },
+  cobre: {
+    name: "Kupfer",
+    fullName: "Kupfer (HG/USD)",
+    description:
+      "Kupferpreis heute in Echtzeit. Aktuelle HG/USD-Kursnotierung, historisches Chart, Höchst- und Tiefststände sowie Kupfermarktanalyse.",
+    about:
+      "Kupfer ist das wichtigste Industriemetall der Welt. Es ist unerlässlich für Elektrifizierung, erneuerbare Energien, Elektrofahrzeuge und Bauwesen. Sein Preis gilt als Frühindikator der Weltwirtschaft, bekannt als „Doctor Copper“. Er wird in USD pro Pfund (lb) notiert.",
+    keywords: [
+      "Kupferpreis heute",
+      "Kupferkurs",
+      "HG/USD",
+      "Kupfer Echtzeit",
+      "in Kupfer investieren",
+      "Kupferpreis Pfund",
+    ],
+    facts: [
+      "Chile ist der größte Kupferproduzent der Welt und stellt etwa 25% der globalen Produktion.",
+      "Kupfer ist für die Energiewende unerlässlich: Ein Elektrofahrzeug verbraucht 3-4 mal mehr Kupfer als ein konventionelles.",
+      "Die Kupfernachfrage für KI-Rechenzentren ist seit 2024 exponentiell gewachsen.",
+      "Die London Metal Exchange (LME) verzeichnete 2025 Rekordhandelsvolumen bei Kupfer.",
+    ],
+  },
+};
+
+const METAL_SEO_TR: Record<string, Omit<MetalSEO, "slug" | "symbol">> = {
+  oro: {
+    name: "Altın",
+    fullName: "Altın (XAU/USD)",
+    description:
+      "Altın fiyatı bugün gerçek zamanlı. Güncel XAU/USD kotasyonu, tarihsel grafik, yüksek/düşük seviyeler ve altın piyasası analizi.",
+    about:
+      "Altın dünyada en çok işlem gören değerli metaldir. Değer saklama aracı, enflasyona karşı koruma ve ekonomik belirsizlik dönemlerinde güvenli liman varlığı olarak kullanılır. Fiyatı troy ons (31,1 gram) başına ABD doları cinsinden ölçülür.",
+    keywords: [
+      "altın fiyatı bugün",
+      "altın kotasyonu",
+      "XAU/USD",
+      "altın gerçek zamanlı",
+      "altına yatırım",
+      "altın ons fiyatı",
+    ],
+    facts: [
+      "Altın COMEX, LBMA ve Şangay Altın Borsası gibi küresel piyasalarda haftada 5 gün, günde 24 saat işlem görür.",
+      "Merkez bankaları rezervlerinde yaklaşık 36.000 ton altın tutuyor; ABD 8.000 tonun üzeriyle en büyük sahip.",
+      "Altın talebi mücevher (~%50), yatırım (~%25), merkez bankaları (~%15) ve teknoloji (~%10) kaynaklıdır.",
+      "Altın/gümüş oranı bir ons altın almak için kaç ons gümüş gerektiğini ölçer. Tarihsel olarak 40x ile 90x arasında değişir.",
+    ],
+  },
+  plata: {
+    name: "Gümüş",
+    fullName: "Gümüş (XAG/USD)",
+    description:
+      "Gümüş fiyatı bugün gerçek zamanlı. Güncel XAG/USD kotasyonu, tarihsel grafik, yüksek/düşük seviyeler ve gümüş piyasası analizi.",
+    about:
+      "Gümüş çift profilli bir değerli metaldir: hem yatırım varlığı hem de temel endüstriyel metal. Elektronik, güneş panelleri, tıp ve mücevheratta kullanılır. Volatilitesi altından yüksektir, bu da onu yatırımcılar için popüler bir seçenek yapar.",
+    keywords: [
+      "gümüş fiyatı bugün",
+      "gümüş kotasyonu",
+      "XAG/USD",
+      "gümüş gerçek zamanlı",
+      "gümüşe yatırım",
+      "gümüş ons fiyatı",
+    ],
+    facts: [
+      "Gümüş tüm metaller arasında en yüksek elektrik ve ısı iletkenliğine sahiptir; elektronikte vazgeçilmezdir.",
+      "Güneş enerjisi sektörü dünya yıllık gümüş üretiminin yaklaşık %10'unu tüketir; bu oran her yıl artıyor.",
+      "Meksika, Peru ve Çin dünyanın en büyük üç gümüş üreticisidir.",
+      "Gümüş altından belirgin şekilde daha volatildir: günlük hareketleri genellikle yüzde olarak 1,5-2 kat daha büyüktür.",
+    ],
+  },
+  platino: {
+    name: "Platin",
+    fullName: "Platin (XPT/USD)",
+    description:
+      "Platin fiyatı bugün gerçek zamanlı. Güncel XPT/USD kotasyonu, tarihsel grafik, yüksek/düşük seviyeler ve platin piyasası analizi.",
+    about:
+      "Platin güçlü endüstriyel bileşeni olan nadir bir değerli metaldir. Başlıca otomotiv katalizörlerinde, mücevheratta, tıbbi ekipmanlarda ve kimya sanayisinde kullanılır. Fiyatı otomotiv sektörüne ve Güney Afrika arzına sıkı bağlıdır.",
+    keywords: [
+      "platin fiyatı bugün",
+      "platin kotasyonu",
+      "XPT/USD",
+      "platin gerçek zamanlı",
+      "platine yatırım",
+      "platin ons fiyatı",
+    ],
+    facts: [
+      "Güney Afrika dünya platininin yaklaşık %70'ini üretir; bu da fiyatını bölgedeki jeopolitik olaylara duyarlı kılar.",
+      "Platin yer kabuğunda altından 30 kat daha nadirdir.",
+      "Otomotiv sektörü platin talebinin yaklaşık %40'ını emisyon katalizörleri için tüketir.",
+      "Tarihsel olarak platin altının üzerinde işlem görürdü. Bu oranın tersine dönmesi (platin altından ucuz) nispeten yeni bir olgudur.",
+    ],
+  },
+  paladio: {
+    name: "Paladyum",
+    fullName: "Paladyum (XPD/USD)",
+    description:
+      "Paladyum fiyatı bugün gerçek zamanlı. Güncel XPD/USD kotasyonu, tarihsel grafik, yüksek/düşük seviyeler ve paladyum piyasası analizi.",
+    about:
+      "Paladyum platin grubundan bir değerli metal olup benzinli araç katalizörleri için otomotiv sektörü tarafından yoğun talep görür. Elektronik, diş hekimliği ve mücevheratta da kullanılır. Arz sınırlıdır; Rusya ve Güney Afrika'da yoğunlaşmıştır.",
+    keywords: [
+      "paladyum fiyatı bugün",
+      "paladyum kotasyonu",
+      "XPD/USD",
+      "paladyum gerçek zamanlı",
+      "paladyuma yatırım",
+      "paladyum ons fiyatı",
+    ],
+    facts: [
+      "Rusya dünya paladyumunun yaklaşık %40'ını üretir; Güney Afrika %35 ile onu izler.",
+      "Paladyum öncelikle benzinli araç katalizörlerinde kullanılır; talebin %80'inden fazlasını karşılar.",
+      "2022'de Rusya yaptırımları ve arz kıtlığı nedeniyle paladyum 3.000$/ons üzerinde tarihi zirvelere ulaştı.",
+      "Paladyum yer kabuğunda platinden 15 kat, altından 30 kat daha nadirdir.",
+    ],
+  },
+  cobre: {
+    name: "Bakır",
+    fullName: "Bakır (HG/USD)",
+    description:
+      "Bakır fiyatı bugün gerçek zamanlı. Güncel HG/USD kotasyonu, tarihsel grafik, yüksek/düşük seviyeler ve bakır piyasası analizi.",
+    about:
+      "Bakır dünyanın en önemli endüstriyel metalidir. Elektrifikasyon, yenilenebilir enerji, elektrikli araçlar ve inşaat için vazgeçilmezdir. Fiyatı küresel ekonominin öncü göstergesi olarak kabul edilir; 'Doctor Copper' olarak bilinir. Libre (lb) başına USD cinsinden kotlanır.",
+    keywords: [
+      "bakır fiyatı bugün",
+      "bakır kotasyonu",
+      "HG/USD",
+      "bakır gerçek zamanlı",
+      "bakıra yatırım",
+      "bakır libre fiyatı",
+    ],
+    facts: [
+      "Şili dünyanın en büyük bakır üreticisidir; küresel üretimin yaklaşık %25'ini temsil eder.",
+      "Bakır enerji dönüşümü için vazgeçilmezdir: bir elektrikli araç geleneksel olandan 3-4 kat daha fazla bakır kullanır.",
+      "Yapay zeka veri merkezleri için bakır talebi 2024'ten bu yana katlanarak arttı.",
+      "Londra Metal Borsası (LME) 2025'te bakır işlem hacminde rekor kaydetti.",
+    ],
+  },
+};
+
+const METAL_SEO_ZH: Record<string, Omit<MetalSEO, "slug" | "symbol">> = {
+  oro: {
+    name: "黄金",
+    fullName: "黄金 (XAU/USD)",
+    description: "黄金今日实时价格。XAU/USD 最新报价、历史图表、高低点及黄金市场分析。",
+    about: "黄金是全球交易量最大的贵金属。作为价值储存、通胀对冲和避险资产，在经济不确定性时期备受青睐。价格以美元/金衡盎司（31.1克）计。",
+    keywords: ["黄金价格今日", "黄金报价", "XAU/USD", "黄金实时", "投资黄金", "黄金盎司价格"],
+    facts: [
+      "黄金在全球市场（如COMEX、LBMA、上海黄金交易所）每周5天、每天24小时交易。",
+      "各国央行持有约36,000吨黄金储备，美国为最大持有国，超过8,000吨。",
+      "黄金需求来自珠宝（约50%）、投资（约25%）、央行（约15%）和科技（约10%）。",
+      "金银比衡量购买一盎司黄金需要多少盎司白银。历史上在40倍至90倍之间波动。",
+    ],
+  },
+  plata: {
+    name: "白银",
+    fullName: "白银 (XAG/USD)",
+    description: "白银今日实时价格。XAG/USD 最新报价、历史图表、高低点及白银市场分析。",
+    about: "白银具有双重属性：既是投资资产，也是重要的工业金属。用于电子、太阳能、医疗和珠宝。其波动性高于黄金，深受交易者青睐。",
+    keywords: ["白银价格今日", "白银报价", "XAG/USD", "白银实时", "投资白银", "白银盎司价格"],
+    facts: [
+      "白银在所有金属中导电性和导热性最高，是电子行业不可或缺的材料。",
+      "太阳能行业每年消耗全球白银产量的约10%，且逐年增长。",
+      "墨西哥、秘鲁和中国是全球三大白银生产国。",
+      "白银波动性显著高于黄金：日波动幅度通常为黄金的1.5-2倍。",
+    ],
+  },
+  platino: {
+    name: "铂金",
+    fullName: "铂金 (XPT/USD)",
+    description: "铂金今日实时价格。XPT/USD 最新报价、历史图表、高低点及铂金市场分析。",
+    about: "铂金是稀有的贵金属，工业用途广泛。主要用于汽车催化转化器、珠宝、医疗设备和化工。价格与汽车行业及南非供应密切相关。",
+    keywords: ["铂金价格今日", "铂金报价", "XPT/USD", "铂金实时", "投资铂金", "铂金盎司价格"],
+    facts: [
+      "南非产量约占全球铂金的70%，价格对当地地缘政治事件敏感。",
+      "铂金在地壳中的稀有度是黄金的30倍。",
+      "汽车行业消耗约40%的铂金需求用于排放催化转化器。",
+      "历史上铂金价格高于黄金。铂金低于黄金的现象是相对近期才出现的。",
+    ],
+  },
+  paladio: {
+    name: "钯金",
+    fullName: "钯金 (XPD/USD)",
+    description: "钯金今日实时价格。XPD/USD 最新报价、历史图表、高低点及钯金市场分析。",
+    about: "钯金是铂族贵金属，汽车行业对汽油催化转化器需求旺盛。也用于电子、牙科和珠宝。供应有限，集中在俄罗斯和南非。",
+    keywords: ["钯金价格今日", "钯金报价", "XPD/USD", "钯金实时", "投资钯金", "钯金盎司价格"],
+    facts: [
+      "俄罗斯产量约占全球钯金的40%，南非约占35%。",
+      "钯金主要用于汽油车催化转化器，占需求80%以上。",
+      "2022年因对俄制裁和供应短缺，钯金创下每盎司3,000美元以上的历史新高。",
+      "钯金在地壳中的稀有度是铂金的15倍、黄金的30倍。",
+    ],
+  },
+  cobre: {
+    name: "铜",
+    fullName: "铜 (HG/USD)",
+    description: "铜今日实时价格。HG/USD 最新报价、历史图表、高低点及铜市场分析。",
+    about: "铜是全球最重要的工业金属。对电气化、可再生能源、电动汽车和建筑业至关重要。其价格被视为全球经济领先指标，素有「铜博士」之称。以美元/磅报价。",
+    keywords: ["铜价格今日", "铜报价", "HG/USD", "铜实时", "投资铜", "铜磅价格"],
+    facts: [
+      "智利是全球最大铜生产国，约占全球产量的25%。",
+      "铜对能源转型至关重要：电动汽车用铜量是传统汽车的3-4倍。",
+      "自2024年以来，人工智能数据中心对铜的需求呈指数级增长。",
+      "伦敦金属交易所（LME）2025年铜交易量创历史纪录。",
+    ],
+  },
+};
+
 export function getMetalSEO(slug: string, locale: string = "es"): MetalSEO | null {
   const base = METAL_SEO[slug];
   if (!base) return null;
   if (locale === "es") return base;
-  if (locale === "ar") {
-    const ar = METAL_SEO_AR[slug];
-    if (ar) return { ...base, ...ar };
-  }
+  const localeMap: Record<string, Record<string, Omit<MetalSEO, "slug" | "symbol">>> = {
+    ar: METAL_SEO_AR,
+    de: METAL_SEO_DE,
+    tr: METAL_SEO_TR,
+    zh: METAL_SEO_ZH,
+  };
+  const localized = localeMap[locale]?.[slug];
+  if (localized) return { ...base, ...localized };
   const en = METAL_SEO_EN[slug];
   if (!en) return base;
   return { ...base, ...en };

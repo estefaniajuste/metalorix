@@ -143,7 +143,7 @@ async function getGlossaryTermsForPrompt(): Promise<string> {
       .orderBy(asc(glossaryTerms.term))
       .limit(200);
     if (terms.length === 0) return "";
-    return terms.map((t) => `- ${t.term} → [${t.term}](/aprende/${t.slug})`).join("\n");
+    return terms.map((t) => `- ${t.term}`).join("\n");
   } catch {
     return "";
   }
@@ -152,9 +152,8 @@ async function getGlossaryTermsForPrompt(): Promise<string> {
 function buildGlossaryLinkingInstructions(termList: string): string {
   if (!termList) return "";
   return `
-CROSS-LINKING CON SECCIÓN "APRENDE" (IMPORTANTE):
-Cuando menciones alguno de estos términos en tu contenido, incluye un enlace markdown la PRIMERA vez que lo menciones. Formato: [nombre del término](/aprende/slug)
-Máximo 3-5 enlaces por artículo, solo los más relevantes.
+TERMINOLOGÍA DEL SECTOR:
+Usa estos términos técnicos cuando sea apropiado. No es necesario incluir enlaces.
 
 TÉRMINOS DISPONIBLES:
 ${termList}
@@ -556,7 +555,7 @@ ${content}
 TRANSLATION RULES:
 - Translate naturally into ${langName}, not word-by-word
 - Keep financial/technical terms accurate (gold, silver, platinum, support/resistance levels, etc.)
-- Preserve markdown formatting (## headings, links like [text](/aprende/slug), etc.)
+- Preserve markdown formatting (## headings, **bold**, etc.)
 - Keep numbers, prices, and percentages as-is
 - Do NOT add or remove content, translate faithfully
 - Do NOT include the original Spanish text

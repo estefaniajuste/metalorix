@@ -21,6 +21,21 @@ const i18n: Record<string, { heading: string; subtitle: string; metals: string[]
     subtitle: "أسعار فورية في الوقت الفعلي، رسوم بيانية احترافية وتحليلات للذهب والفضة والبلاتين والبلاديوم والنحاس",
     metals: ["الذهب", "الفضة", "البلاتين", "البلاديوم", "النحاس"],
   },
+  de: {
+    heading: "Edel- und Industriemetalle",
+    subtitle: "Echtzeit-Spotpreise, professionelle Charts und Analysen für Gold, Silber, Platin, Palladium und Kupfer",
+    metals: ["Gold", "Silber", "Platin", "Palladium", "Kupfer"],
+  },
+  tr: {
+    heading: "Değerli ve Endüstriyel Metaller",
+    subtitle: "Altın, Gümüş, Platin, Paladyum ve Bakır için gerçek zamanlı spot fiyatlar, profesyonel grafikler ve analizler",
+    metals: ["Altın", "Gümüş", "Platin", "Paladyum", "Bakır"],
+  },
+  zh: {
+    heading: "贵金属与工业金属",
+    subtitle: "黄金、白银、铂金、钯金和铜的实时现货价格、专业图表和分析",
+    metals: ["黄金", "白银", "铂金", "钯金", "铜"],
+  },
 };
 
 export default async function OgImage({ params }: { params: { locale: string } }) {
