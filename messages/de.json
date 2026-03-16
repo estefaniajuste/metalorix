@@ -899,7 +899,7 @@
     "equivalences": "Umrechnungen",
     "pricePerUnit": "Preis / {unit}"
   },
-  "currencyConverter": {
+  "currencyDisplay": {
     "title": "Preis in Währungen",
     "subtitle": "Preis pro Feinunze in den wichtigsten Weltwährungen",
     "disclaimer": "Wechselkurse werden stündlich aktualisiert. Abweichungen vom tatsächlichen Marktkurs möglich.",

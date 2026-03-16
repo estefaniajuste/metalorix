@@ -899,7 +899,7 @@
     "equivalences": "Equivalences",
     "pricePerUnit": "Price / {unit}"
   },
-  "currencyConverter": {
+  "currencyDisplay": {
     "title": "Price in currencies",
     "subtitle": "Price per troy ounce in the main global currencies",
     "disclaimer": "Exchange rates updated hourly. May differ from actual market rates.",

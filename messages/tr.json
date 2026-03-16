@@ -899,7 +899,7 @@
     "equivalences": "Eşdeğerler",
     "pricePerUnit": "Fiyat / {unit}"
   },
-  "currencyConverter": {
+  "currencyDisplay": {
     "title": "Döviz cinsinden fiyat",
     "subtitle": "Başlıca küresel döviz cinsinden troy ons fiyatı",
     "disclaimer": "Döviz kurları saatlik güncellenir. Gerçek piyasa kurlarından farklılık gösterebilir.",

@@ -899,7 +899,7 @@
     "equivalences": "换算结果",
     "pricePerUnit": "单价 / {unit}"
   },
-  "currencyConverter": {
+  "currencyDisplay": {
     "title": "多币种报价",
     "subtitle": "以全球主要货币计价的每金衡盎司价格",
     "disclaimer": "汇率每小时更新一次，可能与实时市场汇率存在偏差。",

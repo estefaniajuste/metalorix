@@ -1,15 +1,22 @@
-import Link from "next/link";
+import { Link, getPathname } from "@/i18n/navigation";
+import type { Locale } from "@/i18n/routing";
+
+type Href = string | { pathname: string; params: Record<string, string> };
 
 interface BreadcrumbItem {
   label: string;
-  href?: string;
+  href?: Href;
 }
+
+const BASE_URL = "https://metalorix.com";
 
 export function LearnBreadcrumb({
   items,
+  locale,
   ariaLabel = "Breadcrumb",
 }: {
   items: BreadcrumbItem[];
+  locale: string;
   ariaLabel?: string;
 }) {
   const jsonLd = {
@@ -19,7 +26,9 @@ export function LearnBreadcrumb({
       "@type": "ListItem",
       position: i + 1,
       name: item.label,
-      ...(item.href ? { item: `https://metalorix.com${item.href}` } : {}),
+      ...(item.href
+        ? { item: `${BASE_URL}${getPathname({ locale: locale as Locale, href: item.href as any })}` }
+        : {}),
     })),
   };
 
@@ -35,7 +44,7 @@ export function LearnBreadcrumb({
             {i > 0 && <span className="mx-2">/</span>}
             {item.href ? (
               <Link
-                href={item.href}
+                href={item.href as any}
                 className="hover:text-content-1 transition-colors"
               >
                 {item.label}

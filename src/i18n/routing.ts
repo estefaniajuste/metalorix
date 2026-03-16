@@ -92,7 +92,7 @@ export const routing = defineRouting({
     "/guia-inversion": {
       es: "/guia-inversion",
       en: "/investment-guide",
-      de: "/anleitfaden",
+      de: "/investitionsleitfaden",
       zh: "/touzi-zhinan",
       ar: "/dalil-alistithmar",
       tr: "/yatirim-rehberi",

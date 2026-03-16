@@ -34,7 +34,7 @@ function formatCurrency(val: number, code: string) {
 }
 
 export function CurrencyConverter() {
-  const t = useTranslations("currencyConverter");
+  const t = useTranslations("currencyDisplay");
   const tMetals = useTranslations("metalNames");
   const [metal, setMetal] = useState<MetalSymbol>("XAU");
   const [prices, setPrices] = useState<Record<string, number>>({});

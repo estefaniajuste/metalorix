@@ -168,6 +168,7 @@ export default async function ClusterPage({
             { label: t("breadcrumb"), href: "/learn" },
             { label: clusterName },
           ]}
+          locale={locale}
           ariaLabel={tc("breadcrumbNav")}
         />
 

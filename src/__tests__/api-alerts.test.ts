@@ -23,7 +23,7 @@ function makeRequest(
     }
   }
 
-  const init: RequestInit & { headers: Record<string, string> } = {
+  const init: Record<string, unknown> = {
     method,
     headers: { "Content-Type": "application/json" },
   };

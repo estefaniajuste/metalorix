@@ -899,7 +899,7 @@
     "equivalences": "Equivalencias",
     "pricePerUnit": "Precio / {unit}"
   },
-  "currencyConverter": {
+  "currencyDisplay": {
     "title": "Precio en divisas",
     "subtitle": "Precio por onza troy en las principales divisas mundiales",
     "disclaimer": "Tipos de cambio actualizados cada hora. Pueden diferir del mercado real.",

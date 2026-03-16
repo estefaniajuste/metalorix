@@ -31,7 +31,7 @@ export async function POST(request: NextRequest) {
   const staticPaths = [
     "/", "/herramientas", "/calculadora-rentabilidad", "/conversor-divisas",
     "/comparador", "/ratio-oro-plata", "/calendario-economico", "/guia-inversion",
-    "/productos", "/noticias", "/aprende", "/learn", "/alertas",
+    "/productos", "/noticias", "/learn", "/alertas",
     "/precio-oro-hoy", "/precio-gramo-oro",
   ];
   for (const p of staticPaths) {
@@ -40,8 +40,10 @@ export async function POST(request: NextRequest) {
 
   // Metal pages
   for (const slug of INTERNAL_METAL_SLUGS) {
-    const localizedSlug = getLocalizedMetalSlug(slug, "es");
-    allUrls.push(...allLocaleUrls({ pathname: "/precio/[metal]", params: { metal: localizedSlug } }));
+    for (const loc of routing.locales) {
+      const localizedSlug = getLocalizedMetalSlug(slug, loc);
+      allUrls.push(`${BASE}${getPathname({ locale: loc, href: { pathname: "/precio/[metal]", params: { metal: localizedSlug } } } as any)}`);
+    }
   }
 
   // Product pages
@@ -71,7 +73,7 @@ export async function POST(request: NextRequest) {
         .limit(500);
 
       for (const t of terms) {
-        allUrls.push(...allLocaleUrls({ pathname: "/aprende/[slug]", params: { slug: t.slug } }));
+        allUrls.push(...allLocaleUrls({ pathname: "/learn/[cluster]/[slug]", params: { cluster: "glossary", slug: t.slug } }));
       }
 
       const clusters = await db.select({ slug: learnClusters.slug }).from(learnClusters).limit(100);

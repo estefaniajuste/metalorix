@@ -53,19 +53,19 @@ export async function GET() {
         ? new Date(a.publishedAt).toUTCString()
         : new Date(a.createdAt).toUTCString();
 
+      const displayTitle = en?.title || a.title;
+      const displayExcerpt = en?.excerpt || a.excerpt || a.title;
+
       return `    <item>
-      <title>${escapeXml(a.title)}</title>
-      <link>${BASE_URL}/es/noticias/${a.slug}</link>
-      <guid isPermaLink="true">${BASE_URL}/es/noticias/${a.slug}</guid>
+      <title>${escapeXml(displayTitle)}</title>
+      <link>${BASE_URL}/en/news/${a.slug}</link>
+      <guid isPermaLink="true">${BASE_URL}/en/news/${a.slug}</guid>
       <pubDate>${pubDate}</pubDate>
-      <description>${escapeXml(a.excerpt ?? a.title)}</description>
+      <description>${escapeXml(displayExcerpt)}</description>
+      <dc:language>en</dc:language>
       <category>${escapeXml(a.category)}</category>${
         a.metals
           ? a.metals.map((m) => `\n      <category>${escapeXml(m)}</category>`).join("")
-          : ""
-      }${
-        en
-          ? `\n      <dc:language>en</dc:language>`
           : ""
       }
     </item>`;
@@ -75,10 +75,10 @@ export async function GET() {
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/">
   <channel>
-    <title>Metalorix — Noticias de Metales Preciosos</title>
-    <link>${BASE_URL}/es/noticias</link>
-    <description>Análisis diario del mercado de oro, plata, platino, paladio y cobre. Precios spot, tendencias y noticias.</description>
-    <language>es</language>
+    <title>Metalorix — Precious Metals News</title>
+    <link>${BASE_URL}/en/news</link>
+    <description>Daily analysis of gold, silver, platinum, palladium and copper markets. Spot prices, trends and news.</description>
+    <language>en</language>
     <lastBuildDate>${new Date().toUTCString()}</lastBuildDate>
     <atom:link href="${BASE_URL}/feed.xml" rel="self" type="application/rss+xml"/>
     <image>

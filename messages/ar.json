@@ -899,7 +899,7 @@
     "equivalences": "المعادلات",
     "pricePerUnit": "السعر / {unit}"
   },
-  "currencyConverter": {
+  "currencyDisplay": {
     "title": "السعر بالعملات",
     "subtitle": "سعر الأونصة التروي بالعملات العالمية الرئيسية",
     "disclaimer": "يتم تحديث أسعار الصرف كل ساعة. قد تختلف عن أسعار السوق الفعلية.",

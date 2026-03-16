@@ -99,6 +99,7 @@ export default async function LearnPage() {
               { label: tc("breadcrumbHome"), href: "/" },
               { label: t("breadcrumb") },
             ]}
+            locale={locale}
             ariaLabel={tc("breadcrumbNav")}
           />
 

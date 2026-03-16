@@ -325,10 +325,11 @@ export default async function LearnArticlePage({
               { label: t("breadcrumb"), href: "/learn" },
               {
                 label: clusterName,
-                href: `/learn/${locClusterSlug}`,
+                href: { pathname: "/learn/[cluster]", params: { cluster: locClusterSlug } },
               },
               { label: title },
             ]}
+            locale={locale}
             ariaLabel={tc("breadcrumbNav")}
           />
 

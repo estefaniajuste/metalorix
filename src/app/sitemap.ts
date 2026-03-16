@@ -59,16 +59,22 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     entries.push(buildEntry(page.href, page.freq, page.priority));
   }
 
-  // Metal price pages
+  // Metal price pages (locale-specific slugs)
   for (const slug of INTERNAL_METAL_SLUGS) {
-    const localizedSlug = getLocalizedMetalSlug(slug, routing.defaultLocale);
-    entries.push(
-      buildEntry(
-        { pathname: "/precio/[metal]", params: { metal: localizedSlug } } as any,
-        "daily",
-        0.9,
-      ),
-    );
+    const languages: Record<string, string> = {};
+    for (const loc of routing.locales) {
+      const locSlug = getLocalizedMetalSlug(slug, loc);
+      languages[loc] = `${BASE}${getPathname({ locale: loc, href: { pathname: "/precio/[metal]", params: { metal: locSlug } } as any })}`;
+    }
+    languages["x-default"] = languages[routing.defaultLocale];
+
+    entries.push({
+      url: languages[routing.defaultLocale],
+      lastModified: new Date(),
+      changeFrequency: "daily",
+      priority: 0.9,
+      alternates: { languages },
+    });
   }
 
   // Product pages

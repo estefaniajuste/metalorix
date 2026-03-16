@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
-import { Link } from "@/i18n/navigation";
+import { Link, getPathname } from "@/i18n/navigation";
 import { notFound } from "next/navigation";
 import { getTranslations, getLocale } from "next-intl/server";
 import { getAlternates } from "@/lib/seo/alternates";
+import type { Locale } from "@/i18n/routing";
 import { getDb } from "@/lib/db";
 import { articles, articleTranslations } from "@/lib/db/schema";
 import { eq, and } from "drizzle-orm";
@@ -213,7 +214,7 @@ export default async function ArticlePage({
     "@type": "NewsArticle",
     headline: displayTitle,
     description: displayExcerpt,
-    url: `https://metalorix.com/${locale}/noticias/${article.slug}`,
+    url: `https://metalorix.com${getPathname({ locale: locale as Locale, href: { pathname: "/noticias/[slug]", params: { slug: article.slug } } as any })}`,
     datePublished: article.publishedAt?.toISOString(),
     dateModified: article.updatedAt.toISOString(),
     author: {
