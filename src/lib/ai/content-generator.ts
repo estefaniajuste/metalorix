@@ -1,7 +1,9 @@
-import { generateText, isConfigured } from "./gemini";
+import { generateText, isConfigured, type GeminiLog } from "./gemini";
 import { getDb } from "@/lib/db";
 import { articles, newsSources, metalPrices, glossaryTerms, articleTranslations } from "@/lib/db/schema";
 import { desc, gte, eq, asc, and } from "drizzle-orm";
+import { fetchAllSpotPrices as fetchFromYahoo } from "@/lib/providers/yahoo-finance";
+import { METALS } from "@/lib/providers/metals";
 
 interface PriceData {
   symbol: string;
@@ -35,6 +37,45 @@ async function getCurrentPrices(): Promise<PriceData[]> {
   } catch {
     return [];
   }
+}
+
+/** Fetches prices from Yahoo Finance when DB is empty. No API key required. */
+async function fetchPricesFromProvider(): Promise<PriceData[]> {
+  try {
+    const spots = await fetchFromYahoo();
+    if (!spots || spots.length === 0) return [];
+    return spots.map((s) => ({
+      symbol: s.symbol,
+      name: s.name,
+      price: s.price,
+      change: s.change,
+      changePct: s.changePct,
+    }));
+  } catch (err) {
+    console.warn("[ContentGenerator] fetchPricesFromProvider failed:", err);
+    return [];
+  }
+}
+
+/** Returns prices from DB, or from Yahoo if DB empty, or METALS base values as last resort. Never returns empty for daily summary. */
+async function getPricesWithFallback(): Promise<PriceData[]> {
+  let prices = await getCurrentPrices();
+  if (prices.length > 0) return prices;
+
+  console.warn("[ContentGenerator] metal_prices empty, fetching from Yahoo...");
+  prices = await fetchPricesFromProvider();
+  if (prices.length > 0) return prices;
+
+  console.warn("[ContentGenerator] Yahoo fetch failed, using METALS base values");
+  return (Object.entries(METALS) as [string, { name: string; base: number }][]).map(
+    ([symbol, m]) => ({
+      symbol,
+      name: m.name,
+      price: m.base,
+      change: 0,
+      changePct: 0,
+    })
+  );
 }
 
 async function getRecentNews(hours: number = 24): Promise<NewsItem[]> {
@@ -149,6 +190,17 @@ async function getGlossaryTermsForPrompt(): Promise<string> {
   }
 }
 
+export interface DailyGenerationLog {
+  pricesCount: number;
+  newsCount: number;
+  promptSizeBytes: number;
+  geminiResponseLength?: number;
+  geminiLog?: GeminiLog;
+  parseSuccess: boolean;
+  discardReason?: string;
+  usedFallback: "none" | "minimal" | "raw";
+}
+
 function buildGlossaryLinkingInstructions(termList: string): string {
   if (!termList) return "";
   return `
@@ -160,19 +212,32 @@ ${termList}
 `;
 }
 
-export async function generateDailySummary(): Promise<{
+export async function generateDailySummary(log?: DailyGenerationLog): Promise<{
   slug: string;
   title: string;
   excerpt: string;
   content: string;
   metals: string[];
-} | null> {
-  if (!isConfigured()) return null;
-
-  const prices = await getCurrentPrices();
-  const news = await getRecentNews(24);
+}> {
   const today = new Date();
   const dateStr = formatDate(today);
+  const dateSlug = today.toISOString().slice(0, 10);
+
+  const prices = await getPricesWithFallback();
+  const news = await getRecentNews(24);
+
+  if (log) {
+    log.pricesCount = prices.length;
+    log.newsCount = news.length;
+  }
+  console.log(`[ContentGenerator] generateDailySummary: prices=${prices.length}, news=${news.length}`);
+
+  if (!isConfigured()) {
+    console.warn("[ContentGenerator] Gemini not configured, using minimal article");
+    if (log) log.usedFallback = "minimal";
+    return buildMinimalDailyArticle(prices, dateStr, dateSlug);
+  }
+
   const glossaryContext = await getGlossaryTermsForPrompt();
   const glossaryInstructions = buildGlossaryLinkingInstructions(glossaryContext);
 
@@ -222,18 +287,39 @@ IMPORTANTE sobre fuentes:
 
 Devuelve SOLO el JSON, sin texto adicional antes o después. No envuelvas en bloques de código.`;
 
-  const raw = await generateText(prompt);
-  const dateSlug = today.toISOString().slice(0, 10);
+  const promptSize = new TextEncoder().encode(prompt).length;
+  if (log) log.promptSizeBytes = promptSize;
+  console.log(`[ContentGenerator] Prompt size: ${promptSize} bytes`);
+
+  const raw = await generateText(prompt, {
+    retryOnEmpty: true,
+    log: (entry) => {
+      if (log) log.geminiLog = entry;
+    },
+  });
 
   if (!raw) {
-    if (prices.length === 0) return null;
+    if (log) {
+      log.geminiResponseLength = 0;
+      log.usedFallback = "minimal";
+      log.discardReason = "Gemini returned empty (after retry)";
+    }
+    console.warn("[ContentGenerator] Gemini returned empty, using minimal article fallback");
     return buildMinimalDailyArticle(prices, dateStr, dateSlug);
   }
+
+  if (log) log.geminiResponseLength = raw.length;
+  console.log(`[ContentGenerator] Gemini response length: ${raw.length} chars`);
 
   const parsed = parseStructuredResponse(raw);
 
   if (parsed) {
+    if (log) {
+      log.parseSuccess = true;
+      log.usedFallback = "none";
+    }
     const keywordSlug = slugify(parsed.palabras_clave_url);
+    console.log(`[ContentGenerator] Parsed JSON successfully, slug: ${keywordSlug}-${dateSlug}`);
     return {
       slug: `${keywordSlug}-${dateSlug}`,
       title: parsed.titulo_seo,
@@ -243,6 +329,12 @@ Devuelve SOLO el JSON, sin texto adicional antes o después. No envuelvas en blo
     };
   }
 
+  if (log) {
+    log.parseSuccess = false;
+    log.usedFallback = "raw";
+    log.discardReason = "JSON parse failed, using raw content";
+  }
+  console.warn("[ContentGenerator] JSON parse failed, using raw content as fallback");
   const fallbackSlug = `resumen-diario-metales-preciosos-${dateSlug}`;
   const fallbackTitle = `Resumen del mercado de metales — ${dateStr}`;
   const fallbackExcerpt = `Oro a $${prices.find((p) => p.symbol === "XAU")?.price.toFixed(0) ?? "N/A"}, Plata a $${prices.find((p) => p.symbol === "XAG")?.price.toFixed(2) ?? "N/A"}, Platino a $${prices.find((p) => p.symbol === "XPT")?.price.toFixed(0) ?? "N/A"}, Paladio a $${prices.find((p) => p.symbol === "XPD")?.price.toFixed(0) ?? "N/A"}, Cobre a $${prices.find((p) => p.symbol === "HG")?.price.toFixed(2) ?? "N/A"}/lb. Análisis del día.`;
@@ -273,17 +365,33 @@ function buildMinimalDailyArticle(
   const paladio = prices.find((p) => p.symbol === "XPD");
   const cobre = prices.find((p) => p.symbol === "HG");
 
+  const priceLines: string[] = [];
+  if (oro) priceLines.push(`- **Oro**: $${oro.price.toFixed(2)}/oz (${oro.changePct >= 0 ? "+" : ""}${oro.changePct.toFixed(2)}% en 24h)`);
+  if (plata) priceLines.push(`- **Plata**: $${plata.price.toFixed(2)}/oz (${plata.changePct >= 0 ? "+" : ""}${plata.changePct.toFixed(2)}% en 24h)`);
+  if (platino) priceLines.push(`- **Platino**: $${platino.price.toFixed(2)}/oz (${platino.changePct >= 0 ? "+" : ""}${platino.changePct.toFixed(2)}% en 24h)`);
+  if (paladio) priceLines.push(`- **Paladio**: $${paladio.price.toFixed(2)}/oz (${paladio.changePct >= 0 ? "+" : ""}${paladio.changePct.toFixed(2)}% en 24h)`);
+  if (cobre) priceLines.push(`- **Cobre**: $${cobre.price.toFixed(2)}/lb (${cobre.changePct >= 0 ? "+" : ""}${cobre.changePct.toFixed(2)}% en 24h)`);
+  const priceSection = priceLines.length > 0 ? priceLines.join("\n") : "Datos de precios no disponibles en este momento.";
+
+  const oroAnalysis = oro
+    ? `El oro cotiza a $${oro.price.toFixed(2)}/oz con una variación del ${oro.changePct >= 0 ? "+" : ""}${oro.changePct.toFixed(2)}% en las últimas 24 horas. Como activo refugio, el oro suele reaccionar a la incertidumbre geopolítica, las decisiones de los bancos centrales y las expectativas de inflación.`
+    : "";
+
   const content = `## Resumen del día
 
 Resumen del mercado de metales preciosos para ${dateStr}.
 
 ## Precios actuales
 
-${oro ? `- **Oro**: $${oro.price.toFixed(2)}/oz (${oro.changePct >= 0 ? "+" : ""}${oro.changePct.toFixed(2)}% en 24h)` : ""}
-${plata ? `- **Plata**: $${plata.price.toFixed(2)}/oz (${plata.changePct >= 0 ? "+" : ""}${plata.changePct.toFixed(2)}% en 24h)` : ""}
-${platino ? `- **Platino**: $${platino.price.toFixed(2)}/oz (${platino.changePct >= 0 ? "+" : ""}${platino.changePct.toFixed(2)}% en 24h)` : ""}
-${paladio ? `- **Paladio**: $${paladio.price.toFixed(2)}/oz (${paladio.changePct >= 0 ? "+" : ""}${paladio.changePct.toFixed(2)}% en 24h)` : ""}
-${cobre ? `- **Cobre**: $${cobre.price.toFixed(2)}/lb (${cobre.changePct >= 0 ? "+" : ""}${cobre.changePct.toFixed(2)}% en 24h)` : ""}
+${priceSection}
+
+## Análisis del mercado
+
+${oroAnalysis || "El mercado de metales preciosos refleja la oferta y demanda global, las tensiones geopolíticas y las políticas monetarias. Oro, plata, platino y paladio son metales de inversión y uso industrial."}
+
+## El metal del día: Oro
+
+El oro es el metal precioso por excelencia. Se utiliza como reserva de valor, en joyería y en aplicaciones industriales (electrónica, odontología). Su precio suele subir en entornos de incertidumbre y cuando los tipos de interés reales bajan. Más información en nuestro [glosario de oro](/learn/glossary/oro).
 
 ## Fuentes
 

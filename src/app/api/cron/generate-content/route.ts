@@ -8,6 +8,7 @@ import {
   generateWeeklySummary,
   saveArticle,
   translateArticle,
+  type DailyGenerationLog,
 } from "@/lib/ai/content-generator";
 import {
   generateNewGlossaryTerms,
@@ -53,30 +54,33 @@ export async function POST(request: NextRequest) {
   const generated: string[] = [];
 
   const articleIdsToTranslate: number[] = [];
-  const dailyDebug: { prices?: number; news?: number; error?: string } = {};
+  const dailyLog: DailyGenerationLog & { saveError?: string } = {
+    pricesCount: 0,
+    newsCount: 0,
+    promptSizeBytes: 0,
+    parseSuccess: false,
+    usedFallback: "none",
+  };
 
   if (type === "daily" || type === "auto") {
     try {
-      const article = await generateDailySummary();
-      if (article) {
-        const articleId = await saveArticle(article, "daily");
-        if (articleId) {
-          generated.push(`daily: ${article.slug}`);
-          articleIdsToTranslate.push(articleId);
-        }
+      const article = await generateDailySummary(dailyLog);
+      let articleId = await saveArticle(article, "daily");
+      if (!articleId) {
+        console.warn("[Cron] saveArticle failed, retrying once...");
+        articleId = await saveArticle(article, "daily");
+      }
+      if (articleId) {
+        generated.push(`daily: ${article.slug}`);
+        articleIdsToTranslate.push(articleId);
+        console.log(`[Cron] Daily article saved: ${article.slug} (id=${articleId})`);
       } else {
-        const { newsSources: ns } = await import("@/lib/db/schema");
-        const since = new Date(Date.now() - 24 * 60 * 60 * 1000);
-        const [priceCount, newsCount] = await Promise.all([
-          db.select().from(metalPrices).then((r) => r.length),
-          db.select().from(ns).where(gte(ns.scrapedAt, since)).then((r) => r.length),
-        ]);
-        dailyDebug.prices = priceCount;
-        dailyDebug.news = newsCount;
-        dailyDebug.error = "generateDailySummary returned null (Gemini may have failed)";
+        dailyLog.saveError = "saveArticle failed after retry";
+        console.error("[Cron] Could not save daily article:", article.slug);
       }
     } catch (err) {
-      dailyDebug.error = err instanceof Error ? err.message : String(err);
+      dailyLog.saveError = err instanceof Error ? err.message : String(err);
+      console.error("[Cron] Daily generation failed:", err);
     }
   }
 
@@ -223,6 +227,6 @@ export async function POST(request: NextRequest) {
     ping: pingResult,
     timestamp: new Date().toISOString(),
   };
-  if (Object.keys(dailyDebug).length > 0) body.dailyDebug = dailyDebug;
+  if (type === "daily" || type === "auto") body.dailyLog = dailyLog;
   return NextResponse.json(body);
 }

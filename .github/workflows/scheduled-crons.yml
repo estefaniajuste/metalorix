@@ -55,11 +55,33 @@ jobs:
             exit 1
           fi
 
-  generate-content:
+  prepare-content:
     if: >
-      (github.event_name == 'schedule' && github.event.schedule == '*/15 * * * *') ||
-      github.event.inputs.job == 'all' ||
-      github.event.inputs.job == 'content'
+      github.event_name == 'schedule' ||
+      github.event.inputs.job == 'content' ||
+      github.event.inputs.job == 'all'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Scrape news (for content context)
+        run: |
+          response=$(curl -s -w "\n%{http_code}" -X POST \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+            "${{ env.SERVICE_URL }}/api/cron/scrape-news")
+          echo "News: $(echo "$response" | tail -1)"
+      - name: Scrape prices (ensure fresh data)
+        run: |
+          response=$(curl -s -w "\n%{http_code}" -X POST \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+            "${{ env.SERVICE_URL }}/api/cron/scrape-prices")
+          echo "Prices: $(echo "$response" | tail -1)"
+
+  generate-content:
+    needs: [prepare-content]
+    if: |
+      always() && (needs.prepare-content.result == 'success' || needs.prepare-content.result == 'skipped') &&
+      ((github.event_name == 'schedule' && github.event.schedule == '*/15 * * * *') ||
+       github.event.inputs.job == 'all' ||
+       github.event.inputs.job == 'content')
     runs-on: ubuntu-latest
     steps:
       - name: Check if daily content should run
