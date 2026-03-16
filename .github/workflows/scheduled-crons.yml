@@ -20,6 +20,15 @@ on:
           - alerts
           - learn
           - indexing
+      content_type:
+        description: 'When job=content: daily (solo resumen, evita timeout), weekly, or auto (todo)'
+        required: false
+        default: 'daily'
+        type: choice
+        options:
+          - daily
+          - weekly
+          - auto
 
 env:
   SERVICE_URL: https://metalorix.com
@@ -59,17 +68,17 @@ jobs:
           hour=$(date -u +%H)
           minute=$(date -u +%M)
           day_of_week=$(date -u +%u)
-          # Daily summary at 19:00 UTC (20:00 CET)
-          if [ "$hour" = "19" ] && [ "$minute" -lt "15" ]; then
+          # Daily summary at 19:00 UTC (20:00 CET). Window 0-29 min to tolerate GitHub Actions delays.
+          if [ "$hour" = "19" ] && [ "$minute" -lt "30" ]; then
             echo "type=daily" >> $GITHUB_OUTPUT
             echo "should_run=true" >> $GITHUB_OUTPUT
-          # Weekly summary on Sunday at 18:00 UTC
-          elif [ "$day_of_week" = "7" ] && [ "$hour" = "18" ] && [ "$minute" -lt "15" ]; then
+          # Weekly summary on Sunday at 18:00 UTC. Window 0-29 min for same reason.
+          elif [ "$day_of_week" = "7" ] && [ "$hour" = "18" ] && [ "$minute" -lt "30" ]; then
             echo "type=weekly" >> $GITHUB_OUTPUT
             echo "should_run=true" >> $GITHUB_OUTPUT
-          # Manual trigger
+          # Manual trigger (default daily to avoid Cloud Run timeout)
           elif [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            echo "type=auto" >> $GITHUB_OUTPUT
+            echo "type=${{ github.event.inputs.content_type }}" >> $GITHUB_OUTPUT
             echo "should_run=true" >> $GITHUB_OUTPUT
           else
             echo "should_run=false" >> $GITHUB_OUTPUT
