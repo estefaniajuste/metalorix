@@ -66,8 +66,8 @@ export function DataTable({ history, range }: DataTableProps) {
             const chgPct = prev.price ? (chg / prev.price) * 100 : 0;
             const cls = chg >= 0 ? "text-signal-up" : "text-signal-down";
             const dt = new Date(d.timestamp);
-            const timeStr =
-              range === "1D"
+            const isIntraday = ["1H", "4H", "1D"].includes(range);
+            const timeStr = isIntraday
                 ? dt.toLocaleTimeString(locale, { hour: "2-digit", minute: "2-digit" })
                 : dt.toLocaleDateString(locale, { month: "short", day: "numeric" });
 

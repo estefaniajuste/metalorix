@@ -9,9 +9,11 @@ import { MockProvider, type MetalSymbol, type TimeRange } from "@/lib/providers/
 export const dynamic = "force-dynamic";
 
 const VALID_SYMBOLS = ["XAU", "XAG", "XPT", "XPD", "HG"];
-const VALID_RANGES = ["1D", "1W", "1M", "3M", "6M", "1Y", "2Y", "5Y"];
+const VALID_RANGES = ["1H", "4H", "1D", "1W", "1M", "3M", "6M", "1Y", "2Y", "5Y"];
 
 const RANGE_LOOKBACK: Record<string, number> = {
+  "1H": 60 * 60 * 1000,
+  "4H": 4 * 60 * 60 * 1000,
   "1D": 24 * 60 * 60 * 1000,
   "1W": 7 * 24 * 60 * 60 * 1000,
   "1M": 31 * 24 * 60 * 60 * 1000,
@@ -41,7 +43,9 @@ const YAHOO_TICKERS: Record<string, string> = {
   HG:  "HG=F",
 };
 
-const YAHOO_RANGE_MAP: Record<string, { range: string; interval: string }> = {
+const YAHOO_RANGE_MAP: Record<string, { range?: string; interval: string; periodSeconds?: number }> = {
+  "1H": { interval: "1m", periodSeconds: 3600 },
+  "4H": { interval: "1m", periodSeconds: 4 * 3600 },
   "1D": { range: "1d", interval: "5m" },
   "1W": { range: "5d", interval: "15m" },
   "1M": { range: "1mo", interval: "1d" },
@@ -61,7 +65,14 @@ async function fetchYahooHistory(
   if (!ticker || !config) return null;
 
   try {
-    const url = `https://query1.finance.yahoo.com/v8/finance/chart/${ticker}?range=${config.range}&interval=${config.interval}`;
+    let url: string;
+    if (config.periodSeconds) {
+      const period2 = Math.floor(Date.now() / 1000);
+      const period1 = period2 - config.periodSeconds;
+      url = `https://query1.finance.yahoo.com/v8/finance/chart/${ticker}?period1=${period1}&period2=${period2}&interval=${config.interval}`;
+    } else {
+      url = `https://query1.finance.yahoo.com/v8/finance/chart/${ticker}?range=${config.range}&interval=${config.interval}`;
+    }
     const res = await fetch(url, {
       headers: { "User-Agent": "Mozilla/5.0" },
     });
@@ -112,7 +123,7 @@ export async function GET(request: NextRequest) {
 
   // 1. Try database for short ranges
   const db = getDb();
-  if (db && ["1D", "1W", "1M"].includes(range)) {
+  if (db && ["1H", "4H", "1D", "1W", "1M"].includes(range)) {
     try {
       const since = new Date(Date.now() - RANGE_LOOKBACK[range]);
       const rows = await db
@@ -122,7 +133,7 @@ export async function GET(request: NextRequest) {
           and(eq(priceHistory.symbol, symbol), gte(priceHistory.timestamp, since))
         )
         .orderBy(desc(priceHistory.timestamp))
-        .limit(200);
+        .limit(300);
 
       if (rows.length >= 5) {
         const data = rows
@@ -155,7 +166,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ source: "yahoo", ...yahooResult });
   }
 
-  // 3. Try Gold API
+  // 3. Try Gold API (doesn't support sub-day ranges)
   if (["1D", "1W", "1M", "1Y"].includes(range)) {
     const goldApiResult = await fetchFromGoldApi(symbol, range as TimeRange);
     if (goldApiResult && goldApiResult.data.length > 0) {
@@ -171,8 +182,8 @@ export async function GET(request: NextRequest) {
     }
   }
 
-  // 5. Fallback to mock (only for original ranges)
-  if (["1D", "1W", "1M", "1Y"].includes(range)) {
+  // 5. Fallback to mock
+  if (["1H", "4H", "1D", "1W", "1M", "1Y"].includes(range)) {
     const result = await MockProvider.getHistory(symbol as MetalSymbol, range as TimeRange);
     return NextResponse.json({ source: "mock", ...result });
   }

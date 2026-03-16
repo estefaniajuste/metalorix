@@ -108,8 +108,7 @@ export function MetalPageContent({ symbol }: MetalPageContentProps) {
 
   // Preload all ranges
   useEffect(() => {
-    (["1D", "1W", "1M", "1Y"] as TimeRange[]).forEach(loadHistory);
-    // Preload extended ranges lazily
+    (["1H", "4H", "1D", "1W", "1M", "1Y"] as TimeRange[]).forEach(loadHistory);
     setTimeout(() => {
       (["3M", "6M", "2Y", "5Y"] as TimeRange[]).forEach(loadHistory);
     }, 3000);

@@ -11,6 +11,8 @@ const SYMBOL_MAP: Record<string, { apiSymbol: string; name: string }> = {
 };
 
 const RANGE_CONFIG: Record<TimeRange, { interval: string; outputsize: number }> = {
+  "1H": { interval: "1min", outputsize: 60 },
+  "4H": { interval: "1min", outputsize: 240 },
   "1D": { interval: "30min", outputsize: 48 },
   "1W": { interval: "4h", outputsize: 42 },
   "1M": { interval: "1day", outputsize: 30 },

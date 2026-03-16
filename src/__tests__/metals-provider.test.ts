@@ -54,7 +54,7 @@ describe("MockProvider.getSpotPrices", () => {
 });
 
 describe("MockProvider.getHistory", () => {
-  const ranges: TimeRange[] = ["1D", "1W", "1M", "3M", "6M", "1Y", "2Y", "5Y"];
+  const ranges: TimeRange[] = ["1H", "4H", "1D", "1W", "1M", "3M", "6M", "1Y", "2Y", "5Y"];
   const symbols: MetalSymbol[] = ["XAU", "XAG", "XPT", "XPD", "HG"];
 
   it.each(symbols)("returns data for %s", async (symbol) => {
@@ -66,6 +66,8 @@ describe("MockProvider.getHistory", () => {
 
   it.each(ranges)("returns correct point count for range %s", async (range) => {
     const expectedPoints: Record<TimeRange, number> = {
+      "1H": 60,
+      "4H": 240,
       "1D": 48,
       "1W": 42,
       "1M": 30,

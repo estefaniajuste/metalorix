@@ -3,7 +3,7 @@
 import { useTranslations } from "next-intl";
 import type { TimeRange } from "@/lib/providers/metals";
 
-const ranges: TimeRange[] = ["1D", "1W", "1M", "3M", "6M", "1Y", "2Y", "5Y"];
+const ranges: TimeRange[] = ["1H", "4H", "1D", "1W", "1M", "3M", "6M", "1Y", "2Y", "5Y"];
 
 interface RangeSelectorProps {
   active: TimeRange;
