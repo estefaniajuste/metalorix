@@ -10,7 +10,7 @@ import { eq, and } from "drizzle-orm";
 import { injectGlossaryLinks } from "@/lib/ai/glossary-generator";
 import { ArticleShareBar } from "@/components/dashboard/ArticleShareBar";
 
-async function getArticle(slug: string) {
+async function getArticle(slug: string, locale: string) {
   const db = getDb();
   if (!db) return null;
 
@@ -20,7 +20,46 @@ async function getArticle(slug: string) {
       .from(articles)
       .where(eq(articles.slug, slug))
       .limit(1);
-    return result[0] ?? null;
+    if (result[0]) return result[0];
+
+    if (locale !== "es") {
+      const translationRow = await db
+        .select({ articleId: articleTranslations.articleId })
+        .from(articleTranslations)
+        .where(
+          and(
+            eq(articleTranslations.slug, slug),
+            eq(articleTranslations.locale, locale)
+          )
+        )
+        .limit(1);
+
+      if (translationRow[0]) {
+        const base = await db
+          .select()
+          .from(articles)
+          .where(eq(articles.id, translationRow[0].articleId))
+          .limit(1);
+        return base[0] ?? null;
+      }
+
+      const anyTranslation = await db
+        .select({ articleId: articleTranslations.articleId })
+        .from(articleTranslations)
+        .where(eq(articleTranslations.slug, slug))
+        .limit(1);
+
+      if (anyTranslation[0]) {
+        const base = await db
+          .select()
+          .from(articles)
+          .where(eq(articles.id, anyTranslation[0].articleId))
+          .limit(1);
+        return base[0] ?? null;
+      }
+    }
+
+    return null;
   } catch {
     return null;
   }
@@ -34,7 +73,16 @@ async function getTranslation(articleId: number, locale: string) {
 
   try {
     const result = await db
-      .select()
+      .select({
+        id: articleTranslations.id,
+        articleId: articleTranslations.articleId,
+        locale: articleTranslations.locale,
+        slug: articleTranslations.slug,
+        title: articleTranslations.title,
+        excerpt: articleTranslations.excerpt,
+        content: articleTranslations.content,
+        createdAt: articleTranslations.createdAt,
+      })
       .from(articleTranslations)
       .where(
         and(
@@ -54,7 +102,7 @@ export async function generateMetadata({
 }: {
   params: { slug: string; locale: string };
 }): Promise<Metadata> {
-  const article = await getArticle(params.slug);
+  const article = await getArticle(params.slug, params.locale);
 
   if (!article) {
     const t = await getTranslations("article");
@@ -65,10 +113,11 @@ export async function generateMetadata({
   const translation = await getTranslation(article.id, locale);
   const title = translation?.title ?? article.title;
   const description = translation?.excerpt ?? article.excerpt ?? article.title;
+  const metaSlug = translation?.slug ?? article.slug;
 
   const alternates = getAlternates(locale, {
     pathname: "/noticias/[slug]",
-    params: { slug: article.slug },
+    params: { slug: metaSlug },
   });
 
   return {
@@ -197,7 +246,7 @@ export default async function ArticlePage({
     return map[symbol] ?? symbol;
   };
 
-  const article = await getArticle(params.slug);
+  const article = await getArticle(params.slug, locale);
 
   if (!article) {
     notFound();
@@ -207,6 +256,7 @@ export default async function ArticlePage({
   const displayTitle = translation?.title ?? article.title;
   const displayExcerpt = translation?.excerpt ?? article.excerpt;
   const displayContent = translation?.content ?? article.content;
+  const displaySlug = translation?.slug ?? article.slug;
 
   const linkedContent = await injectGlossaryLinks(displayContent);
 
@@ -215,7 +265,7 @@ export default async function ArticlePage({
     "@type": "NewsArticle",
     headline: displayTitle,
     description: displayExcerpt,
-    url: `https://metalorix.com${getPathname({ locale: locale as Locale, href: { pathname: "/noticias/[slug]", params: { slug: article.slug } } as any })}`,
+    url: `https://metalorix.com${getPathname({ locale: locale as Locale, href: { pathname: "/noticias/[slug]", params: { slug: displaySlug } } as any })}`,
     datePublished: article.publishedAt?.toISOString(),
     dateModified: article.updatedAt.toISOString(),
     author: {
@@ -313,7 +363,7 @@ export default async function ArticlePage({
             <div className="mt-5">
               <ArticleShareBar
                 title={displayTitle}
-                url={`https://metalorix.com${getPathname({ locale: locale as Locale, href: { pathname: "/noticias/[slug]", params: { slug: article.slug } } as any })}`}
+                url={`https://metalorix.com${getPathname({ locale: locale as Locale, href: { pathname: "/noticias/[slug]", params: { slug: displaySlug } } as any })}`}
               />
             </div>
           </header>
@@ -345,7 +395,7 @@ export default async function ArticlePage({
           <div className="mt-10 pt-6 border-t border-border">
             <ArticleShareBar
               title={displayTitle}
-              url={`https://metalorix.com${getPathname({ locale: locale as Locale, href: { pathname: "/noticias/[slug]", params: { slug: article.slug } } as any })}`}
+              url={`https://metalorix.com${getPathname({ locale: locale as Locale, href: { pathname: "/noticias/[slug]", params: { slug: displaySlug } } as any })}`}
             />
           </div>
 

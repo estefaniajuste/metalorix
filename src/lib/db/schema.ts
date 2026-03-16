@@ -96,6 +96,7 @@ export const articleTranslations = pgTable(
       .notNull()
       .references(() => articles.id, { onDelete: "cascade" }),
     locale: varchar("locale", { length: 10 }).notNull(),
+    slug: varchar("slug", { length: 255 }),
     title: varchar("title", { length: 500 }).notNull(),
     excerpt: text("excerpt"),
     content: text("content").notNull(),
@@ -109,6 +110,7 @@ export const articleTranslations = pgTable(
       table.locale
     ),
     localeIdx: index("article_translations_locale_idx").on(table.locale),
+    slugIdx: index("article_translations_slug_idx").on(table.slug),
   })
 );
 

@@ -1,12 +1,12 @@
 import { NextResponse } from "next/server";
 import { getDb } from "@/lib/db";
-import { articles, glossaryTerms, learnClusters, learnArticles } from "@/lib/db/schema";
+import { articles, articleTranslations, glossaryTerms, learnClusters, learnArticles } from "@/lib/db/schema";
 import { eq, desc, isNotNull } from "drizzle-orm";
 
 export const dynamic = "force-dynamic";
 
 export async function GET() {
-  const urls: Array<{ slug: string; type: string; cluster?: string; lastmod?: string }> = [];
+  const urls: Array<{ slug: string; type: string; cluster?: string; lastmod?: string; localizedSlugs?: Record<string, string> }> = [];
 
   try {
     const db = getDb();
@@ -15,18 +15,37 @@ export async function GET() {
     }
 
     const allArticles = await db
-      .select({ slug: articles.slug, publishedAt: articles.publishedAt })
+      .select({ id: articles.id, slug: articles.slug, publishedAt: articles.publishedAt })
       .from(articles)
       .where(eq(articles.published, true))
       .orderBy(desc(articles.publishedAt))
       .limit(1000)
       .catch(() => []);
 
+    const translationSlugs = allArticles.length > 0
+      ? await db
+          .select({
+            articleId: articleTranslations.articleId,
+            locale: articleTranslations.locale,
+            slug: articleTranslations.slug,
+          })
+          .from(articleTranslations)
+          .catch(() => [])
+      : [];
+
+    const slugsByArticle = new Map<number, Record<string, string>>();
+    for (const ts of translationSlugs) {
+      if (!ts.slug) continue;
+      if (!slugsByArticle.has(ts.articleId)) slugsByArticle.set(ts.articleId, {});
+      slugsByArticle.get(ts.articleId)![ts.locale] = ts.slug;
+    }
+
     for (const a of allArticles) {
       urls.push({
         slug: a.slug,
         type: "article",
         lastmod: a.publishedAt ? new Date(a.publishedAt).toISOString().split("T")[0] : undefined,
+        localizedSlugs: slugsByArticle.get(a.id),
       });
     }
 

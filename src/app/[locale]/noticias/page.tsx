@@ -48,8 +48,8 @@ async function getPublishedArticles() {
 async function getTranslationsForArticles(
   articleIds: number[],
   locale: string
-): Promise<Map<number, { title: string; excerpt: string | null }>> {
-  const map = new Map<number, { title: string; excerpt: string | null }>();
+): Promise<Map<number, { title: string; excerpt: string | null; slug: string | null }>> {
+  const map = new Map<number, { title: string; excerpt: string | null; slug: string | null }>();
   if (locale === "es" || articleIds.length === 0) return map;
 
   const db = getDb();
@@ -61,6 +61,7 @@ async function getTranslationsForArticles(
         articleId: articleTranslations.articleId,
         title: articleTranslations.title,
         excerpt: articleTranslations.excerpt,
+        slug: articleTranslations.slug,
       })
       .from(articleTranslations)
       .where(
@@ -71,7 +72,7 @@ async function getTranslationsForArticles(
       );
 
     for (const row of rows) {
-      map.set(row.articleId, { title: row.title, excerpt: row.excerpt });
+      map.set(row.articleId, { title: row.title, excerpt: row.excerpt, slug: row.slug });
     }
   } catch {
     // fallback to original Spanish
@@ -142,10 +143,11 @@ export default async function NoticiasPage() {
                 const tr = translationsMap.get(article.id);
                 const title = tr?.title ?? article.title;
                 const excerpt = tr?.excerpt ?? article.excerpt;
+                const linkSlug = tr?.slug ?? article.slug;
                 return (
                   <Link
                     key={article.id}
-                    href={{ pathname: "/noticias/[slug]" as const, params: { slug: article.slug } }}
+                    href={{ pathname: "/noticias/[slug]" as const, params: { slug: linkSlug } }}
                     className="bg-surface-1 border border-border rounded-DEFAULT overflow-hidden hover:border-border-hover hover:shadow-card hover:-translate-y-0.5 transition-all group"
                   >
                     <div className="h-1.5" style={{ backgroundColor: color }} />

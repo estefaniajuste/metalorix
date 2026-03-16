@@ -112,6 +112,7 @@ interface DynamicUrl {
   type: string;
   cluster?: string;
   lastmod?: string;
+  localizedSlugs?: Record<string, string>;
 }
 
 async function fetchDynamicUrls(): Promise<DynamicUrl[]> {
@@ -157,7 +158,10 @@ export async function GET() {
     const paths: Record<string, string> = {};
 
     if (item.type === "article") {
-      for (const loc of LOCALES) paths[loc] = `/${loc}/${NEWS_BASE[loc]}/${item.slug}`;
+      for (const loc of LOCALES) {
+        const locSlug = item.localizedSlugs?.[loc] ?? item.slug;
+        paths[loc] = `/${loc}/${NEWS_BASE[loc]}/${locSlug}`;
+      }
       urls.push(urlEntry(paths, "weekly", 0.7, item.lastmod || today));
     } else if (item.type === "cluster") {
       for (const loc of LOCALES) paths[loc] = `/${loc}/${LEARN_BASE[loc]}/${item.slug}`;

@@ -707,16 +707,15 @@ interface TranslatedArticle {
   title: string;
   excerpt: string;
   content: string;
+  slug_keywords?: string;
 }
 
 function parseTranslatedResponse(raw: string): TranslatedArticle | null {
   try {
-    // Try closed code block first, then unclosed, then raw
     const closedMatch = raw.match(/```(?:json)?\s*([\s\S]*?)```/);
     const unclosedMatch = !closedMatch ? raw.match(/```(?:json)?\s*([\s\S]*)/) : null;
     let jsonStr = (closedMatch?.[1] ?? unclosedMatch?.[1] ?? raw).trim();
 
-    // Extract the outermost JSON object
     const objMatch = jsonStr.match(/\{[\s\S]*\}/);
     if (objMatch) jsonStr = objMatch[0];
 
@@ -726,6 +725,7 @@ function parseTranslatedResponse(raw: string): TranslatedArticle | null {
         title: parsed.title,
         excerpt: parsed.excerpt ?? "",
         content: parsed.content,
+        slug_keywords: parsed.slug_keywords ?? undefined,
       };
     }
     return null;
@@ -772,7 +772,8 @@ Return ONLY a valid JSON with this exact structure:
 {
   "title": "Translated title in ${langName}",
   "excerpt": "Translated excerpt in ${langName}",
-  "content": "Translated full content in ${langName} with ## for section headings"
+  "content": "Translated full content in ${langName} with ## for section headings",
+  "slug_keywords": "3-6 translated keywords in ${langName} for the URL slug, separated by spaces, lowercase, no accents, no date. Example for English: 'gold rises geopolitical tensions iran'"
 }
 
 Return ONLY the JSON, no additional text.`;
@@ -821,15 +822,21 @@ export async function translateArticle(articleId: number): Promise<number> {
         );
 
         if (result) {
+          const dateSlug = article.slug.match(/\d{4}-\d{2}-\d{2}$/)?.[0] ?? new Date().toISOString().slice(0, 10);
+          const translatedSlug = result.slug_keywords
+            ? `${slugify(result.slug_keywords)}-${dateSlug}`
+            : article.slug;
+
           await db.insert(articleTranslations).values({
             articleId,
             locale,
+            slug: translatedSlug,
             title: result.title,
             excerpt: result.excerpt,
             content: result.content,
           });
           translated++;
-          console.log(`Translated article ${articleId} to ${locale}`);
+          console.log(`Translated article ${articleId} to ${locale}: slug=${translatedSlug}`);
         }
       } catch (err) {
         console.error(`Failed to translate article ${articleId} to ${locale}:`, err);
