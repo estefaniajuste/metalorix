@@ -5,13 +5,6 @@ const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   output: "standalone",
-  async rewrites() {
-    return {
-      beforeFiles: [
-        { source: "/sitemap.xml", destination: "/api/sitemap" },
-      ],
-    };
-  },
   async headers() {
     return [
       {
