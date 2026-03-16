@@ -89,6 +89,28 @@ jobs:
           echo "robots.txt OK — HTTP $STATUS"
           cat /tmp/robots.txt
 
+      - name: Verify sitemap URL from robots.txt is reachable
+        run: |
+          SITEMAP_URL=$(grep -i '^Sitemap:' /tmp/robots.txt | head -1 | sed 's/^Sitemap:\s*//i' | tr -d ' \r')
+          if [ -z "$SITEMAP_URL" ]; then
+            echo "::error::No Sitemap URL found in robots.txt"
+            exit 1
+          fi
+          echo "Sitemap URL from robots.txt: $SITEMAP_URL"
+          STATUS=$(curl -sL -o /tmp/sitemap-from-robots.xml -w "%{http_code}" "$SITEMAP_URL")
+          if [ "$STATUS" != "200" ]; then
+            echo "::error::Sitemap at declared URL returned HTTP $STATUS (expected 200)"
+            head -50 /tmp/sitemap-from-robots.xml
+            exit 1
+          fi
+          if ! grep -q '<urlset' /tmp/sitemap-from-robots.xml; then
+            echo "::error::Sitemap response is not valid XML (missing <urlset>)"
+            head -20 /tmp/sitemap-from-robots.xml
+            exit 1
+          fi
+          URL_COUNT=$(grep -c '<url>' /tmp/sitemap-from-robots.xml || true)
+          echo "Sitemap URL from robots.txt OK — HTTP $STATUS, $URL_COUNT URLs, valid XML"
+
       - name: Verify homepage returns 200
         run: |
           STATUS=$(curl -s -o /dev/null -w "%{http_code}" https://metalorix.com/)

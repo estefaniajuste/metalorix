@@ -162,6 +162,9 @@ export async function GET() {
     } else if (item.type === "cluster") {
       for (const loc of LOCALES) paths[loc] = `/${loc}/${LEARN_BASE[loc]}/${item.slug}`;
       urls.push(urlEntry(paths, "weekly", 0.6, today));
+    } else if (item.type === "glossary") {
+      for (const loc of LOCALES) paths[loc] = `/${loc}/${LEARN_BASE[loc]}/glossary/${item.slug}`;
+      urls.push(urlEntry(paths, "monthly", 0.5, today));
     } else if (item.type === "learn-article" && item.cluster) {
       for (const loc of LOCALES) paths[loc] = `/${loc}/${LEARN_BASE[loc]}/${item.cluster}/${item.slug}`;
       urls.push(urlEntry(paths, "monthly", 0.5, item.lastmod || today));

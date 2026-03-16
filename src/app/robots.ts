@@ -16,6 +16,6 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ["/api/", ...uniquePanelPaths.map((p) => `${p}/`)],
       },
     ],
-    sitemap: "https://metalorix.com/sitemap.xml",
+    sitemap: "https://metalorix.com/api/sitemap",
   };
 }
