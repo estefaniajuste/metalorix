@@ -1,8 +1,4 @@
 import { NextResponse } from "next/server";
-import { getDb } from "@/lib/db";
-import { articles, glossaryTerms, learnClusters, learnArticles } from "@/lib/db/schema";
-import { eq, desc, isNotNull } from "drizzle-orm";
-import { PRODUCTS } from "@/lib/data/products";
 
 export const dynamic = "force-dynamic";
 
@@ -113,20 +109,28 @@ export async function GET() {
     }
 
     // Product pages
-    const productBase: Record<string, string> = {
-      es: "productos", en: "products", de: "produkte",
-      zh: "chanpin", ar: "muntajat", tr: "urunler",
-    };
-    for (const product of PRODUCTS) {
-      const paths: Record<string, string> = {};
-      for (const loc of LOCALES) {
-        paths[loc] = `/${loc}/${productBase[loc]}/${product.slug}`;
+    try {
+      const { PRODUCTS } = await import("@/lib/data/products");
+      const productBase: Record<string, string> = {
+        es: "productos", en: "products", de: "produkte",
+        zh: "chanpin", ar: "muntajat", tr: "urunler",
+      };
+      for (const product of PRODUCTS) {
+        const paths: Record<string, string> = {};
+        for (const loc of LOCALES) {
+          paths[loc] = `/${loc}/${productBase[loc]}/${product.slug}`;
+        }
+        urls.push(urlEntry(paths, "monthly", 0.6, today));
       }
-      urls.push(urlEntry(paths, "monthly", 0.6, today));
+    } catch (err) {
+      console.error("[sitemap] Products load failed:", err);
     }
 
     // Dynamic DB content
     try {
+      const { getDb } = await import("@/lib/db");
+      const schema = await import("@/lib/db/schema");
+      const orm = await import("drizzle-orm");
       const db = getDb();
       if (db) {
         const newsBase: Record<string, string> = {
@@ -138,10 +142,10 @@ export async function GET() {
         };
 
         const allArticles = await db
-          .select({ slug: articles.slug, publishedAt: articles.publishedAt })
-          .from(articles)
-          .where(eq(articles.published, true))
-          .orderBy(desc(articles.publishedAt))
+          .select({ slug: schema.articles.slug, publishedAt: schema.articles.publishedAt })
+          .from(schema.articles)
+          .where(orm.eq(schema.articles.published, true))
+          .orderBy(orm.desc(schema.articles.publishedAt))
           .limit(1000)
           .catch(() => []);
 
@@ -153,9 +157,9 @@ export async function GET() {
         }
 
         const terms = await db
-          .select({ slug: glossaryTerms.slug })
-          .from(glossaryTerms)
-          .where(eq(glossaryTerms.locale, DEFAULT_LOCALE))
+          .select({ slug: schema.glossaryTerms.slug })
+          .from(schema.glossaryTerms)
+          .where(orm.eq(schema.glossaryTerms.locale, DEFAULT_LOCALE))
           .limit(1000)
           .catch(() => []);
 
@@ -166,8 +170,8 @@ export async function GET() {
         }
 
         const clusters = await db
-          .select({ slug: learnClusters.slug })
-          .from(learnClusters)
+          .select({ slug: schema.learnClusters.slug })
+          .from(schema.learnClusters)
           .limit(100)
           .catch(() => []);
 
@@ -178,10 +182,10 @@ export async function GET() {
         }
 
         const learnRows = await db
-          .select({ slug: learnArticles.slug, clusterSlug: learnClusters.slug })
-          .from(learnArticles)
-          .innerJoin(learnClusters, eq(learnArticles.clusterId, learnClusters.id))
-          .where(isNotNull(learnArticles.publishedAt))
+          .select({ slug: schema.learnArticles.slug, clusterSlug: schema.learnClusters.slug })
+          .from(schema.learnArticles)
+          .innerJoin(schema.learnClusters, orm.eq(schema.learnArticles.clusterId, schema.learnClusters.id))
+          .where(orm.isNotNull(schema.learnArticles.publishedAt))
           .limit(1000)
           .catch(() => []);
 
