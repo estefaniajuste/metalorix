@@ -8,6 +8,7 @@ import {
   learnArticles,
   learnArticleLocalizations,
   learnInternalLinks,
+  glossaryTerms,
 } from "@/lib/db/schema";
 import { eq, and } from "drizzle-orm";
 import { getTopicBySlug } from "@/lib/learn/topics";
@@ -95,6 +96,23 @@ async function getArticleData(slug: string, locale: string) {
   }
 }
 
+async function getGlossaryTermData(slug: string) {
+  const db = getDb();
+  if (!db) return null;
+
+  try {
+    const [term] = await db
+      .select()
+      .from(glossaryTerms)
+      .where(and(eq(glossaryTerms.slug, slug), eq(glossaryTerms.published, true)))
+      .limit(1);
+
+    return term ?? null;
+  } catch {
+    return null;
+  }
+}
+
 /**
  * Resolve incoming params to base slugs, handling both localized and base slugs.
  */
@@ -127,6 +145,33 @@ export async function generateMetadata({
   const tl = await getTranslations({ locale, namespace: "learnSection" });
 
   const { baseClusterSlug, topic } = await resolveParams(params, locale);
+
+  if (!topic && baseClusterSlug === "glossary") {
+    const glossaryTerm = await getGlossaryTermData(params.slug);
+    if (glossaryTerm) {
+      const title = glossaryTerm.term;
+      const description = glossaryTerm.definition.slice(0, 155);
+      const alternates = getAlternates(locale, (loc) => ({
+        pathname: "/learn/[cluster]/[slug]",
+        params: {
+          cluster: getLocalizedClusterSlug("glossary", loc),
+          slug: glossaryTerm.slug,
+        },
+      }));
+      return {
+        title: `${title} — ${tl("breadcrumb")} | Metalorix`,
+        description,
+        openGraph: {
+          title: `${title} — Metalorix`,
+          description,
+          type: "article",
+          url: alternates.canonical,
+        },
+        alternates,
+      };
+    }
+  }
+
   if (!topic) return { title: tl("notFound") };
 
   const data = await getArticleData(topic.slug, locale);
@@ -172,6 +217,108 @@ export default async function LearnArticlePage({
   const locale = (await getLocale()) as Locale;
 
   const { baseClusterSlug, topic } = await resolveParams(params, locale);
+
+  if ((!topic || topic.clusterSlug !== baseClusterSlug) && baseClusterSlug === "glossary") {
+    const glossaryTerm = await getGlossaryTermData(params.slug);
+    if (glossaryTerm) {
+      const locClusterSlug = getLocalizedClusterSlug("glossary", locale);
+      const localizedCluster = getLocalizedCluster("glossary", locale);
+      const clusterName = localizedCluster?.name ?? "Glossary & Terminology";
+
+      return (
+        <article className="py-[var(--section-py)]">
+          <div className="mx-auto max-w-[780px] px-6">
+            <LearnBreadcrumb
+              items={[
+                { label: tc("breadcrumbHome"), href: "/" },
+                { label: t("breadcrumb"), href: "/learn" },
+                {
+                  label: clusterName,
+                  href: { pathname: "/learn/[cluster]" as const, params: { cluster: locClusterSlug } },
+                },
+                { label: glossaryTerm.term },
+              ]}
+              locale={locale}
+              ariaLabel={tc("breadcrumbNav")}
+            />
+
+            <header className="mb-8">
+              <div className="flex items-center gap-2 mb-4 flex-wrap">
+                <span className="text-[10px] font-semibold px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-400">
+                  {t("difficultyBeginner")}
+                </span>
+                <span className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-surface-2 text-content-3">
+                  {t("typeGlossary")}
+                </span>
+                {glossaryTerm.category && (
+                  <span className="text-[10px] text-content-3">
+                    {glossaryTerm.category}
+                  </span>
+                )}
+              </div>
+
+              <h1 className="text-2xl sm:text-3xl font-extrabold text-content-0 tracking-tight leading-tight mb-4">
+                {glossaryTerm.term}
+              </h1>
+
+              <p className="text-lg text-content-2 leading-relaxed">
+                {glossaryTerm.definition}
+              </p>
+            </header>
+
+            {glossaryTerm.content ? (
+              <div className="prose-metalorix text-content-1 leading-relaxed text-[15px] [&>p]:mb-5 [&>h2]:text-xl [&>h2]:font-bold [&>h2]:text-content-0 [&>h2]:mt-10 [&>h2]:mb-4 [&>h3]:text-lg [&>h3]:font-semibold [&>h3]:text-content-0 [&>h3]:mt-8 [&>h3]:mb-3 [&>ul]:list-disc [&>ul]:pl-5 [&>ul]:mb-5 [&>ol]:list-decimal [&>ol]:pl-5 [&>ol]:mb-5 [&>blockquote]:border-l-2 [&>blockquote]:border-brand-gold [&>blockquote]:pl-4 [&>blockquote]:italic [&>blockquote]:text-content-2 [&>blockquote]:my-6">
+                {glossaryTerm.content.split("\n").map((line, i) => {
+                  if (!line.trim()) return null;
+                  if (line.startsWith("## "))
+                    return <h2 key={i}>{line.slice(3)}</h2>;
+                  if (line.startsWith("### "))
+                    return <h3 key={i}>{line.slice(4)}</h3>;
+                  if (line.startsWith("- "))
+                    return (
+                      <ul key={i}>
+                        <li>{line.slice(2)}</li>
+                      </ul>
+                    );
+                  return <p key={i}>{line}</p>;
+                })}
+              </div>
+            ) : (
+              <div className="p-8 rounded-lg border border-border bg-surface-1 text-center">
+                <p className="text-content-2 mb-2">
+                  {t("preparingArticle")}
+                </p>
+                <p className="text-sm text-content-3">
+                  {t("preparingArticleHint", { name: clusterName })}
+                </p>
+              </div>
+            )}
+
+            <footer className="mt-10 pt-6 border-t border-border">
+              <div className="flex justify-between items-center">
+                <Link
+                  href={{ pathname: "/learn/[cluster]" as const, params: { cluster: locClusterSlug } }}
+                  className="inline-flex items-center gap-2 text-sm font-medium text-content-2 hover:text-brand-gold transition-colors"
+                >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                    <polyline points="15 18 9 12 15 6" />
+                  </svg>
+                  {t("backTo", { name: clusterName })}
+                </Link>
+                <Link
+                  href="/learn"
+                  className="text-sm font-medium text-content-2 hover:text-brand-gold transition-colors"
+                >
+                  {t("allTopics")}
+                </Link>
+              </div>
+            </footer>
+          </div>
+        </article>
+      );
+    }
+  }
+
   if (!topic || topic.clusterSlug !== baseClusterSlug) notFound();
 
   const cluster = TAXONOMY.find((c) => c.slug === baseClusterSlug);
