@@ -49,7 +49,7 @@ jobs:
             --min-instances 0 \
             --max-instances 3 \
             --add-cloudsql-instances=${{ secrets.GCP_PROJECT_ID }}:europe-west1:metalorix-db \
-            --set-env-vars "TWELVE_DATA_API_KEY=${{ secrets.TWELVE_DATA_API_KEY }},CRON_SECRET=${{ secrets.CRON_SECRET }},GEMINI_API_KEY=${{ secrets.GEMINI_API_KEY }},RESEND_API_KEY=${{ secrets.RESEND_API_KEY }},GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }},GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }},NEXT_PUBLIC_URL=https://metalorix.com,DB_SOCKET_PATH=/cloudsql/${{ secrets.GCP_PROJECT_ID }}:europe-west1:metalorix-db,DB_NAME=metalorix,DB_USER=postgres,DB_PASSWORD=${{ secrets.DB_PASSWORD }}"
+            --set-env-vars "TWELVE_DATA_API_KEY=${{ secrets.TWELVE_DATA_API_KEY }},CRON_SECRET=${{ secrets.CRON_SECRET }},GEMINI_API_KEY=${{ secrets.GEMINI_API_KEY }},RESEND_API_KEY=${{ secrets.RESEND_API_KEY }},GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }},GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }},NEXT_PUBLIC_URL=https://metalorix.com,DB_SOCKET_PATH=/cloudsql/${{ secrets.GCP_PROJECT_ID }}:europe-west1:metalorix-db,DB_NAME=metalorix,DB_USER=postgres,DB_PASSWORD=${{ secrets.DB_PASSWORD }},GOOGLE_INDEXING_KEY=${{ secrets.GOOGLE_INDEXING_KEY }}"
 
   smoke-test:
     needs: deploy
