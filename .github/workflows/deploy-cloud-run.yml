@@ -51,8 +51,55 @@ jobs:
             --add-cloudsql-instances=${{ secrets.GCP_PROJECT_ID }}:europe-west1:metalorix-db \
             --set-env-vars "TWELVE_DATA_API_KEY=${{ secrets.TWELVE_DATA_API_KEY }},CRON_SECRET=${{ secrets.CRON_SECRET }},GEMINI_API_KEY=${{ secrets.GEMINI_API_KEY }},RESEND_API_KEY=${{ secrets.RESEND_API_KEY }},GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }},GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }},NEXT_PUBLIC_URL=https://metalorix.com,DB_SOCKET_PATH=/cloudsql/${{ secrets.GCP_PROJECT_ID }}:europe-west1:metalorix-db,DB_NAME=metalorix,DB_USER=postgres,DB_PASSWORD=${{ secrets.DB_PASSWORD }}"
 
-  lighthouse:
+  smoke-test:
     needs: deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Wait for Cloud Run revision to stabilize
+        run: sleep 30
+
+      - name: Verify sitemap returns 200 with XML
+        run: |
+          STATUS=$(curl -s -o /tmp/sitemap.xml -w "%{http_code}" https://metalorix.com/api/sitemap)
+          if [ "$STATUS" != "200" ]; then
+            echo "::error::Sitemap returned HTTP $STATUS (expected 200)"
+            cat /tmp/sitemap.xml
+            exit 1
+          fi
+          if ! grep -q '<urlset' /tmp/sitemap.xml; then
+            echo "::error::Sitemap response is not valid XML (missing <urlset>)"
+            head -20 /tmp/sitemap.xml
+            exit 1
+          fi
+          URL_COUNT=$(grep -c '<url>' /tmp/sitemap.xml || true)
+          echo "Sitemap OK — HTTP $STATUS, $URL_COUNT URLs"
+
+      - name: Verify robots.txt returns 200
+        run: |
+          STATUS=$(curl -s -o /tmp/robots.txt -w "%{http_code}" https://metalorix.com/robots.txt)
+          if [ "$STATUS" != "200" ]; then
+            echo "::error::robots.txt returned HTTP $STATUS (expected 200)"
+            exit 1
+          fi
+          if ! grep -q 'Sitemap' /tmp/robots.txt; then
+            echo "::error::robots.txt missing Sitemap declaration"
+            cat /tmp/robots.txt
+            exit 1
+          fi
+          echo "robots.txt OK — HTTP $STATUS"
+          cat /tmp/robots.txt
+
+      - name: Verify homepage returns 200
+        run: |
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" https://metalorix.com/)
+          if [ "$STATUS" != "200" ] && [ "$STATUS" != "308" ] && [ "$STATUS" != "307" ]; then
+            echo "::error::Homepage returned HTTP $STATUS"
+            exit 1
+          fi
+          echo "Homepage OK — HTTP $STATUS"
+
+  lighthouse:
+    needs: smoke-test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

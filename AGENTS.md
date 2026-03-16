@@ -33,3 +33,23 @@
 | Noticias RSS | Reuters, Kitco, CNBC, Investing.com, FT, Mining.com, BullionVault, World Gold Council | Contexto para artículos IA |
 | Tipo de cambio | Twelve Data (EURUSD) | Conversión USD/EUR |
 | Contenido educativo | Generado por IA (Gemini) | Glosario y artículos learn |
+
+---
+
+## Verificación obligatoria en producción
+
+**NUNCA afirmar que algo funciona basándose solo en leer el código.** Si el usuario pregunta si algo funciona, verificar el estado real en producción con curl/WebFetch.
+
+### Checks obligatorios si el usuario pregunta por SEO o indexación:
+
+```bash
+curl -s -o /dev/null -w "%{http_code}" https://metalorix.com/api/sitemap  # debe ser 200
+curl -s https://metalorix.com/robots.txt  # debe contener Sitemap
+curl -s -o /dev/null -w "%{http_code}" https://metalorix.com/  # debe ser 200
+```
+
+Si cualquiera falla, **alertar al usuario inmediatamente**.
+
+### Restricción de sitemap:
+
+**NUNCA crear `src/app/sitemap.ts`** (convención Next.js). No funciona con `output: "standalone"` + `next-intl` en Cloud Run. El sitemap se sirve desde `src/app/api/sitemap/route.ts`. Ver `.cursor/rules/seo-disabled.mdc` para detalles completos.
