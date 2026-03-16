@@ -58,10 +58,23 @@ async function getTranslationsForArticles(
   return map;
 }
 
-async function getFeaturedGlossary() {
+async function getFeaturedGlossary(locale: string) {
   const db = getDb();
   if (!db) return [];
   try {
+    const rows = await db
+      .select({
+        slug: glossaryTerms.slug,
+        term: glossaryTerms.term,
+        definition: glossaryTerms.definition,
+        category: glossaryTerms.category,
+      })
+      .from(glossaryTerms)
+      .where(and(eq(glossaryTerms.published, true), eq(glossaryTerms.locale, locale)))
+      .orderBy(desc(glossaryTerms.createdAt))
+      .limit(4);
+    if (rows.length > 0) return rows;
+    // Fallback to default locale if no terms for this locale
     return await db
       .select({
         slug: glossaryTerms.slug,
@@ -85,7 +98,7 @@ export async function HomePreview() {
   const tm = await getTranslations("metalNames");
 
   const latestArticles = await getLatestArticles();
-  const glossary = await getFeaturedGlossary();
+  const glossary = await getFeaturedGlossary(locale);
   const trMap = await getTranslationsForArticles(
     latestArticles.map((a) => a.id),
     locale
@@ -270,7 +283,7 @@ export async function HomePreview() {
               {glossary.map((term) => (
                 <Link
                   key={term.slug}
-                  href="/learn"
+                  href={{ pathname: "/learn/[cluster]/[slug]" as const, params: { cluster: "glossary", slug: term.slug } }}
                   className="bg-surface-1 border border-border rounded-DEFAULT p-4 hover:border-border-hover hover:-translate-y-0.5 transition-all group"
                 >
                   {term.category && (
