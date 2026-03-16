@@ -1,4 +1,8 @@
 import { NextResponse } from "next/server";
+import { getDb } from "@/lib/db";
+import { articles, glossaryTerms, learnClusters, learnArticles } from "@/lib/db/schema";
+import { eq, desc, isNotNull } from "drizzle-orm";
+import { PRODUCTS } from "@/lib/data/products";
 
 export const dynamic = "force-dynamic";
 
@@ -106,6 +110,89 @@ export async function GET() {
         paths[loc] = `/${loc}/${PRICE_PATHS[loc]}/${slugsByLocale[loc]}`;
       }
       urls.push(urlEntry(paths, "daily", 0.9, today));
+    }
+
+    // Product pages
+    const productBase: Record<string, string> = {
+      es: "productos", en: "products", de: "produkte",
+      zh: "chanpin", ar: "muntajat", tr: "urunler",
+    };
+    for (const product of PRODUCTS) {
+      const paths: Record<string, string> = {};
+      for (const loc of LOCALES) {
+        paths[loc] = `/${loc}/${productBase[loc]}/${product.slug}`;
+      }
+      urls.push(urlEntry(paths, "monthly", 0.6, today));
+    }
+
+    // Dynamic DB content
+    try {
+      const db = getDb();
+      if (db) {
+        const newsBase: Record<string, string> = {
+          es: "noticias", en: "news", de: "nachrichten", zh: "xinwen", ar: "akhbar", tr: "haberler",
+        };
+        const learnBase: Record<string, string> = {
+          es: "aprende-inversion", en: "learn", de: "lernen-investition",
+          zh: "xuexi", ar: "taallam", tr: "ogren-yatirim",
+        };
+
+        const allArticles = await db
+          .select({ slug: articles.slug, publishedAt: articles.publishedAt })
+          .from(articles)
+          .where(eq(articles.published, true))
+          .orderBy(desc(articles.publishedAt))
+          .limit(1000)
+          .catch(() => []);
+
+        for (const a of allArticles) {
+          const paths: Record<string, string> = {};
+          for (const loc of LOCALES) paths[loc] = `/${loc}/${newsBase[loc]}/${a.slug}`;
+          const mod = a.publishedAt ? new Date(a.publishedAt).toISOString().split("T")[0] : today;
+          urls.push(urlEntry(paths, "weekly", 0.6, mod));
+        }
+
+        const terms = await db
+          .select({ slug: glossaryTerms.slug })
+          .from(glossaryTerms)
+          .where(eq(glossaryTerms.locale, DEFAULT_LOCALE))
+          .limit(1000)
+          .catch(() => []);
+
+        for (const t of terms) {
+          const paths: Record<string, string> = {};
+          for (const loc of LOCALES) paths[loc] = `/${loc}/${learnBase[loc]}/glossary/${t.slug}`;
+          urls.push(urlEntry(paths, "monthly", 0.5, today));
+        }
+
+        const clusters = await db
+          .select({ slug: learnClusters.slug })
+          .from(learnClusters)
+          .limit(100)
+          .catch(() => []);
+
+        for (const c of clusters) {
+          const paths: Record<string, string> = {};
+          for (const loc of LOCALES) paths[loc] = `/${loc}/${learnBase[loc]}/${c.slug}`;
+          urls.push(urlEntry(paths, "weekly", 0.6, today));
+        }
+
+        const learnRows = await db
+          .select({ slug: learnArticles.slug, clusterSlug: learnClusters.slug })
+          .from(learnArticles)
+          .innerJoin(learnClusters, eq(learnArticles.clusterId, learnClusters.id))
+          .where(isNotNull(learnArticles.publishedAt))
+          .limit(1000)
+          .catch(() => []);
+
+        for (const la of learnRows) {
+          const paths: Record<string, string> = {};
+          for (const loc of LOCALES) paths[loc] = `/${loc}/${learnBase[loc]}/${la.clusterSlug}/${la.slug}`;
+          urls.push(urlEntry(paths, "monthly", 0.5, today));
+        }
+      }
+    } catch (err) {
+      console.error("[sitemap] DB fetch failed:", err);
     }
 
     const xml = `<?xml version="1.0" encoding="UTF-8"?>
