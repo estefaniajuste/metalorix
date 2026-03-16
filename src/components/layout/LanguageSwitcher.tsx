@@ -1,9 +1,14 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useSyncExternalStore } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { useRouter, usePathname } from "@/i18n/navigation";
+import { useParams } from "next/navigation";
 import type { Locale } from "@/i18n/routing";
+import {
+  getLocalePathOverrides,
+  subscribeLocalePathOverrides,
+} from "./locale-paths-store";
 
 const LANGUAGES: { code: Locale; label: string; flag: string; name: string }[] = [
   { code: "es", label: "ES", flag: "🇪🇸", name: "Español" },
@@ -32,9 +37,30 @@ export function LanguageSwitcher() {
     return () => document.removeEventListener("mousedown", handleClick);
   }, []);
 
+  const localeOverrides = useSyncExternalStore(
+    subscribeLocalePathOverrides,
+    getLocalePathOverrides,
+    () => null
+  );
+
+  const params = useParams();
+
   const switchLocale = (code: Locale) => {
     setOpen(false);
-    router.replace(pathname as any, { locale: code });
+    const override = localeOverrides?.[code];
+    if (override) {
+      router.replace(override as any, { locale: code });
+    } else {
+      const { locale: _, ...routeParams } = params;
+      if (Object.keys(routeParams).length > 0) {
+        router.replace(
+          { pathname: pathname as any, params: routeParams as any },
+          { locale: code }
+        );
+      } else {
+        router.replace(pathname as any, { locale: code });
+      }
+    }
   };
 
   const current = LANGUAGES.find((l) => l.code === locale) ?? LANGUAGES[0];

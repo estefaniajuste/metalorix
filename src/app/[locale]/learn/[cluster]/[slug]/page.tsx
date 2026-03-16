@@ -24,7 +24,10 @@ import {
   getLocalizedClusterSlug,
   getBaseArticleSlug,
   getLocalizedArticleSlug,
+  getArticleSlugsForAllLocales,
 } from "@/lib/learn/slug-i18n";
+import { routing } from "@/i18n/routing";
+import { SetLocalePathOverrides } from "@/components/layout/SetLocalePathOverrides";
 import type { Locale } from "@/i18n/config";
 
 export const revalidate = 86400;
@@ -130,11 +133,13 @@ export async function generateMetadata({
   const title = data?.localization.seoTitle || topic.titleEn;
   const description = data?.localization.metaDescription || topic.summaryEn;
 
+  const metaSlugsByLocale = await getArticleSlugsForAllLocales(topic.slug);
+
   const alternates = getAlternates(locale, (loc) => ({
     pathname: "/learn/[cluster]/[slug]",
     params: {
       cluster: getLocalizedClusterSlug(baseClusterSlug, loc),
-      slug: params.slug,
+      slug: metaSlugsByLocale.get(loc) || topic.slug,
     },
   }));
 
@@ -254,11 +259,24 @@ export default async function LearnArticlePage({
     .trim();
   const hasContent = strippedContent.length > 0;
 
+  const articleSlugsByLocale = await getArticleSlugsForAllLocales(topic.slug);
+
+  const localeHrefs: Record<string, { pathname: string; params: { cluster: string; slug: string } }> = {};
+  for (const loc of routing.locales) {
+    localeHrefs[loc] = {
+      pathname: "/learn/[cluster]/[slug]",
+      params: {
+        cluster: getLocalizedClusterSlug(baseClusterSlug, loc as Locale),
+        slug: articleSlugsByLocale.get(loc) || topic.slug,
+      },
+    };
+  }
+
   const alternates = getAlternates(locale, (loc) => ({
     pathname: "/learn/[cluster]/[slug]",
     params: {
       cluster: getLocalizedClusterSlug(baseClusterSlug, loc),
-      slug: params.slug,
+      slug: articleSlugsByLocale.get(loc) || topic.slug,
     },
   }));
 
@@ -293,6 +311,7 @@ export default async function LearnArticlePage({
 
   return (
     <>
+      <SetLocalePathOverrides hrefs={localeHrefs} />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

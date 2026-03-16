@@ -153,7 +153,7 @@ function buildGlossaryLinkingInstructions(termList: string): string {
   if (!termList) return "";
   return `
 TERMINOLOGÍA DEL SECTOR:
-Usa estos términos técnicos cuando sea apropiado. No es necesario incluir enlaces.
+Usa estos términos técnicos cuando sea apropiado. Incluye entre 3 y 5 enlaces a términos del glosario en el cuerpo del artículo usando formato markdown: [término](/learn/glossary/slug-del-termino). No repitas el mismo enlace más de una vez.
 
 TÉRMINOS DISPONIBLES:
 ${termList}

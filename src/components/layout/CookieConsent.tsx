@@ -23,11 +23,13 @@ export function CookieConsent() {
   function accept() {
     localStorage.setItem(CONSENT_KEY, "accepted");
     setState("accepted");
+    window.dispatchEvent(new StorageEvent("storage", { key: CONSENT_KEY, newValue: "accepted" }));
   }
 
   function reject() {
     localStorage.setItem(CONSENT_KEY, "rejected");
     setState("rejected");
+    window.dispatchEvent(new StorageEvent("storage", { key: CONSENT_KEY, newValue: "rejected" }));
   }
 
   if (state !== "pending") return null;

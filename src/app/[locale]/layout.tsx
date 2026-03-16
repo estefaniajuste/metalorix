@@ -1,6 +1,5 @@
 import type { Viewport } from "next";
 import { Inter, Noto_Sans_SC } from "next/font/google";
-import Script from "next/script";
 import "@/styles/globals.css";
 import { ThemeProvider } from "@/components/layout/ThemeProvider";
 import { Nav } from "@/components/layout/Nav";
@@ -11,6 +10,7 @@ import { NextIntlClientProvider, hasLocale } from "next-intl";
 import { getMessages, getTranslations, setRequestLocale } from "next-intl/server";
 import { WebVitals } from "../web-vitals";
 import { ServiceWorkerRegistration } from "@/components/layout/ServiceWorker";
+import { AnalyticsLoader } from "@/components/layout/AnalyticsLoader";
 import { routing } from "@/i18n/routing";
 import { notFound } from "next/navigation";
 
@@ -132,13 +132,6 @@ export default async function LocaleLayout({
         <link rel="dns-prefetch" href="https://api.twelvedata.com" />
       </head>
       <body className={`${inter.variable} ${notoSansSC.variable} ${isCJK ? "font-cjk" : "font-sans"}`}>
-        <Script
-          src="https://www.googletagmanager.com/gtag/js?id=G-9K1MTS78FF"
-          strategy="afterInteractive"
-        />
-        <Script id="gtag-init" strategy="afterInteractive">
-          {`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-9K1MTS78FF');`}
-        </Script>
         <NextIntlClientProvider messages={messages}>
           <ThemeProvider>
             <a
@@ -152,6 +145,7 @@ export default async function LocaleLayout({
             <Footer />
             <ScrollToTop />
             <CookieConsent />
+            <AnalyticsLoader />
             <WebVitals />
             <ServiceWorkerRegistration />
           </ThemeProvider>

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getTranslations, getLocale } from "next-intl/server";
 import { getAlternates } from "@/lib/seo/alternates";
+import { routing } from "@/i18n/routing";
 import { TAXONOMY } from "@/lib/learn/taxonomy";
 import { ALL_TOPICS } from "@/lib/learn/topics";
 import { LearnBreadcrumb } from "@/components/learn/LearnBreadcrumb";
@@ -15,6 +16,7 @@ import {
   getBaseClusterSlug,
   getLocalizedClusterSlug,
 } from "@/lib/learn/slug-i18n";
+import { SetLocalePathOverrides } from "@/components/layout/SetLocalePathOverrides";
 import type { Locale } from "@/i18n/config";
 
 export const revalidate = 86400;
@@ -110,7 +112,54 @@ export default async function ClusterPage({
   const allSlugs = clusterTopics.map((tp) => tp.slug);
   const localizedTitles = await getLocalizedArticleTitles(allSlugs, locale);
 
+  const localeHrefs: Record<string, { pathname: string; params: { cluster: string } }> = {};
+  for (const loc of routing.locales) {
+    localeHrefs[loc] = {
+      pathname: "/learn/[cluster]",
+      params: { cluster: getLocalizedClusterSlug(cluster.slug, loc as Locale) },
+    };
+  }
+
+  const alternates = getAlternates(locale, (loc) => ({
+    pathname: "/learn/[cluster]",
+    params: { cluster: getLocalizedClusterSlug(cluster.slug, loc) },
+  }));
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: clusterName,
+    description: clusterDesc,
+    url: alternates.canonical,
+    isPartOf: {
+      "@type": "WebSite",
+      name: "Metalorix",
+      url: "https://metalorix.com",
+    },
+    publisher: {
+      "@type": "Organization",
+      name: "Metalorix",
+      url: "https://metalorix.com",
+    },
+    numberOfItems: clusterTopics.length,
+    breadcrumb: {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: tc("breadcrumbHome"), item: "https://metalorix.com" },
+        { "@type": "ListItem", position: 2, name: t("breadcrumb"), item: `https://metalorix.com/${locale}/learn` },
+        { "@type": "ListItem", position: 3, name: clusterName },
+      ],
+    },
+  };
+
   return (
+    <>
+      <SetLocalePathOverrides hrefs={localeHrefs} />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+
     <section className="py-[var(--section-py)]">
       <div className="mx-auto max-w-[1100px] px-6">
         <LearnBreadcrumb
@@ -210,5 +259,6 @@ export default async function ClusterPage({
         })}
       </div>
     </section>
+    </>
   );
 }

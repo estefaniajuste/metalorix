@@ -104,13 +104,27 @@ function renderInlineLinks(text: string) {
     const linkText = match[1];
     const href = match[2];
     const isExternal = href.startsWith("http");
-    const aprendeMatch = href.match(/^\/aprende\/(.+)$/);
 
-    if (aprendeMatch) {
+    const learnMatch =
+      href.match(/^\/learn\/([^/]+)\/([^/]+)$/) ||
+      href.match(/^\/aprende-inversion\/([^/]+)\/([^/]+)$/);
+    const legacyAprendeMatch = href.match(/^\/aprende\/(.+)$/);
+
+    if (learnMatch) {
       parts.push(
         <Link
           key={match.index}
-          href="/learn"
+          href={{ pathname: "/learn/[cluster]/[slug]" as const, params: { cluster: learnMatch[1], slug: learnMatch[2] } }}
+          className="text-brand-gold hover:underline font-medium"
+        >
+          {linkText}
+        </Link>
+      );
+    } else if (legacyAprendeMatch) {
+      parts.push(
+        <Link
+          key={match.index}
+          href={{ pathname: "/learn/[cluster]/[slug]" as const, params: { cluster: "glossary", slug: legacyAprendeMatch[1] } }}
           className="text-brand-gold hover:underline font-medium"
         >
           {linkText}

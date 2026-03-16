@@ -123,14 +123,24 @@ export function getLocalizedClusterSlug(
 
 /**
  * Resolve a localized cluster slug back to the base (English) slug.
- * Returns the input slug if no mapping is found (handles English slugs too).
+ * Checks the given locale first, then falls back to checking all locales.
+ * This handles cases where a URL contains slugs from a different locale
+ * (e.g. after switching language via the LanguageSwitcher).
  */
 export function getBaseClusterSlug(
   localizedSlug: string,
   locale: Locale
 ): string {
-  if (locale === "en") return localizedSlug;
-  return CLUSTER_REVERSE_MAP[locale]?.[localizedSlug] ?? localizedSlug;
+  if (locale !== "en") {
+    const result = CLUSTER_REVERSE_MAP[locale]?.[localizedSlug];
+    if (result) return result;
+  }
+
+  for (const mapping of Object.values(CLUSTER_REVERSE_MAP)) {
+    if (mapping[localizedSlug]) return mapping[localizedSlug];
+  }
+
+  return localizedSlug;
 }
 
 /**
@@ -190,44 +200,55 @@ export async function getLocalizedArticleSlug(
 
 /**
  * Resolve a localized article slug back to the base slug.
- * Checks both localized slugs in DB and base slugs in the articles table.
+ * Checks the specific locale first, then base slugs, then all locales
+ * as fallback (handles cross-locale navigation from LanguageSwitcher).
  */
 export async function getBaseArticleSlug(
   localizedSlug: string,
   locale: Locale
 ): Promise<string | null> {
-  if (locale === "en") return localizedSlug;
-
   const db = getDb();
   if (!db) return null;
 
   try {
-    // First try to find by localized slug in the localizations table
-    const [byLocalized] = await db
-      .select({ baseSlug: learnArticles.slug })
-      .from(learnArticleLocalizations)
-      .innerJoin(
-        learnArticles,
-        eq(learnArticles.id, learnArticleLocalizations.articleId)
-      )
-      .where(
-        and(
-          eq(learnArticleLocalizations.slug, localizedSlug),
-          eq(learnArticleLocalizations.locale, locale)
+    if (locale !== "en") {
+      const [byLocalized] = await db
+        .select({ baseSlug: learnArticles.slug })
+        .from(learnArticleLocalizations)
+        .innerJoin(
+          learnArticles,
+          eq(learnArticles.id, learnArticleLocalizations.articleId)
         )
-      )
-      .limit(1);
+        .where(
+          and(
+            eq(learnArticleLocalizations.slug, localizedSlug),
+            eq(learnArticleLocalizations.locale, locale)
+          )
+        )
+        .limit(1);
 
-    if (byLocalized) return byLocalized.baseSlug;
+      if (byLocalized) return byLocalized.baseSlug;
+    }
 
-    // Fallback: check if it's already a base slug
     const [byBase] = await db
       .select({ slug: learnArticles.slug })
       .from(learnArticles)
       .where(eq(learnArticles.slug, localizedSlug))
       .limit(1);
 
-    return byBase?.slug ?? null;
+    if (byBase) return byBase.slug;
+
+    const [anyLocale] = await db
+      .select({ baseSlug: learnArticles.slug })
+      .from(learnArticleLocalizations)
+      .innerJoin(
+        learnArticles,
+        eq(learnArticles.id, learnArticleLocalizations.articleId)
+      )
+      .where(eq(learnArticleLocalizations.slug, localizedSlug))
+      .limit(1);
+
+    return anyLocale?.baseSlug ?? null;
   } catch {
     return null;
   }
@@ -284,6 +305,50 @@ export async function getLocalizedArticleSlugs(
   // Fill missing entries with base slugs
   for (const s of baseSlugs) {
     if (!result.has(s)) result.set(s, s);
+  }
+
+  return result;
+}
+
+/**
+ * Get the localized article slug for a base slug across ALL locales.
+ * Returns Map<locale, localizedSlug>. English always maps to baseSlug.
+ */
+export async function getArticleSlugsForAllLocales(
+  baseSlug: string
+): Promise<Map<string, string>> {
+  const result = new Map<string, string>();
+  const allLocales = ["es", "en", "zh", "ar", "tr", "de"];
+  result.set("en", baseSlug);
+
+  const db = getDb();
+  if (!db) {
+    for (const loc of allLocales) result.set(loc, baseSlug);
+    return result;
+  }
+
+  try {
+    const rows = await db
+      .select({
+        locale: learnArticleLocalizations.locale,
+        slug: learnArticleLocalizations.slug,
+      })
+      .from(learnArticles)
+      .innerJoin(
+        learnArticleLocalizations,
+        eq(learnArticleLocalizations.articleId, learnArticles.id)
+      )
+      .where(eq(learnArticles.slug, baseSlug));
+
+    for (const row of rows) {
+      if (row.slug) result.set(row.locale, row.slug);
+    }
+  } catch {
+    // DB error — fallback to base slug
+  }
+
+  for (const loc of allLocales) {
+    if (!result.has(loc)) result.set(loc, baseSlug);
   }
 
   return result;

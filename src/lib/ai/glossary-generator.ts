@@ -298,7 +298,7 @@ export async function injectGlossaryLinks(
     if (match && match.index !== undefined) {
       const before = result.slice(0, match.index);
       const after = result.slice(match.index + match[0].length);
-      result = `${before}**${match[0]}**${after}`;
+      result = `${before}[${match[0]}](/learn/glossary/${term.slug})${after}`;
       linked.add(term.slug);
     }
   }
