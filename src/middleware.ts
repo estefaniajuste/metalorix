@@ -62,6 +62,14 @@ export function middleware(request: NextRequest) {
 
   const { pathname } = request.nextUrl;
 
+  if (pathname === "/sitemap.xml") {
+    return NextResponse.redirect(new URL("/api/sitemap", request.url), 302);
+  }
+
+  if (pathname === "/feed.xml") {
+    return NextResponse.redirect(new URL("/api/feed", request.url), 302);
+  }
+
   if (pathname.startsWith("/api/")) {
     const response = NextResponse.next();
     response.headers.set("X-Robots-Tag", "noindex");
@@ -106,6 +114,6 @@ export function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    "/((?!_next/static|_next/image|favicon\\.svg|favicon\\.png|icon-.*\\.png|manifest\\.json|robots\\.txt|sitemap\\.xml|feed\\.xml|google.*\\.html).*)",
+    "/((?!_next/static|_next/image|favicon\\.svg|favicon\\.png|icon-.*\\.png|manifest\\.json|robots\\.txt|google.*\\.html).*)",
   ],
 };

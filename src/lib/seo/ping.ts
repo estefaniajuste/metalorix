@@ -1,4 +1,4 @@
-const SITEMAP_URL = "https://metalorix.com/api/sitemap";
+const SITEMAP_URL = "https://metalorix.com/sitemap.xml";
 
 export async function pingSearchEngines(): Promise<{ pinged: string[]; failed: string[] }> {
   const pinged: string[] = [];
