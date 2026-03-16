@@ -56,9 +56,9 @@ function createJwt(key: ServiceAccountKey): string {
 
 async function getAccessToken(
   key: ServiceAccountKey,
-): Promise<string | null> {
+): Promise<{ token: string } | { error: string }> {
   if (cachedToken && Date.now() < cachedToken.expires) {
-    return cachedToken.token;
+    return { token: cachedToken.token };
   }
 
   try {
@@ -73,69 +73,93 @@ async function getAccessToken(
       signal: AbortSignal.timeout(10_000),
     });
 
-    if (!res.ok) return null;
+    const body = await res.text();
+    if (!res.ok) {
+      return { error: `Token auth ${res.status}: ${body.slice(0, 500)}` };
+    }
 
-    const data = await res.json();
+    const data = JSON.parse(body);
     cachedToken = {
       token: data.access_token,
       expires: Date.now() + (data.expires_in - 60) * 1000,
     };
-    return data.access_token;
-  } catch {
-    return null;
+    return { token: data.access_token };
+  } catch (err) {
+    return {
+      error: err instanceof Error ? err.message : String(err),
+    };
   }
 }
+
+export type SubmitResult =
+  | { ok: true }
+  | { ok: false; error: string };
 
 export async function submitUrlToGoogle(
   url: string,
   type: "URL_UPDATED" | "URL_DELETED" = "URL_UPDATED",
-): Promise<boolean> {
+): Promise<SubmitResult> {
   const key = getServiceAccountKey();
-  if (!key) return false;
+  if (!key) return { ok: false, error: "GOOGLE_INDEXING_KEY not configured" };
 
-  const token = await getAccessToken(key);
-  if (!token) return false;
+  const tokenResult = await getAccessToken(key);
+  if ("error" in tokenResult) {
+    return { ok: false, error: `Token: ${tokenResult.error}` };
+  }
 
   try {
     const res = await fetch(INDEXING_ENDPOINT, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${tokenResult.token}`,
       },
       body: JSON.stringify({ url, type }),
       signal: AbortSignal.timeout(10_000),
     });
-    return res.ok;
-  } catch {
-    return false;
+
+    const body = await res.text();
+    if (!res.ok) {
+      return {
+        ok: false,
+        error: `Indexing API ${res.status}: ${body.slice(0, 600)}`,
+      };
+    }
+    return { ok: true };
+  } catch (err) {
+    return {
+      ok: false,
+      error: err instanceof Error ? err.message : String(err),
+    };
   }
 }
 
 export async function submitUrlsToGoogle(
   urls: string[],
   maxPerBatch = 200,
-): Promise<{ submitted: string[]; failed: string[] }> {
+): Promise<{ submitted: string[]; failed: string[]; firstError?: string }> {
   const key = getServiceAccountKey();
-  if (!key) return { submitted: [], failed: urls };
+  if (!key) return { submitted: [], failed: urls, firstError: "Key not configured" };
 
   const submitted: string[] = [];
   const failed: string[] = [];
+  let firstError: string | undefined;
   const batch = urls.slice(0, maxPerBatch);
 
   for (const url of batch) {
-    const ok = await submitUrlToGoogle(url);
-    if (ok) {
+    const result = await submitUrlToGoogle(url);
+    if (result.ok) {
       submitted.push(url);
     } else {
       failed.push(url);
+      if (!firstError) firstError = result.error;
     }
     if (batch.indexOf(url) < batch.length - 1) {
       await new Promise((r) => setTimeout(r, 200));
     }
   }
 
-  return { submitted, failed };
+  return { submitted, failed, firstError };
 }
 
 export function isIndexingApiConfigured(): boolean {

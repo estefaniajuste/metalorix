@@ -135,5 +135,6 @@ export async function POST(request: NextRequest) {
     submitted: result.submitted.length,
     failed: result.failed.length,
     failedUrls: result.failed.slice(0, 10),
+    firstError: result.firstError,
   });
 }
