@@ -63,11 +63,15 @@ export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   if (pathname === "/sitemap.xml") {
-    return NextResponse.rewrite(new URL("/api/sitemap", request.url));
+    const dest = request.nextUrl.clone();
+    dest.pathname = "/api/sitemap";
+    return NextResponse.rewrite(dest);
   }
 
   if (pathname === "/feed.xml") {
-    return NextResponse.rewrite(new URL("/api/feed", request.url));
+    const dest = request.nextUrl.clone();
+    dest.pathname = "/api/feed";
+    return NextResponse.rewrite(dest);
   }
 
   if (pathname.startsWith("/api/")) {
