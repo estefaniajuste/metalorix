@@ -120,6 +120,45 @@ export async function GET() {
     urls.push(urlEntry(paths, "monthly", 0.6, today));
   }
 
+  // Dynamic DB content via internal HTTP call (avoids importing DB modules)
+  try {
+    const port = process.env.PORT || "3000";
+    const res = await fetch(`http://localhost:${port}/api/sitemap-urls`, {
+      signal: AbortSignal.timeout(8_000),
+    });
+    if (res.ok) {
+      const data = await res.json() as {
+        urls: Array<{ slug: string; type: string; cluster?: string; lastmod?: string }>;
+      };
+      const newsBase: Record<string, string> = {
+        es: "noticias", en: "news", de: "nachrichten", zh: "xinwen", ar: "akhbar", tr: "haberler",
+      };
+      const learnBase: Record<string, string> = {
+        es: "aprende-inversion", en: "learn", de: "lernen-investition",
+        zh: "xuexi", ar: "taallam", tr: "ogren-yatirim",
+      };
+
+      for (const item of data.urls) {
+        const paths: Record<string, string> = {};
+        if (item.type === "article") {
+          for (const loc of LOCALES) paths[loc] = `/${loc}/${newsBase[loc]}/${item.slug}`;
+          urls.push(urlEntry(paths, "weekly", 0.6, item.lastmod || today));
+        } else if (item.type === "glossary") {
+          for (const loc of LOCALES) paths[loc] = `/${loc}/${learnBase[loc]}/glossary/${item.slug}`;
+          urls.push(urlEntry(paths, "monthly", 0.5, today));
+        } else if (item.type === "cluster") {
+          for (const loc of LOCALES) paths[loc] = `/${loc}/${learnBase[loc]}/${item.slug}`;
+          urls.push(urlEntry(paths, "weekly", 0.6, today));
+        } else if (item.type === "learn-article" && item.cluster) {
+          for (const loc of LOCALES) paths[loc] = `/${loc}/${learnBase[loc]}/${item.cluster}/${item.slug}`;
+          urls.push(urlEntry(paths, "monthly", 0.5, today));
+        }
+      }
+    }
+  } catch {
+    // DB content unavailable — static sitemap still served
+  }
+
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:xhtml="http://www.w3.org/1999/xhtml">
