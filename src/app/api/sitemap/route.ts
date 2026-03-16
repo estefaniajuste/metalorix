@@ -52,6 +52,15 @@ const PRODUCT_BASE: Record<string, string> = {
   zh: "chanpin", ar: "muntajat", tr: "urunler",
 };
 
+const NEWS_BASE: Record<string, string> = {
+  es: "noticias", en: "news", de: "nachrichten", zh: "xinwen", ar: "akhbar", tr: "haberler",
+};
+
+const LEARN_BASE: Record<string, string> = {
+  es: "aprende-inversion", en: "learn", de: "lernen-investition",
+  zh: "xuexi", ar: "taallam", tr: "ogren-yatirim",
+};
+
 const FREQ_PRIO: Record<string, [string, number]> = {
   "/herramientas": ["weekly", 0.8],
   "/calculadora-rentabilidad": ["monthly", 0.7],
@@ -98,6 +107,28 @@ ${xhtmlLinks}
   </url>`;
 }
 
+interface DynamicUrl {
+  slug: string;
+  type: string;
+  cluster?: string;
+  lastmod?: string;
+}
+
+async function fetchDynamicUrls(): Promise<DynamicUrl[]> {
+  try {
+    const apiBase = process.env.NEXT_PUBLIC_URL || BASE;
+    const res = await fetch(`${apiBase}/api/sitemap-urls`, {
+      signal: AbortSignal.timeout(8_000),
+      headers: { Accept: "application/json" },
+    });
+    if (!res.ok) return [];
+    const data = await res.json();
+    return Array.isArray(data?.urls) ? data.urls : [];
+  } catch {
+    return [];
+  }
+}
+
 export async function GET() {
   const today = new Date().toISOString().split("T")[0];
   const urls: string[] = [];
@@ -118,6 +149,23 @@ export async function GET() {
     const paths: Record<string, string> = {};
     for (const loc of LOCALES) paths[loc] = `/${loc}/${PRODUCT_BASE[loc]}/${slug}`;
     urls.push(urlEntry(paths, "monthly", 0.6, today));
+  }
+
+  const dynamicUrls = await fetchDynamicUrls();
+
+  for (const item of dynamicUrls) {
+    const paths: Record<string, string> = {};
+
+    if (item.type === "article") {
+      for (const loc of LOCALES) paths[loc] = `/${loc}/${NEWS_BASE[loc]}/${item.slug}`;
+      urls.push(urlEntry(paths, "weekly", 0.7, item.lastmod || today));
+    } else if (item.type === "cluster") {
+      for (const loc of LOCALES) paths[loc] = `/${loc}/${LEARN_BASE[loc]}/${item.slug}`;
+      urls.push(urlEntry(paths, "weekly", 0.6, today));
+    } else if (item.type === "learn-article" && item.cluster) {
+      for (const loc of LOCALES) paths[loc] = `/${loc}/${LEARN_BASE[loc]}/${item.cluster}/${item.slug}`;
+      urls.push(urlEntry(paths, "monthly", 0.5, item.lastmod || today));
+    }
   }
 
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
