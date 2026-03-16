@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getDb } from "@/lib/db";
 import { articles, metalPrices } from "@/lib/db/schema";
-import { eq, desc } from "drizzle-orm";
+import { eq, desc, gte } from "drizzle-orm";
 import {
   generateDailySummary,
   generateEventArticle,
@@ -53,15 +53,30 @@ export async function POST(request: NextRequest) {
   const generated: string[] = [];
 
   const articleIdsToTranslate: number[] = [];
+  const dailyDebug: { prices?: number; news?: number; error?: string } = {};
 
   if (type === "daily" || type === "auto") {
-    const article = await generateDailySummary();
-    if (article) {
-      const articleId = await saveArticle(article, "daily");
-      if (articleId) {
-        generated.push(`daily: ${article.slug}`);
-        articleIdsToTranslate.push(articleId);
+    try {
+      const article = await generateDailySummary();
+      if (article) {
+        const articleId = await saveArticle(article, "daily");
+        if (articleId) {
+          generated.push(`daily: ${article.slug}`);
+          articleIdsToTranslate.push(articleId);
+        }
+      } else {
+        const { newsSources: ns } = await import("@/lib/db/schema");
+        const since = new Date(Date.now() - 24 * 60 * 60 * 1000);
+        const [priceCount, newsCount] = await Promise.all([
+          db.select().from(metalPrices).then((r) => r.length),
+          db.select().from(ns).where(gte(ns.scrapedAt, since)).then((r) => r.length),
+        ]);
+        dailyDebug.prices = priceCount;
+        dailyDebug.news = newsCount;
+        dailyDebug.error = "generateDailySummary returned null (Gemini may have failed)";
       }
+    } catch (err) {
+      dailyDebug.error = err instanceof Error ? err.message : String(err);
     }
   }
 
@@ -200,12 +215,14 @@ export async function POST(request: NextRequest) {
     if (newUrls.length) await pingIndexNow(newUrls);
   }
 
-  return NextResponse.json({
+  const body: Record<string, unknown> = {
     ok: true,
     type,
     generated,
     newsletter: newsletterResult,
     ping: pingResult,
     timestamp: new Date().toISOString(),
-  });
+  };
+  if (Object.keys(dailyDebug).length > 0) body.dailyDebug = dailyDebug;
+  return NextResponse.json(body);
 }

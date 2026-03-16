@@ -223,9 +223,13 @@ IMPORTANTE sobre fuentes:
 Devuelve SOLO el JSON, sin texto adicional antes o después. No envuelvas en bloques de código.`;
 
   const raw = await generateText(prompt);
-  if (!raw) return null;
-
   const dateSlug = today.toISOString().slice(0, 10);
+
+  if (!raw) {
+    if (prices.length === 0) return null;
+    return buildMinimalDailyArticle(prices, dateStr, dateSlug);
+  }
+
   const parsed = parseStructuredResponse(raw);
 
   if (parsed) {
@@ -250,6 +254,47 @@ Devuelve SOLO el JSON, sin texto adicional antes o después. No envuelvas en blo
     content: raw.trim(),
     metals: ["XAU", "XAG", "XPT", "XPD", "HG"],
   };
+}
+
+function buildMinimalDailyArticle(
+  prices: PriceData[],
+  dateStr: string,
+  dateSlug: string
+): {
+  slug: string;
+  title: string;
+  excerpt: string;
+  content: string;
+  metals: string[];
+} {
+  const oro = prices.find((p) => p.symbol === "XAU");
+  const plata = prices.find((p) => p.symbol === "XAG");
+  const platino = prices.find((p) => p.symbol === "XPT");
+  const paladio = prices.find((p) => p.symbol === "XPD");
+  const cobre = prices.find((p) => p.symbol === "HG");
+
+  const content = `## Resumen del día
+
+Resumen del mercado de metales preciosos para ${dateStr}.
+
+## Precios actuales
+
+${oro ? `- **Oro**: $${oro.price.toFixed(2)}/oz (${oro.changePct >= 0 ? "+" : ""}${oro.changePct.toFixed(2)}% en 24h)` : ""}
+${plata ? `- **Plata**: $${plata.price.toFixed(2)}/oz (${plata.changePct >= 0 ? "+" : ""}${plata.changePct.toFixed(2)}% en 24h)` : ""}
+${platino ? `- **Platino**: $${platino.price.toFixed(2)}/oz (${platino.changePct >= 0 ? "+" : ""}${platino.changePct.toFixed(2)}% en 24h)` : ""}
+${paladio ? `- **Paladio**: $${paladio.price.toFixed(2)}/oz (${paladio.changePct >= 0 ? "+" : ""}${paladio.changePct.toFixed(2)}% en 24h)` : ""}
+${cobre ? `- **Cobre**: $${cobre.price.toFixed(2)}/lb (${cobre.changePct >= 0 ? "+" : ""}${cobre.changePct.toFixed(2)}% en 24h)` : ""}
+
+## Fuentes
+
+- [Reuters Commodities](https://www.reuters.com/business/commodities/)
+- [Kitco News](https://www.kitco.com/news/)`;
+
+  const slug = `resumen-diario-metales-preciosos-${dateSlug}`;
+  const title = `Resumen del mercado de metales — ${dateStr}`;
+  const excerpt = `Oro a $${oro?.price.toFixed(0) ?? "N/A"}, Plata a $${plata?.price.toFixed(2) ?? "N/A"}, Platino a $${platino?.price.toFixed(0) ?? "N/A"}, Paladio a $${paladio?.price.toFixed(0) ?? "N/A"}, Cobre a $${cobre?.price.toFixed(2) ?? "N/A"}/lb. Análisis del día.`;
+
+  return { slug, title, excerpt, content, metals: ["XAU", "XAG", "XPT", "XPD", "HG"] };
 }
 
 export async function generateEventArticle(
