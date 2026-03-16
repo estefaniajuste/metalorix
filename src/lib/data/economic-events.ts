@@ -260,11 +260,70 @@ const EVENTS_EN: Record<string, EventTexts> = {
   },
 };
 
+const EVENTS_AR: Record<string, EventTexts> = {
+  fomc: {
+    name: "اجتماع FOMC (الاحتياطي الفيدرالي)",
+    nameShort: "FOMC",
+    description: "لجنة السوق المفتوحة الفيدرالية تقرر أسعار الفائدة في الولايات المتحدة. إنه الحدث الأهم للمعادن الثمينة.",
+    metalImpact: "أسعار أعلى → الذهب ينخفض. أسعار أقل أو توقف → الذهب يرتفع.",
+    frequency: "8 مرات سنوياً",
+  },
+  ecb: {
+    name: "قرار البنك المركزي الأوروبي",
+    nameShort: "BCE",
+    description: "البنك المركزي الأوروبي يقرر أسعار الفائدة لمنطقة اليورو. يؤثر على EUR/USD وبالتالي سعر الذهب باليورو.",
+    metalImpact: "أسعار أعلى في الاتحاد الأوروبي → اليورو يرتفع → الذهب باليورو ينخفض (والعكس صحيح).",
+    frequency: "6 مرات سنوياً",
+  },
+  "cpi-us": {
+    name: "مؤشر أسعار المستهلك الأمريكي (التضخم)",
+    nameShort: "IPC USA",
+    description: "مؤشر أسعار المستهلك يقيس التضخم. الذهب تقليدياً تحوط ضد التضخم.",
+    metalImpact: "تضخم أعلى من المتوقع → الذهب يرتفع (تحوط). تضخم منخفض → الذهب ينخفض.",
+    frequency: "شهري",
+  },
+  nfp: {
+    name: "رواتب القطاع غير الزراعي (NFP)",
+    nameShort: "NFP",
+    description: "بيانات التوظيف الأمريكية. سوق عمل قوي قد يؤدي لأسعار فائدة أعلى، مما يضغط على الذهب للانخفاض.",
+    metalImpact: "توظيف قوي → الدولار يرتفع → الذهب ينخفض. توظيف ضعيف → الذهب يرتفع.",
+    frequency: "أول جمعة من كل شهر",
+  },
+  pce: {
+    name: "معامل انكماش PCE (المقياس المفضل للفيدرالي)",
+    nameShort: "PCE",
+    description: "مؤشر PCE هو مقياس التضخم المفضل لدى الاحتياطي الفيدرالي لاتخاذ قرارات السياسة النقدية.",
+    metalImpact: "PCE مرتفع → الفيدرالي قد يرفع الأسعار → ضغط هبوطي على الذهب.",
+    frequency: "شهري",
+  },
+  "gdp-us": {
+    name: "الناتج المحلي الإجمالي الأمريكي",
+    nameShort: "PIB USA",
+    description: "الناتج المحلي الإجمالي يقيس النمو الاقتصادي. الركود عادة صاعد للذهب.",
+    metalImpact: "ناتج ضعيف → مخاوف ركود → الذهب يرتفع كملاذ آمن.",
+    frequency: "ربع سنوي",
+  },
+  pmi: {
+    name: "مؤشر مديري المشتريات الصناعي (ISM)",
+    nameShort: "PMI",
+    description: "مؤشر PMI يقيس نشاط قطاع التصنيع. PMI أقل من 50 يشير إلى انكماش.",
+    metalImpact: "PMI منخفض → الاقتصاد يضعف → الذهب يرتفع كملاذ آمن.",
+    frequency: "شهري",
+  },
+  dxy: {
+    name: "مؤشر الدولار (DXY)",
+    nameShort: "DXY",
+    description: "مؤشر DXY يقيس قوة الدولار مقابل 6 عملات رئيسية. له علاقة عكسية مع الذهب.",
+    metalImpact: "DXY يرتفع → الذهب ينخفض. DXY ينخفض → الذهب يرتفع. علاقة عكسية.",
+    frequency: "مستمر (مرجع)",
+  },
+};
+
 function applyEventLocale(event: EconomicEvent, locale: string): EconomicEvent {
   if (locale === "es") return event;
-  const en = EVENTS_EN[event.id];
-  if (!en) return event;
-  return { ...event, ...en };
+  const texts = locale === "ar" ? EVENTS_AR[event.id] : EVENTS_EN[event.id];
+  if (!texts) return event;
+  return { ...event, ...texts };
 }
 
 export function getLocalizedEvents(locale: string = "es"): EconomicEvent[] {

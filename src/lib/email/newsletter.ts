@@ -4,11 +4,11 @@ import { generateText, isConfigured } from "@/lib/ai/gemini";
 import { sendEmail } from "./resend";
 
 const METAL_NAMES: Record<string, Record<string, string>> = {
-  XAU: { es: "Oro", en: "Gold" },
-  XAG: { es: "Plata", en: "Silver" },
-  XPT: { es: "Platino", en: "Platinum" },
-  XPD: { es: "Paladio", en: "Palladium" },
-  HG:  { es: "Cobre", en: "Copper" },
+  XAU: { es: "Oro", en: "Gold", ar: "الذهب" },
+  XAG: { es: "Plata", en: "Silver", ar: "الفضة" },
+  XPT: { es: "Platino", en: "Platinum", ar: "البلاتين" },
+  XPD: { es: "Paladio", en: "Palladium", ar: "البلاديوم" },
+  HG:  { es: "Cobre", en: "Copper", ar: "النحاس" },
 };
 
 function mName(symbol: string, locale: string = "es"): string {
@@ -25,6 +25,7 @@ interface NlI18n {
 const NL_I18N: Record<string, NlI18n> = {
   es: { viewDashboard: "Ver Dashboard", footer: "Recibes esta newsletter porque te suscribiste en metalorix.com", manageSub: "Gestionar suscripción", weekOf: "Semana del" },
   en: { viewDashboard: "View Dashboard", footer: "You receive this newsletter because you subscribed on metalorix.com", manageSub: "Manage subscription", weekOf: "Week of" },
+  ar: { viewDashboard: "عرض لوحة المعلومات", footer: "تتلقى هذه النشرة لأنك اشتركت في metalorix.com", manageSub: "إدارة الاشتراك", weekOf: "أسبوع" },
 };
 
 function newsletterTemplate(content: string, weekLabel: string, locale: string = "es"): string {

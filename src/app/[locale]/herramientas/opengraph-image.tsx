@@ -16,6 +16,11 @@ const i18n: Record<string, { title: string; subtitle: string; tools: string[] }>
     subtitle: "Analyze and compare precious metals",
     tools: ["Comparison", "Ratio Au/Ag", "Converter", "DCA", "Units"],
   },
+  ar: {
+    title: "الأدوات",
+    subtitle: "تحليل ومقارنة المعادن الثمينة",
+    tools: ["مقارنة", "نسبة ذهب/فضة", "محوّل", "DCA", "وحدات"],
+  },
 };
 
 const toolIcons = ["📊", "⚖️", "💱", "📈", "🔄"];

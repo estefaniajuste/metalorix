@@ -5,8 +5,10 @@ export default function robots(): MetadataRoute.Robots {
     rules: [
       {
         userAgent: "*",
-        disallow: ["/"],
+        allow: "/",
+        disallow: ["/api/", "/panel/", "/lawha/", "/dashboard/", "/mianban/"],
       },
     ],
+    sitemap: "https://metalorix.com/sitemap.xml",
   };
 }

@@ -16,6 +16,11 @@ const i18n: Record<string, { heading: string; subtitle: string; metals: string[]
     subtitle: "Real-time spot prices, professional charts and analytics for Gold, Silver, Platinum, Palladium and Copper",
     metals: ["Gold", "Silver", "Platinum", "Palladium", "Copper"],
   },
+  ar: {
+    heading: "المعادن الثمينة والصناعية",
+    subtitle: "أسعار فورية في الوقت الفعلي، رسوم بيانية احترافية وتحليلات للذهب والفضة والبلاتين والبلاديوم والنحاس",
+    metals: ["الذهب", "الفضة", "البلاتين", "البلاديوم", "النحاس"],
+  },
 };
 
 export default async function OgImage({ params }: { params: { locale: string } }) {

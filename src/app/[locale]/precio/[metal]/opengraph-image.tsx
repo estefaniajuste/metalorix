@@ -10,22 +10,27 @@ const METAL_I18N: Record<string, Record<string, { name: string; title: string; s
   oro: {
     es: { name: "Oro", title: "Precio del Oro", subtitle: "Cotización en tiempo real, gráfico interactivo y análisis" },
     en: { name: "Gold", title: "Gold Price", subtitle: "Real-time quote, interactive chart and analysis" },
+    ar: { name: "الذهب", title: "سعر الذهب", subtitle: "سعر فوري في الوقت الفعلي، رسم بياني تفاعلي وتحليل" },
   },
   plata: {
     es: { name: "Plata", title: "Precio de la Plata", subtitle: "Cotización en tiempo real, gráfico interactivo y análisis" },
     en: { name: "Silver", title: "Silver Price", subtitle: "Real-time quote, interactive chart and analysis" },
+    ar: { name: "الفضة", title: "سعر الفضة", subtitle: "سعر فوري في الوقت الفعلي، رسم بياني تفاعلي وتحليل" },
   },
   platino: {
     es: { name: "Platino", title: "Precio del Platino", subtitle: "Cotización en tiempo real, gráfico interactivo y análisis" },
     en: { name: "Platinum", title: "Platinum Price", subtitle: "Real-time quote, interactive chart and analysis" },
+    ar: { name: "البلاتين", title: "سعر البلاتين", subtitle: "سعر فوري في الوقت الفعلي، رسم بياني تفاعلي وتحليل" },
   },
   paladio: {
     es: { name: "Paladio", title: "Precio del Paladio", subtitle: "Cotización en tiempo real, gráfico interactivo y análisis" },
     en: { name: "Palladium", title: "Palladium Price", subtitle: "Real-time quote, interactive chart and analysis" },
+    ar: { name: "البلاديوم", title: "سعر البلاديوم", subtitle: "سعر فوري في الوقت الفعلي، رسم بياني تفاعلي وتحليل" },
   },
   cobre: {
     es: { name: "Cobre", title: "Precio del Cobre", subtitle: "Cotización en tiempo real, gráfico interactivo y análisis" },
     en: { name: "Copper", title: "Copper Price", subtitle: "Real-time quote, interactive chart and analysis" },
+    ar: { name: "النحاس", title: "سعر النحاس", subtitle: "سعر فوري في الوقت الفعلي، رسم بياني تفاعلي وتحليل" },
   },
 };
 

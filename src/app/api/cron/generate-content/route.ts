@@ -17,6 +17,7 @@ import {
 } from "@/lib/ai/glossary-generator";
 import { isConfigured } from "@/lib/ai/gemini";
 import { sendWeeklyNewsletter } from "@/lib/email/newsletter";
+import { pingSearchEngines, pingIndexNow } from "@/lib/seo/ping";
 
 const CRON_SECRET = process.env.CRON_SECRET;
 const EVENT_THRESHOLD_PCT = 2.0;
@@ -157,11 +158,25 @@ export async function POST(request: NextRequest) {
     }
   }
 
+  // Ping search engines when new content was generated
+  let pingResult = null;
+  if (articleIdsToTranslate.length > 0) {
+    pingResult = await pingSearchEngines();
+    const newUrls = articleIdsToTranslate
+      .map((_, i) => {
+        const slug = generated[i]?.split(": ")[1];
+        return slug ? `https://metalorix.com/es/noticias/${slug}` : null;
+      })
+      .filter(Boolean) as string[];
+    if (newUrls.length) await pingIndexNow(newUrls);
+  }
+
   return NextResponse.json({
     ok: true,
     type,
     generated,
     newsletter: newsletterResult,
+    ping: pingResult,
     timestamp: new Date().toISOString(),
   });
 }

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Link } from "@/i18n/navigation";
 import { notFound } from "next/navigation";
 import { getTranslations, getLocale } from "next-intl/server";
+import { getAlternates } from "@/lib/seo/alternates";
 import { getDb } from "@/lib/db";
 import { articles, articleTranslations } from "@/lib/db/schema";
 import { eq, and } from "drizzle-orm";
@@ -63,6 +64,11 @@ export async function generateMetadata({
   const title = translation?.title ?? article.title;
   const description = translation?.excerpt ?? article.excerpt ?? article.title;
 
+  const alternates = getAlternates(locale, {
+    pathname: "/noticias/[slug]",
+    params: { slug: article.slug },
+  });
+
   return {
     title: `${title} — Metalorix`,
     description,
@@ -70,12 +76,10 @@ export async function generateMetadata({
       title,
       description,
       type: "article",
-      url: `https://metalorix.com/noticias/${article.slug}`,
+      url: alternates.canonical,
       publishedTime: article.publishedAt?.toISOString(),
     },
-    alternates: {
-      canonical: `https://metalorix.com/noticias/${article.slug}`,
-    },
+    alternates,
   };
 }
 
@@ -195,7 +199,7 @@ export default async function ArticlePage({
     "@type": "NewsArticle",
     headline: displayTitle,
     description: displayExcerpt,
-    url: `https://metalorix.com/noticias/${article.slug}`,
+    url: `https://metalorix.com/${locale}/noticias/${article.slug}`,
     datePublished: article.publishedAt?.toISOString(),
     dateModified: article.updatedAt.toISOString(),
     author: {

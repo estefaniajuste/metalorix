@@ -48,6 +48,22 @@ const EMAIL_I18N: Record<string, EmailI18n> = {
     goToMetalorix: "Go to Metalorix",
     reachedPrice: "has reached",
   },
+  ar: {
+    footer: "تتلقى هذا البريد لأنك اشتركت في تنبيهات metalorix.com",
+    manageAlerts: "إدارة التنبيهات",
+    priceAlert: "تنبيه السعر",
+    viewChart: "عرض رسم بياني لـ",
+    viewDashboard: "عرض لوحة المعلومات",
+    welcomeSubject: "مرحبًا بك في تنبيهات Metalorix",
+    welcomeTitle: "!مرحبًا بك في Metalorix",
+    welcomeDesc: "لقد اشتركت في تنبيهات أسعار المعادن الثمينة الذكية. ستتلقى إشعارات عند حدوث تحركات مهمة في الذهب والفضة والبلاتين.",
+    welcomeAlertsTitle: "ستتلقى تنبيهات بشأن:",
+    welcomeAlert1: "أعلى وأدنى مستويات جديدة خلال 52 أسبوعًا",
+    welcomeAlert2: "تحركات حادة (أكثر من 2% في يوم واحد)",
+    welcomeAlert3: "نسبة الذهب/الفضة في مناطق متطرفة",
+    goToMetalorix: "الذهاب إلى Metalorix",
+    reachedPrice: "وصل إلى",
+  },
 };
 
 function getEmailI18n(locale: string = "es"): EmailI18n {
