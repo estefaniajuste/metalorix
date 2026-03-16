@@ -85,7 +85,7 @@ export default async function TerminosPage() {
 
           <div>
             <h2 className="text-lg font-bold text-content-0 mb-2">8. {t("contact")}</h2>
-            <p>{t("terms.contactContent")} <a href="mailto:hello@metalorix.com" className="text-brand-gold hover:underline">hello@metalorix.com</a></p>
+            <p>{t("terms.contactContent")} <a href="mailto:info@metalorix.com" className="text-brand-gold hover:underline">info@metalorix.com</a></p>
           </div>
 
           <div className="pt-4 border-t border-border">

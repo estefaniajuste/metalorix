@@ -5,11 +5,22 @@ import { routing } from "@/i18n/routing";
 
 const CANONICAL_HOST = "metalorix.com";
 
-/**
- * Path aliases that map non-standard legacy URLs to internal pathnames.
- * next-intl's handleI18nRouting then detects locale via Accept-Language /
- * cookie and serves the correct localized URL. We no longer hardcode `/es/`.
- */
+const LOCALES = new Set(["es", "en", "zh", "ar", "tr", "de"]);
+
+const LEARN_PATHS: Record<string, string> = {
+  es: "/aprende-inversion",
+  en: "/learn",
+  de: "/lernen-investition",
+  zh: "/xuexi",
+  ar: "/taallam",
+  tr: "/ogren-yatirim",
+};
+
+const LEARN_LEGACY_SEGMENTS = new Set([
+  "aprende", "glosario", "glossary", "education", "educacion",
+  "aprender", "lernen", "learn", "xuexi", "taallam", "ogren",
+]);
+
 const PATH_ALIASES: Record<string, string> = {
   "/oro": "/precio/oro",
   "/plata": "/precio/plata",
@@ -57,10 +68,26 @@ export function middleware(request: NextRequest) {
     return response;
   }
 
-  // Redirect old /aprende and /glosario paths to /learn
   const lower = pathname.toLowerCase();
-  if (lower === "/aprende" || lower.startsWith("/aprende/") ||
-      lower === "/glosario" || lower.startsWith("/glosario/")) {
+  const segments = lower.split("/").filter(Boolean);
+
+  // Handle /{locale}/{legacy-learn-segment}[/...] → /{locale}/{correct-learn-path}[/...]
+  if (segments.length >= 2 && LOCALES.has(segments[0])) {
+    const locale = segments[0];
+    const correctLearnPath = LEARN_PATHS[locale];
+
+    if (LEARN_LEGACY_SEGMENTS.has(segments[1]) && `/${segments[1]}` !== correctLearnPath) {
+      const rest = segments.slice(2).join("/");
+      const target = `/${locale}${correctLearnPath}${rest ? `/${rest}` : ""}`;
+      return NextResponse.redirect(new URL(target, request.url), 301);
+    }
+  }
+
+  // Handle bare /aprende, /glosario etc. (no locale prefix)
+  if (
+    lower === "/aprende" || lower.startsWith("/aprende/") ||
+    lower === "/glosario" || lower.startsWith("/glosario/")
+  ) {
     return NextResponse.redirect(new URL("/learn", request.url), 301);
   }
 
@@ -71,7 +98,10 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(rewritten, 301);
   }
 
-  return handleI18nRouting(request);
+  const response = handleI18nRouting(request);
+  // Propagate the original URL so not-found/error pages can log it
+  response.headers.set("x-pathname", pathname);
+  return response;
 }
 
 export const config = {

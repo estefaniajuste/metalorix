@@ -536,6 +536,36 @@ export const learnContentJobs = pgTable(
 );
 
 /* ==========================================================
+   Error Logs — 404s and runtime errors tracked for monitoring
+   ========================================================== */
+
+export const errorLogs = pgTable(
+  "error_logs",
+  {
+    id: serial("id").primaryKey(),
+    statusCode: integer("status_code").notNull(),
+    path: varchar("path", { length: 2000 }).notNull(),
+    referer: varchar("referer", { length: 2000 }),
+    userAgent: varchar("user_agent", { length: 1000 }),
+    locale: varchar("locale", { length: 10 }),
+    ip: varchar("ip", { length: 45 }),
+    message: text("message"),
+    count: integer("count").notNull().default(1),
+    firstSeenAt: timestamp("first_seen_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    lastSeenAt: timestamp("last_seen_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  (table) => ({
+    statusIdx: index("error_logs_status_idx").on(table.statusCode),
+    pathIdx: index("error_logs_path_idx").on(table.path),
+    lastSeenIdx: index("error_logs_last_seen_idx").on(table.lastSeenAt),
+  })
+);
+
+/* ==========================================================
    Type exports
    ========================================================== */
 
@@ -560,3 +590,5 @@ export type LearnTag = typeof learnTags.$inferSelect;
 export type LearnGlossaryTerm = typeof learnGlossaryTerms.$inferSelect;
 export type LearnInternalLink = typeof learnInternalLinks.$inferSelect;
 export type LearnContentJob = typeof learnContentJobs.$inferSelect;
+export type ErrorLog = typeof errorLogs.$inferSelect;
+export type NewErrorLog = typeof errorLogs.$inferInsert;

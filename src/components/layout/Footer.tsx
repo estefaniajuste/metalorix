@@ -37,7 +37,7 @@ export function Footer() {
         { href: "/aviso-legal", label: t("legalNotice") },
         { href: "/terminos", label: t("terms") },
         { href: "/privacidad", label: t("privacy") },
-        { href: "mailto:hello@metalorix.com", label: t("contact") },
+        { href: "mailto:info@metalorix.com", label: t("contact") },
       ],
     },
   ];

@@ -1,7 +1,9 @@
 import { Link } from "@/i18n/navigation";
 import { getTranslations, getLocale } from "next-intl/server";
+import { headers } from "next/headers";
 import { getAlternates } from "@/lib/seo/alternates";
 import { getLocalizedMetalSlug } from "@/lib/utils/metal-slugs";
+import { logError } from "@/lib/error-logger";
 
 export async function generateMetadata({
   params,
@@ -21,6 +23,22 @@ export default async function NotFound() {
   const tc = await getTranslations("common");
   const tn = await getTranslations("nav");
   const locale = await getLocale();
+
+  const hdrs = await headers();
+  const path = hdrs.get("x-pathname") || hdrs.get("x-next-url") || hdrs.get("x-invoke-path") || "";
+  const referer = hdrs.get("referer");
+  const userAgent = hdrs.get("user-agent");
+  const ip = hdrs.get("x-forwarded-for")?.split(",")[0]?.trim() || hdrs.get("x-real-ip");
+
+  logError({
+    statusCode: 404,
+    path: path || `/${locale}/unknown`,
+    referer,
+    userAgent,
+    locale,
+    ip,
+    message: "Page not found",
+  });
 
   return (
     <section className="py-[var(--section-py)]">

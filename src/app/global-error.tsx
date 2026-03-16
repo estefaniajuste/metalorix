@@ -38,6 +38,7 @@ export default function GlobalError({
           message: error.message,
           digest: error.digest,
           path: window.location.pathname,
+          statusCode: 500,
           timestamp: Date.now(),
         })
       );

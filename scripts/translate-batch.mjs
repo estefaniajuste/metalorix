@@ -90,7 +90,10 @@ Return ONLY the JSON. No markdown code blocks.`;
   if (!raw) throw new Error("Empty response from Gemini");
 
   const jsonMatch = raw.match(/```(?:json)?\s*([\s\S]*?)```/);
-  const jsonStr = jsonMatch ? jsonMatch[1].trim() : raw.trim();
+  let jsonStr = jsonMatch ? jsonMatch[1].trim() : raw.trim();
+  // Sanitize: remove control chars and fix bad escapes inside JSON string values
+  jsonStr = jsonStr.replace(/[\x00-\x08\x0b\x0c\x0e-\x1f]/g, " ");
+  jsonStr = jsonStr.replace(/\\(?!["\\/bfnrtu])/g, "\\\\");
   const translated = JSON.parse(jsonStr);
 
   if (!translated.title || !translated.content) {

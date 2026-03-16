@@ -38,7 +38,7 @@ export default async function PrivacidadPage() {
             <h2 className="text-lg font-bold text-content-0 mb-3">1. {t("dataController")}</h2>
             <p>
               {t("privacy.dataControllerDesc")}{" "}
-              {t("privacy.contactUs")} <a href="mailto:hello@metalorix.com" className="text-brand-gold hover:underline">hello@metalorix.com</a>.
+              {t("privacy.contactUs")} <a href="mailto:info@metalorix.com" className="text-brand-gold hover:underline">info@metalorix.com</a>.
             </p>
           </section>
 
@@ -87,7 +87,7 @@ export default async function PrivacidadPage() {
             <h2 className="text-lg font-bold text-content-0 mb-3">5. {t("yourRights")}</h2>
             <p>
               {t("privacy.rightsDesc")}{" "}
-              {t("privacy.rightsContact")} <a href="mailto:hello@metalorix.com" className="text-brand-gold hover:underline">hello@metalorix.com</a>.
+              {t("privacy.rightsContact")} <a href="mailto:info@metalorix.com" className="text-brand-gold hover:underline">info@metalorix.com</a>.
             </p>
           </section>
 
