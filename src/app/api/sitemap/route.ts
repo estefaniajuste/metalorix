@@ -38,6 +38,29 @@ const PRICE_PATHS: Record<string, string> = {
   es: "precio", en: "price", de: "preis", zh: "jiage", ar: "sier", tr: "fiyat",
 };
 
+const PRODUCT_SLUGS = [
+  "krugerrand-oro", "american-eagle-oro", "maple-leaf-oro", "filarmonica-oro",
+  "britannia-oro", "canguro-oro", "bufalo-americano-oro", "panda-oro",
+  "lingote-oro-100g", "lingote-oro-1oz", "lingote-oro-10g", "lingote-oro-1kg",
+  "american-eagle-plata", "maple-leaf-plata", "filarmonica-plata", "britannia-plata",
+  "canguro-plata", "krugerrand-plata", "panda-plata", "libertad-plata",
+  "lingote-plata-1kg", "lingote-plata-100oz",
+];
+
+const PRODUCT_BASE: Record<string, string> = {
+  es: "productos", en: "products", de: "produkte",
+  zh: "chanpin", ar: "muntajat", tr: "urunler",
+};
+
+const NEWS_BASE: Record<string, string> = {
+  es: "noticias", en: "news", de: "nachrichten", zh: "xinwen", ar: "akhbar", tr: "haberler",
+};
+
+const LEARN_BASE: Record<string, string> = {
+  es: "aprende-inversion", en: "learn", de: "lernen-investition",
+  zh: "xuexi", ar: "taallam", tr: "ogren-yatirim",
+};
+
 const FREQ_PRIO: Record<string, [string, number]> = {
   "/herramientas": ["weekly", 0.8],
   "/calculadora-rentabilidad": ["monthly", 0.7],
@@ -88,131 +111,77 @@ ${xDefault}
 }
 
 export async function GET() {
+  const today = new Date().toISOString().split("T")[0];
+  const urls: string[] = [];
+
+  // Homepage
+  urls.push(urlEntry(PATHNAMES["/"], "daily", 1.0, today));
+
+  // Static pages
+  for (const [key, [freq, prio]] of Object.entries(FREQ_PRIO)) {
+    if (PATHNAMES[key]) {
+      urls.push(urlEntry(PATHNAMES[key], freq, prio, today));
+    }
+  }
+
+  // Metal price pages
+  for (const [, slugsByLocale] of Object.entries(METAL_SLUGS)) {
+    const paths: Record<string, string> = {};
+    for (const loc of LOCALES) {
+      paths[loc] = `/${loc}/${PRICE_PATHS[loc]}/${slugsByLocale[loc]}`;
+    }
+    urls.push(urlEntry(paths, "daily", 0.9, today));
+  }
+
+  // Product pages (slugs inlined to avoid imports)
+  for (const slug of PRODUCT_SLUGS) {
+    const paths: Record<string, string> = {};
+    for (const loc of LOCALES) {
+      paths[loc] = `/${loc}/${PRODUCT_BASE[loc]}/${slug}`;
+    }
+    urls.push(urlEntry(paths, "monthly", 0.6, today));
+  }
+
+  // Dynamic DB content fetched via internal API to avoid import issues
   try {
-    const today = new Date().toISOString().split("T")[0];
-    const urls: string[] = [];
-
-    urls.push(urlEntry(PATHNAMES["/"], "daily", 1.0, today));
-
-    for (const [key, [freq, prio]] of Object.entries(FREQ_PRIO)) {
-      if (PATHNAMES[key]) {
-        urls.push(urlEntry(PATHNAMES[key], freq, prio, today));
-      }
-    }
-
-    for (const [, slugsByLocale] of Object.entries(METAL_SLUGS)) {
-      const paths: Record<string, string> = {};
-      for (const loc of LOCALES) {
-        paths[loc] = `/${loc}/${PRICE_PATHS[loc]}/${slugsByLocale[loc]}`;
-      }
-      urls.push(urlEntry(paths, "daily", 0.9, today));
-    }
-
-    // Product pages
-    try {
-      const { PRODUCTS } = await import("@/lib/data/products");
-      const productBase: Record<string, string> = {
-        es: "productos", en: "products", de: "produkte",
-        zh: "chanpin", ar: "muntajat", tr: "urunler",
-      };
-      for (const product of PRODUCTS) {
+    const baseUrl = process.env.NEXT_PUBLIC_URL || BASE;
+    const res = await fetch(`${baseUrl}/api/sitemap-urls`, {
+      signal: AbortSignal.timeout(8_000),
+      headers: { "x-internal": "1" },
+    });
+    if (res.ok) {
+      const data = await res.json() as { urls: Array<{ slug: string; type: string; cluster?: string; lastmod?: string }> };
+      for (const item of data.urls) {
         const paths: Record<string, string> = {};
-        for (const loc of LOCALES) {
-          paths[loc] = `/${loc}/${productBase[loc]}/${product.slug}`;
-        }
-        urls.push(urlEntry(paths, "monthly", 0.6, today));
-      }
-    } catch (err) {
-      console.error("[sitemap] Products load failed:", err);
-    }
-
-    // Dynamic DB content
-    try {
-      const { getDb } = await import("@/lib/db");
-      const schema = await import("@/lib/db/schema");
-      const orm = await import("drizzle-orm");
-      const db = getDb();
-      if (db) {
-        const newsBase: Record<string, string> = {
-          es: "noticias", en: "news", de: "nachrichten", zh: "xinwen", ar: "akhbar", tr: "haberler",
-        };
-        const learnBase: Record<string, string> = {
-          es: "aprende-inversion", en: "learn", de: "lernen-investition",
-          zh: "xuexi", ar: "taallam", tr: "ogren-yatirim",
-        };
-
-        const allArticles = await db
-          .select({ slug: schema.articles.slug, publishedAt: schema.articles.publishedAt })
-          .from(schema.articles)
-          .where(orm.eq(schema.articles.published, true))
-          .orderBy(orm.desc(schema.articles.publishedAt))
-          .limit(1000)
-          .catch(() => []);
-
-        for (const a of allArticles) {
-          const paths: Record<string, string> = {};
-          for (const loc of LOCALES) paths[loc] = `/${loc}/${newsBase[loc]}/${a.slug}`;
-          const mod = a.publishedAt ? new Date(a.publishedAt).toISOString().split("T")[0] : today;
-          urls.push(urlEntry(paths, "weekly", 0.6, mod));
-        }
-
-        const terms = await db
-          .select({ slug: schema.glossaryTerms.slug })
-          .from(schema.glossaryTerms)
-          .where(orm.eq(schema.glossaryTerms.locale, DEFAULT_LOCALE))
-          .limit(1000)
-          .catch(() => []);
-
-        for (const t of terms) {
-          const paths: Record<string, string> = {};
-          for (const loc of LOCALES) paths[loc] = `/${loc}/${learnBase[loc]}/glossary/${t.slug}`;
+        if (item.type === "article") {
+          for (const loc of LOCALES) paths[loc] = `/${loc}/${NEWS_BASE[loc]}/${item.slug}`;
+          urls.push(urlEntry(paths, "weekly", 0.6, item.lastmod));
+        } else if (item.type === "glossary") {
+          for (const loc of LOCALES) paths[loc] = `/${loc}/${LEARN_BASE[loc]}/glossary/${item.slug}`;
           urls.push(urlEntry(paths, "monthly", 0.5, today));
-        }
-
-        const clusters = await db
-          .select({ slug: schema.learnClusters.slug })
-          .from(schema.learnClusters)
-          .limit(100)
-          .catch(() => []);
-
-        for (const c of clusters) {
-          const paths: Record<string, string> = {};
-          for (const loc of LOCALES) paths[loc] = `/${loc}/${learnBase[loc]}/${c.slug}`;
+        } else if (item.type === "cluster") {
+          for (const loc of LOCALES) paths[loc] = `/${loc}/${LEARN_BASE[loc]}/${item.slug}`;
           urls.push(urlEntry(paths, "weekly", 0.6, today));
-        }
-
-        const learnRows = await db
-          .select({ slug: schema.learnArticles.slug, clusterSlug: schema.learnClusters.slug })
-          .from(schema.learnArticles)
-          .innerJoin(schema.learnClusters, orm.eq(schema.learnArticles.clusterId, schema.learnClusters.id))
-          .where(orm.isNotNull(schema.learnArticles.publishedAt))
-          .limit(1000)
-          .catch(() => []);
-
-        for (const la of learnRows) {
-          const paths: Record<string, string> = {};
-          for (const loc of LOCALES) paths[loc] = `/${loc}/${learnBase[loc]}/${la.clusterSlug}/${la.slug}`;
+        } else if (item.type === "learn-article") {
+          for (const loc of LOCALES) paths[loc] = `/${loc}/${LEARN_BASE[loc]}/${item.cluster}/${item.slug}`;
           urls.push(urlEntry(paths, "monthly", 0.5, today));
         }
       }
-    } catch (err) {
-      console.error("[sitemap] DB fetch failed:", err);
     }
+  } catch {
+    // DB content unavailable, static sitemap still served
+  }
 
-    const xml = `<?xml version="1.0" encoding="UTF-8"?>
+  const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:xhtml="http://www.w3.org/1999/xhtml">
 ${urls.join("\n")}
 </urlset>`;
 
-    return new NextResponse(xml, {
-      headers: {
-        "Content-Type": "application/xml; charset=utf-8",
-        "Cache-Control": "public, s-maxage=3600, stale-while-revalidate=600",
-      },
-    });
-  } catch (err: unknown) {
-    const message = err instanceof Error ? err.stack || err.message : String(err);
-    return NextResponse.json({ error: "sitemap failed", details: message }, { status: 500 });
-  }
+  return new NextResponse(xml, {
+    headers: {
+      "Content-Type": "application/xml; charset=utf-8",
+      "Cache-Control": "public, s-maxage=3600, stale-while-revalidate=600",
+    },
+  });
 }
