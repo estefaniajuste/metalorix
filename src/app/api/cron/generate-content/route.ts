@@ -15,6 +15,7 @@ import {
   expandTermsWithoutContent,
   getGlossaryTermCount,
 } from "@/lib/ai/glossary-generator";
+import { generateBatch } from "@/lib/learn/generate";
 import { isConfigured } from "@/lib/ai/gemini";
 import { sendWeeklyNewsletter } from "@/lib/email/newsletter";
 import { pingSearchEngines, pingIndexNow } from "@/lib/seo/ping";
@@ -148,6 +149,22 @@ export async function POST(request: NextRequest) {
     const expanded = await expandTermsWithoutContent(3);
     if (expanded > 0) {
       generated.push(`glossary-expanded: ${expanded} terms`);
+    }
+  }
+
+  // Learn articles: generate a small batch daily to fill the learn section
+  if (type === "learn" || type === "auto") {
+    try {
+      const result = await generateBatch({
+        batchId: `cron-${Date.now()}`,
+        locale: "en",
+        dryRun: false,
+      });
+      if (result.succeeded > 0) {
+        generated.push(`learn: ${result.succeeded}/${result.processed} articles generated`);
+      }
+    } catch (err) {
+      console.error("Learn article generation failed:", err);
     }
   }
 

@@ -66,7 +66,9 @@
     "quickGuide": "Yatırım rehberi",
     "quickGuideDesc": "Kıymetli metallere nasıl yatırım yapılır",
     "quickCalendar": "Takvim",
-    "quickCalendarDesc": "Piyasayı hareket ettiren ekonomik olaylar"
+    "quickCalendarDesc": "Piyasayı hareket ettiren ekonomik olaylar",
+    "heroCta": "Ücretsiz fiyat uyarıları al",
+    "heroCtaDesc": "Altın hareketi mi? Size e-posta göndeririz."
   },
   "metals": {
     "gold": "Altın",
@@ -98,7 +100,10 @@
     "breadcrumbHome": "Ana sayfa",
     "share": "Paylaş",
     "copied": "Kopyalandı",
-    "breadcrumbNav": "İçerik haritası"
+    "breadcrumbNav": "İçerik haritası",
+    "alertPromo": "Hiçbir fiyat hareketini kaçırmayın",
+    "alertPromoDesc": "Altın, gümüş veya platin önemli hareketler yaptığında ücretsiz e-posta uyarıları alın.",
+    "alertPromoCta": "Ücretsiz uyarı al"
   },
   "dashboard": {
     "spotPrices": "Spot Fiyatlar",
@@ -317,7 +322,9 @@
     "about": "{metal} hakkında",
     "keyFacts": "Temel bilgiler",
     "otherMetals": "Diğer metaller",
-    "notFound": "Metal bulunamadı — Metalorix"
+    "notFound": "Metal bulunamadı — Metalorix",
+    "setAlert": "Fiyat uyarısı ayarla",
+    "setAlertDesc": "{metal} hedef fiyatınıza ulaştığında bildirim alın"
   },
   "panel": {
     "title": "Panelim",
@@ -698,7 +705,12 @@
     "breadcrumbNews": "Haberler",
     "notFound": "Makale bulunamadı — Metalorix",
     "aiDisclaimer": "Bu makale, kamuya açık kaynaklardan (Reuters, Kitco, CNBC, Investing.com vb.) yapay zeka tarafından otomatik olarak oluşturulmuştur. Metalorix, alıntılanan veri veya haberlerin orijinal yazarı değildir. Finansal tavsiye niteliği taşımaz. Makalenin sonundaki orijinal kaynaklara başvurun.",
-    "allNews": "Tüm haberler"
+    "allNews": "Tüm haberler",
+    "shareArticle": "Bu makaleyi paylaş",
+    "shareTwitter": "X'te paylaş",
+    "shareWhatsApp": "WhatsApp'ta paylaş",
+    "shareLinkedIn": "LinkedIn'de paylaş",
+    "copyLink": "Bağlantıyı kopyala"
   },
   "ratioContent": {
     "currentRatio": "Güncel Altın/Gümüş Oranı",

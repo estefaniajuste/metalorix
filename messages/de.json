@@ -66,7 +66,9 @@
     "quickGuide": "Investitionsguide",
     "quickGuideDesc": "Wie man in Edelmetalle investiert",
     "quickCalendar": "Kalender",
-    "quickCalendarDesc": "Wirtschaftsereignisse die den Markt bewegen"
+    "quickCalendarDesc": "Wirtschaftsereignisse die den Markt bewegen",
+    "heroCta": "Kostenlose Preisalarme erhalten",
+    "heroCtaDesc": "Gold bewegt sich? Wir mailen Ihnen."
   },
   "metals": {
     "gold": "Gold",
@@ -98,7 +100,10 @@
     "breadcrumbHome": "Startseite",
     "share": "Teilen",
     "copied": "Kopiert",
-    "breadcrumbNav": "Brotkrümel-Navigation"
+    "breadcrumbNav": "Brotkrümel-Navigation",
+    "alertPromo": "Keine Preisbewegung verpassen",
+    "alertPromoDesc": "Kostenlose E-Mail-Benachrichtigungen bei bedeutenden Bewegungen von Gold, Silber oder Platin.",
+    "alertPromoCta": "Kostenlose Alarme erhalten"
   },
   "dashboard": {
     "spotPrices": "Spotpreise",
@@ -317,7 +322,9 @@
     "about": "Über {metal}",
     "keyFacts": "Wichtige Fakten",
     "otherMetals": "Andere Metalle",
-    "notFound": "Metall nicht gefunden — Metalorix"
+    "notFound": "Metall nicht gefunden — Metalorix",
+    "setAlert": "Preisalarm einrichten",
+    "setAlertDesc": "Benachrichtigung erhalten, wenn {metal} Ihren Zielpreis erreicht"
   },
   "panel": {
     "title": "Mein Panel",
@@ -698,7 +705,12 @@
     "breadcrumbNews": "Nachrichten",
     "notFound": "Artikel nicht gefunden — Metalorix",
     "aiDisclaimer": "Dieser Artikel wurde automatisch durch künstliche Intelligenz aus öffentlichen Quellen (Reuters, Kitco, CNBC, Investing.com u.a.) erstellt. Metalorix ist nicht der ursprüngliche Autor der zitierten Daten oder Nachrichten. Er stellt keine Finanzberatung dar. Überprüfen Sie die am Ende des Artikels verlinkten Originalquellen.",
-    "allNews": "Alle Nachrichten"
+    "allNews": "Alle Nachrichten",
+    "shareArticle": "Diesen Artikel teilen",
+    "shareTwitter": "Auf X teilen",
+    "shareWhatsApp": "Auf WhatsApp teilen",
+    "shareLinkedIn": "Auf LinkedIn teilen",
+    "copyLink": "Link kopieren"
   },
   "ratioContent": {
     "currentRatio": "Aktuelles Gold/Silber-Verhältnis",

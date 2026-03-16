@@ -82,7 +82,7 @@ export async function sendWeeklyNewsletter(): Promise<{
 
   // Get current prices
   const rows = await db.select().from(metalPrices);
-  const locale: string = "es";
+  const locale: string = "en";
 
   const priceLines = rows
     .map(

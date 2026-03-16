@@ -66,7 +66,9 @@
     "quickGuide": "投资指南",
     "quickGuideDesc": "如何投资贵金属",
     "quickCalendar": "日历",
-    "quickCalendarDesc": "影响市场的经济事件"
+    "quickCalendarDesc": "影响市场的经济事件",
+    "heroCta": "免费获取价格提醒",
+    "heroCtaDesc": "金价波动？我们邮件通知您。"
   },
   "metals": {
     "gold": "黄金",
@@ -98,7 +100,10 @@
     "breadcrumbHome": "首页",
     "share": "分享",
     "copied": "已复制",
-    "breadcrumbNav": "面包屑导航"
+    "breadcrumbNav": "面包屑导航",
+    "alertPromo": "不错过任何价格波动",
+    "alertPromoDesc": "金、银或铂金出现重大波动时，免费邮件提醒。",
+    "alertPromoCta": "获取免费提醒"
   },
   "dashboard": {
     "spotPrices": "现货价格",
@@ -317,7 +322,9 @@
     "about": "关于{metal}",
     "keyFacts": "关键数据",
     "otherMetals": "其他金属",
-    "notFound": "未找到该金属 — Metalorix"
+    "notFound": "未找到该金属 — Metalorix",
+    "setAlert": "设置价格提醒",
+    "setAlertDesc": "{metal}达到目标价格时通知您"
   },
   "panel": {
     "title": "我的面板",
@@ -698,7 +705,12 @@
     "breadcrumbNews": "新闻",
     "notFound": "文章未找到 — Metalorix",
     "aiDisclaimer": "本文由人工智能根据公开来源（Reuters、Kitco、CNBC、Investing.com等）自动生成。Metalorix不是所引用数据或新闻的原始作者。本文不构成投资建议。请查阅文末链接的原始来源。",
-    "allNews": "全部新闻"
+    "allNews": "全部新闻",
+    "shareArticle": "分享这篇文章",
+    "shareTwitter": "分享到 X",
+    "shareWhatsApp": "分享到 WhatsApp",
+    "shareLinkedIn": "分享到 LinkedIn",
+    "copyLink": "复制链接"
   },
   "ratioContent": {
     "currentRatio": "当前金银比",

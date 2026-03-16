@@ -119,11 +119,23 @@ export default async function PrecioMetalPage({
             <h1 className="text-3xl sm:text-4xl font-extrabold text-content-0 tracking-tight">
               {t("priceOf", { metal: seo.name })}
             </h1>
-            <ShareButton
-              title={`${t("priceOf", { metal: seo.name })} — Metalorix`}
-              text={t("shareText", { metal: seo.fullName })}
-              url={alternates.canonical}
-            />
+            <div className="flex items-center gap-2">
+              <Link
+                href="/alertas"
+                className="inline-flex items-center gap-1.5 text-xs font-bold text-[#0B0F17] bg-brand-gold hover:brightness-110 transition-all px-3.5 py-1.5 rounded-sm"
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+                  <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9" />
+                  <path d="M13.73 21a2 2 0 01-3.46 0" />
+                </svg>
+                {t("setAlert")}
+              </Link>
+              <ShareButton
+                title={`${t("priceOf", { metal: seo.name })} — Metalorix`}
+                text={t("shareText", { metal: seo.fullName })}
+                url={alternates.canonical}
+              />
+            </div>
           </div>
           <p className="text-content-2 mb-10 max-w-2xl leading-relaxed">
             {t("description", { metal: seo.fullName })}

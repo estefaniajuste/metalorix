@@ -66,7 +66,9 @@
     "quickGuide": "دليل الاستثمار",
     "quickGuideDesc": "كيف تستثمر في المعادن الثمينة",
     "quickCalendar": "التقويم",
-    "quickCalendarDesc": "أحداث اقتصادية تحرك السوق"
+    "quickCalendarDesc": "أحداث اقتصادية تحرك السوق",
+    "heroCta": "احصل على تنبيهات أسعار مجانية",
+    "heroCtaDesc": "يتحرك الذهب؟ سنرسل لك بريداً إلكترونياً."
   },
   "metals": {
     "gold": "الذهب",
@@ -98,7 +100,10 @@
     "breadcrumbHome": "الرئيسية",
     "share": "مشاركة",
     "copied": "تم النسخ",
-    "breadcrumbNav": "مسار التنقل"
+    "breadcrumbNav": "مسار التنقل",
+    "alertPromo": "لا تفوّت أي تحرك في الأسعار",
+    "alertPromoDesc": "احصل على تنبيهات مجانية عبر البريد الإلكتروني عند حدوث تحركات كبيرة في الذهب أو الفضة أو البلاتين.",
+    "alertPromoCta": "احصل على تنبيهات مجانية"
   },
   "dashboard": {
     "spotPrices": "الأسعار الفورية",
@@ -317,7 +322,9 @@
     "about": "عن {metal}",
     "keyFacts": "حقائق رئيسية",
     "otherMetals": "معادن أخرى",
-    "notFound": "المعدن غير موجود — Metalorix"
+    "notFound": "المعدن غير موجود — Metalorix",
+    "setAlert": "تعيين تنبيه سعر",
+    "setAlertDesc": "استلم إشعاراً عندما يصل {metal} إلى سعرك المستهدف"
   },
   "panel": {
     "title": "لوحتي",
@@ -698,7 +705,12 @@
     "breadcrumbNews": "الأخبار",
     "notFound": "المقال غير موجود — Metalorix",
     "aiDisclaimer": "تم إنشاء هذا المقال تلقائياً بواسطة الذكاء الاصطناعي من مصادر عامة (Reuters, Kitco, CNBC, Investing.com وغيرها). Metalorix ليس المؤلف الأصلي للبيانات أو الأخبار المذكورة. لا يشكل استشارة مالية. راجع المصادر الأصلية المرتبطة في نهاية المقال.",
-    "allNews": "جميع الأخبار"
+    "allNews": "جميع الأخبار",
+    "shareArticle": "شارك هذا المقال",
+    "shareTwitter": "شارك على X",
+    "shareWhatsApp": "شارك على واتساب",
+    "shareLinkedIn": "شارك على لينكد إن",
+    "copyLink": "نسخ الرابط"
   },
   "ratioContent": {
     "currentRatio": "نسبة الذهب/الفضة الحالية",

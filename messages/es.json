@@ -66,7 +66,9 @@
     "quickGuide": "Guía de inversión",
     "quickGuideDesc": "Cómo invertir en metales preciosos",
     "quickCalendar": "Calendario",
-    "quickCalendarDesc": "Eventos económicos que mueven el mercado"
+    "quickCalendarDesc": "Eventos económicos que mueven el mercado",
+    "heroCta": "Consigue alertas de precio gratis",
+    "heroCtaDesc": "¿El oro se mueve? Te avisamos por email."
   },
   "metals": {
     "gold": "Oro",
@@ -98,7 +100,10 @@
     "breadcrumbHome": "Inicio",
     "share": "Compartir",
     "copied": "Copiado",
-    "breadcrumbNav": "Navegación de migas de pan"
+    "breadcrumbNav": "Navegación de migas de pan",
+    "alertPromo": "No te pierdas ningún movimiento",
+    "alertPromoDesc": "Recibe alertas gratuitas por email cuando el oro, plata o platino hagan movimientos significativos.",
+    "alertPromoCta": "Activar alertas gratis"
   },
   "dashboard": {
     "spotPrices": "Precios Spot",
@@ -317,7 +322,9 @@
     "about": "Sobre {metal}",
     "keyFacts": "Datos clave",
     "otherMetals": "Otros metales",
-    "notFound": "Metal no encontrado — Metalorix"
+    "notFound": "Metal no encontrado — Metalorix",
+    "setAlert": "Crear alerta de precio",
+    "setAlertDesc": "Recibe un aviso cuando {metal} alcance tu precio objetivo"
   },
   "panel": {
     "title": "Mi panel",
@@ -698,7 +705,12 @@
     "breadcrumbNews": "Noticias",
     "notFound": "Artículo no encontrado — Metalorix",
     "aiDisclaimer": "Este artículo ha sido generado automáticamente por inteligencia artificial a partir de fuentes públicas (Reuters, Kitco, CNBC, Investing.com, entre otras). Metalorix no es autor original de los datos ni noticias citados. No constituye asesoramiento financiero. Consulta las fuentes originales enlazadas al final del artículo.",
-    "allNews": "Todas las noticias"
+    "allNews": "Todas las noticias",
+    "shareArticle": "Compartir este artículo",
+    "shareTwitter": "Compartir en X",
+    "shareWhatsApp": "Compartir en WhatsApp",
+    "shareLinkedIn": "Compartir en LinkedIn",
+    "copyLink": "Copiar enlace"
   },
   "ratioContent": {
     "currentRatio": "Ratio Oro/Plata actual",

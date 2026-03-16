@@ -8,6 +8,7 @@ import { getDb } from "@/lib/db";
 import { articles, articleTranslations } from "@/lib/db/schema";
 import { eq, and } from "drizzle-orm";
 import { injectGlossaryLinks } from "@/lib/ai/glossary-generator";
+import { ArticleShareBar } from "@/components/dashboard/ArticleShareBar";
 
 async function getArticle(slug: string) {
   const db = getDb();
@@ -308,6 +309,13 @@ export default async function ArticlePage({
               )}
               <span>Metalorix</span>
             </div>
+
+            <div className="mt-5">
+              <ArticleShareBar
+                title={displayTitle}
+                url={`https://metalorix.com${getPathname({ locale: locale as Locale, href: { pathname: "/noticias/[slug]", params: { slug: article.slug } } as any })}`}
+              />
+            </div>
           </header>
 
           {/* Content */}
@@ -333,12 +341,34 @@ export default async function ArticlePage({
             })}
           </div>
 
-          {/* Footer */}
-          <footer className="mt-12 pt-8 border-t border-border">
+          {/* Share + Footer */}
+          <div className="mt-10 pt-6 border-t border-border">
+            <ArticleShareBar
+              title={displayTitle}
+              url={`https://metalorix.com${getPathname({ locale: locale as Locale, href: { pathname: "/noticias/[slug]", params: { slug: article.slug } } as any })}`}
+            />
+          </div>
+
+          <footer className="mt-8 pt-8 border-t border-border">
             <div className="bg-surface-1 border border-border rounded-DEFAULT p-5">
               <p className="text-xs text-content-3 leading-relaxed">
                 {t("aiDisclaimer")}
               </p>
+            </div>
+
+            <div className="mt-8 bg-surface-1 border border-brand-gold/20 rounded-DEFAULT p-6 text-center">
+              <p className="text-sm font-semibold text-content-0 mb-1">{tc("alertPromo")}</p>
+              <p className="text-xs text-content-3 mb-4">{tc("alertPromoDesc")}</p>
+              <Link
+                href="/alertas"
+                className="inline-flex items-center gap-2 text-sm font-bold text-[#0B0F17] bg-brand-gold hover:brightness-110 transition-all px-5 py-2 rounded-sm"
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+                  <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9" />
+                  <path d="M13.73 21a2 2 0 01-3.46 0" />
+                </svg>
+                {tc("alertPromoCta")}
+              </Link>
             </div>
 
             <div className="mt-6 flex justify-between items-center">
@@ -346,15 +376,7 @@ export default async function ArticlePage({
                 href="/noticias"
                 className="inline-flex items-center gap-2 text-sm font-medium text-content-2 hover:text-brand-gold transition-colors"
               >
-                <svg
-                  width="14"
-                  height="14"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
                   <polyline points="15 18 9 12 15 6" />
                 </svg>
                 {t("allNews")}
