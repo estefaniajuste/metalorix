@@ -46,7 +46,7 @@ export async function generateMetadata({
   for (const loc of routing.locales) {
     alternates[loc] = `https://metalorix.com/${loc}`;
   }
-  alternates["x-default"] = "https://metalorix.com/es";
+  alternates["x-default"] = `https://metalorix.com/${routing.defaultLocale}`;
 
   return {
     title: t("title"),

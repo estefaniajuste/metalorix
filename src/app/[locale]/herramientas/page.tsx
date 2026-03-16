@@ -1,6 +1,6 @@
 import dynamic from "next/dynamic";
 import { Link } from "@/i18n/navigation";
-import { getTranslations } from "next-intl/server";
+import { getTranslations, getLocale } from "next-intl/server";
 import { getAlternates } from "@/lib/seo/alternates";
 import { breadcrumbSchema, softwareAppSchema } from "@/lib/seo/schemas";
 
@@ -55,11 +55,13 @@ export async function generateMetadata({
 export default async function HerramientasPage() {
   const t = await getTranslations("tools");
   const tc = await getTranslations("common");
-  const breadcrumb = breadcrumbSchema([{ name: t("title"), path: "/herramientas" }], tc("breadcrumbHome"));
+  const locale = await getLocale();
+  const breadcrumb = breadcrumbSchema([{ name: t("title"), path: "/herramientas" }], tc("breadcrumbHome"), locale);
   const appSchema = softwareAppSchema({
     name: `${t("title")} Metalorix`,
     description: t("subtitle"),
     path: "/herramientas",
+    locale,
   });
 
   return (

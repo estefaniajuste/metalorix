@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Link } from "@/i18n/navigation";
-import { getTranslations } from "next-intl/server";
+import { getTranslations, getLocale } from "next-intl/server";
 import { MultiCurrencyTable } from "@/components/tools/MultiCurrencyTable";
 import { breadcrumbSchema, softwareAppSchema } from "@/lib/seo/schemas";
 import { getAlternates } from "@/lib/seo/alternates";
@@ -23,7 +23,7 @@ export async function generateMetadata({
       title: t("conversor.ogTitle"),
       description: t("conversor.ogDescription"),
       type: "website",
-      url: "https://metalorix.com/conversor-divisas",
+      url: getAlternates(locale, "/conversor-divisas").canonical,
     },
   };
 }
@@ -32,6 +32,7 @@ export default async function ConversorDivisasPage() {
   const t = await getTranslations("currencyConverter");
   const tc = await getTranslations("common");
   const tt = await getTranslations("tools");
+  const locale = await getLocale();
 
   const tp = await getTranslations("pages");
 
@@ -41,11 +42,13 @@ export default async function ConversorDivisasPage() {
       { name: t("breadcrumb"), path: "/conversor-divisas" },
     ],
     tc("breadcrumbHome"),
+    locale,
   );
   const app = softwareAppSchema({
     name: tp("conversor.ogTitle"),
     description: tp("conversor.description"),
     path: "/conversor-divisas",
+    locale,
   });
 
   return (

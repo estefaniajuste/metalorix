@@ -14,6 +14,7 @@ import {
   learnContentJobs,
 } from "@/lib/db/schema";
 import { eq, and } from "drizzle-orm";
+import { slugifyTitle } from "@/lib/learn/slug-utils";
 import type {
   TopicDefinition,
   ArticleContent,
@@ -298,6 +299,7 @@ export async function generateArticle(
     .limit(1);
 
   const locData = {
+    slug: slugifyTitle(content.title),
     title: content.title,
     seoTitle: content.seoTitle,
     metaDescription: content.metaDescription,
@@ -598,6 +600,7 @@ Return ONLY the JSON. No markdown blocks.`;
       .limit(1);
 
     const locData = {
+      slug: slugifyTitle(translated.title),
       title: translated.title,
       seoTitle: translated.seoTitle || translated.title,
       metaDescription:

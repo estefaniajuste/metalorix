@@ -1,8 +1,10 @@
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 
 interface RelatedArticle {
   slug: string;
   clusterSlug: string;
+  localizedSlug?: string;
+  localizedClusterSlug?: string;
   title: string;
   difficulty: string;
   linkType: string;
@@ -30,7 +32,13 @@ export function RelatedArticles({
         {articles.map((article) => (
           <Link
             key={article.slug}
-            href={`/learn/${article.clusterSlug}/${article.slug}`}
+            href={{
+              pathname: "/learn/[cluster]/[slug]" as const,
+              params: {
+                cluster: article.localizedClusterSlug ?? article.clusterSlug,
+                slug: article.localizedSlug ?? article.slug,
+              },
+            }}
             className="group flex items-center gap-3 p-3 rounded-lg border border-border bg-surface-1 hover:border-brand-gold/40 transition-all"
           >
             <span className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-surface-2 text-content-3 shrink-0">

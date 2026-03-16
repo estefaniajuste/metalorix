@@ -1,12 +1,16 @@
 import type { Metadata } from "next";
-import { Link } from "@/i18n/navigation";
+import { Link, getPathname } from "@/i18n/navigation";
 import { getTranslations, getLocale } from "next-intl/server";
 import { getAlternates } from "@/lib/seo/alternates";
 import { TAXONOMY } from "@/lib/learn/taxonomy";
 import { ALL_TOPICS } from "@/lib/learn/topics";
 import { LearnBreadcrumb } from "@/components/learn/LearnBreadcrumb";
-import { getLocalizedCluster } from "@/lib/learn/taxonomy-i18n";
+import {
+  getLocalizedCluster,
+  getLocalizedSubcluster,
+} from "@/lib/learn/taxonomy-i18n";
 import { getLocalizedArticleTitles } from "@/lib/learn/article-titles";
+import { getLocalizedClusterSlug } from "@/lib/learn/slug-i18n";
 import type { Locale } from "@/i18n/config";
 
 export const revalidate = 86400;
@@ -125,7 +129,11 @@ export default async function LearnPage() {
             </div>
           </header>
 
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <h2 className="text-xl font-bold text-content-0 mb-6">
+            {t("topicIndex")}
+          </h2>
+
+          <div className="grid gap-4 sm:grid-cols-2">
             {TAXONOMY.map((cluster) => {
               const count = ALL_TOPICS.filter(
                 (tp) => tp.clusterSlug === cluster.slug
@@ -133,26 +141,58 @@ export default async function LearnPage() {
               const icon = CLUSTER_ICONS[cluster.slug] || "📄";
               const localized = getLocalizedCluster(cluster.slug, locale);
               const clusterName = localized?.name ?? cluster.nameEn;
-              const clusterDesc = localized?.description ?? cluster.descriptionEn;
+              const locClusterSlug = getLocalizedClusterSlug(cluster.slug, locale);
               return (
-                <Link
+                <div
                   key={cluster.slug}
-                  href={{ pathname: "/learn/[cluster]" as const, params: { cluster: cluster.slug } }}
-                  className="group relative rounded-lg border border-border bg-surface-1 p-6 hover:border-brand-gold/40 hover:shadow-md transition-all"
+                  className="rounded-lg border border-border bg-surface-1 p-5"
                 >
-                  <div className="text-2xl mb-3">{icon}</div>
-                  <h2 className="text-base font-bold text-content-0 group-hover:text-brand-gold transition-colors mb-2">
-                    {clusterName}
-                  </h2>
-                  <p className="text-sm text-content-2 leading-relaxed mb-3 line-clamp-2">
-                    {clusterDesc}
-                  </p>
-                  <div className="flex items-center gap-3 text-xs text-content-3">
-                    <span>{t("articlesCount", { count })}</span>
-                    <span>·</span>
-                    <span>{t("topicsCount", { count: cluster.subclusters.length })}</span>
-                  </div>
-                </Link>
+                  <Link
+                    href={{ pathname: "/learn/[cluster]" as const, params: { cluster: locClusterSlug } }}
+                    className="group flex items-center gap-2.5 mb-3"
+                  >
+                    <span className="text-xl shrink-0">{icon}</span>
+                    <h3 className="text-base font-bold text-content-0 group-hover:text-brand-gold transition-colors">
+                      {clusterName}
+                    </h3>
+                    <span className="ml-auto text-xs text-content-3 shrink-0">
+                      {count}
+                    </span>
+                  </Link>
+                  <ul className="space-y-1 border-l-2 border-border pl-4">
+                    {cluster.subclusters.map((sub) => {
+                      const localizedSub = getLocalizedSubcluster(sub.slug, locale);
+                      const subName = localizedSub?.name ?? sub.nameEn;
+                      const subCount = ALL_TOPICS.filter(
+                        (tp) =>
+                          tp.clusterSlug === cluster.slug &&
+                          tp.subclusterSlug === sub.slug
+                      ).length;
+                      const clusterHref = getPathname({
+                        locale,
+                        href: {
+                          pathname: "/learn/[cluster]" as const,
+                          params: { cluster: locClusterSlug },
+                        },
+                      });
+                      return (
+                        <li key={sub.slug}>
+                          <a
+                            href={`${clusterHref}#${sub.slug}`}
+                            className="group/sub flex items-baseline gap-2 py-1 text-sm text-content-2 hover:text-brand-gold transition-colors"
+                          >
+                            <span className="group-hover/sub:text-brand-gold transition-colors">
+                              {subName}
+                            </span>
+                            <span className="text-xs text-content-3 shrink-0">
+                              {subCount}
+                            </span>
+                          </a>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </div>
               );
             })}
           </div>
@@ -169,10 +209,11 @@ export default async function LearnPage() {
                 .slice(0, 6)
                 .map((tp) => {
                   const loc = localizedTitles.get(tp.slug);
+                  const locCluster = getLocalizedClusterSlug(tp.clusterSlug, locale);
                   return (
                     <Link
                       key={tp.slug}
-                      href={{ pathname: "/learn/[cluster]/[slug]" as const, params: { cluster: tp.clusterSlug, slug: tp.slug } }}
+                      href={{ pathname: "/learn/[cluster]/[slug]" as const, params: { cluster: locCluster, slug: loc?.localizedSlug ?? tp.slug } }}
                       className="text-sm font-medium px-3 py-1.5 rounded-full border border-brand-gold/20 text-brand-gold hover:bg-brand-gold/10 transition-colors"
                     >
                       {loc?.title ?? tp.titleEn}

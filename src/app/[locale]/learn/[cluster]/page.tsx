@@ -11,12 +11,23 @@ import {
   getLocalizedSubcluster,
 } from "@/lib/learn/taxonomy-i18n";
 import { getLocalizedArticleTitles } from "@/lib/learn/article-titles";
+import {
+  getBaseClusterSlug,
+  getLocalizedClusterSlug,
+} from "@/lib/learn/slug-i18n";
 import type { Locale } from "@/i18n/config";
 
 export const revalidate = 86400;
 
-export async function generateStaticParams() {
-  return TAXONOMY.map((c) => ({ cluster: c.slug }));
+export async function generateStaticParams({
+  params,
+}: {
+  params: { locale: string };
+}) {
+  const locale = (params?.locale || "en") as Locale;
+  return TAXONOMY.map((c) => ({
+    cluster: getLocalizedClusterSlug(c.slug, locale),
+  }));
 }
 
 const DIFFICULTY_KEY: Record<string, string> = {
@@ -46,17 +57,19 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const locale = (await getLocale()) as Locale;
   const t = await getTranslations({ locale, namespace: "learnSection" });
-  const cluster = TAXONOMY.find((c) => c.slug === params.cluster);
+
+  const baseClusterSlug = getBaseClusterSlug(params.cluster, locale);
+  const cluster = TAXONOMY.find((c) => c.slug === baseClusterSlug);
   if (!cluster) return { title: t("notFound") };
 
   const localized = getLocalizedCluster(cluster.slug, locale);
   const clusterName = localized?.name ?? cluster.nameEn;
   const clusterDesc = localized?.description ?? cluster.descriptionEn;
 
-  const alternates = getAlternates(locale, {
+  const alternates = getAlternates(locale, (loc) => ({
     pathname: "/learn/[cluster]",
-    params: { cluster: cluster.slug },
-  });
+    params: { cluster: getLocalizedClusterSlug(cluster.slug, loc) },
+  }));
 
   return {
     title: `${clusterName} — ${t("breadcrumb")} | Metalorix`,
@@ -78,8 +91,12 @@ export default async function ClusterPage({
   const tc = await getTranslations("common");
   const t = await getTranslations("learnSection");
   const locale = (await getLocale()) as Locale;
-  const cluster = TAXONOMY.find((c) => c.slug === params.cluster);
+
+  const baseClusterSlug = getBaseClusterSlug(params.cluster, locale);
+  const cluster = TAXONOMY.find((c) => c.slug === baseClusterSlug);
   if (!cluster) notFound();
+
+  const locClusterSlug = getLocalizedClusterSlug(cluster.slug, locale);
 
   const clusterTopics = ALL_TOPICS.filter(
     (tp) => tp.clusterSlug === cluster.slug
@@ -132,6 +149,8 @@ export default async function ClusterPage({
                     key={topic.slug}
                     slug={topic.slug}
                     clusterSlug={topic.clusterSlug}
+                    localizedSlug={loc?.localizedSlug}
+                    localizedClusterSlug={locClusterSlug}
                     title={loc?.title ?? topic.titleEn}
                     summary={loc?.summary ?? topic.summaryEn}
                     difficulty={topic.difficulty}
@@ -159,7 +178,7 @@ export default async function ClusterPage({
           const subDesc = localizedSub?.description ?? sub.descriptionEn;
 
           return (
-            <div key={sub.slug} className="mb-10">
+            <div key={sub.slug} id={sub.slug} className="mb-10 scroll-mt-24">
               <h2 className="text-xl font-bold text-content-0 mb-2">
                 {subName}
               </h2>
@@ -174,6 +193,8 @@ export default async function ClusterPage({
                       key={topic.slug}
                       slug={topic.slug}
                       clusterSlug={topic.clusterSlug}
+                      localizedSlug={loc?.localizedSlug}
+                      localizedClusterSlug={locClusterSlug}
                       title={loc?.title ?? topic.titleEn}
                       summary={loc?.summary ?? topic.summaryEn}
                       difficulty={topic.difficulty}

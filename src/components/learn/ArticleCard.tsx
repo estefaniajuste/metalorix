@@ -3,6 +3,8 @@ import { Link } from "@/i18n/navigation";
 interface ArticleCardProps {
   slug: string;
   clusterSlug: string;
+  localizedSlug?: string;
+  localizedClusterSlug?: string;
   title: string;
   summary: string;
   difficulty: string;
@@ -25,6 +27,8 @@ const DIFFICULTY_STYLES: Record<string, string> = {
 export function ArticleCard({
   slug,
   clusterSlug,
+  localizedSlug,
+  localizedClusterSlug,
   title,
   summary,
   difficulty,
@@ -36,7 +40,7 @@ export function ArticleCard({
 }: ArticleCardProps) {
   return (
     <Link
-      href={{ pathname: "/learn/[cluster]/[slug]" as const, params: { cluster: clusterSlug, slug } }}
+      href={{ pathname: "/learn/[cluster]/[slug]" as const, params: { cluster: localizedClusterSlug ?? clusterSlug, slug: localizedSlug ?? slug } }}
       className={`group block rounded-lg border transition-all hover:border-brand-gold/40 hover:shadow-md ${
         isPillar
           ? "border-brand-gold/20 bg-[rgba(214,179,90,0.04)]"

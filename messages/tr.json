@@ -497,6 +497,7 @@
     "advanced": "ileri düzey",
     "articlesCount": "{count} makale",
     "topicsCount": "{count} konu",
+    "topicIndex": "Konu Dizini",
     "startHere": "Buradan başlayın",
     "newToMetals": "Kıymetli metallerde yeni misiniz?",
     "newToMetalsDescription": "Temellerle başlayın ve kademeli olarak ilerleyin. Bu temel makaleler size sağlam bir temel oluşturacaktır.",

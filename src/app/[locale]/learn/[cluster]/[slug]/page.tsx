@@ -19,6 +19,12 @@ import {
   getLocalizedCluster,
   getLocalizedSubcluster,
 } from "@/lib/learn/taxonomy-i18n";
+import {
+  getBaseClusterSlug,
+  getLocalizedClusterSlug,
+  getBaseArticleSlug,
+  getLocalizedArticleSlug,
+} from "@/lib/learn/slug-i18n";
 import type { Locale } from "@/i18n/config";
 
 export const revalidate = 86400;
@@ -47,7 +53,6 @@ async function getArticleData(slug: string, locale: string) {
       )
       .limit(1);
 
-    // Fall back to English
     const localization =
       loc ||
       (
@@ -65,7 +70,6 @@ async function getArticleData(slug: string, locale: string) {
 
     if (!localization) return null;
 
-    // Get internal links
     const links = await db
       .select({
         targetSlug: learnArticles.slug,
@@ -88,6 +92,29 @@ async function getArticleData(slug: string, locale: string) {
   }
 }
 
+/**
+ * Resolve incoming params to base slugs, handling both localized and base slugs.
+ */
+async function resolveParams(
+  params: { cluster: string; slug: string },
+  locale: Locale
+) {
+  const baseClusterSlug = getBaseClusterSlug(params.cluster, locale);
+
+  // Try the slug as a base slug first (topic files are keyed by base slug)
+  let topic = getTopicBySlug(params.slug);
+
+  // If not found, try resolving as a localized slug from the DB
+  if (!topic) {
+    const resolvedBase = await getBaseArticleSlug(params.slug, locale);
+    if (resolvedBase) {
+      topic = getTopicBySlug(resolvedBase);
+    }
+  }
+
+  return { baseClusterSlug, topic };
+}
+
 export async function generateMetadata({
   params,
 }: {
@@ -95,17 +122,21 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const locale = (await getLocale()) as Locale;
   const tl = await getTranslations({ locale, namespace: "learnSection" });
-  const topic = getTopicBySlug(params.slug);
+
+  const { baseClusterSlug, topic } = await resolveParams(params, locale);
   if (!topic) return { title: tl("notFound") };
 
-  const data = await getArticleData(params.slug, locale);
+  const data = await getArticleData(topic.slug, locale);
   const title = data?.localization.seoTitle || topic.titleEn;
   const description = data?.localization.metaDescription || topic.summaryEn;
 
-  const alternates = getAlternates(locale, {
+  const alternates = getAlternates(locale, (loc) => ({
     pathname: "/learn/[cluster]/[slug]",
-    params: { cluster: params.cluster, slug: params.slug },
-  });
+    params: {
+      cluster: getLocalizedClusterSlug(baseClusterSlug, loc),
+      slug: params.slug,
+    },
+  }));
 
   return {
     title: `${title} — ${tl("breadcrumb")} | Metalorix`,
@@ -134,21 +165,23 @@ export default async function LearnArticlePage({
   const tc = await getTranslations("common");
   const t = await getTranslations("learnSection");
   const locale = (await getLocale()) as Locale;
-  const topic = getTopicBySlug(params.slug);
 
-  if (!topic || topic.clusterSlug !== params.cluster) notFound();
+  const { baseClusterSlug, topic } = await resolveParams(params, locale);
+  if (!topic || topic.clusterSlug !== baseClusterSlug) notFound();
 
-  const cluster = TAXONOMY.find((c) => c.slug === params.cluster);
+  const cluster = TAXONOMY.find((c) => c.slug === baseClusterSlug);
   const subcluster = cluster?.subclusters.find(
     (s) => s.slug === topic.subclusterSlug
   );
 
-  const localizedCluster = getLocalizedCluster(params.cluster, locale);
-  const clusterName = localizedCluster?.name ?? cluster?.nameEn ?? params.cluster;
+  const localizedCluster = getLocalizedCluster(baseClusterSlug, locale);
+  const clusterName = localizedCluster?.name ?? cluster?.nameEn ?? baseClusterSlug;
   const localizedSub = subcluster
     ? getLocalizedSubcluster(subcluster.slug, locale)
     : null;
   const subclusterName = localizedSub?.name ?? subcluster?.nameEn;
+
+  const locClusterSlug = getLocalizedClusterSlug(baseClusterSlug, locale);
 
   const DIFFICULTY_KEY: Record<string, string> = {
     beginner: "difficultyBeginner",
@@ -169,27 +202,34 @@ export default async function LearnArticlePage({
     pillar: "typePillar",
   };
 
-  const data = await getArticleData(params.slug, locale);
+  const data = await getArticleData(topic.slug, locale);
 
-  const linkSuggestions = suggestInternalLinks(params.slug, 6);
-  const relatedArticles = (data?.links || []).length > 0
-    ? data!.links.map((l) => ({
-        slug: l.targetSlug,
-        clusterSlug: topic.clusterSlug,
-        title: l.anchor || l.targetSlug,
-        difficulty: topic.difficulty,
-        linkType: l.linkType,
-      }))
-    : linkSuggestions.map((l) => {
-        const tp = getTopicBySlug(l.targetSlug);
-        return {
+  const linkSuggestions = suggestInternalLinks(topic.slug, 6);
+  const relatedArticles = await Promise.all(
+    ((data?.links || []).length > 0
+      ? data!.links.map((l) => ({
           slug: l.targetSlug,
-          clusterSlug: tp?.clusterSlug || params.cluster,
-          title: l.suggestedAnchor,
-          difficulty: tp?.difficulty || "beginner",
+          clusterSlug: topic.clusterSlug,
+          title: l.anchor || l.targetSlug,
+          difficulty: topic.difficulty,
           linkType: l.linkType,
-        };
-      });
+        }))
+      : linkSuggestions.map((l) => {
+          const tp = getTopicBySlug(l.targetSlug);
+          return {
+            slug: l.targetSlug,
+            clusterSlug: tp?.clusterSlug || baseClusterSlug,
+            title: l.suggestedAnchor,
+            difficulty: tp?.difficulty || "beginner",
+            linkType: l.linkType,
+          };
+        })
+    ).map(async (article) => ({
+      ...article,
+      localizedSlug: await getLocalizedArticleSlug(article.slug, locale),
+      localizedClusterSlug: getLocalizedClusterSlug(article.clusterSlug, locale),
+    }))
+  );
 
   const title = data?.localization.title || topic.titleEn;
   const summary = data?.localization.summary || topic.summaryEn;
@@ -214,10 +254,13 @@ export default async function LearnArticlePage({
     .trim();
   const hasContent = strippedContent.length > 0;
 
-  const alternates = getAlternates(locale, {
+  const alternates = getAlternates(locale, (loc) => ({
     pathname: "/learn/[cluster]/[slug]",
-    params: { cluster: params.cluster, slug: params.slug },
-  });
+    params: {
+      cluster: getLocalizedClusterSlug(baseClusterSlug, loc),
+      slug: params.slug,
+    },
+  }));
 
   const jsonLd: Record<string, unknown> = {
     "@context": "https://schema.org",
@@ -263,14 +306,13 @@ export default async function LearnArticlePage({
               { label: t("breadcrumb"), href: "/learn" },
               {
                 label: clusterName,
-                href: `/learn/${params.cluster}`,
+                href: `/learn/${locClusterSlug}`,
               },
               { label: title },
             ]}
             ariaLabel={tc("breadcrumbNav")}
           />
 
-          {/* Header */}
           <header className="mb-8">
             <div className="flex items-center gap-2 mb-4 flex-wrap">
               <span
@@ -310,7 +352,6 @@ export default async function LearnArticlePage({
             )}
           </header>
 
-          {/* Content */}
           {hasContent ? (
             <div className="prose-metalorix text-content-1 leading-relaxed text-[15px] [&>p]:mb-5 [&>h2]:text-xl [&>h2]:font-bold [&>h2]:text-content-0 [&>h2]:mt-10 [&>h2]:mb-4 [&>h3]:text-lg [&>h3]:font-semibold [&>h3]:text-content-0 [&>h3]:mt-8 [&>h3]:mb-3 [&>ul]:list-disc [&>ul]:pl-5 [&>ul]:mb-5 [&>ol]:list-decimal [&>ol]:pl-5 [&>ol]:mb-5 [&>blockquote]:border-l-2 [&>blockquote]:border-brand-gold [&>blockquote]:pl-4 [&>blockquote]:italic [&>blockquote]:text-content-2 [&>blockquote]:my-6">
               {strippedContent.split("\n").map((line, i) => {
@@ -339,27 +380,25 @@ export default async function LearnArticlePage({
             </div>
           )}
 
-          {/* Key Takeaways */}
           {keyTakeaways.length > 0 && (
             <div className="mt-10 p-5 rounded-lg bg-surface-1 border border-border">
               <h2 className="text-base font-bold text-content-0 mb-3">
                 {t("keyTakeaways")}
               </h2>
               <ul className="space-y-2">
-                {keyTakeaways.map((t: string, i: number) => (
+                {keyTakeaways.map((takeaway: string, i: number) => (
                   <li
                     key={i}
                     className="flex gap-2 text-sm text-content-1"
                   >
                     <span className="text-brand-gold shrink-0">•</span>
-                    {t}
+                    {takeaway}
                   </li>
                 ))}
               </ul>
             </div>
           )}
 
-          {/* FAQ */}
           {faq.length > 0 && (
             <div className="mt-10">
               <h2 className="text-xl font-bold text-content-0 mb-4">
@@ -385,7 +424,6 @@ export default async function LearnArticlePage({
             </div>
           )}
 
-          {/* Related Articles */}
           <RelatedArticles
             articles={relatedArticles}
             heading={t("relatedArticles")}
@@ -398,11 +436,10 @@ export default async function LearnArticlePage({
             }}
           />
 
-          {/* Footer */}
           <footer className="mt-10 pt-6 border-t border-border">
             <div className="flex justify-between items-center">
               <Link
-                href={{ pathname: "/learn/[cluster]" as const, params: { cluster: params.cluster } }}
+                href={{ pathname: "/learn/[cluster]" as const, params: { cluster: locClusterSlug } }}
                 className="inline-flex items-center gap-2 text-sm font-medium text-content-2 hover:text-brand-gold transition-colors"
               >
                 <svg

@@ -384,6 +384,7 @@ export const learnArticleLocalizations = pgTable(
       .notNull()
       .references(() => learnArticles.id, { onDelete: "cascade" }),
     locale: varchar("locale", { length: 10 }).notNull(),
+    slug: varchar("slug", { length: 300 }),
     title: varchar("title", { length: 300 }).notNull(),
     seoTitle: varchar("seo_title", { length: 120 }),
     metaDescription: varchar("meta_description", { length: 160 }),
@@ -413,6 +414,7 @@ export const learnArticleLocalizations = pgTable(
     translationStatusIdx: index("learn_article_loc_trans_idx").on(
       table.translationStatus
     ),
+    slugIdx: index("learn_article_loc_slug_idx").on(table.slug, table.locale),
   })
 );
 

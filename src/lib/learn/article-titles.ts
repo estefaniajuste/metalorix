@@ -5,12 +5,13 @@ import { eq, and, inArray } from "drizzle-orm";
 interface LocalizedTitle {
   title: string;
   summary: string;
+  localizedSlug?: string;
 }
 
 /**
- * Batch-load localized article titles/summaries for a set of slugs.
+ * Batch-load localized article titles/summaries/slugs for a set of base slugs.
  * Falls back to English if the requested locale isn't available.
- * Returns a Map<slug, {title, summary}>.
+ * Returns a Map<baseSlug, {title, summary, localizedSlug}>.
  */
 export async function getLocalizedArticleTitles(
   slugs: string[],
@@ -26,6 +27,7 @@ export async function getLocalizedArticleTitles(
     const articles = await db
       .select({
         slug: learnArticles.slug,
+        localizedSlug: learnArticleLocalizations.slug,
         title: learnArticleLocalizations.title,
         summary: learnArticleLocalizations.summary,
         locale: learnArticleLocalizations.locale,
@@ -46,7 +48,11 @@ export async function getLocalizedArticleTitles(
 
     for (const row of articles) {
       const entry = bySlug.get(row.slug) ?? {};
-      const data = { title: row.title, summary: row.summary };
+      const data: LocalizedTitle = {
+        title: row.title,
+        summary: row.summary,
+        localizedSlug: row.localizedSlug ?? undefined,
+      };
       if (row.locale === locale) {
         entry.preferred = data;
       } else {

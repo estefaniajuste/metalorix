@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Link } from "@/i18n/navigation";
-import { getTranslations } from "next-intl/server";
+import { getTranslations, getLocale } from "next-intl/server";
 import { MetalComparator } from "@/components/tools/MetalComparator";
 import { breadcrumbSchema, softwareAppSchema } from "@/lib/seo/schemas";
 import { getAlternates } from "@/lib/seo/alternates";
@@ -23,7 +23,7 @@ export async function generateMetadata({
       title: t("comparador.ogTitle"),
       description: t("comparador.ogDescription"),
       type: "website",
-      url: "https://metalorix.com/comparador",
+      url: getAlternates(locale, "/comparador").canonical,
     },
   };
 }
@@ -33,6 +33,7 @@ export default async function ComparadorPage() {
   const tc = await getTranslations("common");
   const tt = await getTranslations("tools");
   const tm = await getTranslations("metals");
+  const locale = await getLocale();
 
   const tp = await getTranslations("pages");
 
@@ -42,11 +43,13 @@ export default async function ComparadorPage() {
       { name: t("breadcrumb"), path: "/comparador" },
     ],
     tc("breadcrumbHome"),
+    locale,
   );
   const app = softwareAppSchema({
     name: tp("comparador.ogTitle"),
     description: tp("comparador.description"),
     path: "/comparador",
+    locale,
   });
 
   return (

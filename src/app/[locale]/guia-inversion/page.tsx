@@ -51,11 +51,12 @@ export default async function GuiaInversionPage() {
   const t = await getTranslations("guide");
   const tc = await getTranslations("common");
 
+  const locale = await getLocale();
   const bc = breadcrumbSchemaFn(
     [{ name: t("breadcrumb"), path: "/guia-inversion" }],
     tc("breadcrumbHome"),
+    locale,
   );
-  const locale = await getLocale();
   const faqItems = getFaqItems(locale);
   const faq = faqSchemaFn(
     faqItems.map((item) => ({ question: item.question, answer: item.answer })),

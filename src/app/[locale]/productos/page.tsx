@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Link } from "@/i18n/navigation";
-import { getTranslations } from "next-intl/server";
+import { getTranslations, getLocale } from "next-intl/server";
 import { getAlternates } from "@/lib/seo/alternates";
 import { ProductFilter } from "@/components/products/ProductFilter";
 import { breadcrumbSchema } from "@/lib/seo/schemas";
@@ -22,7 +22,7 @@ export async function generateMetadata({
       title: t("productos.ogTitle"),
       description: t("productos.ogDescription"),
       type: "website",
-      url: "https://metalorix.com/productos",
+      url: getAlternates(locale, "/productos").canonical,
     },
     alternates: getAlternates(locale, "/productos"),
   };
@@ -31,10 +31,12 @@ export async function generateMetadata({
 export default async function ProductosPage() {
   const t = await getTranslations("products");
   const tc = await getTranslations("common");
+  const locale = await getLocale();
 
   const bc = breadcrumbSchema(
     [{ name: t("breadcrumb"), path: "/productos" }],
     tc("breadcrumbHome"),
+    locale,
   );
 
   return (

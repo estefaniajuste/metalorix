@@ -1,4 +1,11 @@
+import { getPathname } from "@/i18n/navigation";
+import type { Locale } from "@/i18n/routing";
+
 const BASE_URL = "https://metalorix.com";
+
+function localizedUrl(locale: string, pathname: string): string {
+  return `${BASE_URL}${getPathname({ locale: locale as Locale, href: pathname as any })}`;
+}
 
 export interface BreadcrumbItem {
   name: string;
@@ -7,18 +14,19 @@ export interface BreadcrumbItem {
 
 export function breadcrumbSchema(
   items: BreadcrumbItem[],
-  homeName = "Home",
+  homeName: string,
+  locale: string,
 ) {
   return {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: [
-      { "@type": "ListItem", position: 1, name: homeName, item: BASE_URL },
+      { "@type": "ListItem", position: 1, name: homeName, item: localizedUrl(locale, "/") },
       ...items.map((item, i) => ({
         "@type": "ListItem",
         position: i + 2,
         name: item.name,
-        item: `${BASE_URL}${item.path}`,
+        item: localizedUrl(locale, item.path),
       })),
     ],
   };
@@ -28,16 +36,16 @@ export function webPageSchema(opts: {
   name: string;
   description: string;
   path: string;
-  locale?: string;
+  locale: string;
 }) {
   return {
     "@context": "https://schema.org",
     "@type": "WebPage",
     name: opts.name,
     description: opts.description,
-    url: `${BASE_URL}${opts.path}`,
+    url: localizedUrl(opts.locale, opts.path),
     isPartOf: { "@type": "WebSite", name: "Metalorix", url: BASE_URL },
-    inLanguage: opts.locale ?? "es",
+    inLanguage: opts.locale,
   };
 }
 
@@ -45,6 +53,7 @@ export function softwareAppSchema(opts: {
   name: string;
   description: string;
   path: string;
+  locale: string;
   category?: string;
 }) {
   return {
@@ -52,7 +61,7 @@ export function softwareAppSchema(opts: {
     "@type": "WebApplication",
     name: opts.name,
     description: opts.description,
-    url: `${BASE_URL}${opts.path}`,
+    url: localizedUrl(opts.locale, opts.path),
     applicationCategory: opts.category || "FinanceApplication",
     operatingSystem: "All",
     offers: {

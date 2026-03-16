@@ -18,15 +18,24 @@ type HrefInput =
       params: Record<string, string>;
     };
 
-export function getAlternates(locale: string, href: HrefInput) {
+type HrefInputOrPerLocale = HrefInput | ((loc: Locale) => HrefInput);
+
+export function getAlternates(
+  locale: string,
+  href: HrefInputOrPerLocale
+) {
+  const resolveHref = (loc: Locale) =>
+    typeof href === "function" ? href(loc) : href;
+
   const languages: Record<string, string> = {};
   for (const loc of routing.locales) {
-    languages[loc] = `${BASE_URL}${getPathname({ locale: loc as Locale, href: href as any })}`;
+    const h = resolveHref(loc as Locale);
+    languages[loc] = `${BASE_URL}${getPathname({ locale: loc as Locale, href: h as any })}`;
   }
-  languages["x-default"] = languages.es;
+  languages["x-default"] = languages[routing.defaultLocale];
 
   return {
-    canonical: `${BASE_URL}${getPathname({ locale: locale as Locale, href: href as any })}`,
+    canonical: `${BASE_URL}${getPathname({ locale: locale as Locale, href: resolveHref(locale as Locale) as any })}`,
     languages,
   };
 }

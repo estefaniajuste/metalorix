@@ -18,6 +18,8 @@ import {
 import { isConfigured } from "@/lib/ai/gemini";
 import { sendWeeklyNewsletter } from "@/lib/email/newsletter";
 import { pingSearchEngines, pingIndexNow } from "@/lib/seo/ping";
+import { routing } from "@/i18n/routing";
+import { getPathname } from "@/i18n/navigation";
 
 const CRON_SECRET = process.env.CRON_SECRET;
 const EVENT_THRESHOLD_PCT = 2.0;
@@ -162,12 +164,22 @@ export async function POST(request: NextRequest) {
   let pingResult = null;
   if (articleIdsToTranslate.length > 0) {
     pingResult = await pingSearchEngines();
-    const newUrls = articleIdsToTranslate
-      .map((_, i) => {
-        const slug = generated[i]?.split(": ")[1];
-        return slug ? `https://metalorix.com/es/noticias/${slug}` : null;
-      })
-      .filter(Boolean) as string[];
+
+    const slugs: string[] = [];
+    for (const id of articleIdsToTranslate) {
+      try {
+        const rows = await db.select({ slug: articles.slug }).from(articles).where(eq(articles.id, id)).limit(1);
+        if (rows[0]) slugs.push(rows[0].slug);
+      } catch { /* skip */ }
+    }
+
+    const newUrls: string[] = [];
+    for (const slug of slugs) {
+      for (const loc of routing.locales) {
+        const path = getPathname({ locale: loc, href: { pathname: "/noticias/[slug]", params: { slug } } as any });
+        newUrls.push(`https://metalorix.com${path}`);
+      }
+    }
     if (newUrls.length) await pingIndexNow(newUrls);
   }
 

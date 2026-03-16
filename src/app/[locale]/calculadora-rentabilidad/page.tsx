@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Link } from "@/i18n/navigation";
-import { getTranslations } from "next-intl/server";
+import { getTranslations, getLocale } from "next-intl/server";
 import { RoiCalculator } from "@/components/tools/RoiCalculator";
 import { breadcrumbSchema, softwareAppSchema } from "@/lib/seo/schemas";
 import { getAlternates } from "@/lib/seo/alternates";
@@ -23,7 +23,7 @@ export async function generateMetadata({
       title: t("calculadora.ogTitle"),
       description: t("calculadora.ogDescription"),
       type: "website",
-      url: "https://metalorix.com/calculadora-rentabilidad",
+      url: getAlternates(locale, "/calculadora-rentabilidad").canonical,
     },
   };
 }
@@ -32,6 +32,7 @@ export default async function CalculadoraRentabilidadPage() {
   const t = await getTranslations("roiCalc");
   const tc = await getTranslations("common");
   const tt = await getTranslations("tools");
+  const locale = await getLocale();
 
   const tp = await getTranslations("pages");
 
@@ -41,11 +42,13 @@ export default async function CalculadoraRentabilidadPage() {
       { name: tt("roiCalculator"), path: "/calculadora-rentabilidad" },
     ],
     tc("breadcrumbHome"),
+    locale,
   );
   const app = softwareAppSchema({
     name: tp("calculadora.ogTitle"),
     description: tp("calculadora.description"),
     path: "/calculadora-rentabilidad",
+    locale,
   });
 
   return (

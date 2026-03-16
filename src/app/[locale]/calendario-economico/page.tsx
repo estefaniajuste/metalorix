@@ -39,6 +39,7 @@ export default async function CalendarioEconomicoPage() {
       { name: t("breadcrumb"), path: "/calendario-economico" },
     ],
     tc("breadcrumbHome"),
+    locale,
   );
   const page = webPageSchema({
     name: tp("calendario.title"),

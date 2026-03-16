@@ -49,15 +49,16 @@ export async function generateMetadata({
   };
 }
 
-function JsonLd({ slug }: { slug: string }) {
-  const seo = getMetalSEO(slug)!;
+function JsonLd({ slug, locale, canonicalUrl }: { slug: string; locale: string; canonicalUrl: string }) {
+  const seo = getMetalSEO(slug, locale)!;
+  const homeUrl = `https://metalorix.com/${locale}`;
   const schemas = [
     {
       "@context": "https://schema.org",
       "@type": "FinancialProduct",
       name: seo.fullName,
       description: seo.about,
-      url: `https://metalorix.com/precio/${seo.slug}`,
+      url: canonicalUrl,
       provider: { "@type": "Organization", name: "Metalorix", url: "https://metalorix.com" },
       category: "Precious Metals",
     },
@@ -65,8 +66,8 @@ function JsonLd({ slug }: { slug: string }) {
       "@context": "https://schema.org",
       "@type": "BreadcrumbList",
       itemListElement: [
-        { "@type": "ListItem", position: 1, name: "Metalorix", item: "https://metalorix.com" },
-        { "@type": "ListItem", position: 2, name: seo.name, item: `https://metalorix.com/precio/${seo.slug}` },
+        { "@type": "ListItem", position: 1, name: "Metalorix", item: homeUrl },
+        { "@type": "ListItem", position: 2, name: seo.name, item: canonicalUrl },
       ],
     },
   ];
@@ -93,13 +94,18 @@ export default async function PrecioMetalPage({
   const t = await getTranslations("prices");
   const tc = await getTranslations("common");
   const tf = await getTranslations("footer");
+  const localizedSlug = getLocalizedMetalSlug(seo.slug, locale);
+  const alternates = getAlternates(locale, {
+    pathname: "/precio/[metal]",
+    params: { metal: localizedSlug },
+  });
   const otherMetals = Object.keys(METAL_SEO)
     .filter((slug) => slug !== seo.slug)
     .map((slug) => ({ ...getMetalSEO(slug, locale)!, localSlug: getLocalizedMetalSlug(slug, locale) }));
 
   return (
     <>
-      <JsonLd slug={seo.slug} />
+      <JsonLd slug={seo.slug} locale={locale} canonicalUrl={alternates.canonical} />
 
       <section className="py-[var(--section-py)]">
         <div className="mx-auto max-w-[1200px] px-6">
@@ -116,7 +122,7 @@ export default async function PrecioMetalPage({
             <ShareButton
               title={`${t("priceOf", { metal: seo.name })} — Metalorix`}
               text={t("shareText", { metal: seo.fullName })}
-              url={`https://metalorix.com/precio/${seo.slug}`}
+              url={alternates.canonical}
             />
           </div>
           <p className="text-content-2 mb-10 max-w-2xl leading-relaxed">

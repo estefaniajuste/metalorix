@@ -34,6 +34,7 @@ export default async function RatioOroPlataPage() {
   const bc = breadcrumbSchema(
     [{ name: t("breadcrumb"), path: "/ratio-oro-plata" }],
     tc("breadcrumbHome"),
+    locale,
   );
   const page = webPageSchema({
     name: tp("ratio.ogTitle"),
