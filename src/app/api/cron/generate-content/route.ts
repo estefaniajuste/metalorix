@@ -17,7 +17,6 @@ import {
   getGlossaryTermCount,
 } from "@/lib/ai/glossary-generator";
 import { generateBatch } from "@/lib/learn/generate";
-import { isConfigured } from "@/lib/ai/gemini";
 import { sendWeeklyNewsletter } from "@/lib/email/newsletter";
 import { pingSearchEngines, pingIndexNow } from "@/lib/seo/ping";
 import { routing } from "@/i18n/routing";
@@ -32,13 +31,6 @@ export async function POST(request: NextRequest) {
     if (auth !== `Bearer ${CRON_SECRET}`) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
-  }
-
-  if (!isConfigured()) {
-    return NextResponse.json(
-      { error: "Gemini API not configured" },
-      { status: 503 }
-    );
   }
 
   const db = getDb();
@@ -91,25 +83,20 @@ export async function POST(request: NextRequest) {
 
       const article = await generateDailySummary(dailyLog);
 
-      if (dailyLog.usedFallback === "minimal") {
-        dailyLog.saveError = "minimal_fallback_rejected";
-        console.error(
-          "[Cron] REFUSED to publish minimal fallback article. Gemini failed; minimal content is not acceptable for production. Retry the cron when Gemini is available."
+      let articleId = await saveArticle(article, "daily");
+      if (!articleId) {
+        console.warn("[Cron] saveArticle failed, retrying once...");
+        articleId = await saveArticle(article, "daily");
+      }
+      if (articleId) {
+        generated.push(`daily: ${article.slug}`);
+        articleIdsToTranslate.push(articleId);
+        console.log(
+          `[Cron] Daily article saved: ${article.slug} (id=${articleId})${dailyLog.usedFallback === "minimal" ? " [fallback]" : ""}`
         );
       } else {
-        let articleId = await saveArticle(article, "daily");
-        if (!articleId) {
-          console.warn("[Cron] saveArticle failed, retrying once...");
-          articleId = await saveArticle(article, "daily");
-        }
-        if (articleId) {
-          generated.push(`daily: ${article.slug}`);
-          articleIdsToTranslate.push(articleId);
-          console.log(`[Cron] Daily article saved: ${article.slug} (id=${articleId})`);
-        } else {
-          dailyLog.saveError = "saveArticle failed after retry";
-          console.error("[Cron] Could not save daily article:", article.slug);
-        }
+        dailyLog.saveError = "saveArticle failed after retry";
+        console.error("[Cron] Could not save daily article:", article.slug);
       }
     } catch (err) {
       dailyLog.saveError = err instanceof Error ? err.message : String(err);
@@ -269,14 +256,6 @@ export async function POST(request: NextRequest) {
     timestamp: new Date().toISOString(),
   };
   if (type === "daily" || type === "auto") body.dailyLog = dailyLog;
-
-  const minimalRejected = (type === "daily" || type === "auto") && dailyLog.saveError === "minimal_fallback_rejected";
-  if (minimalRejected) {
-    return NextResponse.json(
-      { ...body, error: "Daily article rejected: Gemini failed, minimal fallback not acceptable for production" },
-      { status: 503 }
-    );
-  }
 
   return NextResponse.json(body);
 }
