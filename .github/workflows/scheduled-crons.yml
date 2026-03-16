@@ -21,7 +21,7 @@ on:
           - learn
           - indexing
       content_type:
-        description: 'When job=content: daily (solo resumen, evita timeout), weekly, or auto (todo)'
+        description: 'When job=content: daily, weekly, auto, translate, or replace_today (delete + regenerate today)'
         required: false
         default: 'daily'
         type: choice
@@ -29,6 +29,8 @@ on:
           - daily
           - weekly
           - auto
+          - translate
+          - replace_today
 
 env:
   SERVICE_URL: https://metalorix.com
@@ -109,13 +111,18 @@ jobs:
       - name: Generate content
         if: steps.check.outputs.should_run == 'true'
         run: |
+          url="${{ env.SERVICE_URL }}/api/cron/generate-content?type=${{ steps.check.outputs.type }}"
           response=$(curl -s -w "\n%{http_code}" -X POST \
             -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
-            "${{ env.SERVICE_URL }}/api/cron/generate-content?type=${{ steps.check.outputs.type }}")
+            "$url")
           http_code=$(echo "$response" | tail -1)
           body=$(echo "$response" | head -n -1)
           echo "Status: $http_code"
           echo "Response: $body"
+          if [ "$http_code" -ge 400 ]; then
+            echo "::error::Generate content failed with status $http_code (503 = Gemini failed, minimal fallback rejected)"
+            exit 1
+          fi
 
   check-alerts:
     if: >

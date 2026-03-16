@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getDb } from "@/lib/db";
-import { articles, metalPrices } from "@/lib/db/schema";
-import { eq, desc, gte } from "drizzle-orm";
+import { articles, articleTranslations, metalPrices } from "@/lib/db/schema";
+import { eq, desc, gte, and, like } from "drizzle-orm";
 import {
   generateDailySummary,
   generateEventArticle,
@@ -50,7 +50,9 @@ export async function POST(request: NextRequest) {
   }
 
   const url = new URL(request.url);
-  const type = url.searchParams.get("type") || "daily";
+  let type = url.searchParams.get("type") || "daily";
+  const replaceToday = url.searchParams.get("replace_today") === "1" || type === "replace_today";
+  if (type === "replace_today") type = "daily";
   const generated: string[] = [];
 
   const articleIdsToTranslate: number[] = [];
@@ -64,19 +66,50 @@ export async function POST(request: NextRequest) {
 
   if (type === "daily" || type === "auto") {
     try {
-      const article = await generateDailySummary(dailyLog);
-      let articleId = await saveArticle(article, "daily");
-      if (!articleId) {
-        console.warn("[Cron] saveArticle failed, retrying once...");
-        articleId = await saveArticle(article, "daily");
+      if (replaceToday) {
+        const base = process.env.NEXT_PUBLIC_URL || "https://metalorix.com";
+        const headers: Record<string, string> = {};
+        if (CRON_SECRET) headers["Authorization"] = `Bearer ${CRON_SECRET}`;
+        await fetch(`${base}/api/cron/scrape-news`, { method: "POST", headers }).catch(() => {});
+        await fetch(`${base}/api/cron/scrape-prices`, { method: "POST", headers }).catch(() => {});
+
+        const dateSlug = new Date().toISOString().slice(0, 10);
+        const pattern = `%-${dateSlug}`;
+        const toReplace = await db
+          .select({ id: articles.id, slug: articles.slug })
+          .from(articles)
+          .where(and(eq(articles.category, "daily"), like(articles.slug, pattern)))
+          .orderBy(desc(articles.publishedAt))
+          .limit(1);
+        if (toReplace.length > 0) {
+          await db.delete(articleTranslations).where(eq(articleTranslations.articleId, toReplace[0].id));
+          await db.delete(articles).where(eq(articles.id, toReplace[0].id));
+          generated.push(`replaced: ${toReplace[0].slug}`);
+          console.log(`[Cron] Replaced today's article: ${toReplace[0].slug}`);
+        }
       }
-      if (articleId) {
-        generated.push(`daily: ${article.slug}`);
-        articleIdsToTranslate.push(articleId);
-        console.log(`[Cron] Daily article saved: ${article.slug} (id=${articleId})`);
+
+      const article = await generateDailySummary(dailyLog);
+
+      if (dailyLog.usedFallback === "minimal") {
+        dailyLog.saveError = "minimal_fallback_rejected";
+        console.error(
+          "[Cron] REFUSED to publish minimal fallback article. Gemini failed; minimal content is not acceptable for production. Retry the cron when Gemini is available."
+        );
       } else {
-        dailyLog.saveError = "saveArticle failed after retry";
-        console.error("[Cron] Could not save daily article:", article.slug);
+        let articleId = await saveArticle(article, "daily");
+        if (!articleId) {
+          console.warn("[Cron] saveArticle failed, retrying once...");
+          articleId = await saveArticle(article, "daily");
+        }
+        if (articleId) {
+          generated.push(`daily: ${article.slug}`);
+          articleIdsToTranslate.push(articleId);
+          console.log(`[Cron] Daily article saved: ${article.slug} (id=${articleId})`);
+        } else {
+          dailyLog.saveError = "saveArticle failed after retry";
+          console.error("[Cron] Could not save daily article:", article.slug);
+        }
       }
     } catch (err) {
       dailyLog.saveError = err instanceof Error ? err.message : String(err);
@@ -130,8 +163,16 @@ export async function POST(request: NextRequest) {
   }
 
   for (const articleId of articleIdsToTranslate) {
-    const count = await translateArticle(articleId);
-    if (count > 0) generated.push(`translations: ${count} for article ${articleId}`);
+    let count = await translateArticle(articleId);
+    if (count === 0) {
+      console.warn("[Cron] translateArticle returned 0, retrying once...");
+      count = await translateArticle(articleId);
+    }
+    if (count > 0) {
+      generated.push(`translations: ${count} for article ${articleId}`);
+    } else {
+      console.error(`[Cron] Article ${articleId} has NO translations after retry. Users in en/zh/ar/tr/de will see Spanish.`);
+    }
   }
 
   if (type === "translate") {
@@ -228,5 +269,14 @@ export async function POST(request: NextRequest) {
     timestamp: new Date().toISOString(),
   };
   if (type === "daily" || type === "auto") body.dailyLog = dailyLog;
+
+  const minimalRejected = (type === "daily" || type === "auto") && dailyLog.saveError === "minimal_fallback_rejected";
+  if (minimalRejected) {
+    return NextResponse.json(
+      { ...body, error: "Daily article rejected: Gemini failed, minimal fallback not acceptable for production" },
+      { status: 503 }
+    );
+  }
+
   return NextResponse.json(body);
 }
