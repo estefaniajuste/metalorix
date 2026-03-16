@@ -585,6 +585,53 @@ Devuelve SOLO el JSON, sin texto adicional antes o después. No envuelvas en blo
   };
 }
 
+const MIN_CONTENT_WORDS: Record<string, number> = {
+  daily: 300,
+  weekly: 500,
+  event: 200,
+  educational: 200,
+};
+
+const GENERIC_TITLES = [
+  "resumen del mercado de metales",
+  "análisis del mercado",
+  "resumen diario",
+  "resumen semanal",
+];
+
+export interface ArticleQualityResult {
+  passed: boolean;
+  reasons: string[];
+}
+
+export function validateArticleQuality(
+  article: { title: string; excerpt: string; content: string },
+  category: string
+): ArticleQualityResult {
+  const reasons: string[] = [];
+  const wordCount = article.content.split(/\s+/).filter(Boolean).length;
+  const minWords = MIN_CONTENT_WORDS[category] ?? 200;
+
+  if (wordCount < minWords) {
+    reasons.push(`content too short: ${wordCount} words (min ${minWords})`);
+  }
+
+  if (!article.title || article.title.length < 20) {
+    reasons.push(`title too short or missing: "${article.title?.slice(0, 30)}"`);
+  }
+
+  const titleLower = article.title?.toLowerCase() ?? "";
+  if (GENERIC_TITLES.some((g) => titleLower.startsWith(g))) {
+    reasons.push(`generic title rejected: "${article.title.slice(0, 60)}"`);
+  }
+
+  if (!article.excerpt || article.excerpt.length < 50) {
+    reasons.push(`excerpt too short or missing: ${article.excerpt?.length ?? 0} chars (min 50)`);
+  }
+
+  return { passed: reasons.length === 0, reasons };
+}
+
 export async function saveArticle(
   article: {
     slug: string;
@@ -597,6 +644,12 @@ export async function saveArticle(
 ): Promise<number | null> {
   const db = getDb();
   if (!db) return null;
+
+  const quality = validateArticleQuality(article, category);
+  if (!quality.passed) {
+    console.error(`[saveArticle] Quality check FAILED for "${article.slug}":`, quality.reasons);
+    return null;
+  }
 
   try {
     const existing = await db

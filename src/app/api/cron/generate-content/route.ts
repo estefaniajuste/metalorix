@@ -8,7 +8,9 @@ import {
   generateWeeklySummary,
   saveArticle,
   translateArticle,
+  validateArticleQuality,
   type DailyGenerationLog,
+  type ArticleQualityResult,
 } from "@/lib/ai/content-generator";
 import {
   generateNewGlossaryTerms,
@@ -18,9 +20,13 @@ import {
 } from "@/lib/ai/glossary-generator";
 import { generateBatch } from "@/lib/learn/generate";
 import { sendWeeklyNewsletter } from "@/lib/email/newsletter";
+import { sendEmail } from "@/lib/email/resend";
 import { pingSearchEngines, pingIndexNow } from "@/lib/seo/ping";
 import { routing } from "@/i18n/routing";
 import { getPathname } from "@/i18n/navigation";
+
+const ADMIN_EMAIL = "estefaniajuste@gmail.com";
+const EXPECTED_TRANSLATIONS = 5;
 
 const CRON_SECRET = process.env.CRON_SECRET;
 const EVENT_THRESHOLD_PCT = 2.0;
@@ -83,20 +89,24 @@ export async function POST(request: NextRequest) {
 
       const article = await generateDailySummary(dailyLog);
 
-      let articleId = await saveArticle(article, "daily");
-      if (!articleId) {
-        console.warn("[Cron] saveArticle failed, retrying once...");
-        articleId = await saveArticle(article, "daily");
-      }
-      if (articleId) {
-        generated.push(`daily: ${article.slug}`);
-        articleIdsToTranslate.push(articleId);
-        console.log(
-          `[Cron] Daily article saved: ${article.slug} (id=${articleId})${dailyLog.usedFallback === "minimal" ? " [fallback]" : ""}`
-        );
+      const quality = validateArticleQuality(article, "daily");
+      if (!quality.passed) {
+        dailyLog.saveError = `quality_rejected: ${quality.reasons.join("; ")}`;
+        console.error("[Cron] Daily article REJECTED by quality gate:", quality.reasons);
       } else {
-        dailyLog.saveError = "saveArticle failed after retry";
-        console.error("[Cron] Could not save daily article:", article.slug);
+        let articleId = await saveArticle(article, "daily");
+        if (!articleId) {
+          console.warn("[Cron] saveArticle failed, retrying once...");
+          articleId = await saveArticle(article, "daily");
+        }
+        if (articleId) {
+          generated.push(`daily: ${article.slug}`);
+          articleIdsToTranslate.push(articleId);
+          console.log(`[Cron] Daily article saved: ${article.slug} (id=${articleId})`);
+        } else {
+          dailyLog.saveError = "saveArticle failed after retry";
+          console.error("[Cron] Could not save daily article:", article.slug);
+        }
       }
     } catch (err) {
       dailyLog.saveError = err instanceof Error ? err.message : String(err);
@@ -149,16 +159,21 @@ export async function POST(request: NextRequest) {
     }
   }
 
+  const translationIssues: string[] = [];
   for (const articleId of articleIdsToTranslate) {
     let count = await translateArticle(articleId);
-    if (count === 0) {
-      console.warn("[Cron] translateArticle returned 0, retrying once...");
-      count = await translateArticle(articleId);
+    if (count < EXPECTED_TRANSLATIONS) {
+      console.warn(`[Cron] Only ${count}/${EXPECTED_TRANSLATIONS} translations, retrying...`);
+      const extra = await translateArticle(articleId);
+      count += extra;
     }
     if (count > 0) {
       generated.push(`translations: ${count} for article ${articleId}`);
-    } else {
-      console.error(`[Cron] Article ${articleId} has NO translations after retry. Users in en/zh/ar/tr/de will see Spanish.`);
+    }
+    if (count < EXPECTED_TRANSLATIONS) {
+      const missing = EXPECTED_TRANSLATIONS - count;
+      translationIssues.push(`article ${articleId}: ${missing} translations missing`);
+      console.error(`[Cron] Article ${articleId}: only ${count}/${EXPECTED_TRANSLATIONS} translations.`);
     }
   }
 
@@ -247,10 +262,37 @@ export async function POST(request: NextRequest) {
     if (newUrls.length) await pingIndexNow(newUrls);
   }
 
+  // Alert admin by email if daily generation or translations failed
+  const dailyFailed = (type === "daily" || type === "auto") && !!dailyLog.saveError;
+  const hasTranslationGaps = translationIssues.length > 0;
+
+  if (dailyFailed || hasTranslationGaps) {
+    const problems: string[] = [];
+    if (dailyFailed) problems.push(`Daily article error: ${dailyLog.saveError}`);
+    if (hasTranslationGaps) problems.push(...translationIssues);
+
+    const subject = `[Metalorix] Content pipeline failed — ${new Date().toISOString().slice(0, 10)}`;
+    const html = `
+      <h2>Content Pipeline Alert</h2>
+      <p><strong>Type:</strong> ${type}</p>
+      <p><strong>Timestamp:</strong> ${new Date().toISOString()}</p>
+      <h3>Problems:</h3>
+      <ul>${problems.map((p) => `<li>${p}</li>`).join("")}</ul>
+      <h3>Daily Log:</h3>
+      <pre>${JSON.stringify(dailyLog, null, 2)}</pre>
+      <p>Run the workflow with <code>content_type=replace_today</code> to regenerate.</p>
+    `;
+    await sendEmail({ to: ADMIN_EMAIL, subject, html }).catch((err) =>
+      console.error("[Cron] Failed to send alert email:", err)
+    );
+    console.warn("[Cron] Alert email sent to admin about pipeline failure");
+  }
+
   const body: Record<string, unknown> = {
     ok: true,
     type,
     generated,
+    translationIssues: hasTranslationGaps ? translationIssues : undefined,
     newsletter: newsletterResult,
     ping: pingResult,
     timestamp: new Date().toISOString(),
