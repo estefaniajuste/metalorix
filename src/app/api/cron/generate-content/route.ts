@@ -9,6 +9,7 @@ import {
   saveArticle,
   translateArticle,
   validateArticleQuality,
+  backfillTranslationSlugs,
   type DailyGenerationLog,
   type ArticleQualityResult,
 } from "@/lib/ai/content-generator";
@@ -177,21 +178,30 @@ export async function POST(request: NextRequest) {
     }
   }
 
-  if (type === "translate") {
+  if (type === "translate" || type === "backfill-slugs") {
     try {
-      const untranslated = await db
-        .select({ id: articles.id })
-        .from(articles)
-        .where(eq(articles.published, true))
-        .orderBy(desc(articles.publishedAt))
-        .limit(5);
-
-      for (const { id } of untranslated) {
-        const count = await translateArticle(id);
-        if (count > 0) generated.push(`translated article ${id}: ${count} languages`);
-      }
+      const backfilled = await backfillTranslationSlugs();
+      if (backfilled > 0) generated.push(`backfilled slugs: ${backfilled}`);
     } catch (err) {
-      console.error("Bulk translation failed:", err);
+      console.error("Slug backfill failed:", err);
+    }
+
+    if (type === "translate") {
+      try {
+        const untranslated = await db
+          .select({ id: articles.id })
+          .from(articles)
+          .where(eq(articles.published, true))
+          .orderBy(desc(articles.publishedAt))
+          .limit(5);
+
+        for (const { id } of untranslated) {
+          const count = await translateArticle(id);
+          if (count > 0) generated.push(`translated article ${id}: ${count} languages`);
+        }
+      } catch (err) {
+        console.error("Bulk translation failed:", err);
+      }
     }
   }
 

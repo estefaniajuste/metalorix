@@ -875,3 +875,46 @@ export async function getArticleTranslation(
     return null;
   }
 }
+
+export async function backfillTranslationSlugs(): Promise<number> {
+  const db = getDb();
+  if (!db) return 0;
+
+  let updated = 0;
+  try {
+    const rows = await db
+      .select({
+        id: articleTranslations.id,
+        articleId: articleTranslations.articleId,
+        locale: articleTranslations.locale,
+        title: articleTranslations.title,
+        slug: articleTranslations.slug,
+      })
+      .from(articleTranslations);
+
+    const articleIds = Array.from(new Set(rows.map((r) => r.articleId)));
+    const baseArticles = await db
+      .select({ id: articles.id, slug: articles.slug })
+      .from(articles);
+    const baseSlugMap = new Map(baseArticles.map((a) => [a.id, a.slug]));
+
+    for (const row of rows) {
+      if (row.slug) continue;
+      const baseSlug = baseSlugMap.get(row.articleId) ?? "";
+      const dateMatch = baseSlug.match(/\d{4}-\d{2}-\d{2}$/);
+      const dateSlug = dateMatch ? dateMatch[0] : new Date().toISOString().slice(0, 10);
+      const titleSlug = slugify(row.title);
+      const newSlug = `${titleSlug}-${dateSlug}`;
+
+      await db
+        .update(articleTranslations)
+        .set({ slug: newSlug })
+        .where(eq(articleTranslations.id, row.id));
+      updated++;
+      console.log(`[Backfill] article_translation ${row.id} (${row.locale}): ${newSlug}`);
+    }
+  } catch (err) {
+    console.error("[Backfill] Error:", err);
+  }
+  return updated;
+}
