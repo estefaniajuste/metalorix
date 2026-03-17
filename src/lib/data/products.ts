@@ -2461,6 +2461,8 @@ const PRODUCTS_TR: Record<string, ProductTexts> = {
   },
 };
 
+import { getLocalizedProductSlug, getBaseProductSlug } from "./product-slugs";
+
 function applyLocale(product: Product, locale: string): Product {
   if (locale === "es") return product;
   const map: Record<string, Record<string, ProductTexts>> = {
@@ -2474,6 +2476,7 @@ function applyLocale(product: Product, locale: string): Product {
   if (!texts) return product;
   return {
     ...product,
+    slug: getLocalizedProductSlug(product.slug, locale),
     name: texts.name,
     shortName: texts.shortName,
     country: texts.country,
@@ -2488,7 +2491,11 @@ function applyLocale(product: Product, locale: string): Product {
 }
 
 export function getProduct(slug: string, locale: string = "es"): Product | null {
-  const product = PRODUCTS.find((p) => p.slug === slug) ?? null;
+  let product = PRODUCTS.find((p) => p.slug === slug) ?? null;
+  if (!product) {
+    const baseSlug = getBaseProductSlug(slug, locale);
+    product = PRODUCTS.find((p) => p.slug === baseSlug) ?? null;
+  }
   if (!product) return null;
   return applyLocale(product, locale);
 }

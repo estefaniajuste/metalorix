@@ -4,12 +4,19 @@ import { Link } from "@/i18n/navigation";
 import { getTranslations, getLocale } from "next-intl/server";
 import { getAlternates } from "@/lib/seo/alternates";
 import { PRODUCTS, getProduct, getLocalizedProducts } from "@/lib/data/products";
+import { getAllLocalizedSlugsForBase, getBaseProductSlug } from "@/lib/data/product-slugs";
 import { ProductSpotPrice } from "@/components/products/ProductSpotPrice";
 import { TaxByCountrySelector } from "@/components/products/TaxByCountrySelector";
 import type { MetalSymbol } from "@/lib/providers/metals";
 
 export function generateStaticParams() {
-  return PRODUCTS.map((p) => ({ slug: p.slug }));
+  const params: { slug: string }[] = [];
+  for (const p of PRODUCTS) {
+    for (const slug of getAllLocalizedSlugsForBase(p.slug)) {
+      params.push({ slug });
+    }
+  }
+  return params;
 }
 
 export async function generateMetadata({
@@ -24,7 +31,7 @@ export async function generateMetadata({
 
   const alternates = getAlternates(locale, {
     pathname: "/productos/[slug]",
-    params: { slug: product.slug },
+    params: { slug },
   });
 
   return {
@@ -91,7 +98,10 @@ export default async function ProductoPage({
 
   const allProducts = getLocalizedProducts(locale);
   const relatedProducts = allProducts.filter(
-    (p) => p.metal === product.metal && p.slug !== product.slug
+    (p) => {
+      const pBase = getBaseProductSlug(p.slug, locale);
+      return p.metal === product.metal && pBase !== baseSlug;
+    }
   ).slice(0, 3);
 
   const metalColor = product.metal === "oro" ? "#D6B35A" : "#A7B0BE";
@@ -105,6 +115,7 @@ export default async function ProductoPage({
     pathname: "/productos/[slug]",
     params: { slug: product.slug },
   });
+  const baseSlug = getBaseProductSlug(params.slug, locale);
 
   const breadcrumbSchema = {
     "@context": "https://schema.org",

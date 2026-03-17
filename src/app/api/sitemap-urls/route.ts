@@ -1,12 +1,21 @@
 import { NextResponse } from "next/server";
 import { getDb } from "@/lib/db";
-import { articles, articleTranslations, glossaryTerms, learnClusters, learnArticles } from "@/lib/db/schema";
+import {
+  articles, articleTranslations, glossaryTerms,
+  learnClusters, learnArticles, learnArticleLocalizations,
+} from "@/lib/db/schema";
 import { eq, desc, isNotNull } from "drizzle-orm";
 
 export const dynamic = "force-dynamic";
 
 export async function GET() {
-  const urls: Array<{ slug: string; type: string; cluster?: string; lastmod?: string; localizedSlugs?: Record<string, string> }> = [];
+  const urls: Array<{
+    slug: string;
+    type: string;
+    cluster?: string;
+    lastmod?: string;
+    localizedSlugs?: Record<string, string>;
+  }> = [];
 
   try {
     const db = getDb();
@@ -14,6 +23,7 @@ export async function GET() {
       return NextResponse.json({ urls });
     }
 
+    // --- News articles with localized slugs ---
     const allArticles = await db
       .select({ id: articles.id, slug: articles.slug, publishedAt: articles.publishedAt })
       .from(articles)
@@ -49,6 +59,7 @@ export async function GET() {
       });
     }
 
+    // --- Glossary: English slugs as canonical (no cross-locale FK) ---
     const terms = await db
       .select({ slug: glossaryTerms.slug })
       .from(glossaryTerms)
@@ -60,6 +71,7 @@ export async function GET() {
       urls.push({ slug: t.slug, type: "glossary" });
     }
 
+    // --- Clusters ---
     const clusters = await db
       .select({ slug: learnClusters.slug })
       .from(learnClusters)
@@ -70,16 +82,44 @@ export async function GET() {
       urls.push({ slug: c.slug, type: "cluster" });
     }
 
+    // --- Learn articles with localized slugs ---
     const learnRows = await db
-      .select({ slug: learnArticles.slug, clusterSlug: learnClusters.slug })
+      .select({
+        id: learnArticles.id,
+        slug: learnArticles.slug,
+        clusterSlug: learnClusters.slug,
+      })
       .from(learnArticles)
       .innerJoin(learnClusters, eq(learnArticles.clusterId, learnClusters.id))
       .where(isNotNull(learnArticles.publishedAt))
       .limit(1000)
       .catch(() => []);
 
+    const learnLocRows = learnRows.length > 0
+      ? await db
+          .select({
+            articleId: learnArticleLocalizations.articleId,
+            locale: learnArticleLocalizations.locale,
+            slug: learnArticleLocalizations.slug,
+          })
+          .from(learnArticleLocalizations)
+          .catch(() => [])
+      : [];
+
+    const learnSlugsByArticle = new Map<number, Record<string, string>>();
+    for (const lr of learnLocRows) {
+      if (!lr.slug) continue;
+      if (!learnSlugsByArticle.has(lr.articleId)) learnSlugsByArticle.set(lr.articleId, {});
+      learnSlugsByArticle.get(lr.articleId)![lr.locale] = lr.slug;
+    }
+
     for (const la of learnRows) {
-      urls.push({ slug: la.slug, type: "learn-article", cluster: la.clusterSlug });
+      urls.push({
+        slug: la.slug,
+        type: "learn-article",
+        cluster: la.clusterSlug,
+        localizedSlugs: learnSlugsByArticle.get(la.id),
+      });
     }
   } catch (err) {
     console.error("[sitemap-urls] DB error:", err);

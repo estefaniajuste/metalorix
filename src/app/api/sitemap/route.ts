@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { getProductSlugsByLocale } from "@/lib/data/product-slugs";
 
 export const dynamic = "force-dynamic";
 
@@ -61,6 +62,23 @@ const LEARN_BASE: Record<string, string> = {
   zh: "xuexi", ar: "taallam", tr: "ogren-yatirim",
 };
 
+const CLUSTER_SLUG_I18N: Record<string, Record<string, string>> = {
+  es: { fundamentals: "fundamentos", history: "historia", "markets-trading": "mercados-trading", investment: "inversion", "physical-metals": "metales-fisicos", "price-factors": "factores-precio", "production-industry": "produccion-industria", "geology-science": "geologia-ciencia", "regulation-tax": "regulacion-impuestos", "security-authenticity": "seguridad-autenticidad", "ratios-analytics": "ratios-analitica", macroeconomics: "macroeconomia", guides: "guias", "faq-mistakes": "preguntas-errores", comparisons: "comparativas", glossary: "glosario" },
+  de: { fundamentals: "grundlagen", history: "geschichte", "markets-trading": "maerkte-handel", investment: "investition", "physical-metals": "physische-metalle", "price-factors": "preisfaktoren", "production-industry": "produktion-industrie", "geology-science": "geologie-wissenschaft", "regulation-tax": "regulierung-steuern", "security-authenticity": "sicherheit-echtheit", "ratios-analytics": "kennzahlen-analyse", macroeconomics: "makrooekonomie", guides: "leitfaeden", "faq-mistakes": "faq-fehler", comparisons: "vergleiche", glossary: "glossar" },
+  zh: { fundamentals: "jichu", history: "lishi", "markets-trading": "shichang-jiaoyi", investment: "touzi", "physical-metals": "shiwu-jinshu", "price-factors": "jiage-yinsu", "production-industry": "shengchan-gongye", "geology-science": "dizhi-kexue", "regulation-tax": "fagui-shuiwu", "security-authenticity": "anquan-zhenwei", "ratios-analytics": "bilv-fenxi", macroeconomics: "hongguan-jingji", guides: "zhinan", "faq-mistakes": "changjian-wenti", comparisons: "bijiao", glossary: "shuyu" },
+  ar: { fundamentals: "asasiyat", history: "tarikh", "markets-trading": "aswaq-tadawul", investment: "istithmar", "physical-metals": "maadin-madiyah", "price-factors": "awamil-asiar", "production-industry": "intaj-sinai", "geology-science": "jiyulujiya-ulum", "regulation-tax": "tanzim-daraib", "security-authenticity": "aman-asalah", "ratios-analytics": "nisab-tahlilat", macroeconomics: "iqtisad-kulli", guides: "adillah", "faq-mistakes": "asilah-akhta", comparisons: "muqaranat", glossary: "mustalahat" },
+  tr: { fundamentals: "temeller", history: "tarih", "markets-trading": "piyasalar-ticaret", investment: "yatirim", "physical-metals": "fiziksel-metaller", "price-factors": "fiyat-faktorleri", "production-industry": "uretim-endustri", "geology-science": "jeoloji-bilim", "regulation-tax": "duzenleme-vergi", "security-authenticity": "guvenlik-orijinallik", "ratios-analytics": "oranlar-analitik", macroeconomics: "makroekonomi", guides: "rehberler", "faq-mistakes": "sss-hatalar", comparisons: "karsilastirmalar", glossary: "sozluk" },
+};
+
+function localizedCluster(baseSlug: string, locale: string): string {
+  if (locale === "en") return baseSlug;
+  return CLUSTER_SLUG_I18N[locale]?.[baseSlug] ?? baseSlug;
+}
+
+const GLOSSARY_CLUSTER: Record<string, string> = {
+  es: "glosario", en: "glossary", de: "glossar", zh: "shuyu", ar: "mustalahat", tr: "sozluk",
+};
+
 const FREQ_PRIO: Record<string, [string, number]> = {
   "/herramientas": ["weekly", 0.8],
   "/calculadora-rentabilidad": ["monthly", 0.7],
@@ -113,6 +131,7 @@ interface DynamicUrl {
   cluster?: string;
   lastmod?: string;
   localizedSlugs?: Record<string, string>;
+  localizedClusters?: Record<string, string>;
 }
 
 async function fetchDynamicUrls(): Promise<DynamicUrl[]> {
@@ -148,7 +167,8 @@ export async function GET() {
 
   for (const slug of PRODUCT_SLUGS) {
     const paths: Record<string, string> = {};
-    for (const loc of LOCALES) paths[loc] = `/${loc}/${PRODUCT_BASE[loc]}/${slug}`;
+    const locSlugs = getProductSlugsByLocale(slug);
+    for (const loc of LOCALES) paths[loc] = `/${loc}/${PRODUCT_BASE[loc]}/${locSlugs[loc] ?? slug}`;
     urls.push(urlEntry(paths, "monthly", 0.6, today));
   }
 
@@ -164,13 +184,20 @@ export async function GET() {
       }
       urls.push(urlEntry(paths, "weekly", 0.7, item.lastmod || today));
     } else if (item.type === "cluster") {
-      for (const loc of LOCALES) paths[loc] = `/${loc}/${LEARN_BASE[loc]}/${item.slug}`;
+      for (const loc of LOCALES) paths[loc] = `/${loc}/${LEARN_BASE[loc]}/${localizedCluster(item.slug, loc)}`;
       urls.push(urlEntry(paths, "weekly", 0.6, today));
     } else if (item.type === "glossary") {
-      for (const loc of LOCALES) paths[loc] = `/${loc}/${LEARN_BASE[loc]}/glossary/${item.slug}`;
+      for (const loc of LOCALES) {
+        const gSlug = item.localizedSlugs?.[loc] ?? item.slug;
+        paths[loc] = `/${loc}/${LEARN_BASE[loc]}/${GLOSSARY_CLUSTER[loc] ?? "glossary"}/${gSlug}`;
+      }
       urls.push(urlEntry(paths, "monthly", 0.5, today));
     } else if (item.type === "learn-article" && item.cluster) {
-      for (const loc of LOCALES) paths[loc] = `/${loc}/${LEARN_BASE[loc]}/${item.cluster}/${item.slug}`;
+      for (const loc of LOCALES) {
+        const aSlug = item.localizedSlugs?.[loc] ?? item.slug;
+        const cSlug = localizedCluster(item.cluster, loc);
+        paths[loc] = `/${loc}/${LEARN_BASE[loc]}/${cSlug}/${aSlug}`;
+      }
       urls.push(urlEntry(paths, "monthly", 0.5, item.lastmod || today));
     }
   }
