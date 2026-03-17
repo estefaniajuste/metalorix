@@ -1,6 +1,7 @@
 import { Link } from "@/i18n/navigation";
 import { getTranslations } from "next-intl/server";
 import { getAlternates } from "@/lib/seo/alternates";
+import { CookieConsentManager } from "@/components/layout/CookieConsentManager";
 
 export async function generateMetadata({
   params,
@@ -52,9 +53,10 @@ export default async function PrivacidadPage() {
             </ul>
           </section>
 
-          <section>
+          <section id="gestionar-cookies">
             <h2 className="text-lg font-bold text-content-0 mb-3">3. {t("cookiesStorage")}</h2>
-            <p className="mb-3">{t("privacy.cookiesIntro")}</p>
+            <CookieConsentManager />
+            <p className="mb-3 mt-4">{t("privacy.cookiesIntro")}</p>
             <div className="bg-surface-1 border border-border rounded-DEFAULT overflow-hidden">
               <table className="w-full text-sm">
                 <thead>

@@ -28,6 +28,8 @@ export function AnalyticsLoader() {
 
   if (consent !== "accepted") return null;
 
+  const debugMode = typeof window !== "undefined" && new URLSearchParams(window.location.search).get("debug_ga") === "1";
+
   return (
     <>
       <Script
@@ -35,7 +37,7 @@ export function AnalyticsLoader() {
         strategy="afterInteractive"
       />
       <Script id="gtag-init" strategy="afterInteractive">
-        {`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','${GA_ID}');`}
+        {`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','${GA_ID}'${debugMode ? ",{debug_mode:true}" : ""});`}
       </Script>
     </>
   );
