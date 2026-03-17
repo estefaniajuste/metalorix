@@ -165,3 +165,39 @@ export async function submitUrlsToGoogle(
 export function isIndexingApiConfigured(): boolean {
   return getServiceAccountKey() !== null;
 }
+
+/** Returns safe diagnostic info for debugging (no secrets exposed). */
+export function getIndexingApiDiagnostics(): {
+  configured: boolean;
+  hasEnvVar: boolean;
+  envVarLength: number;
+  parseError?: string;
+} {
+  const raw = process.env.GOOGLE_INDEXING_KEY;
+  const hasEnvVar = !!raw && raw.length > 0;
+  const envVarLength = raw?.length ?? 0;
+
+  if (!hasEnvVar) {
+    return { configured: false, hasEnvVar: false, envVarLength: 0, parseError: "GOOGLE_INDEXING_KEY not set or empty" };
+  }
+
+  try {
+    const decoded = Buffer.from(raw!, "base64").toString("utf-8");
+    const parsed = JSON.parse(decoded);
+    if (parsed.client_email && parsed.private_key) {
+      return { configured: true, hasEnvVar: true, envVarLength, parseError: undefined };
+    }
+    return { configured: false, hasEnvVar: true, envVarLength, parseError: "JSON missing client_email or private_key" };
+  } catch (e1) {
+    try {
+      const parsed = JSON.parse(raw!);
+      if (parsed.client_email && parsed.private_key) {
+        return { configured: true, hasEnvVar: true, envVarLength, parseError: undefined };
+      }
+      return { configured: false, hasEnvVar: true, envVarLength, parseError: "JSON missing client_email or private_key" };
+    } catch (e2) {
+      const err = e2 instanceof Error ? e2.message : String(e2);
+      return { configured: false, hasEnvVar: true, envVarLength, parseError: `Parse failed: ${err.slice(0, 80)}` };
+    }
+  }
+}
