@@ -92,8 +92,8 @@ jobs:
           hour=$(date -u +%H)
           minute=$(date -u +%M)
           day_of_week=$(date -u +%u)
-          # Daily summary at 19:00 UTC (20:00 CET). Window 0-29 min to tolerate GitHub Actions delays.
-          if [ "$hour" = "19" ] && [ "$minute" -lt "30" ]; then
+          # Daily summary at 07:00 UTC (08:00 CET). Window 0-29 min to tolerate GitHub Actions delays.
+          if [ "$hour" = "07" ] && [ "$minute" -lt "30" ]; then
             echo "type=daily" >> $GITHUB_OUTPUT
             echo "should_run=true" >> $GITHUB_OUTPUT
           # Weekly summary on Sunday at 18:00 UTC. Window 0-29 min for same reason.
