@@ -24,12 +24,14 @@ export function CookieConsent() {
     localStorage.setItem(CONSENT_KEY, "accepted");
     setState("accepted");
     window.dispatchEvent(new StorageEvent("storage", { key: CONSENT_KEY, newValue: "accepted" }));
+    window.dispatchEvent(new CustomEvent("mtx-consent-changed", { detail: { value: "accepted" } }));
   }
 
   function reject() {
     localStorage.setItem(CONSENT_KEY, "rejected");
     setState("rejected");
     window.dispatchEvent(new StorageEvent("storage", { key: CONSENT_KEY, newValue: "rejected" }));
+    window.dispatchEvent(new CustomEvent("mtx-consent-changed", { detail: { value: "rejected" } }));
   }
 
   if (state !== "pending") return null;

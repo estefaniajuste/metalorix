@@ -15,8 +15,15 @@ export function AnalyticsLoader() {
     const handleStorage = (e: StorageEvent) => {
       if (e.key === CONSENT_KEY) setConsent(e.newValue);
     };
+    const handleConsentChanged = (e: CustomEvent<{ value: string }>) => {
+      setConsent(e.detail.value);
+    };
     window.addEventListener("storage", handleStorage);
-    return () => window.removeEventListener("storage", handleStorage);
+    window.addEventListener("mtx-consent-changed", handleConsentChanged as EventListener);
+    return () => {
+      window.removeEventListener("storage", handleStorage);
+      window.removeEventListener("mtx-consent-changed", handleConsentChanged as EventListener);
+    };
   }, []);
 
   if (consent !== "accepted") return null;
