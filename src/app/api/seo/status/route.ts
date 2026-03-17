@@ -8,5 +8,6 @@ import { isIndexingApiConfigured } from "@/lib/seo/indexing-api";
 export async function GET() {
   return NextResponse.json({
     indexingApiConfigured: isIndexingApiConfigured(),
+    indexNowConfigured: !!process.env.INDEXNOW_KEY,
   });
 }
