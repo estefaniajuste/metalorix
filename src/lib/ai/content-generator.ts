@@ -266,6 +266,8 @@ INSTRUCCIONES PARA EL CONTENIDO:
 - Tono: informativo, analítico, útil para quien invierte en metales
 - NO incluyas título ni fecha al inicio (se añaden automáticamente)
 - NO digas "como analista" ni uses primera persona
+- CRÍTICO: NO insertes enlaces externos (URLs http/https) dentro del cuerpo del artículo. Los nombres de fuentes como Reuters, CNBC, Financial Times, etc. deben aparecer como texto plano en el contenido, NO como enlaces clicables. Los enlaces a fuentes van SOLO en el campo "fuentes" del JSON.
+- Los ÚNICOS enlaces permitidos en el cuerpo del artículo son enlaces internos al glosario con formato [término](/learn/glossary/slug-del-termino)
 ${glossaryInstructions}
 
 INSTRUCCIONES SEO Y FUENTES (MUY IMPORTANTE):
@@ -443,6 +445,7 @@ Escribe un artículo de 400-500 palabras explicando:
 
 FORMATO: párrafos normales, ## para secciones. Tono profesional, datos concretos.
 NO incluyas título. NO uses primera persona.
+CRÍTICO: NO insertes enlaces externos (URLs http/https) en el cuerpo del artículo. Los nombres de fuentes van como texto plano. Los ÚNICOS enlaces permitidos son internos al glosario: [término](/learn/glossary/slug).
 ${glossaryInstructions}
 
 INSTRUCCIONES SEO Y FUENTES (MUY IMPORTANTE):
@@ -535,6 +538,7 @@ INSTRUCCIONES PARA EL CONTENIDO:
 - Usa ## para títulos de sección
 - Tono: profesional, analítico, basado en hechos
 - NO incluyas título. NO uses primera persona.
+- CRÍTICO: NO insertes enlaces externos (URLs http/https) en el cuerpo del artículo. Los nombres de fuentes van como texto plano. Los ÚNICOS enlaces permitidos son internos al glosario: [término](/learn/glossary/slug).
 ${glossaryInstructions}
 
 INSTRUCCIONES SEO Y FUENTES (MUY IMPORTANTE):
@@ -766,6 +770,8 @@ TRANSLATION RULES:
 - Do NOT add or remove content, translate faithfully
 - Do NOT include the original Spanish text
 - Keep the same tone: professional, analytical, informative
+- CRITICAL: Do NOT add any external hyperlinks (http/https URLs) inline in the article body. If the original has inline links like [text](https://...), convert them to plain text (just the text, no link). External links should ONLY appear in the Sources/Fuentes section at the end.
+- Preserve internal glossary links like [term](/learn/glossary/slug) as-is — do NOT remove those
 
 Return ONLY a valid JSON with this exact structure:
 

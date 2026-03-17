@@ -142,7 +142,7 @@ const METAL_COLORS: Record<string, string> = {
   HG: "#B87333",
 };
 
-function renderInlineLinks(text: string, glossarySlugsInLocale?: Set<string>) {
+function renderInlineLinks(text: string, glossarySlugsInLocale?: Set<string>, isSourcesSection?: boolean) {
   const linkRegex = /\[([^\]]+)\]\(([^)]+)\)/g;
   const parts: (string | JSX.Element)[] = [];
   let lastIndex = 0;
@@ -167,11 +167,7 @@ function renderInlineLinks(text: string, glossarySlugsInLocale?: Set<string>) {
       : null;
 
     if (isGlossaryLink && glossarySlugsInLocale && glossarySlug && !glossarySlugsInLocale.has(glossarySlug)) {
-      parts.push(
-        <span key={match.index} className="font-medium">
-          {linkText}
-        </span>
-      );
+      parts.push(linkText);
     } else if (learnMatch) {
       parts.push(
         <Link
@@ -193,27 +189,23 @@ function renderInlineLinks(text: string, glossarySlugsInLocale?: Set<string>) {
         </Link>
       );
     } else if (isExternal) {
-      parts.push(
-        <a
-          key={match.index}
-          href={href}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-brand-gold hover:underline font-medium"
-        >
-          {linkText}
-        </a>
-      );
+      if (isSourcesSection) {
+        parts.push(
+          <a
+            key={match.index}
+            href={href}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-brand-gold hover:underline font-medium"
+          >
+            {linkText}
+          </a>
+        );
+      } else {
+        parts.push(linkText);
+      }
     } else {
-      parts.push(
-        <a
-          key={match.index}
-          href={href}
-          className="text-brand-gold hover:underline font-medium"
-        >
-          {linkText}
-        </a>
-      );
+      parts.push(linkText);
     }
     lastIndex = match.index + match[0].length;
   }
@@ -399,25 +391,31 @@ export default async function ArticlePage({
 
           {/* Content */}
           <div className="prose-metalorix text-content-1 leading-relaxed text-[15px] [&>p]:mb-5 [&>h2]:text-xl [&>h2]:font-bold [&>h2]:text-content-0 [&>h2]:mt-10 [&>h2]:mb-4 [&>h3]:text-lg [&>h3]:font-semibold [&>h3]:text-content-0 [&>h3]:mt-8 [&>h3]:mb-3 [&>ul]:list-disc [&>ul]:pl-5 [&>ul]:mb-5 [&>ol]:list-decimal [&>ol]:pl-5 [&>ol]:mb-5 [&>blockquote]:border-l-2 [&>blockquote]:border-brand-gold [&>blockquote]:pl-4 [&>blockquote]:italic [&>blockquote]:text-content-2 [&>blockquote]:my-6">
-            {linkedContent.split("\n").map((paragraph, i) => {
-              if (!paragraph.trim()) return null;
-              if (paragraph.startsWith("## ")) {
-                return (
-                  <h2 key={i}>{renderInlineLinks(paragraph.replace("## ", ""), glossarySlugsInLocale)}</h2>
-                );
-              }
-              if (paragraph.startsWith("### ")) {
-                return (
-                  <h3 key={i}>{renderInlineLinks(paragraph.replace("### ", ""), glossarySlugsInLocale)}</h3>
-                );
-              }
-              if (paragraph.startsWith("- ")) {
-                return (
-                  <li key={i} className="ml-5 list-disc">{renderInlineLinks(paragraph.slice(2), glossarySlugsInLocale)}</li>
-                );
-              }
-              return <p key={i}>{renderInlineLinks(paragraph, glossarySlugsInLocale)}</p>;
-            })}
+            {(() => {
+              const lines = linkedContent.split("\n");
+              let inSources = false;
+              return lines.map((paragraph, i) => {
+                if (!paragraph.trim()) return null;
+                const sourcesHeading = /^##\s*(Fuentes|Sources|Quellen|Kaynaklar|المصادر|来源)\s*$/i;
+                if (sourcesHeading.test(paragraph)) inSources = true;
+                if (paragraph.startsWith("## ")) {
+                  return (
+                    <h2 key={i}>{renderInlineLinks(paragraph.replace("## ", ""), glossarySlugsInLocale, inSources)}</h2>
+                  );
+                }
+                if (paragraph.startsWith("### ")) {
+                  return (
+                    <h3 key={i}>{renderInlineLinks(paragraph.replace("### ", ""), glossarySlugsInLocale, inSources)}</h3>
+                  );
+                }
+                if (paragraph.startsWith("- ")) {
+                  return (
+                    <li key={i} className="ml-5 list-disc">{renderInlineLinks(paragraph.slice(2), glossarySlugsInLocale, inSources)}</li>
+                  );
+                }
+                return <p key={i}>{renderInlineLinks(paragraph, glossarySlugsInLocale, inSources)}</p>;
+              });
+            })()}
           </div>
 
           {/* Share + Footer */}
