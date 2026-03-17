@@ -40,12 +40,10 @@ const PRICE_PATHS: Record<string, string> = {
 };
 
 const PRODUCT_SLUGS = [
-  "krugerrand-oro", "american-eagle-oro", "maple-leaf-oro", "filarmonica-oro",
-  "britannia-oro", "canguro-oro", "bufalo-americano-oro", "panda-oro",
-  "lingote-oro-100g", "lingote-oro-1oz", "lingote-oro-10g", "lingote-oro-1kg",
-  "american-eagle-plata", "maple-leaf-plata", "filarmonica-plata", "britannia-plata",
-  "canguro-plata", "krugerrand-plata", "panda-plata", "libertad-plata",
-  "lingote-plata-1kg", "lingote-plata-100oz",
+  "krugerrand-oro", "maple-leaf-oro", "filarmonica-oro", "britannia-oro", "eagle-oro",
+  "maple-leaf-plata", "filarmonica-plata", "britannia-plata", "eagle-plata", "krugerrand-plata",
+  "lingote-oro-1oz", "lingote-oro-100g", "lingote-oro-1kg",
+  "lingote-plata-1kg",
 ];
 
 const PRODUCT_BASE: Record<string, string> = {
