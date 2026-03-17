@@ -5,7 +5,7 @@ import { getTranslations, getLocale } from "next-intl/server";
 import { getAlternates } from "@/lib/seo/alternates";
 import type { Locale } from "@/i18n/routing";
 import { getDb } from "@/lib/db";
-import { articles, articleTranslations } from "@/lib/db/schema";
+import { articles, articleTranslations, glossaryTerms } from "@/lib/db/schema";
 import { eq, and } from "drizzle-orm";
 import { injectGlossaryLinks } from "@/lib/ai/glossary-generator";
 import { ArticleShareBar } from "@/components/dashboard/ArticleShareBar";
@@ -142,7 +142,7 @@ const METAL_COLORS: Record<string, string> = {
   HG: "#B87333",
 };
 
-function renderInlineLinks(text: string) {
+function renderInlineLinks(text: string, glossarySlugsInLocale?: Set<string>) {
   const linkRegex = /\[([^\]]+)\]\(([^)]+)\)/g;
   const parts: (string | JSX.Element)[] = [];
   let lastIndex = 0;
@@ -161,7 +161,18 @@ function renderInlineLinks(text: string) {
       href.match(/^\/aprende-inversion\/([^/]+)\/([^/]+)$/);
     const legacyAprendeMatch = href.match(/^\/aprende\/(.+)$/);
 
-    if (learnMatch) {
+    const isGlossaryLink = learnMatch?.[1] === "glossary" || !!legacyAprendeMatch;
+    const glossarySlug = isGlossaryLink
+      ? (learnMatch?.[2] || legacyAprendeMatch?.[1])
+      : null;
+
+    if (isGlossaryLink && glossarySlugsInLocale && glossarySlug && !glossarySlugsInLocale.has(glossarySlug)) {
+      parts.push(
+        <span key={match.index} className="font-medium">
+          {linkText}
+        </span>
+      );
+    } else if (learnMatch) {
       parts.push(
         <Link
           key={match.index}
@@ -259,6 +270,24 @@ export default async function ArticlePage({
   const displaySlug = translation?.slug ?? article.slug;
 
   const linkedContent = await injectGlossaryLinks(displayContent);
+
+  let glossarySlugsInLocale: Set<string> | undefined;
+  if (locale !== "es") {
+    const db = getDb();
+    if (db) {
+      try {
+        const rows = await db
+          .select({ slug: glossaryTerms.slug })
+          .from(glossaryTerms)
+          .where(and(eq(glossaryTerms.locale, locale), eq(glossaryTerms.published, true)));
+        glossarySlugsInLocale = new Set(rows.map((r) => r.slug));
+      } catch {
+        glossarySlugsInLocale = new Set();
+      }
+    } else {
+      glossarySlugsInLocale = new Set();
+    }
+  }
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -374,20 +403,20 @@ export default async function ArticlePage({
               if (!paragraph.trim()) return null;
               if (paragraph.startsWith("## ")) {
                 return (
-                  <h2 key={i}>{renderInlineLinks(paragraph.replace("## ", ""))}</h2>
+                  <h2 key={i}>{renderInlineLinks(paragraph.replace("## ", ""), glossarySlugsInLocale)}</h2>
                 );
               }
               if (paragraph.startsWith("### ")) {
                 return (
-                  <h3 key={i}>{renderInlineLinks(paragraph.replace("### ", ""))}</h3>
+                  <h3 key={i}>{renderInlineLinks(paragraph.replace("### ", ""), glossarySlugsInLocale)}</h3>
                 );
               }
               if (paragraph.startsWith("- ")) {
                 return (
-                  <li key={i} className="ml-5 list-disc">{renderInlineLinks(paragraph.slice(2))}</li>
+                  <li key={i} className="ml-5 list-disc">{renderInlineLinks(paragraph.slice(2), glossarySlugsInLocale)}</li>
                 );
               }
-              return <p key={i}>{renderInlineLinks(paragraph)}</p>;
+              return <p key={i}>{renderInlineLinks(paragraph, glossarySlugsInLocale)}</p>;
             })}
           </div>
 
