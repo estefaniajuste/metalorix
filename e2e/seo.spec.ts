@@ -21,20 +21,26 @@ test.describe("SEO", () => {
     expect(html).toContain("Metalorix");
   });
 
-  test("sitemap.xml returns empty urlset", async ({ request }) => {
+  test("sitemap.xml returns 404 (canonical sitemap is /api/sitemap)", async ({ request }) => {
     const response = await request.get("/sitemap.xml");
+    expect(response.status()).toBe(404);
+  });
+
+  test("/api/sitemap returns valid urlset", async ({ request }) => {
+    const response = await request.get("/api/sitemap");
     expect(response.status()).toBe(200);
     const body = await response.text();
     expect(body).toContain("<urlset");
   });
 
-  test("robots.txt blocks all crawlers", async ({ request }) => {
+  test("robots.txt allows crawling and declares sitemap", async ({ request }) => {
     const response = await request.get("/robots.txt");
     expect(response.status()).toBe(200);
     const body = await response.text();
     expect(body.toLowerCase()).toContain("user-agent");
-    expect(body).toContain("Disallow: /");
-    expect(body).not.toContain("Sitemap");
+    expect(body).toContain("Allow: /");
+    expect(body).toContain("Sitemap");
+    expect(body).toContain("api/sitemap");
   });
 
   test("metal pages have Open Graph tags", async ({ page }) => {

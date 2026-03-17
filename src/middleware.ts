@@ -62,10 +62,6 @@ export function middleware(request: NextRequest) {
 
   const { pathname } = request.nextUrl;
 
-  if (pathname === "/sitemap.xml") {
-    return NextResponse.redirect(new URL("/api/sitemap", request.url), 302);
-  }
-
   if (pathname === "/feed.xml") {
     return NextResponse.redirect(new URL("/api/feed", request.url), 302);
   }
