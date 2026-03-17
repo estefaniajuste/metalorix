@@ -53,3 +53,28 @@ Si cualquiera falla, **alertar al usuario inmediatamente**.
 ### Restricción de sitemap:
 
 **NUNCA crear `src/app/sitemap.ts`** (convención Next.js). No funciona con `output: "standalone"` + `next-intl` en Cloud Run. El sitemap se sirve desde `src/app/api/sitemap/route.ts`. Ver `.cursor/rules/seo-disabled.mdc` para detalles completos.
+
+---
+
+## URLs/slugs SIEMPRE en el idioma del contenido
+
+**CRÍTICO para SEO y UX.** Toda URL con slug dinámico DEBE tener el slug en el mismo idioma que el contenido de la página. Un slug en español en una página en inglés es un bug grave.
+
+### Cómo funciona:
+
+| Sección | Fuente del slug localizado | Archivo clave |
+|---------|---------------------------|---------------|
+| Noticias | `article_translations.slug` | `src/lib/ai/content-generator.ts` (`translateArticle`) |
+| Productos | `PRODUCT_SLUGS_I18N` (estático) | `src/lib/data/product-slugs.ts` |
+| Learn articles | `learn_article_localizations.slug` | `src/lib/learn/slug-i18n.ts` |
+| Learn clusters | `CLUSTER_SLUG_I18N` (estático) | `src/lib/learn/slug-i18n.ts` |
+
+### Al añadir nuevo contenido dinámico traducido:
+
+1. La traducción DEBE incluir un slug en el idioma destino
+2. La página de detalle DEBE resolver slugs localizados al contenido base
+3. La lista DEBE usar el slug localizado en los links
+4. El sitemap DEBE usar slugs localizados en los `<xhtml:link>` alternates
+5. `generateStaticParams` DEBE incluir todos los slugs (base + localizados)
+
+Ver `.cursor/rules/i18n-slugs.mdc` para detalles y ejemplos de código.

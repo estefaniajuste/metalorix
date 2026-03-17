@@ -1,0 +1,47 @@
+---
+description: URLs/slugs must match the page language — never show Spanish slugs in non-Spanish locales
+alwaysApply: true
+---
+
+# i18n URL Slugs — MUST Match Content Language
+
+Every URL slug visible to the user or to search engines MUST be in the same language as the page content. A Spanish slug on an English page is a critical SEO and UX bug.
+
+## Rules
+
+1. **News articles** (`article_translations`): the `slug` column stores a per-locale slug. `translateArticle()` asks Gemini for `slug_keywords` in the target language and builds the slug from them. Links and article resolution use localized slugs.
+
+2. **Products** (`product-slugs.ts`): `PRODUCT_SLUGS_I18N` maps every base (Spanish) slug to its localized version per locale. `applyLocale()` in `products.ts` sets the localized slug. `getProduct()` resolves both base and localized slugs. `generateStaticParams()` returns all slug variants.
+
+3. **Learn articles** (`learn_article_localizations`): the `slug` column stores a per-locale slug. `slug-i18n.ts` handles resolution.
+
+4. **Learn clusters** (`slug-i18n.ts`): `CLUSTER_SLUG_I18N` maps base (English) cluster slugs to localized versions. The sitemap uses `localizedCluster()`.
+
+5. **Sitemap** (`/api/sitemap/route.ts`): MUST use localized slugs per locale for articles, products, learn content, and clusters. Never the same slug for all locales.
+
+## When Adding New Dynamic Content
+
+- If the content is translated, the translation MUST include a localized slug
+- If the content uses static data with locale overlays, add slug mappings in the overlay
+- The sitemap MUST reflect localized slugs in `<xhtml:link>` alternates
+- The detail page MUST resolve both base and localized slugs (for cross-locale navigation)
+
+## Anti-patterns (NEVER do this)
+
+```typescript
+// ❌ Same slug for all locales
+<Link href={{ pathname: "/noticias/[slug]", params: { slug: article.slug } }}>
+
+// ✅ Use localized slug
+const linkSlug = translation?.slug ?? article.slug;
+<Link href={{ pathname: "/noticias/[slug]", params: { slug: linkSlug } }}>
+```
+
+```typescript
+// ❌ Product sitemap with base slug for all locales
+for (const loc of LOCALES) paths[loc] = `/${loc}/${PRODUCT_BASE[loc]}/${slug}`;
+
+// ✅ Product sitemap with localized slug
+const locSlugs = getProductSlugsByLocale(slug);
+for (const loc of LOCALES) paths[loc] = `/${loc}/${PRODUCT_BASE[loc]}/${locSlugs[loc] ?? slug}`;
+```
