@@ -773,7 +773,7 @@ Return ONLY a valid JSON with this exact structure:
   "title": "Translated title in ${langName}",
   "excerpt": "Translated excerpt in ${langName}",
   "content": "Translated full content in ${langName} with ## for section headings",
-  "slug_keywords": "3-6 translated keywords in ${langName} for the URL slug, separated by spaces, lowercase, no accents, no date. Example for English: 'gold rises geopolitical tensions iran'"
+  "slug_keywords": "3-6 keywords in ENGLISH (Latin alphabet only) for the URL slug, separated by spaces, lowercase, no accents, no special characters, no date. Example: 'gold rises geopolitical tensions iran'. IMPORTANT: Always use English words regardless of the article language, because URLs must use Latin characters only."
 }
 
 Return ONLY the JSON, no additional text.`;
@@ -823,9 +823,25 @@ export async function translateArticle(articleId: number): Promise<number> {
 
         if (result) {
           const dateSlug = article.slug.match(/\d{4}-\d{2}-\d{2}$/)?.[0] ?? new Date().toISOString().slice(0, 10);
-          const translatedSlug = result.slug_keywords
-            ? `${slugify(result.slug_keywords)}-${dateSlug}`
-            : article.slug;
+          const keywordSlug = result.slug_keywords ? slugify(result.slug_keywords) : "";
+          let translatedSlug: string;
+          if (keywordSlug) {
+            translatedSlug = `${keywordSlug}-${dateSlug}`;
+          } else {
+            // Non-Latin locales: use English translation slug if available
+            const [enTrans] = await db
+              .select({ slug: articleTranslations.slug })
+              .from(articleTranslations)
+              .where(
+                and(
+                  eq(articleTranslations.articleId, articleId),
+                  eq(articleTranslations.locale, "en")
+                )
+              )
+              .limit(1);
+            translatedSlug = enTrans?.slug || article.slug;
+            console.log(`[translate] ${locale}: non-Latin keywords, using ${enTrans?.slug ? "EN" : "base"} slug: ${translatedSlug}`);
+          }
 
           await db.insert(articleTranslations).values({
             articleId,
@@ -892,19 +908,34 @@ export async function backfillTranslationSlugs(): Promise<number> {
       })
       .from(articleTranslations);
 
-    const articleIds = Array.from(new Set(rows.map((r) => r.articleId)));
     const baseArticles = await db
       .select({ id: articles.id, slug: articles.slug })
       .from(articles);
     const baseSlugMap = new Map(baseArticles.map((a) => [a.id, a.slug]));
 
+    // Build map of English slugs per article for non-Latin locale fallback
+    const enSlugMap = new Map<number, string>();
     for (const row of rows) {
-      if (row.slug) continue;
+      if (row.locale === "en" && row.slug) enSlugMap.set(row.articleId, row.slug);
+    }
+
+    for (const row of rows) {
+      const isBrokenSlug = !row.slug || /^-?\d{4}-\d{2}-\d{2}$/.test(row.slug);
+      if (row.slug && !isBrokenSlug) continue;
       const baseSlug = baseSlugMap.get(row.articleId) ?? "";
       const dateMatch = baseSlug.match(/\d{4}-\d{2}-\d{2}$/);
       const dateSlug = dateMatch ? dateMatch[0] : new Date().toISOString().slice(0, 10);
       const titleSlug = slugify(row.title);
-      const newSlug = `${titleSlug}-${dateSlug}`;
+
+      let newSlug: string;
+      if (titleSlug) {
+        newSlug = `${titleSlug}-${dateSlug}`;
+      } else {
+        // Non-Latin locales (zh, ar): use English slug if available, else base slug
+        const enSlug = enSlugMap.get(row.articleId);
+        newSlug = enSlug || baseSlug;
+        console.log(`[Backfill] ${row.id} (${row.locale}): non-Latin title, using ${enSlug ? "EN" : "base"} slug: ${newSlug}`);
+      }
 
       await db
         .update(articleTranslations)
