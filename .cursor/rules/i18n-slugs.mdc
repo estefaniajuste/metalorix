@@ -26,6 +26,19 @@ Every URL slug visible to the user or to search engines MUST be in the same lang
 - The sitemap MUST reflect localized slugs in `<xhtml:link>` alternates
 - The detail page MUST resolve both base and localized slugs (for cross-locale navigation)
 
+## Checklist: ALL places that link to articles
+
+When adding or modifying code that builds article URLs, verify localized slugs:
+
+| Location | Slug to use for locale X |
+|----------|---------------------------|
+| `noticias/page.tsx` | `tr?.slug ?? article.slug` (tr from getTranslationsForArticles) |
+| `HomePreview.tsx` | `trMap.get(id)?.slug ?? article.slug` |
+| `article/[slug]/page.tsx` | Redirect if `params.slug !== correctSlug` (es→article.slug, other→translation.slug) |
+| `sitemap/route.ts` | `item.localizedSlugs?.[loc] ?? item.slug` |
+| `submit-urls`, `index-all` | Fetch article_translations, use `locSlugs?.[loc] ?? article.slug` |
+| `generate-content` ping | Same as above — NEVER use article.slug for all locales |
+
 ## Anti-patterns (NEVER do this)
 
 ```typescript
@@ -35,6 +48,14 @@ Every URL slug visible to the user or to search engines MUST be in the same lang
 // ✅ Use localized slug
 const linkSlug = translation?.slug ?? article.slug;
 <Link href={{ pathname: "/noticias/[slug]", params: { slug: linkSlug } }}>
+```
+
+```typescript
+// ❌ Ping/IndexNow with base slug for all locales
+for (const loc of LOCALES) paths.push(getPathname({ locale: loc, href: { pathname: "/noticias/[slug]", params: { slug: article.slug } } }));
+
+// ✅ Use localized slug per locale
+const slug = loc === "es" ? article.slug : (locSlugs?.[loc] ?? article.slug);
 ```
 
 ```typescript

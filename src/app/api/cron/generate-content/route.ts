@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getDb } from "@/lib/db";
 import { articles, articleTranslations, metalPrices } from "@/lib/db/schema";
-import { eq, desc, gte, and, like } from "drizzle-orm";
+import { eq, desc, gte, and, like, inArray } from "drizzle-orm";
 import {
   generateDailySummary,
   generateEventArticle,
@@ -278,17 +278,24 @@ export async function POST(request: NextRequest) {
   if (articleIdsToTranslate.length > 0) {
     pingResult = await pingSearchEngines();
 
-    const slugs: string[] = [];
-    for (const id of articleIdsToTranslate) {
-      try {
-        const rows = await db.select({ slug: articles.slug }).from(articles).where(eq(articles.id, id)).limit(1);
-        if (rows[0]) slugs.push(rows[0].slug);
-      } catch { /* skip */ }
+    const transRows = await db
+      .select({ articleId: articleTranslations.articleId, locale: articleTranslations.locale, slug: articleTranslations.slug })
+      .from(articleTranslations)
+      .where(inArray(articleTranslations.articleId, articleIdsToTranslate));
+    const slugsByArticle = new Map<number, Record<string, string>>();
+    for (const r of transRows) {
+      if (!r.slug) continue;
+      if (!slugsByArticle.has(r.articleId)) slugsByArticle.set(r.articleId, {});
+      slugsByArticle.get(r.articleId)![r.locale] = r.slug;
     }
 
     const newUrls: string[] = [];
-    for (const slug of slugs) {
+    for (const id of articleIdsToTranslate) {
+      const [art] = await db.select({ slug: articles.slug }).from(articles).where(eq(articles.id, id)).limit(1);
+      if (!art) continue;
+      const locSlugs = slugsByArticle.get(id);
       for (const loc of routing.locales) {
+        const slug = loc === "es" ? art.slug : (locSlugs?.[loc] ?? art.slug);
         const path = getPathname({ locale: loc, href: { pathname: "/noticias/[slug]", params: { slug } } as any });
         newUrls.push(`https://metalorix.com${path}`);
       }

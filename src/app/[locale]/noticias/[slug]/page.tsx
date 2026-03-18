@@ -22,41 +22,20 @@ async function getArticle(slug: string, locale: string) {
       .limit(1);
     if (result[0]) return result[0];
 
-    if (locale !== "es") {
-      const translationRow = await db
-        .select({ articleId: articleTranslations.articleId })
-        .from(articleTranslations)
-        .where(
-          and(
-            eq(articleTranslations.slug, slug),
-            eq(articleTranslations.locale, locale)
-          )
-        )
+    // Resolve by translation slug (any locale) — enables redirect when wrong slug on /es/
+    const anyTranslation = await db
+      .select({ articleId: articleTranslations.articleId })
+      .from(articleTranslations)
+      .where(eq(articleTranslations.slug, slug))
+      .limit(1);
+
+    if (anyTranslation[0]) {
+      const base = await db
+        .select()
+        .from(articles)
+        .where(eq(articles.id, anyTranslation[0].articleId))
         .limit(1);
-
-      if (translationRow[0]) {
-        const base = await db
-          .select()
-          .from(articles)
-          .where(eq(articles.id, translationRow[0].articleId))
-          .limit(1);
-        return base[0] ?? null;
-      }
-
-      const anyTranslation = await db
-        .select({ articleId: articleTranslations.articleId })
-        .from(articleTranslations)
-        .where(eq(articleTranslations.slug, slug))
-        .limit(1);
-
-      if (anyTranslation[0]) {
-        const base = await db
-          .select()
-          .from(articles)
-          .where(eq(articles.id, anyTranslation[0].articleId))
-          .limit(1);
-        return base[0] ?? null;
-      }
+      return base[0] ?? null;
     }
 
     return null;
@@ -256,9 +235,12 @@ export default async function ArticlePage({
   }
 
   const translation = await getTranslation(article.id, locale);
-  // Redirect to correct localized slug when URL has wrong-language slug (e.g. /en/news/metales-preciosos-...)
-  if (locale !== "es" && translation?.slug && params.slug !== translation.slug) {
-    redirect(getPathname({ locale: locale as Locale, href: { pathname: "/noticias/[slug]", params: { slug: translation.slug } } as any }));
+  // Redirect to correct localized slug when URL has wrong-language slug
+  // - Spanish page with English slug: /es/noticias/precious-metals-... → /es/noticias/metales-preciosos-...
+  // - English page with Spanish slug: /en/news/metales-preciosos-... → /en/news/precious-metals-...
+  const correctSlug = locale === "es" ? article.slug : (translation?.slug ?? article.slug);
+  if (params.slug !== correctSlug) {
+    redirect(getPathname({ locale: locale as Locale, href: { pathname: "/noticias/[slug]", params: { slug: correctSlug } } as any }));
   }
 
   const displayTitle = translation?.title ?? article.title;
