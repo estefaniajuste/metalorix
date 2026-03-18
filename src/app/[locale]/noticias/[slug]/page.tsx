@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Link, getPathname } from "@/i18n/navigation";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { getTranslations, getLocale } from "next-intl/server";
 import { getAlternates } from "@/lib/seo/alternates";
 import type { Locale } from "@/i18n/routing";
@@ -256,6 +256,11 @@ export default async function ArticlePage({
   }
 
   const translation = await getTranslation(article.id, locale);
+  // Redirect to correct localized slug when URL has wrong-language slug (e.g. /en/news/metales-preciosos-...)
+  if (locale !== "es" && translation?.slug && params.slug !== translation.slug) {
+    redirect(getPathname({ locale: locale as Locale, href: { pathname: "/noticias/[slug]", params: { slug: translation.slug } } as any }));
+  }
+
   const displayTitle = translation?.title ?? article.title;
   const displayExcerpt = translation?.excerpt ?? article.excerpt;
   const displayContent = translation?.content ?? article.content;

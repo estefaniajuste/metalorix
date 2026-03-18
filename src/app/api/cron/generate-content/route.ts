@@ -178,6 +178,30 @@ export async function POST(request: NextRequest) {
     }
   }
 
+  // Regenerate translations for today's article (fixes wrong-language slugs)
+  if (type === "regenerate_translations") {
+    try {
+      const dateSlug = new Date().toISOString().slice(0, 10);
+      const pattern = `%-${dateSlug}`;
+      const todayArticle = await db
+        .select({ id: articles.id, slug: articles.slug })
+        .from(articles)
+        .where(and(eq(articles.category, "daily"), like(articles.slug, pattern)))
+        .orderBy(desc(articles.publishedAt))
+        .limit(1);
+      if (todayArticle.length > 0) {
+        await db.delete(articleTranslations).where(eq(articleTranslations.articleId, todayArticle[0].id));
+        const count = await translateArticle(todayArticle[0].id);
+        generated.push(`regenerated translations for article ${todayArticle[0].id}: ${count} languages`);
+        articleIdsToTranslate.push(todayArticle[0].id);
+      } else {
+        generated.push("regenerate_translations: no daily article found for today");
+      }
+    } catch (err) {
+      console.error("Regenerate translations failed:", err);
+    }
+  }
+
   if (type === "translate" || type === "backfill-slugs") {
     try {
       const backfilled = await backfillTranslationSlugs();

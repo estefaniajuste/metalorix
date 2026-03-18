@@ -3,8 +3,8 @@ import { getPathname } from "@/i18n/navigation";
 import { routing, type Locale } from "@/i18n/routing";
 import { INTERNAL_METAL_SLUGS, getLocalizedMetalSlug } from "@/lib/utils/metal-slugs";
 import { getDb } from "@/lib/db";
-import { articles } from "@/lib/db/schema";
-import { eq, desc } from "drizzle-orm";
+import { articles, articleTranslations } from "@/lib/db/schema";
+import { eq, desc, inArray } from "drizzle-orm";
 import { pingSearchEngines, pingIndexNow } from "@/lib/seo/ping";
 
 const BASE = "https://metalorix.com";
@@ -59,16 +59,39 @@ export async function POST(request: NextRequest) {
     const db = getDb();
     if (db) {
       const allArticles = await db
-        .select({ slug: articles.slug })
+        .select({ id: articles.id, slug: articles.slug })
         .from(articles)
         .where(eq(articles.published, true))
         .orderBy(desc(articles.publishedAt))
         .limit(500);
 
+      const articleIds = allArticles.map((a) => a.id);
+      const translationRows = articleIds.length > 0
+        ? await db
+            .select({
+              articleId: articleTranslations.articleId,
+              locale: articleTranslations.locale,
+              slug: articleTranslations.slug,
+            })
+            .from(articleTranslations)
+            .where(inArray(articleTranslations.articleId, articleIds))
+        : [];
+
+      const slugsByArticle = new Map<number, Record<string, string>>();
+      for (const row of translationRows) {
+        if (!row.slug) continue;
+        if (!slugsByArticle.has(row.articleId)) slugsByArticle.set(row.articleId, {});
+        slugsByArticle.get(row.articleId)![row.locale] = row.slug;
+      }
+
       for (const article of allArticles) {
-        urls.push(
-          ...allLocaleUrls({ pathname: "/noticias/[slug]", params: { slug: article.slug } } as any)
-        );
+        const locSlugs = slugsByArticle.get(article.id);
+        for (const loc of routing.locales) {
+          const slug = loc === "es" ? article.slug : (locSlugs?.[loc] ?? article.slug);
+          urls.push(
+            `${BASE}${getPathname({ locale: loc as Locale, href: { pathname: "/noticias/[slug]", params: { slug } } as any })}`
+          );
+        }
       }
     }
   } catch {

@@ -21,7 +21,7 @@ on:
           - learn
           - indexing
       content_type:
-        description: 'When job=content: daily, weekly, auto, translate, or replace_today (delete + regenerate today)'
+        description: 'When job=content: daily, weekly, auto, translate, replace_today, or regenerate_translations'
         required: false
         default: 'daily'
         type: choice
@@ -31,6 +31,7 @@ on:
           - auto
           - translate
           - replace_today
+          - regenerate_translations
 
 env:
   SERVICE_URL: https://metalorix.com

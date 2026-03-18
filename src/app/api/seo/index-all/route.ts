@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getDb } from "@/lib/db";
-import { articles, glossaryTerms, learnClusters, learnArticles } from "@/lib/db/schema";
-import { eq, desc, isNotNull } from "drizzle-orm";
+import { articles, articleTranslations, glossaryTerms, learnClusters, learnArticles } from "@/lib/db/schema";
+import { eq, desc, isNotNull, inArray } from "drizzle-orm";
 import { routing } from "@/i18n/routing";
 import { getPathname } from "@/i18n/navigation";
 import { INTERNAL_METAL_SLUGS, getLocalizedMetalSlug } from "@/lib/utils/metal-slugs";
@@ -56,14 +56,39 @@ export async function POST(request: NextRequest) {
   if (db) {
     try {
       const allArticles = await db
-        .select({ slug: articles.slug })
+        .select({ id: articles.id, slug: articles.slug })
         .from(articles)
         .where(eq(articles.published, true))
         .orderBy(desc(articles.publishedAt))
         .limit(500);
 
+      const articleIds = allArticles.map((a) => a.id);
+      const translationRows = articleIds.length > 0
+        ? await db
+            .select({
+              articleId: articleTranslations.articleId,
+              locale: articleTranslations.locale,
+              slug: articleTranslations.slug,
+            })
+            .from(articleTranslations)
+            .where(inArray(articleTranslations.articleId, articleIds))
+        : [];
+
+      const slugsByArticle = new Map<number, Record<string, string>>();
+      for (const row of translationRows) {
+        if (!row.slug) continue;
+        if (!slugsByArticle.has(row.articleId)) slugsByArticle.set(row.articleId, {});
+        slugsByArticle.get(row.articleId)![row.locale] = row.slug;
+      }
+
       for (const a of allArticles) {
-        allUrls.push(...allLocaleUrls({ pathname: "/noticias/[slug]", params: { slug: a.slug } }));
+        const locSlugs = slugsByArticle.get(a.id);
+        for (const loc of routing.locales) {
+          const slug = loc === "es" ? a.slug : (locSlugs?.[loc] ?? a.slug);
+          allUrls.push(
+            `${BASE}${getPathname({ locale: loc, href: { pathname: "/noticias/[slug]", params: { slug } } } as any)}`
+          );
+        }
       }
 
       const terms = await db
