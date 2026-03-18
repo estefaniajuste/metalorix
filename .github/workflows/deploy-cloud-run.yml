@@ -12,7 +12,39 @@ env:
   IMAGE: europe-west1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/metalorix/app
 
 jobs:
+  migrate:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci --ignore-scripts
+
+      - name: Start Cloud SQL Proxy
+        run: |
+          curl -o cloud-sql-proxy https://storage.googleapis.com/cloud-sql-connectors/cloud-sql-proxy/v2.8.0/cloud-sql-proxy.linux.amd64
+          chmod +x cloud-sql-proxy
+          ./cloud-sql-proxy ${{ secrets.GCP_PROJECT_ID }}:europe-west1:metalorix-db --port=5432 &
+          sleep 3
+
+      - name: Run database migrations
+        env:
+          DATABASE_URL: postgresql://postgres:${{ secrets.DB_PASSWORD }}@127.0.0.1:5432/metalorix
+        run: npm run db:migrate
+
   deploy:
+    needs: migrate
     runs-on: ubuntu-latest
     permissions:
       contents: read
