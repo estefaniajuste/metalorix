@@ -1,7 +1,7 @@
 import { generateText, isConfigured } from "./gemini";
 import { getDb } from "@/lib/db";
 import { glossaryTerms } from "@/lib/db/schema";
-import { eq, asc, isNull } from "drizzle-orm";
+import { eq, asc, isNull, and } from "drizzle-orm";
 import { getCategoryIds } from "@/lib/data/glossary-categories";
 
 interface TermSummary {
@@ -304,6 +304,203 @@ export async function injectGlossaryLinks(
   }
 
   return result;
+}
+
+const GLOSSARY_TRANSLATION_LOCALES = ["en", "zh", "ar", "tr", "de"] as const;
+
+const GLOSSARY_LANGUAGE_NAMES: Record<string, string> = {
+  en: "English",
+  zh: "Simplified Chinese",
+  ar: "Arabic",
+  tr: "Turkish",
+  de: "German",
+};
+
+interface TranslatedGlossaryTerm {
+  term: string;
+  definition: string;
+  content: string;
+  slug_keywords?: string;
+}
+
+function parseTranslatedGlossaryResponse(raw: string): TranslatedGlossaryTerm | null {
+  try {
+    const closedMatch = raw.match(/```(?:json)?\s*([\s\S]*?)```/);
+    const unclosedMatch = !closedMatch ? raw.match(/```(?:json)?\s*([\s\S]*)/) : null;
+    let jsonStr = (closedMatch?.[1] ?? unclosedMatch?.[1] ?? raw).trim();
+    const objMatch = jsonStr.match(/\{[\s\S]*\}/);
+    if (objMatch) jsonStr = objMatch[0];
+    const parsed = JSON.parse(jsonStr);
+    if (parsed.term && parsed.definition && parsed.content) {
+      return {
+        term: String(parsed.term),
+        definition: String(parsed.definition),
+        content: String(parsed.content),
+        slug_keywords: parsed.slug_keywords ? String(parsed.slug_keywords) : undefined,
+      };
+    }
+    return null;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Translate a Spanish glossary term to a target locale.
+ */
+async function translateGlossaryTermToLocale(
+  term: string,
+  definition: string,
+  content: string,
+  category: string | null,
+  targetLocale: string
+): Promise<TranslatedGlossaryTerm | null> {
+  if (!isConfigured()) return null;
+
+  const langName = GLOSSARY_LANGUAGE_NAMES[targetLocale];
+  if (!langName) return null;
+
+  const slugInstruction =
+    targetLocale === "zh" || targetLocale === "ar"
+      ? "3-6 keywords in ENGLISH (Latin alphabet only) for the URL slug, separated by spaces, lowercase. Example: 'state strategic reserve'."
+      : `3-6 keywords in ${langName} for the URL slug, separated by spaces, lowercase, Latin alphabet only. Example for English: 'state strategic reserve'. Example for German: 'staatliche strategische reserve'.`;
+
+  const prompt = `You are a professional translator specializing in financial and precious metals content.
+
+Translate the following Spanish glossary term about precious metals into ${langName}.
+
+ORIGINAL TERM (Spanish): ${term}
+ORIGINAL DEFINITION (Spanish): ${definition}
+ORIGINAL CONTENT (Spanish):
+${content || "(no expanded content)"}
+
+TRANSLATION RULES:
+- Translate naturally into ${langName}, not word-by-word
+- Keep financial/technical terms accurate
+- Preserve markdown formatting (## headings, **bold**, etc.)
+- Keep numbers and percentages as-is
+- Preserve internal glossary links like [term](/learn/glossary/slug) — keep the slug as-is for now (do not translate URLs)
+- Do NOT add external hyperlinks
+
+Return ONLY a valid JSON:
+{
+  "term": "Translated term name in ${langName}",
+  "definition": "Translated definition in ${langName}",
+  "content": "Translated full content in ${langName} (or empty string if original was empty)",
+  "slug_keywords": "${slugInstruction}"
+}
+
+Return ONLY the JSON, no additional text.`;
+
+  const raw = await generateText(prompt);
+  if (!raw) return null;
+  return parseTranslatedGlossaryResponse(raw);
+}
+
+/**
+ * Translate a Spanish glossary term to all supported locales and save.
+ * Returns the number of new translations created.
+ */
+export async function translateGlossaryTerm(termId: number): Promise<number> {
+  const db = getDb();
+  if (!db || !isConfigured()) return 0;
+
+  let translated = 0;
+
+  try {
+    const [source] = await db
+      .select()
+      .from(glossaryTerms)
+      .where(and(eq(glossaryTerms.id, termId), eq(glossaryTerms.locale, "es")))
+      .limit(1);
+
+    if (!source) return 0;
+
+    for (const locale of GLOSSARY_TRANSLATION_LOCALES) {
+      try {
+        const existing = await db
+          .select({ id: glossaryTerms.id })
+          .from(glossaryTerms)
+          .where(
+            and(
+              eq(glossaryTerms.sourceId, termId),
+              eq(glossaryTerms.locale, locale)
+            )
+          )
+          .limit(1);
+
+        if (existing.length > 0) continue;
+
+        const result = await translateGlossaryTermToLocale(
+          source.term,
+          source.definition,
+          source.content ?? "",
+          source.category,
+          locale
+        );
+
+        if (result) {
+          const translatedSlug = result.slug_keywords
+            ? slugify(result.slug_keywords)
+            : `${source.slug}-${locale}`;
+
+          await db
+            .insert(glossaryTerms)
+            .values({
+              slug: translatedSlug,
+              term: result.term,
+              locale,
+              definition: result.definition,
+              content: result.content || null,
+              category: source.category,
+              relatedSlugs: source.relatedSlugs,
+              sourceId: termId,
+              published: true,
+            });
+          translated++;
+          console.log(`[Glossary] Translated ${source.term} to ${locale}: slug=${translatedSlug}`);
+        }
+      } catch (err) {
+        console.error(`[Glossary] Failed to translate term ${termId} to ${locale}:`, err);
+      }
+    }
+  } catch (err) {
+    console.error(`[Glossary] Failed to translate term ${termId}:`, err);
+  }
+
+  return translated;
+}
+
+/**
+ * Translate glossary terms that have no translation in the target locales.
+ * Picks up to `count` Spanish terms and translates them.
+ */
+export async function translateGlossaryBatch(count: number): Promise<number> {
+  const db = getDb();
+  if (!db || !isConfigured()) return 0;
+
+  let total = 0;
+
+  try {
+    const spanishTerms = await db
+      .select({ id: glossaryTerms.id, term: glossaryTerms.term })
+      .from(glossaryTerms)
+      .where(and(eq(glossaryTerms.published, true), eq(glossaryTerms.locale, "es")))
+      .orderBy(glossaryTerms.createdAt)
+      .limit(count);
+
+    for (const t of spanishTerms) {
+      const n = await translateGlossaryTerm(t.id);
+      total += n;
+      if (n > 0) {
+        await new Promise((r) => setTimeout(r, 500));
+      }
+    }
+  } catch (err) {
+    console.error("[Glossary] translateGlossaryBatch failed:", err);
+  }
+
+  return total;
 }
 
 /**

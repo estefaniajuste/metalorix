@@ -1,5 +1,8 @@
 import { Link } from "@/i18n/navigation";
 import { getTranslations, getLocale } from "next-intl/server";
+import { getLocalizedClusterSlug } from "@/lib/learn/slug-i18n";
+import { getCategoryLabel } from "@/lib/data/glossary-categories";
+import type { Locale } from "@/i18n/routing";
 import { getDb } from "@/lib/db";
 import { articles, articleTranslations, glossaryTerms } from "@/lib/db/schema";
 import { eq, desc, and, inArray } from "drizzle-orm";
@@ -74,19 +77,8 @@ async function getFeaturedGlossary(locale: string) {
       .where(and(eq(glossaryTerms.published, true), eq(glossaryTerms.locale, locale)))
       .orderBy(desc(glossaryTerms.createdAt))
       .limit(4);
-    if (rows.length > 0) return rows;
-    // Fallback to default locale if no terms for this locale
-    return await db
-      .select({
-        slug: glossaryTerms.slug,
-        term: glossaryTerms.term,
-        definition: glossaryTerms.definition,
-        category: glossaryTerms.category,
-      })
-      .from(glossaryTerms)
-      .where(eq(glossaryTerms.published, true))
-      .orderBy(desc(glossaryTerms.createdAt))
-      .limit(4);
+    // Only show glossary in user's locale — never fallback to Spanish in EN/other locales
+    return rows;
   } catch {
     return [];
   }
@@ -285,12 +277,12 @@ export async function HomePreview() {
               {glossary.map((term) => (
                 <Link
                   key={term.slug}
-                  href={{ pathname: "/learn/[cluster]/[slug]" as const, params: { cluster: "glossary", slug: term.slug } }}
+                  href={{ pathname: "/learn/[cluster]/[slug]" as const, params: { cluster: getLocalizedClusterSlug("glossary", locale as Locale), slug: term.slug } }}
                   className="bg-surface-1 border border-border rounded-DEFAULT p-4 hover:border-border-hover hover:-translate-y-0.5 transition-all group"
                 >
                   {term.category && (
                     <span className="text-[10px] font-medium text-content-3 uppercase tracking-wider">
-                      {term.category}
+                      {getCategoryLabel(term.category, locale)}
                     </span>
                   )}
                   <h3 className="text-sm font-semibold text-content-0 mt-1 mb-1.5 group-hover:text-brand-gold transition-colors">

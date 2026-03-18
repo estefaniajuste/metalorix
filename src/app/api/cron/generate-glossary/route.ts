@@ -9,6 +9,7 @@ import {
   expandTermsWithoutContent,
   injectGlossaryLinks,
   getGlossaryTermCount,
+  translateGlossaryBatch,
 } from "@/lib/ai/glossary-generator";
 
 const CRON_SECRET = process.env.CRON_SECRET?.trim();
@@ -63,6 +64,11 @@ export async function POST(request: NextRequest) {
   if (action === "expand") {
     const expanded = await expandTermsWithoutContent(count);
     results.push(`expanded: ${expanded} terms`);
+  }
+
+  if (action === "translate") {
+    const translated = await translateGlossaryBatch(count);
+    results.push(`translated: ${translated} new locale entries`);
   }
 
   if (action === "relink") {

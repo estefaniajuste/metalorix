@@ -4,6 +4,7 @@ import { articles, articleTranslations, metalPrices } from "@/lib/db/schema";
 import { eq, desc, gte, and, like, inArray } from "drizzle-orm";
 import {
   generateDailySummary,
+  generateEveningSummary,
   generateEventArticle,
   generateWeeklySummary,
   saveArticle,
@@ -62,6 +63,29 @@ export async function POST(request: NextRequest) {
     parseSuccess: false,
     usedFallback: "none",
   };
+
+  if (type === "evening") {
+    try {
+      const article = await generateEveningSummary(dailyLog);
+      const quality = validateArticleQuality(article, "daily");
+      if (!quality.passed) {
+        dailyLog.saveError = `evening quality_rejected: ${quality.reasons.join("; ")}`;
+        console.error("[Cron] Evening article REJECTED by quality gate:", quality.reasons);
+      } else {
+        const articleId = await saveArticle(article, "daily");
+        if (articleId) {
+          generated.push(`evening: ${article.slug}`);
+          articleIdsToTranslate.push(articleId);
+          console.log(`[Cron] Evening article saved: ${article.slug} (id=${articleId})`);
+        } else {
+          dailyLog.saveError = "saveArticle failed (evening)";
+        }
+      }
+    } catch (err) {
+      dailyLog.saveError = err instanceof Error ? err.message : String(err);
+      console.error("[Cron] Evening generation failed:", err);
+    }
+  }
 
   if (type === "daily" || type === "auto") {
     try {
@@ -303,8 +327,8 @@ export async function POST(request: NextRequest) {
     if (newUrls.length) await pingIndexNow(newUrls);
   }
 
-  // Alert admin by email if daily generation or translations failed
-  const dailyFailed = (type === "daily" || type === "auto") && !!dailyLog.saveError;
+  // Alert admin by email if daily/evening generation or translations failed
+  const dailyFailed = (type === "daily" || type === "evening" || type === "auto") && !!dailyLog.saveError;
   const hasTranslationGaps = translationIssues.length > 0;
 
   if (dailyFailed || hasTranslationGaps) {
@@ -338,7 +362,7 @@ export async function POST(request: NextRequest) {
     ping: pingResult,
     timestamp: new Date().toISOString(),
   };
-  if (type === "daily" || type === "auto") body.dailyLog = dailyLog;
+  if (type === "daily" || type === "evening" || type === "auto") body.dailyLog = dailyLog;
 
   return NextResponse.json(body);
 }

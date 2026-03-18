@@ -220,6 +220,15 @@ jobs:
           echo "Expand Status: $http_code"
           echo "Expand Response: $body"
 
+          # Translate 3 Spanish terms to en/zh/ar/tr/de
+          response=$(curl -s -w "\n%{http_code}" -X POST \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+            "${{ env.SERVICE_URL }}/api/cron/generate-glossary?action=translate&count=3")
+          http_code=$(echo "$response" | tail -1)
+          body=$(echo "$response" | head -n -1)
+          echo "Translate Status: $http_code"
+          echo "Translate Response: $body"
+
   generate-learn:
     if: >
       (github.event_name == 'schedule' && github.event.schedule == '*/15 * * * *') ||

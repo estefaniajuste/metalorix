@@ -129,6 +129,7 @@ export const glossaryTerms = pgTable(
     content: text("content"),
     category: varchar("category", { length: 100 }),
     relatedSlugs: varchar("related_slugs", { length: 50 }).array(),
+    sourceId: integer("source_id"), // References glossary_terms.id for translations (no FK to avoid circular ref)
     published: boolean("published").notNull().default(false),
     createdAt: timestamp("created_at", { withTimezone: true })
       .notNull()

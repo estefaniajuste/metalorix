@@ -407,6 +407,144 @@ El oro es el metal precioso por excelencia. Se utiliza como reserva de valor, en
   return { slug, title, excerpt, content, metals: ["XAU", "XAG", "XPT", "XPD", "HG"] };
 }
 
+/** Evening summary: session close recap. Different from daily (morning). Slug prefixed with "cierre-" to avoid collision. */
+export async function generateEveningSummary(log?: DailyGenerationLog): Promise<{
+  slug: string;
+  title: string;
+  excerpt: string;
+  content: string;
+  metals: string[];
+}> {
+  const today = new Date();
+  const dateStr = formatDate(today);
+  const dateSlug = today.toISOString().slice(0, 10);
+
+  const prices = await getPricesWithFallback();
+  const news = await getRecentNews(12);
+
+  if (log) {
+    log.pricesCount = prices.length;
+    log.newsCount = news.length;
+  }
+  console.log(`[ContentGenerator] generateEveningSummary: prices=${prices.length}, news=${news.length}`);
+
+  if (!isConfigured()) {
+    console.warn("[ContentGenerator] Gemini not configured, using minimal evening article");
+    if (log) log.usedFallback = "minimal";
+    return buildMinimalEveningArticle(prices, dateStr, dateSlug);
+  }
+
+  const glossaryContext = await getGlossaryTermsForPrompt();
+  const glossaryInstructions = buildGlossaryLinkingInstructions(glossaryContext);
+
+  const prompt = `Eres un analista experto en metales preciosos, macroeconomía y geopolítica que escribe en español para inversores hispanohablantes.
+
+Escribe un RESUMEN DE CIERRE DE SESIÓN del mercado de metales preciosos para hoy, ${dateStr}. Este artículo se publica tras el cierre de los mercados occidentales (NY, Londres). Es distinto del resumen matinal: aquí el foco es qué ha pasado DURANTE la sesión, niveles de cierre y qué ha movido los precios en las últimas horas.
+
+DATOS DE PRECIOS AL CIERRE:
+${formatPrices(prices)}
+
+NOTICIAS RELEVANTES DE LAS ÚLTIMAS 12H:
+${formatNews(news)}
+
+INSTRUCCIONES PARA EL CONTENIDO:
+- Escribe en español natural, profesional pero accesible
+- Longitud: 400-550 palabras (más conciso que el resumen matinal)
+- Estructura:
+  1. Párrafo resumen: qué ha dominado la sesión (subidas, caídas, consolidación)
+  2. Niveles de cierre por metal con variación intradía
+  3. Causas del movimiento: datos macro publicados hoy, declaraciones de la Fed/BCE, noticias geopolíticas, flujos de mercado
+  4. Perspectiva para mañana: qué vigilar
+- Conecta SIEMPRE los movimientos con causas reales
+- Usa formato: párrafos normales, ## para secciones principales
+- Tono: informativo, analítico
+- NO incluyas título ni fecha al inicio
+- NO digas "como analista" ni uses primera persona
+- CRÍTICO: NO insertes enlaces externos (URLs http/https) en el cuerpo. Los ÚNICOS enlaces permitidos son internos al glosario: [término](/learn/glossary/slug-del-termino).
+${glossaryInstructions}
+
+INSTRUCCIONES SEO Y FUENTES (MUY IMPORTANTE):
+Devuelve tu respuesta como un JSON válido con esta estructura exacta:
+
+{
+  "titulo_seo": "Título SEO (50-65 caracteres). Debe captar el cierre de sesión: 'El oro cierra por debajo de $5000 tras incertidumbre ante la Fed', 'Plata y cobre suben al cierre por datos de manufacturas en China', 'Metales cierran mixtos: oro estable, platino cae un 1.5%'. Incluye precio o nivel clave si es relevante.",
+  "meta_descripcion": "Metadescripción (140-155 caracteres). Cierre de sesión con precios concretos y factor clave. Debe invitar al clic.",
+  "palabras_clave_url": "3-6 palabras clave para la URL sin fecha. Ejemplo: 'oro cierra fed sesion' o 'metales cierre sesion datos china'. Incluye 'cierre' o 'sesion' para diferenciar del resumen matinal.",
+  "contenido": "El artículo completo aquí (400-550 palabras con ## para secciones). NO incluyas la sección de fuentes.",
+  "fuentes": [{"titulo": "Título descriptivo de la fuente", "url": "URL completa de la noticia original"}]
+}
+
+IMPORTANTE sobre fuentes:
+- Incluye en "fuentes" las noticias utilizadas
+- Mínimo 2 fuentes, máximo 5
+
+Devuelve SOLO el JSON, sin texto adicional antes o después. No envuelvas en bloques de código.`;
+
+  const promptSize = new TextEncoder().encode(prompt).length;
+  if (log) log.promptSizeBytes = promptSize;
+
+  const raw = await generateText(prompt, {
+    retryOnEmpty: true,
+    log: (entry) => {
+      if (log) log.geminiLog = entry;
+    },
+  });
+
+  if (!raw) {
+    if (log) log.usedFallback = "minimal";
+    return buildMinimalEveningArticle(prices, dateStr, dateSlug);
+  }
+
+  const parsed = parseStructuredResponse(raw);
+
+  if (parsed) {
+    if (log) log.parseSuccess = true;
+    const keywordSlug = slugify(parsed.palabras_clave_url);
+    const slug = `cierre-${keywordSlug}-${dateSlug}`;
+    console.log(`[ContentGenerator] Parsed evening JSON, slug: ${slug}`);
+    return {
+      slug,
+      title: parsed.titulo_seo,
+      excerpt: parsed.meta_descripcion,
+      content: appendSources(parsed.contenido.trim(), parsed.fuentes),
+      metals: ["XAU", "XAG", "XPT", "XPD", "HG"],
+    };
+  }
+
+  if (log) log.parseSuccess = false;
+  const fallbackSlug = `cierre-sesion-metales-${dateSlug}`;
+  const fallbackTitle = `Cierre de sesión — Metales preciosos ${dateStr}`;
+  const oro = prices.find((p) => p.symbol === "XAU");
+  const fallbackExcerpt = `Oro cierra a $${oro?.price.toFixed(0) ?? "N/A"}, Plata a $${prices.find((p) => p.symbol === "XAG")?.price.toFixed(2) ?? "N/A"}. Resumen de la sesión.`;
+
+  return {
+    slug: fallbackSlug,
+    title: fallbackTitle,
+    excerpt: fallbackExcerpt,
+    content: raw.trim(),
+    metals: ["XAU", "XAG", "XPT", "XPD", "HG"],
+  };
+}
+
+function buildMinimalEveningArticle(
+  prices: PriceData[],
+  dateStr: string,
+  dateSlug: string
+): {
+  slug: string;
+  title: string;
+  excerpt: string;
+  content: string;
+  metals: string[];
+} {
+  const daily = buildMinimalDailyArticle(prices, dateStr, dateSlug);
+  return {
+    ...daily,
+    slug: `cierre-sesion-metales-${dateSlug}`,
+    title: `Cierre de sesión — Metales preciosos ${dateStr}`,
+  };
+}
+
 export async function generateEventArticle(
   metal: string,
   metalName: string,
