@@ -4,7 +4,7 @@ import {
   isIndexingApiConfigured,
 } from "@/lib/seo/indexing-api";
 
-const CRON_SECRET = process.env.CRON_SECRET;
+const CRON_SECRET = process.env.CRON_SECRET?.trim();
 const BASE = process.env.NEXT_PUBLIC_URL || "https://metalorix.com";
 
 const PRIORITY_STATIC_URLS = [
@@ -105,7 +105,7 @@ function buildDynamicUrls(items: DynamicUrl[], maxPerType: number): string[] {
 
 export async function POST(request: NextRequest) {
   if (CRON_SECRET) {
-    const auth = request.headers.get("authorization");
+    const auth = request.headers.get("authorization")?.trim();
     if (auth !== `Bearer ${CRON_SECRET}`) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }

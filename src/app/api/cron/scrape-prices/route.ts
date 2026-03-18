@@ -7,7 +7,7 @@ import { fetchAllSpotPrices as fetchFromGoldApi } from "@/lib/providers/gold-api
 import { fetchAllSpotPrices as fetchFromTwelveData } from "@/lib/providers/twelve-data";
 import type { MetalSpot } from "@/lib/providers/metals";
 
-const CRON_SECRET = process.env.CRON_SECRET;
+const CRON_SECRET = process.env.CRON_SECRET?.trim();
 const REQUIRED_SYMBOLS = ["XAU", "XAG", "XPT", "XPD", "HG"];
 
 async function fetchAllPrices(): Promise<MetalSpot[]> {
@@ -31,7 +31,7 @@ async function fetchAllPrices(): Promise<MetalSpot[]> {
 
 export async function POST(request: NextRequest) {
   if (CRON_SECRET) {
-    const auth = request.headers.get("authorization");
+    const auth = request.headers.get("authorization")?.trim();
     if (auth !== `Bearer ${CRON_SECRET}`) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }

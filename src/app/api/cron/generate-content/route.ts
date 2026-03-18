@@ -29,12 +29,12 @@ import { getPathname } from "@/i18n/navigation";
 const ADMIN_EMAIL = "estefaniajuste@gmail.com";
 const EXPECTED_TRANSLATIONS = 5;
 
-const CRON_SECRET = process.env.CRON_SECRET;
+const CRON_SECRET = process.env.CRON_SECRET?.trim();
 const EVENT_THRESHOLD_PCT = 2.0;
 
 export async function POST(request: NextRequest) {
   if (CRON_SECRET) {
-    const auth = request.headers.get("authorization");
+    const auth = request.headers.get("authorization")?.trim();
     if (auth !== `Bearer ${CRON_SECRET}`) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }

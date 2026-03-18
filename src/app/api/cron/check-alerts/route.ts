@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { runAlertEngine } from "@/lib/alerts/engine";
 
-const CRON_SECRET = process.env.CRON_SECRET;
+const CRON_SECRET = process.env.CRON_SECRET?.trim();
 
 export async function POST(request: NextRequest) {
   if (CRON_SECRET) {
-    const auth = request.headers.get("authorization");
+    const auth = request.headers.get("authorization")?.trim();
     if (auth !== `Bearer ${CRON_SECRET}`) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
