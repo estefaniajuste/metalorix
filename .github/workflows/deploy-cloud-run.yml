@@ -51,6 +51,8 @@ jobs:
 
   deploy:
     needs: migrate
+    # migrate can fail (ECONNRESET with Cloud SQL Proxy from GitHub); deploy continues
+    if: always() && (needs.migrate.result == 'success' || needs.migrate.result == 'failure')
     runs-on: ubuntu-latest
     permissions:
       contents: read
