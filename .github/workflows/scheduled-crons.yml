@@ -190,8 +190,8 @@ jobs:
         run: |
           hour=$(date -u +%H)
           minute=$(date -u +%M)
-          # Generate glossary terms daily at 10:00 UTC
-          if [ "$hour" = "10" ] && [ "$minute" -lt "15" ]; then
+          # Generate glossary terms daily at 10:00 UTC (full hour to tolerate delays)
+          if [ "$hour" = "10" ]; then
             echo "should_run=true" >> $GITHUB_OUTPUT
           elif [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
             echo "should_run=true" >> $GITHUB_OUTPUT

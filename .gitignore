@@ -34,8 +34,8 @@ npm-debug.log*
 # Docker volumes
 pgdata/
 
-# Drizzle
-drizzle/meta/
+# Drizzle (meta/ needed for migrate in CI)
+# drizzle/meta/
 
 # Playwright
 /test-results/
