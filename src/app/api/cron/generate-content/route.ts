@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getDb } from "@/lib/db";
 import { articles, articleTranslations, metalPrices } from "@/lib/db/schema";
-import { eq, desc, gte, and, like, inArray } from "drizzle-orm";
+import { eq, desc, gte, lt, and, like, not, inArray } from "drizzle-orm";
 import {
   generateDailySummary,
   generateEveningSummary,
@@ -31,7 +31,8 @@ const ADMIN_EMAIL = "estefaniajuste@gmail.com";
 const EXPECTED_TRANSLATIONS = 5;
 
 const CRON_SECRET = process.env.CRON_SECRET?.trim();
-const EVENT_THRESHOLD_PCT = 2.0;
+/** Event articles only for exceptional moves (≥5%). Normal 2-3% moves are covered in daily/evening. */
+const EVENT_THRESHOLD_PCT = 5.0;
 
 export async function POST(request: NextRequest) {
   if (CRON_SECRET) {
@@ -66,19 +67,34 @@ export async function POST(request: NextRequest) {
 
   if (type === "evening") {
     try {
-      const article = await generateEveningSummary(dailyLog);
-      const quality = validateArticleQuality(article, "daily");
-      if (!quality.passed) {
-        dailyLog.saveError = `evening quality_rejected: ${quality.reasons.join("; ")}`;
-        console.error("[Cron] Evening article REJECTED by quality gate:", quality.reasons);
+      const dateSlug = new Date().toISOString().slice(0, 10);
+      const existingEvening = await db
+        .select({ id: articles.id })
+        .from(articles)
+        .where(
+          and(
+            eq(articles.category, "daily"),
+            like(articles.slug, `cierre-%-${dateSlug}`)
+          )
+        )
+        .limit(1);
+      if (existingEvening.length > 0) {
+        generated.push(`evening: skipped (already exists for ${dateSlug})`);
       } else {
-        const articleId = await saveArticle(article, "daily");
-        if (articleId) {
-          generated.push(`evening: ${article.slug}`);
-          articleIdsToTranslate.push(articleId);
-          console.log(`[Cron] Evening article saved: ${article.slug} (id=${articleId})`);
+        const article = await generateEveningSummary(dailyLog);
+        const quality = validateArticleQuality(article, "daily");
+        if (!quality.passed) {
+          dailyLog.saveError = `evening quality_rejected: ${quality.reasons.join("; ")}`;
+          console.error("[Cron] Evening article REJECTED by quality gate:", quality.reasons);
         } else {
-          dailyLog.saveError = "saveArticle failed (evening)";
+          const articleId = await saveArticle(article, "daily");
+          if (articleId) {
+            generated.push(`evening: ${article.slug}`);
+            articleIdsToTranslate.push(articleId);
+            console.log(`[Cron] Evening article saved: ${article.slug} (id=${articleId})`);
+          } else {
+            dailyLog.saveError = "saveArticle failed (evening)";
+          }
         }
       }
     } catch (err) {
@@ -89,48 +105,63 @@ export async function POST(request: NextRequest) {
 
   if (type === "daily" || type === "auto") {
     try {
-      if (replaceToday) {
-        const base = process.env.NEXT_PUBLIC_URL || "https://metalorix.com";
-        const headers: Record<string, string> = {};
-        if (CRON_SECRET) headers["Authorization"] = `Bearer ${CRON_SECRET}`;
-        await fetch(`${base}/api/cron/scrape-news`, { method: "POST", headers }).catch(() => {});
-        await fetch(`${base}/api/cron/scrape-prices`, { method: "POST", headers }).catch(() => {});
-
-        const dateSlug = new Date().toISOString().slice(0, 10);
-        const pattern = `%-${dateSlug}`;
-        const toReplace = await db
-          .select({ id: articles.id, slug: articles.slug })
-          .from(articles)
-          .where(and(eq(articles.category, "daily"), like(articles.slug, pattern)))
-          .orderBy(desc(articles.publishedAt))
-          .limit(1);
-        if (toReplace.length > 0) {
-          await db.delete(articleTranslations).where(eq(articleTranslations.articleId, toReplace[0].id));
-          await db.delete(articles).where(eq(articles.id, toReplace[0].id));
-          generated.push(`replaced: ${toReplace[0].slug}`);
-          console.log(`[Cron] Replaced today's article: ${toReplace[0].slug}`);
-        }
-      }
-
-      const article = await generateDailySummary(dailyLog);
-
-      const quality = validateArticleQuality(article, "daily");
-      if (!quality.passed) {
-        dailyLog.saveError = `quality_rejected: ${quality.reasons.join("; ")}`;
-        console.error("[Cron] Daily article REJECTED by quality gate:", quality.reasons);
+      const dateSlugDaily = new Date().toISOString().slice(0, 10);
+      const existingDailies = await db
+        .select({ id: articles.id, slug: articles.slug })
+        .from(articles)
+        .where(
+          and(
+            eq(articles.category, "daily"),
+            like(articles.slug, `%-${dateSlugDaily}`)
+          )
+        );
+      const hasMorningDaily = existingDailies.some((a) => !a.slug.startsWith("cierre-"));
+      if (hasMorningDaily && !replaceToday) {
+        generated.push(`daily: skipped (already exists for ${dateSlugDaily})`);
       } else {
-        let articleId = await saveArticle(article, "daily");
-        if (!articleId) {
-          console.warn("[Cron] saveArticle failed, retrying once...");
-          articleId = await saveArticle(article, "daily");
+        if (replaceToday) {
+          const base = process.env.NEXT_PUBLIC_URL || "https://metalorix.com";
+          const headers: Record<string, string> = {};
+          if (CRON_SECRET) headers["Authorization"] = `Bearer ${CRON_SECRET}`;
+          await fetch(`${base}/api/cron/scrape-news`, { method: "POST", headers }).catch(() => {});
+          await fetch(`${base}/api/cron/scrape-prices`, { method: "POST", headers }).catch(() => {});
+
+          const dateSlug = new Date().toISOString().slice(0, 10);
+          const pattern = `%-${dateSlug}`;
+          const toReplace = await db
+            .select({ id: articles.id, slug: articles.slug })
+            .from(articles)
+            .where(and(eq(articles.category, "daily"), like(articles.slug, pattern), not(like(articles.slug, "cierre-%"))))
+            .orderBy(desc(articles.publishedAt))
+            .limit(1);
+          if (toReplace.length > 0) {
+            await db.delete(articleTranslations).where(eq(articleTranslations.articleId, toReplace[0].id));
+            await db.delete(articles).where(eq(articles.id, toReplace[0].id));
+            generated.push(`replaced: ${toReplace[0].slug}`);
+            console.log(`[Cron] Replaced today's article: ${toReplace[0].slug}`);
+          }
         }
-        if (articleId) {
-          generated.push(`daily: ${article.slug}`);
-          articleIdsToTranslate.push(articleId);
-          console.log(`[Cron] Daily article saved: ${article.slug} (id=${articleId})`);
+
+        const article = await generateDailySummary(dailyLog);
+
+        const quality = validateArticleQuality(article, "daily");
+        if (!quality.passed) {
+          dailyLog.saveError = `quality_rejected: ${quality.reasons.join("; ")}`;
+          console.error("[Cron] Daily article REJECTED by quality gate:", quality.reasons);
         } else {
-          dailyLog.saveError = "saveArticle failed after retry";
-          console.error("[Cron] Could not save daily article:", article.slug);
+          let articleId = await saveArticle(article, "daily");
+          if (!articleId) {
+            console.warn("[Cron] saveArticle failed, retrying once...");
+            articleId = await saveArticle(article, "daily");
+          }
+          if (articleId) {
+            generated.push(`daily: ${article.slug}`);
+            articleIdsToTranslate.push(articleId);
+            console.log(`[Cron] Daily article saved: ${article.slug} (id=${articleId})`);
+          } else {
+            dailyLog.saveError = "saveArticle failed after retry";
+            console.error("[Cron] Could not save daily article:", article.slug);
+          }
         }
       }
     } catch (err) {
@@ -160,20 +191,47 @@ export async function POST(request: NextRequest) {
     };
 
     try {
-      const prices = await db.select().from(metalPrices);
-      for (const p of prices) {
-        const changePct = parseFloat(p.changePct24h ?? "0");
-        if (Math.abs(changePct) >= EVENT_THRESHOLD_PCT) {
+      const now = new Date();
+      const startOfToday = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
+      const startOfTomorrow = new Date(startOfToday);
+      startOfTomorrow.setUTCDate(startOfTomorrow.getUTCDate() + 1);
+
+      const anyEventToday = await db
+        .select({ id: articles.id })
+        .from(articles)
+        .where(
+          and(
+            eq(articles.category, "event"),
+            gte(articles.publishedAt, startOfToday),
+            lt(articles.publishedAt, startOfTomorrow)
+          )
+        )
+        .limit(1);
+      if (anyEventToday.length > 0) {
+        generated.push("event: skipped (max 1 per day, already exists)");
+      } else {
+        const prices = await db.select().from(metalPrices);
+        const candidates = prices
+          .map((p) => ({
+            symbol: p.symbol,
+            changePct: parseFloat(p.changePct24h ?? "0"),
+            priceUsd: parseFloat(p.priceUsd),
+          }))
+          .filter((p) => Math.abs(p.changePct) >= EVENT_THRESHOLD_PCT)
+          .sort((a, b) => Math.abs(b.changePct) - Math.abs(a.changePct));
+
+        if (candidates.length > 0) {
+          const top = candidates[0];
           const article = await generateEventArticle(
-            p.symbol,
-            metalNames[p.symbol] ?? p.symbol,
-            parseFloat(p.priceUsd),
-            changePct
+            top.symbol,
+            metalNames[top.symbol] ?? top.symbol,
+            top.priceUsd,
+            top.changePct
           );
           if (article) {
             const articleId = await saveArticle(article, "event");
             if (articleId) {
-              generated.push(`event: ${article.slug}`);
+              generated.push(`event: ${article.slug} (${top.symbol} ${top.changePct >= 0 ? "+" : ""}${top.changePct.toFixed(1)}%)`);
               articleIdsToTranslate.push(articleId);
             }
           }

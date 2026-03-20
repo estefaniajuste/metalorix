@@ -245,6 +245,18 @@ export async function generateDailySummary(log?: DailyGenerationLog): Promise<{
 
 Escribe un RESUMEN DIARIO del mercado de metales preciosos e industriales para hoy, ${dateStr}.
 
+CRÍTICO - LO MÁS SIGNIFICATIVO EN TODOS LOS ÁMBITOS:
+Tu prioridad es cubrir lo MÁS significativo del día, NO solo subidas o bajadas de precios. Incluye:
+- Movimientos de precios relevantes (pero no como único foco)
+- Compras de bancos centrales, reservas oficiales
+- Geopolítica: conflictos, sanciones, tensiones que afecten a metales
+- Minería: producción, huelgas, proyectos nuevos
+- Regulaciones y normativas
+- Demanda industrial (solar, electrónica, automoción)
+- Datos macro (Fed, BCE, empleo, inflación)
+- ETFs y flujos de inversión
+Si la noticia más importante del día es que un banco central compró oro récord, o que hay una nueva regulación minera, eso debe ser el titular — no una subida del 0.5%.
+
 DATOS DE PRECIOS ACTUALES:
 ${formatPrices(prices)}
 
@@ -255,9 +267,9 @@ INSTRUCCIONES PARA EL CONTENIDO:
 - Escribe en español natural, profesional pero accesible
 - Longitud: 500-700 palabras
 - Estructura:
-  1. Párrafo resumen con lo más importante del día
+  1. Párrafo resumen con lo MÁS significativo del día (precio, regulación, geopolítica, lo que sea más relevante)
   2. Análisis de cada metal con datos concretos
-  3. Contexto geopolítico y macroeconómico: explica cómo los eventos globales del día (conflictos, sanciones, decisiones de bancos centrales, datos de empleo, inflación, políticas comerciales, aranceles, etc.) afectan a los metales
+  3. Contexto geopolítico y macroeconómico: explica cómo los eventos globales del día afectan a los metales
   4. Perspectivas a corto plazo
 - Conecta SIEMPRE los movimientos de precios con causas reales: decisiones de la Fed, tensiones geopolíticas, datos económicos, demanda industrial, compras de bancos centrales, etc.
 - Usa formato: párrafos normales, encabezados con ## para secciones principales
@@ -274,7 +286,7 @@ INSTRUCCIONES SEO Y FUENTES (MUY IMPORTANTE):
 Debes devolver tu respuesta como un JSON válido con esta estructura exacta:
 
 {
-  "titulo_seo": "Un título optimizado para SEO (50-65 caracteres). Debe captar la esencia de la jornada con palabras clave que la gente busca en Google. Ejemplos de buen título: 'El oro supera los $5000 por tensiones en Oriente Medio', 'Caída del oro y subida de la plata tras datos de empleo en EE.UU.', 'Récord del oro ante debilidad del dólar y compras de bancos centrales'. NO uses títulos genéricos como 'Resumen del mercado'. Incluye la causa principal del movimiento.",
+  "titulo_seo": "Un título optimizado para SEO (50-65 caracteres). Debe captar lo MÁS significativo del día, no solo precios: 'Bancos centrales compran oro récord en 2026', 'Nueva regulación minera en Chile afecta al cobre', 'El oro supera $5000 por tensiones en Oriente Medio', 'Caída del oro tras datos de empleo en EE.UU.'. NO uses títulos genéricos. Incluye la noticia más relevante (precio, regulación, geopolítica, demanda).",
   "meta_descripcion": "Metadescripción atractiva para Google (140-155 caracteres). Resumen con precios concretos y el factor clave del día. Debe invitar al clic.",
   "palabras_clave_url": "3-6 palabras clave separadas por espacios para la URL, sin fecha. Ejemplo: 'oro sube tensiones geopoliticas ormuz' o 'plata maximo anual demanda industrial'. Solo las palabras más relevantes del día.",
   "contenido": "El artículo completo aquí (500-700 palabras con formato ## para secciones). NO incluyas la sección de fuentes aquí, va en el campo fuentes.",
@@ -439,7 +451,10 @@ export async function generateEveningSummary(log?: DailyGenerationLog): Promise<
 
   const prompt = `Eres un analista experto en metales preciosos, macroeconomía y geopolítica que escribe en español para inversores hispanohablantes.
 
-Escribe un RESUMEN DE CIERRE DE SESIÓN del mercado de metales preciosos para hoy, ${dateStr}. Este artículo se publica tras el cierre de los mercados occidentales (NY, Londres). Es distinto del resumen matinal: aquí el foco es qué ha pasado DURANTE la sesión, niveles de cierre y qué ha movido los precios en las últimas horas.
+Escribe un RESUMEN DE CIERRE DE SESIÓN del mercado de metales preciosos para hoy, ${dateStr}. Este artículo se publica tras el cierre de los mercados occidentales (NY, Londres). Es distinto del resumen matinal: aquí el foco es qué ha pasado DURANTE la sesión.
+
+CRÍTICO - LO MÁS SIGNIFICATIVO DE LA SESIÓN:
+Prioriza lo MÁS significativo, no solo subidas o bajadas de precios. Incluye: movimientos de precios relevantes, noticias geopolíticas, declaraciones de la Fed/BCE, datos macro publicados hoy, compras de bancos centrales, regulaciones, demanda industrial. Si la noticia más importante es una declaración de la Fed o un dato de empleo, eso debe destacar — no solo "oro sube 0.3%".
 
 DATOS DE PRECIOS AL CIERRE:
 ${formatPrices(prices)}
@@ -451,9 +466,9 @@ INSTRUCCIONES PARA EL CONTENIDO:
 - Escribe en español natural, profesional pero accesible
 - Longitud: 400-550 palabras (más conciso que el resumen matinal)
 - Estructura:
-  1. Párrafo resumen: qué ha dominado la sesión (subidas, caídas, consolidación)
+  1. Párrafo resumen: lo MÁS significativo de la sesión (precios, noticias, datos macro)
   2. Niveles de cierre por metal con variación intradía
-  3. Causas del movimiento: datos macro publicados hoy, declaraciones de la Fed/BCE, noticias geopolíticas, flujos de mercado
+  3. Causas: datos macro, declaraciones Fed/BCE, geopolítica, flujos de mercado
   4. Perspectiva para mañana: qué vigilar
 - Conecta SIEMPRE los movimientos con causas reales
 - Usa formato: párrafos normales, ## para secciones principales
@@ -467,7 +482,7 @@ INSTRUCCIONES SEO Y FUENTES (MUY IMPORTANTE):
 Devuelve tu respuesta como un JSON válido con esta estructura exacta:
 
 {
-  "titulo_seo": "Título SEO (50-65 caracteres). Debe captar el cierre de sesión: 'El oro cierra por debajo de $5000 tras incertidumbre ante la Fed', 'Plata y cobre suben al cierre por datos de manufacturas en China', 'Metales cierran mixtos: oro estable, platino cae un 1.5%'. Incluye precio o nivel clave si es relevante.",
+  "titulo_seo": "Título SEO (50-65 caracteres). Debe captar lo MÁS significativo del cierre: 'El oro cierra por debajo de $5000 tras incertidumbre ante la Fed', 'Plata sube al cierre por datos de manufacturas en China', 'Metales cierran mixtos tras declaraciones del BCE'. Incluye la noticia más relevante, no solo el precio.",
   "meta_descripcion": "Metadescripción (140-155 caracteres). Cierre de sesión con precios concretos y factor clave. Debe invitar al clic.",
   "palabras_clave_url": "3-6 palabras clave para la URL sin fecha. Ejemplo: 'oro cierra fed sesion' o 'metales cierre sesion datos china'. Incluye 'cierre' o 'sesion' para diferenciar del resumen matinal.",
   "contenido": "El artículo completo aquí (400-550 palabras con ## para secciones). NO incluyas la sección de fuentes.",
@@ -569,7 +584,7 @@ export async function generateEventArticle(
 
   const prompt = `Eres un analista experto en metales preciosos, macroeconomía y geopolítica que escribe en español.
 
-ALERTA DE MERCADO: ${metalName} ${direction} un ${absChange}% hoy (${dateStr}).
+ALERTA DE MERCADO EXCEPCIONAL: ${metalName} ${direction} un ${absChange}% hoy (${dateStr}). Este es un movimiento fuera de lo normal que merece un artículo dedicado.
 Precio actual: $${price.toFixed(2)} USD/oz
 
 NOTICIAS RECIENTES:
