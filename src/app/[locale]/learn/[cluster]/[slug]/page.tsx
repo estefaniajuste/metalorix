@@ -477,7 +477,7 @@ export default async function LearnArticlePage({
     },
   }));
 
-  const jsonLd: Record<string, unknown> = {
+  const articleJsonLd: Record<string, unknown> = {
     "@context": "https://schema.org",
     "@type": "Article",
     headline: title,
@@ -495,24 +495,35 @@ export default async function LearnArticlePage({
     },
   };
 
-  if (faq.length > 0) {
-    jsonLd.mainEntity = faq.map((item: { question: string; answer: string }) => ({
-      "@type": "Question",
-      name: item.question,
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: item.answer,
-      },
-    }));
-  }
+  const faqJsonLd =
+    faq.length > 0
+      ? {
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          mainEntity: faq.map((item: { question: string; answer: string }) => ({
+            "@type": "Question",
+            name: item.question,
+            acceptedAnswer: {
+              "@type": "Answer",
+              text: item.answer,
+            },
+          })),
+        }
+      : null;
 
   return (
     <>
       <SetLocalePathOverrides hrefs={localeHrefs} />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
       />
+      {faqJsonLd && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+        />
+      )}
 
       <article className="py-[var(--section-py)]">
         <div className="mx-auto max-w-[780px] px-6">

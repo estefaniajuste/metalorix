@@ -75,7 +75,11 @@ export const TOPICS_PART4: TopicDefinition[] = [
     summaryEn:
       "Examine how gold and silver performed during extreme inflation events in Germany, Zimbabwe, Venezuela, and Argentina, and what investors can learn from these episodes.",
     tags: ["hyperinflation", "gold", "silver", "wealth-preservation", "case-studies"],
-    relatedSlugs: ["currency-debasement-through-history", "currency-crises-and-gold"],
+    relatedSlugs: [
+      "currency-debasement-through-history",
+      "ppi-and-gold-correlation",
+      "currency-crises-and-gold",
+    ],
     priority: 2,
   },
   {
@@ -2275,7 +2279,11 @@ export const TOPICS_PART4: TopicDefinition[] = [
     summaryEn:
       "A single-page overview comparing all four major precious metals across price, supply, demand, volatility, investment options, and optimal portfolio role.",
     tags: ["precious-metals", "comparison", "overview"],
-    relatedSlugs: ["gold-vs-silver-comprehensive-comparison", "which-precious-metal-is-best-for-beginners"],
+    relatedSlugs: [
+      "gold-vs-silver-comprehensive-comparison",
+      "volatility-comparison-across-metals",
+      "which-precious-metal-is-best-for-beginners",
+    ],
     priority: 1,
   },
   {
@@ -2331,7 +2339,11 @@ export const TOPICS_PART4: TopicDefinition[] = [
     summaryEn:
       "Compare historical and implied volatility across gold, silver, platinum, and palladium — annualized vol, max daily moves, and how volatility characteristics affect position sizing.",
     tags: ["volatility", "comparison", "risk", "data"],
-    relatedSlugs: ["investment-metal-performance-10-year-comparison", "liquidity-comparison-across-metals"],
+    relatedSlugs: [
+      "comparing-all-precious-metals-at-once",
+      "investment-metal-performance-10-year-comparison",
+      "liquidity-comparison-across-metals",
+    ],
     glossaryTermSlugs: ["volatility-definition"],
     priority: 2,
   },

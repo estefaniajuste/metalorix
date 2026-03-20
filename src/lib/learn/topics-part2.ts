@@ -4466,6 +4466,7 @@ export const TOPICS_PART2: TopicDefinition[] = [
     tags: ["ppi", "gold", "leading-indicator", "producer-prices"],
     relatedSlugs: [
       "cpi-data-impact-on-gold",
+      "hyperinflation-episodes-and-gold",
       "real-interest-rates-and-gold-price",
       "inflation-expectations-vs-actual-inflation",
     ],
