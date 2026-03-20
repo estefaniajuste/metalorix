@@ -330,13 +330,15 @@ export async function POST(request: NextRequest) {
     }
   }
 
-  // Learn articles: generate a small batch daily to fill the learn section
+  // Learn articles: generate 3 new articles per run (08:00 and 16:00 UTC), only topics without content
   if (type === "learn" || type === "auto") {
     try {
       const result = await generateBatch({
         batchId: `cron-${Date.now()}`,
         locale: "en",
         dryRun: false,
+        limit: 3,
+        onlyMissing: true,
       });
       if (result.succeeded > 0) {
         generated.push(`learn: ${result.succeeded}/${result.processed} articles generated`);

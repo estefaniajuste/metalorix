@@ -274,8 +274,8 @@ jobs:
         run: |
           hour=$(date -u +%H)
           minute=$(date -u +%M)
-          # Generate learn articles at 08:00 and 16:00 UTC
-          if ([ "$hour" = "08" ] || [ "$hour" = "16" ]) && [ "$minute" -lt "15" ]; then
+          # Generate learn articles at 08:00 and 16:00 UTC (full hour to tolerate delays)
+          if [ "$hour" = "08" ] || [ "$hour" = "16" ]; then
             echo "should_run=true" >> $GITHUB_OUTPUT
           elif [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
             echo "should_run=true" >> $GITHUB_OUTPUT

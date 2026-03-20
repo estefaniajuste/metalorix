@@ -31,8 +31,8 @@ STRUCTURE:
 Return a valid JSON object with this exact schema:
 {
   "title": "Clear, informative title (50-70 chars)",
-  "seoTitle": "SEO-optimized title (50-60 chars, may differ from title)",
-  "metaDescription": "Compelling meta description (140-155 chars)",
+  "seoTitle": "SEO title for CTR (50-60 chars). Include concrete benefit or key concept. Example: 'FIFO vs LIFO for Gold: Which Cost Basis Method Saves You Tax?'",
+  "metaDescription": "Meta for CTR (140-155 chars). What they'll learn + why it matters. Example: 'Learn FIFO, LIFO, and Specific ID for precious metals. Choose the right cost basis method to minimize taxes when selling.'",
   "summary": "2-3 sentence summary of what the reader will learn",
   "keyIdea": "One sentence capturing the core concept or takeaway",
   "sections": [

@@ -106,4 +106,8 @@ export interface BatchJobConfig {
   difficulty?: Difficulty;
   locale: Locale;
   dryRun?: boolean;
+  /** Max articles to process (for cron). Default: no limit. */
+  limit?: number;
+  /** If true, only process topics that don't have content yet. Default: false. */
+  onlyMissing?: boolean;
 }

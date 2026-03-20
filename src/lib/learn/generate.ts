@@ -401,8 +401,27 @@ export async function generateBatch(
     topics = ALL_TOPICS;
   }
 
+  // Filter to only topics without content (for cron efficiency)
+  if (config.onlyMissing && db) {
+    const existingRows = await db
+      .select({ slug: learnArticles.slug })
+      .from(learnArticles)
+      .innerJoin(
+        learnArticleLocalizations,
+        eq(learnArticleLocalizations.articleId, learnArticles.id)
+      )
+      .where(eq(learnArticleLocalizations.locale, "en"));
+    const existingSet = new Set(existingRows.map((r) => r.slug));
+    topics = topics.filter((t) => !existingSet.has(t.slug));
+  }
+
   // Sort by priority
   topics.sort((a, b) => a.priority - b.priority);
+
+  // Apply limit (for cron: process N per run)
+  if (config.limit && config.limit > 0) {
+    topics = topics.slice(0, config.limit);
+  }
 
   // Create job record
   let jobId: number | undefined;

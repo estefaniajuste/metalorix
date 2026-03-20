@@ -286,8 +286,8 @@ INSTRUCCIONES SEO Y FUENTES (MUY IMPORTANTE):
 Debes devolver tu respuesta como un JSON válido con esta estructura exacta:
 
 {
-  "titulo_seo": "Un título optimizado para SEO (50-65 caracteres). Debe captar lo MÁS significativo del día, no solo precios: 'Bancos centrales compran oro récord en 2026', 'Nueva regulación minera en Chile afecta al cobre', 'El oro supera $5000 por tensiones en Oriente Medio', 'Caída del oro tras datos de empleo en EE.UU.'. NO uses títulos genéricos. Incluye la noticia más relevante (precio, regulación, geopolítica, demanda).",
-  "meta_descripcion": "Metadescripción atractiva para Google (140-155 caracteres). Resumen con precios concretos y el factor clave del día. Debe invitar al clic.",
+  "titulo_seo": "Título para CTR (50-65 caracteres). Incluye DATOS CONCRETOS (precio, %, cifra) y la CAUSA. Ejemplos que generan clics: 'Oro a $5.100: sube 2% por tensiones en Irán', 'Bancos centrales compran récord de oro en 2026', 'Plata cae 3% tras datos de empleo en EE.UU.'. Evita genéricos como 'Resumen del mercado'. El título debe hacer que alguien quiera hacer clic.",
+  "meta_descripcion": "Metadescripción para CTR (140-155 caracteres). Primera frase: el dato más impactante (precio actual, variación). Segunda: por qué importa o qué hacer. Incluye números. Ejemplo: 'Oro cotiza a $5.100 (+2%). Tensiones en Oriente Medio y debilidad del dólar impulsan el metal. Análisis y niveles clave para hoy.' Debe generar curiosidad o utilidad.",
   "palabras_clave_url": "3-6 palabras clave separadas por espacios para la URL, sin fecha. Ejemplo: 'oro sube tensiones geopoliticas ormuz' o 'plata maximo anual demanda industrial'. Solo las palabras más relevantes del día.",
   "contenido": "El artículo completo aquí (500-700 palabras con formato ## para secciones). NO incluyas la sección de fuentes aquí, va en el campo fuentes.",
   "fuentes": [{"titulo": "Título descriptivo de la fuente", "url": "URL completa de la noticia original"}]
@@ -482,8 +482,8 @@ INSTRUCCIONES SEO Y FUENTES (MUY IMPORTANTE):
 Devuelve tu respuesta como un JSON válido con esta estructura exacta:
 
 {
-  "titulo_seo": "Título SEO (50-65 caracteres). Debe captar lo MÁS significativo del cierre: 'El oro cierra por debajo de $5000 tras incertidumbre ante la Fed', 'Plata sube al cierre por datos de manufacturas en China', 'Metales cierran mixtos tras declaraciones del BCE'. Incluye la noticia más relevante, no solo el precio.",
-  "meta_descripcion": "Metadescripción (140-155 caracteres). Cierre de sesión con precios concretos y factor clave. Debe invitar al clic.",
+  "titulo_seo": "Título para CTR (50-65 caracteres). Incluye precio de cierre y causa. Ejemplos: 'Oro cierra en $5.050 (-1,2%) tras declaraciones de la Fed', 'Plata sube 2% al cierre por datos de China', 'Metales mixtos: oro estable, platino cae 1,5%'. Datos concretos = más clics.",
+  "meta_descripcion": "Metadescripción para CTR (140-155 caracteres). Niveles de cierre + factor clave + qué vigilar mañana. Ejemplo: 'Oro cierra a $5.050. La Fed mantiene tipos y el dólar se fortalece. Resumen de la sesión y perspectivas para mañana.'",
   "palabras_clave_url": "3-6 palabras clave para la URL sin fecha. Ejemplo: 'oro cierra fed sesion' o 'metales cierre sesion datos china'. Incluye 'cierre' o 'sesion' para diferenciar del resumen matinal.",
   "contenido": "El artículo completo aquí (400-550 palabras con ## para secciones). NO incluyas la sección de fuentes.",
   "fuentes": [{"titulo": "Título descriptivo de la fuente", "url": "URL completa de la noticia original"}]
@@ -605,8 +605,8 @@ INSTRUCCIONES SEO Y FUENTES (MUY IMPORTANTE):
 Debes devolver tu respuesta como un JSON válido con esta estructura exacta:
 
 {
-  "titulo_seo": "Un título optimizado para SEO (50-65 caracteres). Debe explicar qué ha pasado y por qué. Ejemplos: '${metalName} se dispara un ${absChange}% por sanciones a Rusia', '${metalName} cae tras subida de tipos de la Fed', 'Desplome del ${metalName.toLowerCase()}: inversores huyen a bonos del Tesoro'. Incluye la CAUSA del movimiento, no solo el dato.",
-  "meta_descripcion": "Metadescripción para Google (140-155 caracteres). Precio actual, cambio porcentual y causa principal. Debe generar clics.",
+  "titulo_seo": "Título para CTR (50-65 caracteres). Movimiento + causa. Ejemplos: '${metalName} se dispara ${absChange}% por sanciones a Rusia', '${metalName} cae ${absChange}% tras subida de tipos de la Fed', 'Desplome del ${metalName.toLowerCase()}: inversores huyen a bonos'. Incluye el % y la causa.",
+  "meta_descripcion": "Metadescripción para CTR (140-155 caracteres). Precio actual + variación + causa + qué significa. Ejemplo: '${metalName} cotiza a $X tras subir ${absChange}%. [Causa]. Análisis y niveles clave para inversores.'",
   "palabras_clave_url": "3-6 palabras clave para la URL sin fecha. Ejemplo: '${metalName.toLowerCase()} ${direction} ${absChange} sanciones rusia' o '${metalName.toLowerCase()} caida tipos interes fed'. Solo palabras relevantes.",
   "contenido": "El artículo completo aquí (400-500 palabras con formato ## para secciones). NO incluyas la sección de fuentes aquí.",
   "fuentes": [{"titulo": "Título descriptivo de la fuente", "url": "URL completa de la noticia original"}]
@@ -698,8 +698,8 @@ INSTRUCCIONES SEO Y FUENTES (MUY IMPORTANTE):
 Debes devolver tu respuesta como un JSON válido con esta estructura exacta:
 
 {
-  "titulo_seo": "Un título optimizado para SEO (50-65 caracteres). Debe resumir el hecho más importante de la semana. Ejemplos: 'Semana alcista para el oro: máximos históricos por compras de China', 'La plata lidera las subidas semanales por demanda industrial', 'Oro y platino caen en semana marcada por la Fed'. NO uses títulos genéricos como 'Análisis semanal'. Destaca el evento o tendencia más relevante.",
-  "meta_descripcion": "Metadescripción para Google (140-155 caracteres). Resumen con datos clave de la semana y el factor dominante. Debe invitar al clic.",
+  "titulo_seo": "Título para CTR (50-65 caracteres). Resultado semanal + causa. Ejemplos: 'Oro sube 4% en la semana: récord por compras de China', 'Plata lidera con +6% por demanda industrial', 'Oro y platino caen en semana de la Fed'. Incluye % o dato concreto.",
+  "meta_descripcion": "Metadescripción para CTR (140-155 caracteres). Variaciones semanales por metal + factor dominante + qué esperar. Ejemplo: 'Oro +4%, plata +6%, platino -1%. La Fed y China marcan la semana. Resumen y perspectivas.'",
   "palabras_clave_url": "3-6 palabras clave para la URL sin fecha. Ejemplo: 'oro maximos historicos compras china' o 'plata sube demanda industrial semana'. Solo palabras relevantes.",
   "contenido": "El artículo completo aquí (700-900 palabras con formato ## para secciones). NO incluyas la sección de fuentes aquí.",
   "fuentes": [{"titulo": "Título descriptivo de la fuente", "url": "URL completa de la noticia original"}]
@@ -935,8 +935,8 @@ TRANSLATION RULES:
 Return ONLY a valid JSON with this exact structure:
 
 {
-  "title": "Translated title in ${langName}",
-  "excerpt": "Translated excerpt in ${langName}",
+  "title": "Translated title in ${langName} (50-65 chars). Keep concrete data (prices, %), cause, and CTR appeal. Do NOT make it generic.",
+  "excerpt": "Translated excerpt in ${langName} (140-155 chars). Keep numbers and the hook that invites clicks.",
   "content": "Translated full content in ${langName} with ## for section headings",
   "slug_keywords": "${slugInstruction}"
 }
