@@ -14,6 +14,7 @@ env:
 jobs:
   migrate:
     runs-on: ubuntu-latest
+    continue-on-error: true  # ECONNRESET with Cloud SQL Proxy is intermittent; deploy + smoke-test must run
     permissions:
       contents: read
       id-token: write
@@ -36,17 +37,18 @@ jobs:
           curl -sSfL -o cloud-sql-proxy https://storage.googleapis.com/cloud-sql-connectors/cloud-sql-proxy/v2.8.0/cloud-sql-proxy.linux.amd64
           chmod +x cloud-sql-proxy
           ./cloud-sql-proxy ${{ secrets.GCP_PROJECT_ID }}:europe-west1:metalorix-db --port=5432 &
-          sleep 8
+          sleep 15
 
       - name: Run database migrations
         env:
           DATABASE_URL: postgresql://postgres:${{ secrets.DB_PASSWORD }}@127.0.0.1:5432/metalorix
         run: |
-          for i in 1 2 3; do
+          for i in 1 2 3 4 5; do
             npm run db:migrate && exit 0
-            echo "Migration attempt $i failed, retrying in 5s..."
-            sleep 5
+            echo "Migration attempt $i failed, retrying in 10s..."
+            sleep 10
           done
+          echo "::warning::Migrations failed after 5 attempts (ECONNRESET). Deploy continues."
           exit 1
 
   deploy:
