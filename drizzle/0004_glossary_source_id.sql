@@ -1,1 +1,1 @@
-ALTER TABLE "glossary_terms" ADD COLUMN "source_id" integer;
+ALTER TABLE "glossary_terms" ADD COLUMN IF NOT EXISTS "source_id" integer;

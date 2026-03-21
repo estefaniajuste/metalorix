@@ -67,4 +67,59 @@ El middleware añade `X-Robots-Tag: noindex` a todas las rutas `/api/*`. Esto es
 
 - **robots.txt, sitemap, pings:** Correctos y activos.
 - **Test E2E:** Corregido para validar el estado correcto.
-- **Pendiente:** Configurar `GOOGLE_INDEXING_KEY` para que el cron de indexación funcione.
+- **GOOGLE_INDEXING_KEY:** Configurada y funcionando (verificado 17 mar 2026).
+
+---
+
+## 6. Auditoría completa del día del apagón (15 marzo 2026)
+
+**Commit 82463d4** modificó 7 archivos. Estado actual de cada uno:
+
+| Archivo | Cambio en 82463d4 | Estado actual | ¿Bloqueando? |
+|---------|-------------------|---------------|--------------|
+| `src/app/robots.ts` | Disallow /, sin Sitemap | ✓ Allow /, Sitemap | No |
+| `src/lib/seo/ping.ts` | pingSearchEngines/pingIndexNow → no-ops | ✓ Pings activos (Google, Bing) | No |
+| `src/app/api/cron/generate-content/route.ts` | Eliminadas llamadas a ping | ✓ pingSearchEngines + pingIndexNow restaurados | No |
+| `src/app/sitemap.ts` | Sitemap vacío (0 URLs) | **Archivo eliminado** — proyecto usa `/api/sitemap/route.ts` | No |
+| `public/googled1a167fc78548df7.html` | Eliminado | ✓ Restaurado (verificación GSC) | No |
+| `e2e/seo.spec.ts` | Test esperaba "blocks all", "no Sitemap" | ✓ Test corregido (Allow, Sitemap) | No |
+| `src/app/aprende/[slug]/page.tsx` | Modificado | **Eliminado** — páginas duplicadas quitadas en bda11ec | No |
+| `src/app/aprende/page.tsx` | Modificado | **Eliminado** — idem | No |
+
+**Conclusión:** No queda ningún bloqueo activo del día del apagón. Todo lo que se deshabilitó ha sido restaurado o sustituido correctamente.
+
+---
+
+## 7. Auditoría del día siguiente (16 marzo 2026)
+
+Commits relevantes del 16 marzo y su estado actual:
+
+| Commit | Descripción | ¿Dejó algo bloqueado? |
+|--------|-------------|------------------------|
+| **bda11ec** | Re-enable SEO, eliminar páginas duplicadas | No — todo restaurado |
+| **7b3bf55** | Revert to static-only sitemap (44 URLs) | **Temporal** — 8b0396e lo revirtió 26 min después |
+| **8b0396e** | Restore ~1000 dynamic URLs via fetch | ✓ Sitemap dinámico activo |
+| **d7a093c** | Redirect sitemap.xml → /api/sitemap | Eliminado en f5c03cb (17 mar) — ya no duplica |
+| **a9080db** | Remove /glosario y /aprende, keep /learn | ✓ Middleware redirige /aprende, /glosario → /learn |
+| **cced3a1** | Serve sitemap at /api/sitemap | ✓ Arquitectura actual |
+| **2027628** | Ventana horaria 19:00 → 19:29 UTC | Sustituido por 97edaee (07:00 UTC) |
+| **68902e8** | SEO: sitemap improvements, robots | ✓ Mejoras aplicadas |
+
+**Conclusión 16 marzo:** El único paréntesis fue 7b3bf55 (sitemap estático 44 URLs), corregido el mismo día por 8b0396e. No queda ningún bloqueo activo.
+
+---
+
+## 8. Auditoría del día previo (14 marzo 2026)
+
+Commits del 14 marzo (día antes del apagón):
+
+| Commit | Descripción | ¿Bloquea SEO? |
+|--------|-------------|---------------|
+| **addf1a5** | i18n completo + content-generator SEO | No — mejoras de SEO |
+| **feab433** | i18n, OAuth, tests, schemas (breadcrumb homeName) | No — mejoras |
+| **28f216a** | Traducciones de artículos vía Gemini | No |
+| **2fb8878** | URL routing con paths traducidos | No |
+| **ee3ba22** | Relax Lighthouse budgets | No |
+| **6703d87** | Fix package-lock | No |
+
+**Conclusión 14 marzo:** Solo añadidos de funcionalidad e i18n. Ningún commit desactiva o bloquea SEO. El 15 marzo por la mañana (82463d4) fue el único apagón.
