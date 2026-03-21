@@ -98,10 +98,15 @@ async function fetchYahooHistory(
         const o = opens[i];
         const h = highs[i];
         const l = lows[i];
+        const open = o ?? c;
+        const high = Math.max(c, open, h ?? c, l ?? c);
+        const low = Math.min(c, open, h ?? c, l ?? c);
         data.push({
           timestamp: new Date(timestamps[i] * 1000).toISOString(),
           price: c,
-          ...(o != null && h != null && l != null && { open: o, high: h, low: l }),
+          open,
+          high,
+          low,
         });
       }
     }
@@ -147,12 +152,16 @@ export async function GET(request: NextRequest) {
         .limit(300);
 
       if (rows.length >= 5) {
-        const data = rows
-          .reverse()
-          .map((r) => ({
+        const data = rows.reverse().map((r) => {
+          const price = parseFloat(r.priceUsd);
+          return {
             timestamp: r.timestamp.toISOString(),
-            price: parseFloat(r.priceUsd),
-          }));
+            price,
+            open: price,
+            high: price,
+            low: price,
+          };
+        });
 
         const first = data[0].price;
         const last = data[data.length - 1].price;

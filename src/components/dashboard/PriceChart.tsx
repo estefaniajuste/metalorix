@@ -124,6 +124,26 @@ function hasOhlc(data: HistoryResult["data"]): boolean {
   return data.length > 0 && data.every((d) => d.open != null && d.high != null && d.low != null);
 }
 
+/** Deduplicate by unix second (Yahoo / DB can repeat); lightweight-charts rejects duplicate time. */
+function toCandlestickRows(data: HistoryResult["data"]): CandlestickData<Time>[] {
+  const bySec = new Map<number, CandlestickData<Time>>();
+  for (const d of data) {
+    if (d.open == null || d.high == null || d.low == null) continue;
+    const sec = Math.floor(new Date(d.timestamp).getTime() / 1000);
+    const t = sec as Time;
+    bySec.set(sec, {
+      time: t,
+      open: d.open,
+      high: d.high,
+      low: d.low,
+      close: d.price,
+    });
+  }
+  return Array.from(bySec.entries())
+    .sort(([a], [b]) => a - b)
+    .map(([, row]) => row);
+}
+
 export function PriceChart({ symbol, range, history }: PriceChartProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const chartRef = useRef<IChartApi | null>(null);
@@ -184,7 +204,8 @@ export function PriceChart({ symbol, range, history }: PriceChartProps) {
   useEffect(() => {
     if (!chartRef.current || !history) return;
 
-    const useCandlestick = hasOhlc(history.data);
+    const candleRows = hasOhlc(history.data) ? toCandlestickRows(history.data) : [];
+    const useCandlestick = candleRows.length > 0;
     const chart = chartRef.current;
     const container = containerRef.current;
     if (!container) return;
@@ -207,14 +228,7 @@ export function PriceChart({ symbol, range, history }: PriceChartProps) {
     }
 
     if (useCandlestick) {
-      const data: CandlestickData<Time>[] = history.data.map((d) => ({
-        time: (Math.floor(new Date(d.timestamp).getTime() / 1000)) as Time,
-        open: d.open!,
-        high: d.high!,
-        low: d.low!,
-        close: d.price,
-      }));
-      (seriesRef.current as ISeriesApi<"Candlestick">).setData(data);
+      (seriesRef.current as ISeriesApi<"Candlestick">).setData(candleRows);
     } else {
       const data: AreaData<Time>[] = history.data.map((d) => ({
         time: (Math.floor(new Date(d.timestamp).getTime() / 1000)) as Time,

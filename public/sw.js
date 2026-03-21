@@ -1,11 +1,6 @@
-const CACHE_NAME = "metalorix-v1";
+const CACHE_NAME = "metalorix-v2";
 
-const PRECACHE_URLS = [
-  "/",
-  "/manifest.json",
-  "/favicon.png",
-  "/icon-192.png",
-];
+const PRECACHE_URLS = ["/manifest.json", "/favicon.png", "/icon-192.png"];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
@@ -36,6 +31,13 @@ self.addEventListener("fetch", (event) => {
   const url = new URL(request.url);
 
   if (request.method !== "GET") return;
+
+  // Document navigations and Next.js RSC/data fetches must not go through a
+  // generic cache layer — stale HTML + new JS causes hydration failures and
+  // apparent "frozen" loads after deploy or from search results.
+  if (request.mode === "navigate") {
+    return;
+  }
 
   // API requests: network-first with cache fallback
   if (url.pathname.startsWith("/api/")) {
@@ -73,16 +75,5 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  // Pages: network-first, cache fallback, then offline page
-  event.respondWith(
-    fetch(request)
-      .then((response) => {
-        if (response.ok) {
-          const clone = response.clone();
-          caches.open(CACHE_NAME).then((cache) => cache.put(request, clone));
-        }
-        return response;
-      })
-      .catch(() => caches.match(request).then((cached) => cached || caches.match("/")))
-  );
+  // Everything else (RSC, same-origin fetches, etc.): default browser behavior
 });

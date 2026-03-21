@@ -3,7 +3,10 @@
 import { useCallback, useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import type { HistoryResult, MetalSymbol, TimeRange } from "@/lib/providers/metals";
-import { TechnicalIndicators } from "@/components/dashboard/TechnicalIndicators";
+import {
+  TechnicalIndicators,
+  MIN_HISTORY_FOR_TECH_INDICATORS,
+} from "@/components/dashboard/TechnicalIndicators";
 
 const SYMBOLS: MetalSymbol[] = ["XAU", "XAG", "XPT", "XPD", "HG"];
 const RANGES: { value: TimeRange; label: string }[] = [
@@ -100,13 +103,13 @@ export function ToolsTechnicalIndicators() {
         </p>
       )}
 
-      {!loading && !error && history && history.data.length < 30 && (
+      {!loading && !error && history && history.data.length < MIN_HISTORY_FOR_TECH_INDICATORS && (
         <p className="text-sm text-content-3 py-8 text-center">
           {te("somethingWrong")}
         </p>
       )}
 
-      {!loading && !error && history && history.data.length >= 30 && (
+      {!loading && !error && history && history.data.length >= MIN_HISTORY_FOR_TECH_INDICATORS && (
         <TechnicalIndicators history={history} hideTitle />
       )}
     </div>
