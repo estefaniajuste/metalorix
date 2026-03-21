@@ -826,12 +826,16 @@
   "technicalIndicators": {
     "title": "المؤشرات الفنية",
     "loadingHint": "جاري تحميل RSI وMACD ونطاقات بولينجر…",
+    "insufficientData": "عدد الشموع غير كافٍ لحساب المؤشرات. جرّب نطاقًا أطول (مثل شهر أو سنة).",
+    "tryLongerRange": "تعذّر رسم المؤشرات بهذه البيانات. اختر نطاقًا زمنيًا أطول.",
+    "macdTitle": "MACD ({fast}, {slow}, {signal})",
+    "smaLegend": "SMA({period})",
     "overbought": "تشبع شرائي",
     "oversold": "تشبع بيعي",
     "neutral": "محايد",
     "overboughtLabel": "تشبع شرائي 70<",
     "oversoldLabel": "تشبع بيعي 30>",
-    "bollingerTitle": "نطاقات بولينجر (20, 2)",
+    "bollingerTitle": "نطاقات بولينجر ({period}, {mult})",
     "price": "السعر",
     "bands": "النطاقات"
   },

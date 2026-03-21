@@ -826,12 +826,16 @@
   "technicalIndicators": {
     "title": "技术指标",
     "loadingHint": "正在加载 RSI、MACD 与布林带…",
+    "insufficientData": "K 线数量不足，无法计算指标。请尝试更长周期（如 1 个月或 1 年）。",
+    "tryLongerRange": "当前数据无法绘制指标，请选择更长的时间范围。",
+    "macdTitle": "MACD ({fast}, {slow}, {signal})",
+    "smaLegend": "SMA({period})",
     "overbought": "超买",
     "oversold": "超卖",
     "neutral": "中性",
     "overboughtLabel": ">70 超买",
     "oversoldLabel": "<30 超卖",
-    "bollingerTitle": "布林带 (20, 2)",
+    "bollingerTitle": "布林带 ({period}, {mult})",
     "price": "价格",
     "bands": "通道"
   },

@@ -826,12 +826,16 @@
   "technicalIndicators": {
     "title": "Technical indicators",
     "loadingHint": "Loading RSI, MACD and Bollinger Bands…",
+    "insufficientData": "Not enough candles to compute indicators. Try a longer range (e.g. 1M or 1Y).",
+    "tryLongerRange": "Indicators could not be drawn with this data. Select a longer time range.",
+    "macdTitle": "MACD ({fast}, {slow}, {signal})",
+    "smaLegend": "SMA({period})",
     "overbought": "Overbought",
     "oversold": "Oversold",
     "neutral": "Neutral",
     "overboughtLabel": ">70 Overbought",
     "oversoldLabel": "<30 Oversold",
-    "bollingerTitle": "Bollinger Bands (20, 2)",
+    "bollingerTitle": "Bollinger Bands ({period}, {mult})",
     "price": "Price",
     "bands": "Bands"
   },

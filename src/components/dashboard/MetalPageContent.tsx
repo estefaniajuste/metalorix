@@ -99,6 +99,10 @@ export function MetalPageContent({ symbol }: MetalPageContentProps) {
   }, [loadSpot]);
 
   useEffect(() => {
+    setHistory({});
+  }, [symbol]);
+
+  useEffect(() => {
     fetch("/api/forex")
       .then((r) => r.json())
       .then((d) => {
@@ -111,13 +115,21 @@ export function MetalPageContent({ symbol }: MetalPageContentProps) {
     loadHistory(activeRange);
   }, [activeRange, loadHistory]);
 
-  // Preload all ranges
+  // Precarga el resto de rangos sin competir con el activo (evita peticiones duplicadas y prioriza el rango visible)
   useEffect(() => {
-    (["1H", "4H", "1D", "1W", "1M", "1Y"] as TimeRange[]).forEach(loadHistory);
-    setTimeout(() => {
-      (["3M", "6M", "2Y", "5Y"] as TimeRange[]).forEach(loadHistory);
+    const short: TimeRange[] = ["1H", "4H", "1D", "1W", "1M", "1Y"];
+    const long: TimeRange[] = ["3M", "6M", "2Y", "5Y"];
+    const t1 = window.setTimeout(() => {
+      short.filter((r) => r !== activeRange).forEach(loadHistory);
+    }, 50);
+    const t2 = window.setTimeout(() => {
+      long.filter((r) => r !== activeRange).forEach(loadHistory);
     }, 3000);
-  }, [loadHistory]);
+    return () => {
+      clearTimeout(t1);
+      clearTimeout(t2);
+    };
+  }, [loadHistory, activeRange]);
 
   const historyKey = `${symbol}_${activeRange}`;
   const currentHistory = history[historyKey] ?? null;

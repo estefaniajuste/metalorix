@@ -826,12 +826,16 @@
   "technicalIndicators": {
     "title": "Teknik göstergeler",
     "loadingHint": "RSI, MACD ve Bollinger Bantları yükleniyor…",
+    "insufficientData": "Göstergeler için yeterli mum yok. Daha uzun bir aralık deneyin (ör. 1A veya 1Y).",
+    "tryLongerRange": "Bu verilerle göstergeler çizilemedi. Daha uzun bir zaman aralığı seçin.",
+    "macdTitle": "MACD ({fast}, {slow}, {signal})",
+    "smaLegend": "SMA({period})",
     "overbought": "Aşırı alım",
     "oversold": "Aşırı satım",
     "neutral": "Nötr",
     "overboughtLabel": ">70 Aşırı alım",
     "oversoldLabel": "<30 Aşırı satım",
-    "bollingerTitle": "Bollinger Bantları (20, 2)",
+    "bollingerTitle": "Bollinger Bantları ({period}, {mult})",
     "price": "Fiyat",
     "bands": "Bantlar"
   },

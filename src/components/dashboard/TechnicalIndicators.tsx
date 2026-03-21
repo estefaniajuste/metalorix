@@ -6,6 +6,8 @@ import {
   calculateRSI,
   calculateMACD,
   calculateBollinger,
+  pickMacdPeriods,
+  pickBollingerPeriod,
 } from "@/lib/utils/indicators";
 import { useTranslations } from "next-intl";
 import { useTheme } from "@/components/layout/ThemeProvider";
@@ -284,8 +286,6 @@ function drawBollinger(
 
 /** Mínimo de velas para mostrar al menos RSI; usado también en la página de herramientas. */
 export const MIN_HISTORY_FOR_TECH_INDICATORS = 16;
-const MIN_POINTS_MACD = 35;
-const MIN_POINTS_BOLL = 21;
 
 export function TechnicalIndicators({
   history,
@@ -307,18 +307,26 @@ export function TechnicalIndicators({
 
     const prices = history.data.map((d) => d.price);
     const timestamps = history.data.map((d) => d.timestamp);
+    const n = prices.length;
+
+    const macdCfg = pickMacdPeriods(n);
+    const bollPeriod = pickBollingerPeriod(n);
 
     return {
       rsi: calculateRSI(prices, timestamps),
-      macd:
-        prices.length >= MIN_POINTS_MACD
-          ? calculateMACD(prices, timestamps)
-          : { macd: [], signal: [], histogram: [], timestamps: [] },
-      bollinger:
-        prices.length >= MIN_POINTS_BOLL
-          ? calculateBollinger(prices, timestamps)
-          : { upper: [], middle: [], lower: [], timestamps: [] },
+      macd: macdCfg
+        ? calculateMACD(
+            prices,
+            timestamps,
+            macdCfg.fast,
+            macdCfg.slow,
+            macdCfg.signal
+          )
+        : { macd: [], signal: [], histogram: [], timestamps: [] },
+      bollinger: calculateBollinger(prices, timestamps, bollPeriod),
       prices,
+      macdCfg,
+      bollPeriod,
     };
   }, [history]);
 
@@ -339,7 +347,18 @@ export function TechnicalIndicators({
     const ro = el ? new ResizeObserver(() => render()) : null;
     if (el) ro?.observe(el);
     window.addEventListener("resize", render);
+    let cancelled = false;
+    let innerRaf = 0;
+    const outerRaf = requestAnimationFrame(() => {
+      if (cancelled) return;
+      innerRaf = requestAnimationFrame(() => {
+        if (!cancelled) render();
+      });
+    });
     return () => {
+      cancelled = true;
+      cancelAnimationFrame(outerRaf);
+      if (innerRaf) cancelAnimationFrame(innerRaf);
       ro?.disconnect();
       window.removeEventListener("resize", render);
     };
@@ -365,7 +384,40 @@ export function TechnicalIndicators({
     );
   }
 
-  if (!data || (!showRsi && !showMacd && !showBoll)) return null;
+  if (!data || (!showRsi && !showMacd && !showBoll)) {
+    if (
+      !isLoading &&
+      history?.data &&
+      history.data.length > 0 &&
+      history.data.length < MIN_HISTORY_FOR_TECH_INDICATORS
+    ) {
+      return (
+        <div className="mb-6 rounded-DEFAULT border border-border bg-surface-1 p-4">
+          {!hideTitle && (
+            <h3 className="text-base font-semibold text-content-0 mb-2">{t("title")}</h3>
+          )}
+          <p className="text-sm text-content-2">{t("insufficientData")}</p>
+        </div>
+      );
+    }
+    if (
+      !isLoading &&
+      data &&
+      !showRsi &&
+      !showMacd &&
+      !showBoll
+    ) {
+      return (
+        <div className="mb-6 rounded-DEFAULT border border-border bg-surface-1 p-4">
+          {!hideTitle && (
+            <h3 className="text-base font-semibold text-content-0 mb-2">{t("title")}</h3>
+          )}
+          <p className="text-sm text-content-2">{t("tryLongerRange")}</p>
+        </div>
+      );
+    }
+    return null;
+  }
 
   const lastRsi = data.rsi.values[data.rsi.values.length - 1];
   const lastMacd = showMacd ? data.macd.macd[data.macd.macd.length - 1] : undefined;
@@ -416,7 +468,11 @@ export function TechnicalIndicators({
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2">
               <span className="text-sm font-semibold text-content-0">
-                MACD (12, 26, 9)
+                {t("macdTitle", {
+                  fast: data.macdCfg!.fast,
+                  slow: data.macdCfg!.slow,
+                  signal: data.macdCfg!.signal,
+                })}
               </span>
               <span
                 className={`text-xs font-medium ${
@@ -444,14 +500,15 @@ export function TechnicalIndicators({
         <div className="bg-surface-1 border border-border rounded-DEFAULT p-4">
           <div className="flex items-center justify-between mb-3">
             <span className="text-sm font-semibold text-content-0">
-              {t("bollingerTitle")}
+              {t("bollingerTitle", { period: data.bollPeriod, mult: 2 })}
             </span>
             <div className="flex items-center gap-3 text-[10px] text-content-3">
               <span className="flex items-center gap-1">
                 <span className="w-2 h-0.5 bg-brand-gold rounded" /> {t("price")}
               </span>
               <span className="flex items-center gap-1">
-                <span className="w-2 h-0.5 bg-blue-500 rounded" /> SMA(20)
+                <span className="w-2 h-0.5 bg-blue-500 rounded" />{" "}
+                {t("smaLegend", { period: data.bollPeriod })}
               </span>
               <span className="flex items-center gap-1">
                 <span className="w-5 h-2 bg-blue-500/10 rounded border border-blue-500/30" /> {t("bands")}

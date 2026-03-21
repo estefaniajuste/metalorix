@@ -124,3 +124,20 @@ export function calculateBollinger(
 
   return result;
 }
+
+/** Periodos MACD según longitud: estándar (35+) o compactos para series más cortas. */
+export function pickMacdPeriods(
+  len: number
+): { fast: number; slow: number; signal: number } | null {
+  if (len < 20) return null;
+  if (len >= 35) return { fast: 12, slow: 26, signal: 9 };
+  if (len >= 28) return { fast: 8, slow: 21, signal: 5 };
+  if (len >= 24) return { fast: 6, slow: 17, signal: 4 };
+  return { fast: 5, slow: 12, signal: 3 };
+}
+
+/** Periodo Bollinger: 20 por defecto; más corto si hay menos velas (mín. 7). */
+export function pickBollingerPeriod(len: number): number {
+  if (len >= 21) return 20;
+  return Math.max(7, Math.min(14, len - 2));
+}

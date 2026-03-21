@@ -826,12 +826,16 @@
   "technicalIndicators": {
     "title": "Technische Indikatoren",
     "loadingHint": "RSI, MACD und Bollinger-Bänder werden geladen…",
+    "insufficientData": "Zu wenige Kerzen für die Indikatoren. Bitte einen längeren Zeitraum wählen (z. B. 1M oder 1J).",
+    "tryLongerRange": "Die Indikatoren konnten mit diesen Daten nicht gezeichnet werden. Wählen Sie einen längeren Zeitraum.",
+    "macdTitle": "MACD ({fast}, {slow}, {signal})",
+    "smaLegend": "SMA({period})",
     "overbought": "Überkauft",
     "oversold": "Überverkauft",
     "neutral": "Neutral",
     "overboughtLabel": ">70 Überkauft",
     "oversoldLabel": "<30 Überverkauft",
-    "bollingerTitle": "Bollinger-Bänder (20, 2)",
+    "bollingerTitle": "Bollinger-Bänder ({period}, {mult})",
     "price": "Kurs",
     "bands": "Bänder"
   },
