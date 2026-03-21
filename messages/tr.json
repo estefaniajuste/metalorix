@@ -756,7 +756,8 @@
     "pound": "Libre (453,6 g)",
     "gram": "Gram",
     "kilogram": "Kilogram",
-    "exchangeRate": "EUR/USD döviz kuru"
+    "exchangeRate": "EUR/USD döviz kuru",
+    "technicalIndicatorsSection": "Teknik göstergeler"
   },
   "gramPriceContent": {
     "goldGram24kUsd": "24 ayar altın gram fiyatı (USD)",
@@ -824,6 +825,7 @@
   },
   "technicalIndicators": {
     "title": "Teknik göstergeler",
+    "loadingHint": "RSI, MACD ve Bollinger Bantları yükleniyor…",
     "overbought": "Aşırı alım",
     "oversold": "Aşırı satım",
     "neutral": "Nötr",

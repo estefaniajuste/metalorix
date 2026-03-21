@@ -756,7 +756,8 @@
     "pound": "Pound (453.6 g)",
     "gram": "Gram",
     "kilogram": "Kilogram",
-    "exchangeRate": "EUR/USD exchange rate"
+    "exchangeRate": "EUR/USD exchange rate",
+    "technicalIndicatorsSection": "Technical indicators"
   },
   "gramPriceContent": {
     "goldGram24kUsd": "Gold gram 24K in USD",
@@ -824,6 +825,7 @@
   },
   "technicalIndicators": {
     "title": "Technical indicators",
+    "loadingHint": "Loading RSI, MACD and Bollinger Bands…",
     "overbought": "Overbought",
     "oversold": "Oversold",
     "neutral": "Neutral",

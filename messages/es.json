@@ -756,7 +756,8 @@
     "pound": "Libra (453,6 g)",
     "gram": "Gramo",
     "kilogram": "Kilogramo",
-    "exchangeRate": "Tipo de cambio EUR/USD"
+    "exchangeRate": "Tipo de cambio EUR/USD",
+    "technicalIndicatorsSection": "Indicadores técnicos"
   },
   "gramPriceContent": {
     "goldGram24kUsd": "Gramo de oro 24K en USD",
@@ -824,6 +825,7 @@
   },
   "technicalIndicators": {
     "title": "Indicadores técnicos",
+    "loadingHint": "Cargando RSI, MACD y Bandas de Bollinger…",
     "overbought": "Sobrecomprado",
     "oversold": "Sobrevendido",
     "neutral": "Neutral",

@@ -756,7 +756,8 @@
     "pound": "磅（453.6克）",
     "gram": "克",
     "kilogram": "千克",
-    "exchangeRate": "欧元/美元汇率"
+    "exchangeRate": "欧元/美元汇率",
+    "technicalIndicatorsSection": "技术指标"
   },
   "gramPriceContent": {
     "goldGram24kUsd": "24K黄金每克美元价格",
@@ -824,6 +825,7 @@
   },
   "technicalIndicators": {
     "title": "技术指标",
+    "loadingHint": "正在加载 RSI、MACD 与布林带…",
     "overbought": "超买",
     "oversold": "超卖",
     "neutral": "中性",

@@ -82,7 +82,12 @@ export function MetalPageContent({ symbol }: MetalPageContentProps) {
         );
         const { data, change, changePct } = await res.json();
         setHistory((prev) => ({ ...prev, [key]: { data, change, changePct } }));
-      } catch {}
+      } catch {
+        setHistory((prev) => ({
+          ...prev,
+          [key]: { data: [], change: 0, changePct: 0 },
+        }));
+      }
     },
     [symbol]
   );
@@ -116,6 +121,8 @@ export function MetalPageContent({ symbol }: MetalPageContentProps) {
 
   const historyKey = `${symbol}_${activeRange}`;
   const currentHistory = history[historyKey] ?? null;
+  /** Mientras no haya respuesta del API para el rango activo, mostramos placeholder de indicadores */
+  const historyPending = !(historyKey in history);
   const isUp = spot ? spot.change >= 0 : currentHistory ? currentHistory.change >= 0 : true;
 
   const iconColors: Record<string, string> = {
@@ -178,6 +185,11 @@ export function MetalPageContent({ symbol }: MetalPageContentProps) {
         history={currentHistory}
       />
 
+      {/* Indicadores justo bajo el gráfico: visibles sin scroll para quien entra por enlace */}
+      <section id="indicadores-tecnicos" aria-label={t("technicalIndicatorsSection")}>
+        <TechnicalIndicators history={currentHistory} isLoading={historyPending} />
+      </section>
+
       {/* Stats grid */}
       {currentHistory && currentHistory.data.length > 0 && (
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
@@ -223,9 +235,6 @@ export function MetalPageContent({ symbol }: MetalPageContentProps) {
           ))}
         </div>
       )}
-
-      {/* Technical indicators */}
-      <TechnicalIndicators history={currentHistory} />
 
       {/* Conversion table */}
       {spot && (

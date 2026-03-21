@@ -756,7 +756,8 @@
     "pound": "رطل (453.6 غ)",
     "gram": "غرام",
     "kilogram": "كيلوغرام",
-    "exchangeRate": "سعر صرف EUR/USD"
+    "exchangeRate": "سعر صرف EUR/USD",
+    "technicalIndicatorsSection": "المؤشرات الفنية"
   },
   "gramPriceContent": {
     "goldGram24kUsd": "غرام ذهب 24 قيراط بالدولار",
@@ -824,6 +825,7 @@
   },
   "technicalIndicators": {
     "title": "المؤشرات الفنية",
+    "loadingHint": "جاري تحميل RSI وMACD ونطاقات بولينجر…",
     "overbought": "تشبع شرائي",
     "oversold": "تشبع بيعي",
     "neutral": "محايد",
