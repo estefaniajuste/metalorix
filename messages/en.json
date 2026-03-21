@@ -542,7 +542,11 @@
     "linkPrerequisite": "Prerequisite",
     "linkDeeperDive": "Go Deeper",
     "linkComparison": "Compare",
-    "linkSeeAlso": "See Also"
+    "linkSeeAlso": "See Also",
+    "explorePlatform": "Explore the platform",
+    "viewPrices": "View prices",
+    "viewTools": "Tools",
+    "setAlerts": "Alerts"
   },
   "goldToday": {
     "title": "Gold price today",

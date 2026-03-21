@@ -10,11 +10,13 @@ import {
   type IChartApi,
   type ISeriesApi,
   type AreaSeriesPartialOptions,
+  type CandlestickSeriesPartialOptions,
   ColorType,
   CrosshairMode,
   type DeepPartial,
   type ChartOptions,
   type AreaData,
+  type CandlestickData,
   type Time,
 } from "lightweight-charts";
 
@@ -80,7 +82,13 @@ function getChartOptions(
   };
 }
 
-function getSeriesOptions(
+const PRICE_FORMAT = {
+  type: "price" as const,
+  precision: 2,
+  minMove: 0.01,
+};
+
+function getAreaSeriesOptions(
   color: string,
   isDark: boolean
 ): AreaSeriesPartialOptions {
@@ -93,18 +101,34 @@ function getSeriesOptions(
     crosshairMarkerBorderColor: isDark ? "#121826" : "#FFFFFF",
     crosshairMarkerBorderWidth: 2,
     crosshairMarkerRadius: 5,
-    priceFormat: {
-      type: "price",
-      precision: 2,
-      minMove: 0.01,
-    },
+    priceFormat: PRICE_FORMAT,
   };
+}
+
+function getCandlestickSeriesOptions(
+  _color: string,
+  _isDark: boolean
+): CandlestickSeriesPartialOptions {
+  return {
+    upColor: "#34D399",
+    downColor: "#F87171",
+    borderUpColor: "#34D399",
+    borderDownColor: "#F87171",
+    wickUpColor: "#34D399",
+    wickDownColor: "#F87171",
+    priceFormat: PRICE_FORMAT,
+  };
+}
+
+function hasOhlc(data: HistoryResult["data"]): boolean {
+  return data.length > 0 && data.every((d) => d.open != null && d.high != null && d.low != null);
 }
 
 export function PriceChart({ symbol, range, history }: PriceChartProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const chartRef = useRef<IChartApi | null>(null);
-  const seriesRef = useRef<ISeriesApi<"Area"> | null>(null);
+  const seriesRef = useRef<ISeriesApi<"Area"> | ISeriesApi<"Candlestick"> | null>(null);
+  const seriesTypeRef = useRef<"area" | "candlestick">("area");
   const [zoomed, setZoomed] = useState(false);
   const { theme } = useTheme();
   const tm = useTranslations("metalNames");
@@ -119,10 +143,7 @@ export function PriceChart({ symbol, range, history }: PriceChartProps) {
     const rect = container.getBoundingClientRect();
 
     const chart = createChart(container, getChartOptions(isDark, rect.width, rect.height));
-    const series = chart.addAreaSeries(getSeriesOptions(metal.color, isDark));
-
     chartRef.current = chart;
-    seriesRef.current = series;
 
     const handleResize = () => {
       const newRect = container.getBoundingClientRect();
@@ -152,22 +173,57 @@ export function PriceChart({ symbol, range, history }: PriceChartProps) {
     const rect = container.getBoundingClientRect();
 
     chartRef.current.applyOptions(getChartOptions(isDark, rect.width, rect.height));
-    seriesRef.current.applyOptions(getSeriesOptions(metal.color, isDark));
+    const opts =
+      seriesTypeRef.current === "candlestick"
+        ? getCandlestickSeriesOptions(metal.color, isDark)
+        : getAreaSeriesOptions(metal.color, isDark);
+    seriesRef.current.applyOptions(opts);
   }, [isDark, metal.color]);
 
-  // Update data
+  // Update data and series type (area vs candlestick)
   useEffect(() => {
-    if (!seriesRef.current || !chartRef.current || !history) return;
+    if (!chartRef.current || !history) return;
 
-    seriesRef.current.applyOptions(getSeriesOptions(metal.color, isDark));
+    const useCandlestick = hasOhlc(history.data);
+    const chart = chartRef.current;
+    const container = containerRef.current;
+    if (!container) return;
+    const rect = container.getBoundingClientRect();
 
-    const data: AreaData<Time>[] = history.data.map((d) => ({
-      time: (Math.floor(new Date(d.timestamp).getTime() / 1000)) as Time,
-      value: d.price,
-    }));
+    const needsNewSeries =
+      !seriesRef.current || seriesTypeRef.current !== (useCandlestick ? "candlestick" : "area");
 
-    seriesRef.current.setData(data);
-    chartRef.current.timeScale().fitContent();
+    if (needsNewSeries && seriesRef.current) {
+      chart.removeSeries(seriesRef.current);
+      seriesRef.current = null;
+    }
+
+    if (!seriesRef.current) {
+      const series = useCandlestick
+        ? chart.addCandlestickSeries(getCandlestickSeriesOptions(metal.color, isDark))
+        : chart.addAreaSeries(getAreaSeriesOptions(metal.color, isDark));
+      seriesRef.current = series;
+      seriesTypeRef.current = useCandlestick ? "candlestick" : "area";
+    }
+
+    if (useCandlestick) {
+      const data: CandlestickData<Time>[] = history.data.map((d) => ({
+        time: (Math.floor(new Date(d.timestamp).getTime() / 1000)) as Time,
+        open: d.open!,
+        high: d.high!,
+        low: d.low!,
+        close: d.price,
+      }));
+      (seriesRef.current as ISeriesApi<"Candlestick">).setData(data);
+    } else {
+      const data: AreaData<Time>[] = history.data.map((d) => ({
+        time: (Math.floor(new Date(d.timestamp).getTime() / 1000)) as Time,
+        value: d.price,
+      }));
+      (seriesRef.current as ISeriesApi<"Area">).setData(data);
+    }
+
+    chart.timeScale().fitContent();
     setZoomed(false);
   }, [history, metal.color, isDark]);
 

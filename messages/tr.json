@@ -542,7 +542,11 @@
     "linkPrerequisite": "Ön Koşul",
     "linkDeeperDive": "Derinleştir",
     "linkComparison": "Karşılaştır",
-    "linkSeeAlso": "Ayrıca Bakınız"
+    "linkSeeAlso": "Ayrıca Bakınız",
+    "explorePlatform": "Platformu keşfet",
+    "viewPrices": "Fiyatları görüntüle",
+    "viewTools": "Araçlar",
+    "setAlerts": "Fiyat uyarıları"
   },
   "goldToday": {
     "title": "Bugün altın fiyatı",

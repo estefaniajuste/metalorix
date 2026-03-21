@@ -542,7 +542,11 @@
     "linkPrerequisite": "前置知识",
     "linkDeeperDive": "深入了解",
     "linkComparison": "对比",
-    "linkSeeAlso": "参见"
+    "linkSeeAlso": "参见",
+    "explorePlatform": "探索平台",
+    "viewPrices": "查看价格",
+    "viewTools": "工具",
+    "setAlerts": "价格提醒"
   },
   "goldToday": {
     "title": "今日黄金价格",

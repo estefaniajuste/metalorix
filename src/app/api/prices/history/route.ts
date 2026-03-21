@@ -29,7 +29,12 @@ interface YahooChartResponse {
     result: Array<{
       timestamp: number[];
       indicators: {
-        quote: Array<{ close: (number | null)[] }>;
+        quote: Array<{
+          open: (number | null)[];
+          high: (number | null)[];
+          low: (number | null)[];
+          close: (number | null)[];
+        }>;
       };
     }> | null;
   };
@@ -83,14 +88,20 @@ async function fetchYahooHistory(
     if (!result) return null;
 
     const timestamps = result.timestamp;
-    const closes = result.indicators.quote[0].close;
-    const data: Array<{ timestamp: string; price: number }> = [];
+    const quote = result.indicators.quote[0];
+    const { open: opens, high: highs, low: lows, close: closes } = quote;
+    const data: Array<{ timestamp: string; price: number; open?: number; high?: number; low?: number }> = [];
 
     for (let i = 0; i < timestamps.length; i++) {
-      if (closes[i] != null) {
+      const c = closes[i];
+      if (c != null) {
+        const o = opens[i];
+        const h = highs[i];
+        const l = lows[i];
         data.push({
           timestamp: new Date(timestamps[i] * 1000).toISOString(),
-          price: closes[i]!,
+          price: c,
+          ...(o != null && h != null && l != null && { open: o, high: h, low: l }),
         });
       }
     }
@@ -121,9 +132,9 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: "Invalid range" }, { status: 400 });
   }
 
-  // 1. Try database for short ranges
+  // 1. Try database for short ranges only (DB has no OHLC; 1M+ use Yahoo for candlesticks)
   const db = getDb();
-  if (db && ["1H", "4H", "1D", "1W", "1M"].includes(range)) {
+  if (db && ["1H", "4H", "1D", "1W"].includes(range)) {
     try {
       const since = new Date(Date.now() - RANGE_LOOKBACK[range]);
       const rows = await db

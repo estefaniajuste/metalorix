@@ -130,10 +130,17 @@ export async function fetchTimeSeries(
     if (raw.status === "error" || !raw.values?.length) return null;
 
     const data: HistoryPoint[] = raw.values
-      .map((v) => ({
-        timestamp: new Date(v.datetime).toISOString(),
-        price: parseFloat(v.close),
-      }))
+      .map((v) => {
+        const close = parseFloat(v.close);
+        const open = parseFloat(v.open);
+        const high = parseFloat(v.high);
+        const low = parseFloat(v.low);
+        return {
+          timestamp: new Date(v.datetime).toISOString(),
+          price: close,
+          ...(!isNaN(open) && !isNaN(high) && !isNaN(low) && { open, high, low }),
+        };
+      })
       .reverse();
 
     const first = data[0].price;

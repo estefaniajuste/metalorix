@@ -542,7 +542,11 @@
     "linkPrerequisite": "Requisito previo",
     "linkDeeperDive": "Profundizar",
     "linkComparison": "Comparar",
-    "linkSeeAlso": "Ver también"
+    "linkSeeAlso": "Ver también",
+    "explorePlatform": "Explorar la plataforma",
+    "viewPrices": "Ver precios",
+    "viewTools": "Herramientas",
+    "setAlerts": "Alertas"
   },
   "goldToday": {
     "title": "Precio del oro hoy",

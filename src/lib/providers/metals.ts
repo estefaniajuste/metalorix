@@ -10,6 +10,10 @@ export interface MetalSpot {
 export interface HistoryPoint {
   timestamp: string;
   price: number;
+  /** OHLC for candlestick charts; when present, chart uses candles */
+  open?: number;
+  high?: number;
+  low?: number;
 }
 
 export interface HistoryResult {

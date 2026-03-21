@@ -542,7 +542,11 @@
     "linkPrerequisite": "متطلب سابق",
     "linkDeeperDive": "تعمّق أكثر",
     "linkComparison": "قارن",
-    "linkSeeAlso": "انظر أيضاً"
+    "linkSeeAlso": "انظر أيضاً",
+    "explorePlatform": "استكشف المنصة",
+    "viewPrices": "عرض الأسعار",
+    "viewTools": "الأدوات",
+    "setAlerts": "التنبيهات"
   },
   "goldToday": {
     "title": "سعر الذهب اليوم",

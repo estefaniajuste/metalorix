@@ -664,6 +664,32 @@ export default async function LearnArticlePage({
             }}
           />
 
+          <div className="mt-8 pt-6 border-t border-border">
+            <h3 className="text-sm font-semibold text-content-2 mb-3">
+              {t("explorePlatform")}
+            </h3>
+            <div className="flex flex-wrap gap-3">
+              <Link
+                href="/"
+                className="inline-flex items-center gap-1.5 text-sm font-medium text-content-2 hover:text-brand-gold transition-colors"
+              >
+                {t("viewPrices")}
+              </Link>
+              <Link
+                href="/herramientas"
+                className="inline-flex items-center gap-1.5 text-sm font-medium text-content-2 hover:text-brand-gold transition-colors"
+              >
+                {t("viewTools")}
+              </Link>
+              <Link
+                href="/alertas"
+                className="inline-flex items-center gap-1.5 text-sm font-medium text-content-2 hover:text-brand-gold transition-colors"
+              >
+                {t("setAlerts")}
+              </Link>
+            </div>
+          </div>
+
           <footer className="mt-10 pt-6 border-t border-border">
             <div className="flex justify-between items-center">
               <Link
