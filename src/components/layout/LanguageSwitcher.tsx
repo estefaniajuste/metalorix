@@ -17,6 +17,7 @@ const LANGUAGES: { code: Locale; label: string; flag: string; name: string }[] =
   { code: "ar", label: "AR", flag: "🇸🇦", name: "العربية" },
   { code: "tr", label: "TR", flag: "🇹🇷", name: "Türkçe" },
   { code: "de", label: "DE", flag: "🇩🇪", name: "Deutsch" },
+  { code: "hi", label: "हि", flag: "🇮🇳", name: "हिन्दी" },
 ];
 
 export function LanguageSwitcher() {
