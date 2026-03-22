@@ -251,7 +251,7 @@ export default async function ArticlePage({
   const linkedContent = await injectGlossaryLinks(displayContent);
 
   let glossarySlugsInLocale: Set<string> | undefined;
-  if (locale !== "es") {
+  {
     const db = getDb();
     if (db) {
       try {

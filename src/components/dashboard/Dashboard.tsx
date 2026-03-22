@@ -118,7 +118,7 @@ export function Dashboard() {
               </span>
             )}
           </h2>
-          <div className="flex items-center gap-3 flex-wrap">
+          <div className="flex items-center gap-3 flex-wrap min-w-0">
             <CurrencyUnitToggle
               currency={currency}
               unit={unit}

@@ -208,7 +208,7 @@ async function getGlossaryTermsForPrompt(): Promise<string> {
       .orderBy(asc(glossaryTerms.term))
       .limit(200);
     if (terms.length === 0) return "";
-    return terms.map((t) => `- ${t.term}`).join("\n");
+    return terms.map((t) => `- ${t.term} → slug: ${t.slug}`).join("\n");
   } catch {
     return "";
   }
@@ -229,9 +229,9 @@ function buildGlossaryLinkingInstructions(termList: string): string {
   if (!termList) return "";
   return `
 TERMINOLOGÍA DEL SECTOR:
-Usa estos términos técnicos cuando sea apropiado. Incluye entre 3 y 5 enlaces a términos del glosario en el cuerpo del artículo usando formato markdown: [término](/learn/glossary/slug-del-termino). No repitas el mismo enlace más de una vez.
+Usa estos términos técnicos cuando sea apropiado. Incluye entre 3 y 5 enlaces a términos del glosario en el cuerpo del artículo usando formato markdown: [término visible](/learn/glossary/SLUG-EXACTO). Usa SIEMPRE el slug exacto que aparece después de "→ slug:" en la lista. No inventes slugs. No repitas el mismo enlace más de una vez.
 
-TÉRMINOS DISPONIBLES:
+TÉRMINOS DISPONIBLES (formato: nombre → slug: slug-exacto):
 ${termList}
 `;
 }
