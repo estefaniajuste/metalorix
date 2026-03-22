@@ -98,6 +98,24 @@ const CLUSTER_SLUG_I18N: Record<string, Record<string, string>> = {
     comparisons: "karsilastirmalar",
     glossary: "sozluk",
   },
+  hi: {
+    fundamentals: "mool-tattva",
+    history: "itihas",
+    "markets-trading": "bazaar-vyapar",
+    investment: "nivesh",
+    "physical-metals": "bhaute-dhatu",
+    "price-factors": "mulya-karak",
+    "production-industry": "uttpadan-udyog",
+    "geology-science": "bhugol-vigyan",
+    "regulation-tax": "niyaman-kar",
+    "security-authenticity": "suraksha-pramaan",
+    "ratios-analytics": "anupat-vishleshan",
+    macroeconomics: "makro-arthvyavastha",
+    guides: "margdarshika",
+    "faq-mistakes": "puchhe-jane-wale-sawal",
+    comparisons: "tulna",
+    glossary: "shabdavali",
+  },
 };
 
 // Pre-compute reverse maps for fast base slug lookups
@@ -318,7 +336,7 @@ export async function getArticleSlugsForAllLocales(
   baseSlug: string
 ): Promise<Map<string, string>> {
   const result = new Map<string, string>();
-  const allLocales = ["es", "en", "zh", "ar", "tr", "de"];
+  const allLocales = ["es", "en", "zh", "ar", "tr", "de", "hi"];
   result.set("en", baseSlug);
 
   const db = getDb();

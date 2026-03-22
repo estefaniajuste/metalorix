@@ -39,7 +39,7 @@ export async function generateMetadata({
   const { locale } = params;
   const t = await getTranslations({ locale, namespace: "metadata" });
   const localeMap: Record<string, string> = {
-    es: "es_ES", en: "en_US", zh: "zh_CN", ar: "ar_SA", tr: "tr_TR", de: "de_DE",
+    es: "es_ES", en: "en_US", zh: "zh_CN", ar: "ar_SA", tr: "tr_TR", de: "de_DE", hi: "hi_IN",
   };
 
   const alternates: Record<string, string> = {};

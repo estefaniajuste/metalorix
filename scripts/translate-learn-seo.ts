@@ -9,7 +9,7 @@ import { resolve } from "path";
 
 config({ path: resolve(process.cwd(), ".env.local") });
 
-const TARGET_LOCALES = ["es", "zh", "ar", "tr", "de"] as const;
+const TARGET_LOCALES = ["es", "zh", "ar", "tr", "de", "hi"] as const;
 const SLUGS = [
   "ppi-and-gold-correlation",
   "coin-grading-scale-ms-pf",
@@ -30,6 +30,7 @@ const LANGUAGE_NAMES: Record<string, string> = {
   ar: "Arabic",
   tr: "Turkish",
   de: "German",
+  hi: "Hindi",
 };
 
 function parseJson<T>(raw: string): T | null {

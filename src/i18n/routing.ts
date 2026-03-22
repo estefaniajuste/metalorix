@@ -1,7 +1,7 @@
 import { defineRouting } from "next-intl/routing";
 
 export const routing = defineRouting({
-  locales: ["es", "en", "zh", "ar", "tr", "de"] as const,
+  locales: ["es", "en", "zh", "ar", "tr", "de", "hi"] as const,
   defaultLocale: "en",
   localePrefix: "always",
 
@@ -15,6 +15,7 @@ export const routing = defineRouting({
       zh: "/jiage/[metal]",
       ar: "/sier/[metal]",
       tr: "/fiyat/[metal]",
+      hi: "/mulya/[metal]",
     },
 
     "/precio-oro-hoy": {
@@ -24,6 +25,7 @@ export const routing = defineRouting({
       zh: "/jin-ri-jin-jia",
       ar: "/sier-althahab-alyawm",
       tr: "/altin-fiyati-bugun",
+      hi: "/sona-bhav-aaj",
     },
 
     "/precio-gramo-oro": {
@@ -33,6 +35,7 @@ export const routing = defineRouting({
       zh: "/mei-ke-jin-jia",
       ar: "/sier-ghram-althahab",
       tr: "/gram-altin-fiyati",
+      hi: "/sona-gram-mulya",
     },
 
     "/herramientas": {
@@ -42,6 +45,7 @@ export const routing = defineRouting({
       zh: "/gongju",
       ar: "/adawat",
       tr: "/araclar",
+      hi: "/upakar",
     },
 
     "/calculadora-rentabilidad": {
@@ -51,6 +55,7 @@ export const routing = defineRouting({
       zh: "/shouyi-jisuan",
       ar: "/hasibat-alarabah",
       tr: "/getiri-hesaplayici",
+      hi: "/laabh-ganak",
     },
 
     "/conversor-divisas": {
@@ -60,6 +65,7 @@ export const routing = defineRouting({
       zh: "/huobi-zhuanhua",
       ar: "/muhawwil-alumlat",
       tr: "/doviz-cevirici",
+      hi: "/mudra-badlav",
     },
 
     "/comparador": {
@@ -69,6 +75,7 @@ export const routing = defineRouting({
       zh: "/bijiao",
       ar: "/muqarin",
       tr: "/karsilastirma",
+      hi: "/tulana",
     },
 
     "/ratio-oro-plata": {
@@ -78,6 +85,7 @@ export const routing = defineRouting({
       zh: "/jin-yin-bi",
       ar: "/nisbat-althahab-alfiddah",
       tr: "/altin-gumus-orani",
+      hi: "/sona-chandi-anupat",
     },
 
     "/calendario-economico": {
@@ -87,6 +95,7 @@ export const routing = defineRouting({
       zh: "/jingji-rili",
       ar: "/altaqwim-aliqtisadi",
       tr: "/ekonomik-takvim",
+      hi: "/arthik-patra",
     },
 
     "/guia-inversion": {
@@ -96,6 +105,7 @@ export const routing = defineRouting({
       zh: "/touzi-zhinan",
       ar: "/dalil-alistithmar",
       tr: "/yatirim-rehberi",
+      hi: "/nivesh-margdarshika",
     },
 
     "/productos": {
@@ -105,6 +115,7 @@ export const routing = defineRouting({
       zh: "/chanpin",
       ar: "/muntajat",
       tr: "/urunler",
+      hi: "/utpad",
     },
 
     "/productos/[slug]": {
@@ -114,6 +125,7 @@ export const routing = defineRouting({
       zh: "/chanpin/[slug]",
       ar: "/muntajat/[slug]",
       tr: "/urunler/[slug]",
+      hi: "/utpad/[slug]",
     },
 
     "/noticias": {
@@ -123,6 +135,7 @@ export const routing = defineRouting({
       zh: "/xinwen",
       ar: "/akhbar",
       tr: "/haberler",
+      hi: "/samachar",
     },
 
     "/noticias/[slug]": {
@@ -132,6 +145,7 @@ export const routing = defineRouting({
       zh: "/xinwen/[slug]",
       ar: "/akhbar/[slug]",
       tr: "/haberler/[slug]",
+      hi: "/samachar/[slug]",
     },
 
     "/learn": {
@@ -141,6 +155,7 @@ export const routing = defineRouting({
       zh: "/xuexi",
       ar: "/taallam",
       tr: "/ogren-yatirim",
+      hi: "/gyaan-nivesh",
     },
 
     "/learn/[cluster]": {
@@ -150,6 +165,7 @@ export const routing = defineRouting({
       zh: "/xuexi/[cluster]",
       ar: "/taallam/[cluster]",
       tr: "/ogren-yatirim/[cluster]",
+      hi: "/gyaan-nivesh/[cluster]",
     },
 
     "/learn/[cluster]/[slug]": {
@@ -159,6 +175,7 @@ export const routing = defineRouting({
       zh: "/xuexi/[cluster]/[slug]",
       ar: "/taallam/[cluster]/[slug]",
       tr: "/ogren-yatirim/[cluster]/[slug]",
+      hi: "/gyaan-nivesh/[cluster]/[slug]",
     },
 
     "/alertas": {
@@ -168,6 +185,7 @@ export const routing = defineRouting({
       zh: "/jingbao",
       ar: "/tanbihat",
       tr: "/uyarilar",
+      hi: "/suchnayen",
     },
 
     "/panel": {
@@ -177,6 +195,7 @@ export const routing = defineRouting({
       zh: "/mianban",
       ar: "/lawha",
       tr: "/panel",
+      hi: "/dashboard",
     },
 
     "/aviso-legal": {
@@ -186,6 +205,7 @@ export const routing = defineRouting({
       zh: "/falv-shengming",
       ar: "/ishaar-qanuni",
       tr: "/yasal-uyari",
+      hi: "/vidhey-suchna",
     },
 
     "/terminos": {
@@ -195,6 +215,7 @@ export const routing = defineRouting({
       zh: "/tiaokuan",
       ar: "/shurut",
       tr: "/sartlar",
+      hi: "/sharten",
     },
 
     "/privacidad": {
@@ -204,6 +225,7 @@ export const routing = defineRouting({
       zh: "/yinsi",
       ar: "/khususiyah",
       tr: "/gizlilik",
+      hi: "/gagta",
     },
   },
 });

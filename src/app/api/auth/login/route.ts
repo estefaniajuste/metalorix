@@ -18,7 +18,7 @@ export async function POST(request: NextRequest) {
   }
 
   const email = body.email?.trim().toLowerCase();
-  const locale = ["es", "en", "de", "zh", "ar", "tr"].includes(body.locale ?? "")
+  const locale = ["es", "en", "de", "zh", "ar", "tr", "hi"].includes(body.locale ?? "")
     ? body.locale!
     : "es";
   if (!email || !email.includes("@")) {

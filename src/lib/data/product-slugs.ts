@@ -50,6 +50,7 @@ const PRODUCT_SLUGS_I18N: Record<string, Record<string, string>> = {
 };
 PRODUCT_SLUGS_I18N.zh = PRODUCT_SLUGS_I18N.en;
 PRODUCT_SLUGS_I18N.ar = PRODUCT_SLUGS_I18N.en;
+PRODUCT_SLUGS_I18N.hi = PRODUCT_SLUGS_I18N.en;
 
 const PRODUCT_REVERSE: Record<string, Record<string, string>> = {};
 for (const [locale, mapping] of Object.entries(PRODUCT_SLUGS_I18N)) {

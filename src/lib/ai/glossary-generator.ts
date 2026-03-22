@@ -306,7 +306,7 @@ export async function injectGlossaryLinks(
   return result;
 }
 
-const GLOSSARY_TRANSLATION_LOCALES = ["en", "zh", "ar", "tr", "de"] as const;
+const GLOSSARY_TRANSLATION_LOCALES = ["en", "zh", "ar", "tr", "de", "hi"] as const;
 
 const GLOSSARY_LANGUAGE_NAMES: Record<string, string> = {
   en: "English",

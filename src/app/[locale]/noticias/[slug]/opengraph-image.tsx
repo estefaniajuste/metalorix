@@ -9,9 +9,9 @@ export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
 const CATEGORY_LABELS: Record<string, Record<string, string>> = {
-  daily: { es: "Resumen Diario", en: "Daily Summary", de: "Tagesbericht", zh: "每日摘要", ar: "ملخص يومي", tr: "Günlük Özet" },
-  weekly: { es: "Análisis Semanal", en: "Weekly Analysis", de: "Wochenanalyse", zh: "每周分析", ar: "تحليل أسبوعي", tr: "Haftalık Analiz" },
-  event: { es: "Alerta de Mercado", en: "Market Alert", de: "Marktwarnung", zh: "市场警报", ar: "تنبيه السوق", tr: "Piyasa Uyarısı" },
+  daily: { es: "Resumen Diario", en: "Daily Summary", de: "Tagesbericht", zh: "每日摘要", ar: "ملخص يومي", tr: "Günlük Özet", hi: "दैनिक सारांश" },
+  weekly: { es: "Análisis Semanal", en: "Weekly Analysis", de: "Wochenanalyse", zh: "每周分析", ar: "تحليل أسبوعي", tr: "Haftalık Analiz", hi: "साप्ताहिक विश्लेषण" },
+  event: { es: "Alerta de Mercado", en: "Market Alert", de: "Marktwarnung", zh: "市场警报", ar: "تنبيه السوق", tr: "Piyasa Uyarısı", hi: "बाजार अलर्ट" },
 };
 
 export default async function OgImage({

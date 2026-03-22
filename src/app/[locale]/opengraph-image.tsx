@@ -36,6 +36,11 @@ const i18n: Record<string, { heading: string; subtitle: string; metals: string[]
     subtitle: "黄金、白银、铂金、钯金和铜的实时现货价格、专业图表和分析",
     metals: ["黄金", "白银", "铂金", "钯金", "铜"],
   },
+  hi: {
+    heading: "कीमती और औद्योगिक धातुएं",
+    subtitle: "सोना, चांदी, प्लैटिनम, पैलेडियम और तांबे के लिए रीयल-टाइम स्पॉट कीमतें, प्रोफेशनल चार्ट और एनालिटिक्स",
+    metals: ["सोना", "चांदी", "प्लैटिनम", "पैलेडियम", "तांबा"],
+  },
 };
 
 export default async function OgImage({ params }: { params: { locale: string } }) {

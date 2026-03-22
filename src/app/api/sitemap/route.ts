@@ -4,39 +4,39 @@ import { getProductSlugsByLocale } from "@/lib/data/product-slugs";
 export const dynamic = "force-dynamic";
 
 const BASE = "https://metalorix.com";
-const LOCALES = ["es", "en", "zh", "ar", "tr", "de"] as const;
+const LOCALES = ["es", "en", "zh", "ar", "tr", "de", "hi"] as const;
 const DEFAULT_LOCALE = "en";
 
 const PATHNAMES: Record<string, Record<string, string>> = {
-  "/": { es: "/es", en: "/en", zh: "/zh", ar: "/ar", tr: "/tr", de: "/de" },
-  "/herramientas": { es: "/es/herramientas", en: "/en/tools", de: "/de/werkzeuge", zh: "/zh/gongju", ar: "/ar/adawat", tr: "/tr/araclar" },
-  "/calculadora-rentabilidad": { es: "/es/calculadora-rentabilidad", en: "/en/roi-calculator", de: "/de/renditerechner", zh: "/zh/shouyi-jisuan", ar: "/ar/hasibat-alarabah", tr: "/tr/getiri-hesaplayici" },
-  "/conversor-divisas": { es: "/es/conversor-divisas", en: "/en/currency-converter", de: "/de/waehrungsrechner", zh: "/zh/huobi-zhuanhua", ar: "/ar/muhawwil-alumlat", tr: "/tr/doviz-cevirici" },
-  "/comparador": { es: "/es/comparador", en: "/en/comparator", de: "/de/vergleich", zh: "/zh/bijiao", ar: "/ar/muqarin", tr: "/tr/karsilastirma" },
-  "/ratio-oro-plata": { es: "/es/ratio-oro-plata", en: "/en/gold-silver-ratio", de: "/de/gold-silber-verhaeltnis", zh: "/zh/jin-yin-bi", ar: "/ar/nisbat-althahab-alfiddah", tr: "/tr/altin-gumus-orani" },
-  "/calendario-economico": { es: "/es/calendario-economico", en: "/en/economic-calendar", de: "/de/wirtschaftskalender", zh: "/zh/jingji-rili", ar: "/ar/altaqwim-aliqtisadi", tr: "/tr/ekonomik-takvim" },
-  "/guia-inversion": { es: "/es/guia-inversion", en: "/en/investment-guide", de: "/de/investitionsleitfaden", zh: "/zh/touzi-zhinan", ar: "/ar/dalil-alistithmar", tr: "/tr/yatirim-rehberi" },
-  "/productos": { es: "/es/productos", en: "/en/products", de: "/de/produkte", zh: "/zh/chanpin", ar: "/ar/muntajat", tr: "/tr/urunler" },
-  "/noticias": { es: "/es/noticias", en: "/en/news", de: "/de/nachrichten", zh: "/zh/xinwen", ar: "/ar/akhbar", tr: "/tr/haberler" },
-  "/learn": { es: "/es/aprende-inversion", en: "/en/learn", de: "/de/lernen-investition", zh: "/zh/xuexi", ar: "/ar/taallam", tr: "/tr/ogren-yatirim" },
-  "/alertas": { es: "/es/alertas", en: "/en/alerts", de: "/de/benachrichtigungen", zh: "/zh/jingbao", ar: "/ar/tanbihat", tr: "/tr/uyarilar" },
-  "/precio-oro-hoy": { es: "/es/precio-oro-hoy", en: "/en/gold-price-today", de: "/de/goldpreis-heute", zh: "/zh/jin-ri-jin-jia", ar: "/ar/sier-althahab-alyawm", tr: "/tr/altin-fiyati-bugun" },
-  "/precio-gramo-oro": { es: "/es/precio-gramo-oro", en: "/en/gold-price-per-gram", de: "/de/goldpreis-pro-gramm", zh: "/zh/mei-ke-jin-jia", ar: "/ar/sier-ghram-althahab", tr: "/tr/gram-altin-fiyati" },
-  "/aviso-legal": { es: "/es/aviso-legal", en: "/en/legal-notice", de: "/de/impressum", zh: "/zh/falv-shengming", ar: "/ar/ishaar-qanuni", tr: "/tr/yasal-uyari" },
-  "/terminos": { es: "/es/terminos", en: "/en/terms", de: "/de/agb", zh: "/zh/tiaokuan", ar: "/ar/shurut", tr: "/tr/sartlar" },
-  "/privacidad": { es: "/es/privacidad", en: "/en/privacy", de: "/de/datenschutz", zh: "/zh/yinsi", ar: "/ar/khususiyah", tr: "/tr/gizlilik" },
+  "/": { es: "/es", en: "/en", zh: "/zh", ar: "/ar", tr: "/tr", de: "/de", hi: "/hi" },
+  "/herramientas": { es: "/es/herramientas", en: "/en/tools", de: "/de/werkzeuge", zh: "/zh/gongju", ar: "/ar/adawat", tr: "/tr/araclar", hi: "/hi/upakar" },
+  "/calculadora-rentabilidad": { es: "/es/calculadora-rentabilidad", en: "/en/roi-calculator", de: "/de/renditerechner", zh: "/zh/shouyi-jisuan", ar: "/ar/hasibat-alarabah", tr: "/tr/getiri-hesaplayici", hi: "/hi/laabh-ganak" },
+  "/conversor-divisas": { es: "/es/conversor-divisas", en: "/en/currency-converter", de: "/de/waehrungsrechner", zh: "/zh/huobi-zhuanhua", ar: "/ar/muhawwil-alumlat", tr: "/tr/doviz-cevirici", hi: "/hi/mudra-badlav" },
+  "/comparador": { es: "/es/comparador", en: "/en/comparator", de: "/de/vergleich", zh: "/zh/bijiao", ar: "/ar/muqarin", tr: "/tr/karsilastirma", hi: "/hi/tulana" },
+  "/ratio-oro-plata": { es: "/es/ratio-oro-plata", en: "/en/gold-silver-ratio", de: "/de/gold-silber-verhaeltnis", zh: "/zh/jin-yin-bi", ar: "/ar/nisbat-althahab-alfiddah", tr: "/tr/altin-gumus-orani", hi: "/hi/sona-chandi-anupat" },
+  "/calendario-economico": { es: "/es/calendario-economico", en: "/en/economic-calendar", de: "/de/wirtschaftskalender", zh: "/zh/jingji-rili", ar: "/ar/altaqwim-aliqtisadi", tr: "/tr/ekonomik-takvim", hi: "/hi/arthik-patra" },
+  "/guia-inversion": { es: "/es/guia-inversion", en: "/en/investment-guide", de: "/de/investitionsleitfaden", zh: "/zh/touzi-zhinan", ar: "/ar/dalil-alistithmar", tr: "/tr/yatirim-rehberi", hi: "/hi/nivesh-margdarshika" },
+  "/productos": { es: "/es/productos", en: "/en/products", de: "/de/produkte", zh: "/zh/chanpin", ar: "/ar/muntajat", tr: "/tr/urunler", hi: "/hi/utpad" },
+  "/noticias": { es: "/es/noticias", en: "/en/news", de: "/de/nachrichten", zh: "/zh/xinwen", ar: "/ar/akhbar", tr: "/tr/haberler", hi: "/hi/samachar" },
+  "/learn": { es: "/es/aprende-inversion", en: "/en/learn", de: "/de/lernen-investition", zh: "/zh/xuexi", ar: "/ar/taallam", tr: "/tr/ogren-yatirim", hi: "/hi/gyaan-nivesh" },
+  "/alertas": { es: "/es/alertas", en: "/en/alerts", de: "/de/benachrichtigungen", zh: "/zh/jingbao", ar: "/ar/tanbihat", tr: "/tr/uyarilar", hi: "/hi/suchnayen" },
+  "/precio-oro-hoy": { es: "/es/precio-oro-hoy", en: "/en/gold-price-today", de: "/de/goldpreis-heute", zh: "/zh/jin-ri-jin-jia", ar: "/ar/sier-althahab-alyawm", tr: "/tr/altin-fiyati-bugun", hi: "/hi/sona-bhav-aaj" },
+  "/precio-gramo-oro": { es: "/es/precio-gramo-oro", en: "/en/gold-price-per-gram", de: "/de/goldpreis-pro-gramm", zh: "/zh/mei-ke-jin-jia", ar: "/ar/sier-ghram-althahab", tr: "/tr/gram-altin-fiyati", hi: "/hi/sona-gram-mulya" },
+  "/aviso-legal": { es: "/es/aviso-legal", en: "/en/legal-notice", de: "/de/impressum", zh: "/zh/falv-shengming", ar: "/ar/ishaar-qanuni", tr: "/tr/yasal-uyari", hi: "/hi/vidhey-suchna" },
+  "/terminos": { es: "/es/terminos", en: "/en/terms", de: "/de/agb", zh: "/zh/tiaokuan", ar: "/ar/shurut", tr: "/tr/sartlar", hi: "/hi/sharten" },
+  "/privacidad": { es: "/es/privacidad", en: "/en/privacy", de: "/de/datenschutz", zh: "/zh/yinsi", ar: "/ar/khususiyah", tr: "/tr/gizlilik", hi: "/hi/gagta" },
 };
 
 const METAL_SLUGS: Record<string, Record<string, string>> = {
-  oro: { es: "oro", en: "gold", de: "gold", zh: "gold", ar: "gold", tr: "altin" },
-  plata: { es: "plata", en: "silver", de: "silber", zh: "silver", ar: "silver", tr: "gumus" },
-  platino: { es: "platino", en: "platinum", de: "platin", zh: "platinum", ar: "platinum", tr: "platin" },
-  paladio: { es: "paladio", en: "palladium", de: "palladium", zh: "palladium", ar: "palladium", tr: "paladyum" },
-  cobre: { es: "cobre", en: "copper", de: "kupfer", zh: "copper", ar: "copper", tr: "bakir" },
+  oro: { es: "oro", en: "gold", de: "gold", zh: "gold", ar: "gold", tr: "altin", hi: "sona" },
+  plata: { es: "plata", en: "silver", de: "silber", zh: "silver", ar: "silver", tr: "gumus", hi: "chandi" },
+  platino: { es: "platino", en: "platinum", de: "platin", zh: "platinum", ar: "platinum", tr: "platin", hi: "platinam" },
+  paladio: { es: "paladio", en: "palladium", de: "palladium", zh: "palladium", ar: "palladium", tr: "paladyum", hi: "palladium" },
+  cobre: { es: "cobre", en: "copper", de: "kupfer", zh: "copper", ar: "copper", tr: "bakir", hi: "tamba" },
 };
 
 const PRICE_PATHS: Record<string, string> = {
-  es: "precio", en: "price", de: "preis", zh: "jiage", ar: "sier", tr: "fiyat",
+  es: "precio", en: "price", de: "preis", zh: "jiage", ar: "sier", tr: "fiyat", hi: "mulya",
 };
 
 const PRODUCT_SLUGS = [
@@ -48,16 +48,16 @@ const PRODUCT_SLUGS = [
 
 const PRODUCT_BASE: Record<string, string> = {
   es: "productos", en: "products", de: "produkte",
-  zh: "chanpin", ar: "muntajat", tr: "urunler",
+  zh: "chanpin", ar: "muntajat", tr: "urunler", hi: "utpad",
 };
 
 const NEWS_BASE: Record<string, string> = {
-  es: "noticias", en: "news", de: "nachrichten", zh: "xinwen", ar: "akhbar", tr: "haberler",
+  es: "noticias", en: "news", de: "nachrichten", zh: "xinwen", ar: "akhbar", tr: "haberler", hi: "samachar",
 };
 
 const LEARN_BASE: Record<string, string> = {
   es: "aprende-inversion", en: "learn", de: "lernen-investition",
-  zh: "xuexi", ar: "taallam", tr: "ogren-yatirim",
+  zh: "xuexi", ar: "taallam", tr: "ogren-yatirim", hi: "gyaan-nivesh",
 };
 
 const CLUSTER_SLUG_I18N: Record<string, Record<string, string>> = {
@@ -66,6 +66,7 @@ const CLUSTER_SLUG_I18N: Record<string, Record<string, string>> = {
   zh: { fundamentals: "jichu", history: "lishi", "markets-trading": "shichang-jiaoyi", investment: "touzi", "physical-metals": "shiwu-jinshu", "price-factors": "jiage-yinsu", "production-industry": "shengchan-gongye", "geology-science": "dizhi-kexue", "regulation-tax": "fagui-shuiwu", "security-authenticity": "anquan-zhenwei", "ratios-analytics": "bilv-fenxi", macroeconomics: "hongguan-jingji", guides: "zhinan", "faq-mistakes": "changjian-wenti", comparisons: "bijiao", glossary: "shuyu" },
   ar: { fundamentals: "asasiyat", history: "tarikh", "markets-trading": "aswaq-tadawul", investment: "istithmar", "physical-metals": "maadin-madiyah", "price-factors": "awamil-asiar", "production-industry": "intaj-sinai", "geology-science": "jiyulujiya-ulum", "regulation-tax": "tanzim-daraib", "security-authenticity": "aman-asalah", "ratios-analytics": "nisab-tahlilat", macroeconomics: "iqtisad-kulli", guides: "adillah", "faq-mistakes": "asilah-akhta", comparisons: "muqaranat", glossary: "mustalahat" },
   tr: { fundamentals: "temeller", history: "tarih", "markets-trading": "piyasalar-ticaret", investment: "yatirim", "physical-metals": "fiziksel-metaller", "price-factors": "fiyat-faktorleri", "production-industry": "uretim-endustri", "geology-science": "jeoloji-bilim", "regulation-tax": "duzenleme-vergi", "security-authenticity": "guvenlik-orijinallik", "ratios-analytics": "oranlar-analitik", macroeconomics: "makroekonomi", guides: "rehberler", "faq-mistakes": "sss-hatalar", comparisons: "karsilastirmalar", glossary: "sozluk" },
+  hi: { fundamentals: "mool-tattva", history: "itihas", "markets-trading": "bazaar-vyapar", investment: "nivesh", "physical-metals": "bhaute-dhatu", "price-factors": "mulya-karak", "production-industry": "uttpadan-udyog", "geology-science": "bhugol-vigyan", "regulation-tax": "niyaman-kar", "security-authenticity": "suraksha-pramaan", "ratios-analytics": "anupat-vishleshan", macroeconomics: "makro-arthvyavastha", guides: "margdarshika", "faq-mistakes": "puchhe-jane-wale-sawal", comparisons: "tulna", glossary: "shabdavali" },
 };
 
 function localizedCluster(baseSlug: string, locale: string): string {
@@ -74,7 +75,7 @@ function localizedCluster(baseSlug: string, locale: string): string {
 }
 
 const GLOSSARY_CLUSTER: Record<string, string> = {
-  es: "glosario", en: "glossary", de: "glossar", zh: "shuyu", ar: "mustalahat", tr: "sozluk",
+  es: "glosario", en: "glossary", de: "glossar", zh: "shuyu", ar: "mustalahat", tr: "sozluk", hi: "shabdavali",
 };
 
 const FREQ_PRIO: Record<string, [string, number]> = {

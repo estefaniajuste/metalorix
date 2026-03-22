@@ -5,7 +5,7 @@ import { routing } from "@/i18n/routing";
 
 const CANONICAL_HOST = "metalorix.com";
 
-const LOCALES = new Set(["es", "en", "zh", "ar", "tr", "de"]);
+const LOCALES = new Set(["es", "en", "zh", "ar", "tr", "de", "hi"]);
 
 const LEARN_PATHS: Record<string, string> = {
   es: "/aprende-inversion",
@@ -14,6 +14,7 @@ const LEARN_PATHS: Record<string, string> = {
   zh: "/xuexi",
   ar: "/taallam",
   tr: "/ogren-yatirim",
+  hi: "/gyaan-nivesh",
 };
 
 const LEARN_LEGACY_SEGMENTS = new Set([

@@ -9,13 +9,14 @@ if (!DATABASE_URL || !GEMINI_API_KEY) {
   process.exit(1);
 }
 
-const LOCALES = ["en", "zh", "ar", "tr", "de"];
+const LOCALES = ["en", "zh", "ar", "tr", "de", "hi"];
 const LANGUAGE_NAMES = {
   en: "English",
   zh: "Simplified Chinese",
   ar: "Arabic",
   tr: "Turkish",
   de: "German",
+  hi: "Hindi",
 };
 
 const sql = postgres(DATABASE_URL, { max: 3, idle_timeout: 20, connect_timeout: 10 });

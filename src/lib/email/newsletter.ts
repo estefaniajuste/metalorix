@@ -4,11 +4,11 @@ import { generateText, isConfigured } from "@/lib/ai/gemini";
 import { sendEmail } from "./resend";
 
 const METAL_NAMES: Record<string, Record<string, string>> = {
-  XAU: { es: "Oro", en: "Gold", ar: "الذهب", zh: "黄金", de: "Gold", tr: "Altın" },
-  XAG: { es: "Plata", en: "Silver", ar: "الفضة", zh: "白银", de: "Silber", tr: "Gümüş" },
-  XPT: { es: "Platino", en: "Platinum", ar: "البلاتين", zh: "铂金", de: "Platin", tr: "Platin" },
-  XPD: { es: "Paladio", en: "Palladium", ar: "البلاديوم", zh: "钯金", de: "Palladium", tr: "Paladyum" },
-  HG:  { es: "Cobre", en: "Copper", ar: "النحاس", zh: "铜", de: "Kupfer", tr: "Bakır" },
+  XAU: { es: "Oro", en: "Gold", ar: "الذهب", zh: "黄金", de: "Gold", tr: "Altın", hi: "सोना" },
+  XAG: { es: "Plata", en: "Silver", ar: "الفضة", zh: "白银", de: "Silber", tr: "Gümüş", hi: "चांदी" },
+  XPT: { es: "Platino", en: "Platinum", ar: "البلاتين", zh: "铂金", de: "Platin", tr: "Platin", hi: "प्लैटिनम" },
+  XPD: { es: "Paladio", en: "Palladium", ar: "البلاديوم", zh: "钯金", de: "Palladium", tr: "Paladyum", hi: "पैलेडियम" },
+  HG:  { es: "Cobre", en: "Copper", ar: "النحاس", zh: "铜", de: "Kupfer", tr: "Bakır", hi: "तांबा" },
 };
 
 function mName(symbol: string, locale: string = "es"): string {
@@ -29,6 +29,7 @@ const NL_I18N: Record<string, NlI18n> = {
   zh: { viewDashboard: "查看仪表板", footer: "您收到此通讯是因为您在 metalorix.com 上订阅了", manageSub: "管理订阅", weekOf: "第...周" },
   de: { viewDashboard: "Dashboard anzeigen", footer: "Du erhältst diesen Newsletter, weil du dich auf metalorix.com angemeldet hast", manageSub: "Abo verwalten", weekOf: "Woche vom" },
   tr: { viewDashboard: "Paneli Görüntüle", footer: "Bu bülteni metalorix.com'a abone olduğunuz için alıyorsunuz", manageSub: "Aboneliği yönet", weekOf: "Haftası" },
+  hi: { viewDashboard: "डैशबोर्ड देखें", footer: "आपको यह न्यूजलेटर इसलिए मिल रहा है क्योंकि आपने metalorix.com पर सदस्यता ली", manageSub: "सदस्यता प्रबंधित करें", weekOf: "सप्ताह" },
 };
 
 function newsletterTemplate(content: string, weekLabel: string, locale: string = "es"): string {

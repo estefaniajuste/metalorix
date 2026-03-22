@@ -850,7 +850,7 @@ export async function saveArticle(
    Article Translation
    ========================================================== */
 
-const TRANSLATION_LOCALES = ["en", "zh", "ar", "tr", "de"] as const;
+const TRANSLATION_LOCALES = ["en", "zh", "ar", "tr", "de", "hi"] as const;
 
 const LANGUAGE_NAMES: Record<string, string> = {
   en: "English",
@@ -858,6 +858,7 @@ const LANGUAGE_NAMES: Record<string, string> = {
   ar: "Arabic",
   tr: "Turkish",
   de: "German",
+  hi: "Hindi",
 };
 
 interface TranslatedArticle {
@@ -902,10 +903,10 @@ async function translateArticleToLocale(
   const langName = LANGUAGE_NAMES[targetLocale];
   if (!langName) return null;
 
-  // Slug must match content language (i18n rule). For zh/ar use English (Latin chars). For en/de/tr use target language.
+  // Slug must match content language (i18n rule). For zh/ar/hi use English (Latin chars). For en/de/tr use target language.
   const slugInstruction =
-    targetLocale === "zh" || targetLocale === "ar"
-      ? "3-6 keywords in ENGLISH (Latin alphabet only) for the URL slug, separated by spaces, lowercase, no accents, no special characters, no date. Example: 'gold rises geopolitical tensions iran'. Use English because Chinese/Arabic script is not suitable for URLs."
+    targetLocale === "zh" || targetLocale === "ar" || targetLocale === "hi"
+      ? "3-6 keywords in ENGLISH (Latin alphabet only) for the URL slug, separated by spaces, lowercase, no accents, no special characters, no date. Example: 'gold rises geopolitical tensions iran'. Use English because non-Latin scripts are not suitable for URLs."
       : `3-6 keywords in ${langName} for the URL slug, separated by spaces, lowercase, Latin alphabet only, no accents, no special characters, no date. Example for English: 'gold rises geopolitical tensions iran'. Example for German: 'edelmetalle rueckgang iran inflation'. Example for Turkish: 'altin gumus dusus iran gerilim'. CRITICAL: The slug MUST be in ${langName}, matching the page content language.`;
 
   const prompt = `You are a professional translator specializing in financial and precious metals content.

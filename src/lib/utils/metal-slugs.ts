@@ -6,6 +6,7 @@ const INTERNAL_TO_LOCALE: Record<string, Record<string, string>> = {
     zh: "gold",
     ar: "gold",
     tr: "altin",
+    hi: "sona",
   },
   plata: {
     es: "plata",
@@ -14,6 +15,7 @@ const INTERNAL_TO_LOCALE: Record<string, Record<string, string>> = {
     zh: "silver",
     ar: "silver",
     tr: "gumus",
+    hi: "chandi",
   },
   platino: {
     es: "platino",
@@ -22,6 +24,7 @@ const INTERNAL_TO_LOCALE: Record<string, Record<string, string>> = {
     zh: "platinum",
     ar: "platinum",
     tr: "platin",
+    hi: "platinam",
   },
   paladio: {
     es: "paladio",
@@ -30,6 +33,7 @@ const INTERNAL_TO_LOCALE: Record<string, Record<string, string>> = {
     zh: "palladium",
     ar: "palladium",
     tr: "paladyum",
+    hi: "palladium",
   },
   cobre: {
     es: "cobre",
@@ -38,6 +42,7 @@ const INTERNAL_TO_LOCALE: Record<string, Record<string, string>> = {
     zh: "copper",
     ar: "copper",
     tr: "bakir",
+    hi: "tamba",
   },
 };
 

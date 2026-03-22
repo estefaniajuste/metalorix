@@ -112,6 +112,22 @@ const EMAIL_I18N: Record<string, EmailI18n> = {
     goToMetalorix: "前往 Metalorix",
     reachedPrice: "已达到",
   },
+  hi: {
+    footer: "आपको यह ईमेल इसलिए मिला क्योंकि आपने metalorix.com पर अलर्ट की सदस्यता ली",
+    manageAlerts: "अलर्ट प्रबंधित करें",
+    priceAlert: "कीमत अलर्ट",
+    viewChart: "चार्ट देखें",
+    viewDashboard: "डैशबोर्ड देखें",
+    welcomeSubject: "Metalorix अलर्ट में आपका स्वागत है",
+    welcomeTitle: "Metalorix में आपका स्वागत है!",
+    welcomeDesc: "आपने कीमती धातुओं की स्मार्ट कीमत अलर्ट की सदस्यता ली। सोना, चांदी और प्लैटिनम में महत्वपूर्ण हलचल होने पर आपको सूचनाएं मिलेंगी।",
+    welcomeAlertsTitle: "आपको ये अलर्ट मिलेंगे:",
+    welcomeAlert1: "नए 52-सप्ताह के उच्च और निम्न",
+    welcomeAlert2: "तेज़ हलचलें (एक दिन में >2%)",
+    welcomeAlert3: "सोना/चांदी अनुपात चरम क्षेत्रों में",
+    goToMetalorix: "Metalorix पर जाएं",
+    reachedPrice: "तक पहुंच गया",
+  },
 };
 
 function getEmailI18n(locale: string = "es"): EmailI18n {

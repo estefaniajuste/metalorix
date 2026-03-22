@@ -15,6 +15,7 @@ const L = {
   zh: "zh",
   ar: "ar",
   tr: "tr",
+  hi: "hi",
 } as const;
 
 /**
@@ -544,7 +545,7 @@ export const TAX_BY_COUNTRY: CountryTaxInfo[] = [
   {
     code: "IN",
     flag: "🇮🇳",
-    name: { [L.es]: "India", [L.en]: "India", [L.de]: "Indien", [L.zh]: "印度", [L.ar]: "الهند", [L.tr]: "Hindistan" },
+    name: { [L.es]: "India", [L.en]: "India", [L.de]: "Indien", [L.zh]: "印度", [L.ar]: "الهند", [L.tr]: "Hindistan", [L.hi]: "भारत" },
     goldVatExempt: false,
     goldNote: {
       [L.es]: "GST del 3 % sobre el oro. Además, arancel de importación del 6 % (reducido en 2024).",
@@ -553,6 +554,7 @@ export const TAX_BY_COUNTRY: CountryTaxInfo[] = [
       [L.zh]: "黄金征收3%GST，另加6%进口关税（2024年下调）。",
       [L.ar]: "GST 3٪ على الذهب. بالإضافة إلى رسوم استيراد 6٪.",
       [L.tr]: "Altın üzerinde %3 GST. Ayrıca %6 ithalat vergisi.",
+      [L.hi]: "सोने पर 3% GST। इसके अलावा 6% आयात शुल्क (2024 में कम)।",
     },
     silverVatRate: "3 %",
     silverNote: {
@@ -562,6 +564,7 @@ export const TAX_BY_COUNTRY: CountryTaxInfo[] = [
       [L.zh]: "3%GST。印度是世界最大的白银消费国之一。",
       [L.ar]: "GST 3٪. الهند من أكبر مستهلكي الفضة.",
       [L.tr]: "%3 GST. Hindistan dünyanın en büyük gümüş tüketicilerinden biridir.",
+      [L.hi]: "3% GST। भारत दुनिया के सबसे बड़े चांदी उपभोक्ताओं में से एक है।",
     },
   },
   {
@@ -738,6 +741,7 @@ const LOCALE_DEFAULT_COUNTRY: Record<string, string> = {
   zh: "CN",
   ar: "SA",
   tr: "TR",
+  hi: "IN",
 };
 
 export function getDefaultCountryForLocale(locale: string): string {
