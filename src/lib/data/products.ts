@@ -2471,6 +2471,7 @@ function applyLocale(product: Product, locale: string): Product {
     de: PRODUCTS_DE,
     zh: PRODUCTS_ZH,
     tr: PRODUCTS_TR,
+    hi: PRODUCTS_EN,
   };
   const texts = map[locale]?.[product.slug] || PRODUCTS_EN[product.slug];
   if (!texts) return product;

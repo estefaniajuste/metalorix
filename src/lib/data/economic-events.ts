@@ -498,7 +498,14 @@ const EVENTS_TR: Record<string, EventTexts> = {
 
 function applyEventLocale(event: EconomicEvent, locale: string): EconomicEvent {
   if (locale === "es") return event;
-  const map: Record<string, Record<string, EventTexts>> = { en: EVENTS_EN, ar: EVENTS_AR, zh: EVENTS_ZH, de: EVENTS_DE, tr: EVENTS_TR };
+  const map: Record<string, Record<string, EventTexts>> = {
+    en: EVENTS_EN,
+    ar: EVENTS_AR,
+    zh: EVENTS_ZH,
+    de: EVENTS_DE,
+    tr: EVENTS_TR,
+    hi: EVENTS_EN,
+  };
   const texts = map[locale]?.[event.id];
   if (!texts) {
     const fallback = EVENTS_EN[event.id];

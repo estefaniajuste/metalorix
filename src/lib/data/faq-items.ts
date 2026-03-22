@@ -201,7 +201,15 @@ const FAQ_TR: FaqItem[] = [
   },
 ];
 
-const FAQ_MAP: Record<string, FaqItem[]> = { es: FAQ_ES, en: FAQ_EN, ar: FAQ_AR, zh: FAQ_ZH, de: FAQ_DE, tr: FAQ_TR };
+const FAQ_MAP: Record<string, FaqItem[]> = {
+  es: FAQ_ES,
+  en: FAQ_EN,
+  ar: FAQ_AR,
+  zh: FAQ_ZH,
+  de: FAQ_DE,
+  tr: FAQ_TR,
+  hi: FAQ_EN,
+};
 
 export function getFaqItems(locale: string = "es"): FaqItem[] {
   return FAQ_MAP[locale] || FAQ_ES;
