@@ -39,9 +39,9 @@
     "investmentGuide": "Yatırım rehberi"
   },
   "home": {
-    "title": "Altın veya gümüşte",
-    "titleAccent": "hiçbir hareketi kaçırma.",
-    "subtitle": "5 metal canlı fiyatlar. Yükselip düştüğünde e-posta gönderiyoruz. Ücretsiz, spam yok.",
+    "title": "Altın, gümüş ve daha —",
+    "titleAccent": "canlı fiyatlar.",
+    "subtitle": "5 kıymetli metal için gerçek zamanlı kotasyonlar, grafikler, geçmiş veriler ve günlük değişim.",
     "viewDashboard": "Paneli Görüntüle",
     "tools": "Araçlar",
     "skipToContent": "İçeriğe atla",
@@ -53,7 +53,6 @@
     "viewAllLearn": "Tam sözlüğü görüntüle",
     "exploreTitle": "Metalorix'i Keşfet",
     "quickPrices": "Canlı fiyatlar",
-    "quickScrollPrices": "Fiyatları görüntüle ↓",
     "quickPricesDesc": "Grafikler ve geçmiş verilerle 5 metal",
     "quickTools": "Araçlar",
     "quickToolsDesc": "Oran, dönüştürücü, DCA hesaplayıcı ve daha fazlası",
@@ -69,27 +68,8 @@
     "quickGuideDesc": "Kıymetli metallere nasıl yatırım yapılır",
     "quickCalendar": "Takvim",
     "quickCalendarDesc": "Piyasayı hareket ettiren ekonomik olaylar",
-    "heroCta": "Hareket edince bana bildir",
-    "heroCtaDesc": "Ücretsiz. Kart gerekmez. Önemli olduğunda tek e-posta.",
-    "quickMore": "Daha fazla",
-    "firstVisit": {
-      "title": "İlk kez mi buradasınız?",
-      "message": "Altın bir günde %2 hareket edebilir. Ücretsiz abone olun, olduğunda bildirelim. Spam yok.",
-      "cta": "Uyarıları istiyorum",
-      "dismiss": "Sadece fiyatları gör"
-    },
-    "marketPulse": {
-      "label": "Bugün:",
-      "gold": "Altın",
-      "silver": "Gümüş",
-      "period": "24 saatte",
-      "viewMetal": "Görüntüle"
-    },
-    "alertsCta": {
-      "title": "Altın hareket ettiğinde size bildirelim mi?",
-      "desc": "Ücretsiz e-posta uyarıları. Spam yok, sadece önemli olduğunda.",
-      "cta": "Ücretsiz abone ol"
-    }
+    "heroLink": "E-posta ile fiyat uyarıları",
+    "quickMore": "Daha fazla"
   },
   "metals": {
     "gold": "Altın",

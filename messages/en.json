@@ -39,9 +39,9 @@
     "investmentGuide": "Investment guide"
   },
   "home": {
-    "title": "Don't miss a move",
-    "titleAccent": "in gold or silver.",
-    "subtitle": "Live prices for 5 metals. We'll email you when they go up or down. Free, no spam.",
+    "title": "Gold, silver & more —",
+    "titleAccent": "live prices.",
+    "subtitle": "Real-time quotes for 5 precious metals with charts, historical data and daily change.",
     "viewDashboard": "View Dashboard",
     "tools": "Tools",
     "skipToContent": "Skip to content",
@@ -53,7 +53,6 @@
     "viewAllLearn": "View full glossary",
     "exploreTitle": "Explore Metalorix",
     "quickPrices": "Live prices",
-    "quickScrollPrices": "View prices ↓",
     "quickPricesDesc": "5 metals with charts and historical data",
     "quickTools": "Tools",
     "quickToolsDesc": "Ratio, converter, DCA calculator and more",
@@ -69,27 +68,8 @@
     "quickGuideDesc": "How to invest in precious metals",
     "quickCalendar": "Calendar",
     "quickCalendarDesc": "Economic events that move the market",
-    "heroCta": "Notify me when it moves",
-    "heroCtaDesc": "Free. No card required. One email when it matters.",
-    "quickMore": "More",
-    "firstVisit": {
-      "title": "First time here?",
-      "message": "Gold can move 2% in a day. Subscribe for free and we'll email you when it happens. Zero spam.",
-      "cta": "I want the alerts",
-      "dismiss": "Just view prices"
-    },
-    "marketPulse": {
-      "label": "Today:",
-      "gold": "Gold",
-      "silver": "Silver",
-      "period": "in 24h",
-      "viewMetal": "View"
-    },
-    "alertsCta": {
-      "title": "Want us to notify you when gold moves?",
-      "desc": "Free email alerts. No spam, only when it matters.",
-      "cta": "Subscribe for free"
-    }
+    "heroLink": "Price alerts by email",
+    "quickMore": "More"
   },
   "metals": {
     "gold": "Gold",

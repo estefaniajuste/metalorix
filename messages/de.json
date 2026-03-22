@@ -39,9 +39,9 @@
     "investmentGuide": "Investitionsleitfaden"
   },
   "home": {
-    "title": "Verpassen Sie keine Bewegung",
-    "titleAccent": "bei Gold oder Silber.",
-    "subtitle": "Live-Preise für 5 Metalle. Wir mailen Ihnen, wenn sie steigen oder fallen. Kostenlos, kein Spam.",
+    "title": "Gold, Silber & mehr —",
+    "titleAccent": "Live-Preise.",
+    "subtitle": "Echtzeit-Kurse für 5 Edelmetalle mit Charts, historischen Daten und Tagesveränderung.",
     "viewDashboard": "Dashboard anzeigen",
     "tools": "Werkzeuge",
     "skipToContent": "Zum Inhalt springen",
@@ -53,7 +53,6 @@
     "viewAllLearn": "Vollständiges Glossar anzeigen",
     "exploreTitle": "Metalorix entdecken",
     "quickPrices": "Live-Preise",
-    "quickScrollPrices": "Preise anzeigen ↓",
     "quickPricesDesc": "5 Metalle mit Charts und historischen Daten",
     "quickTools": "Werkzeuge",
     "quickToolsDesc": "Ratio, Umrechner, DCA-Rechner und mehr",
@@ -69,27 +68,8 @@
     "quickGuideDesc": "Wie man in Edelmetalle investiert",
     "quickCalendar": "Kalender",
     "quickCalendarDesc": "Wirtschaftsereignisse die den Markt bewegen",
-    "heroCta": "Benachrichtigen Sie mich bei Bewegungen",
-    "heroCtaDesc": "Kostenlos. Keine Karte nötig. Eine E-Mail, wenn es wichtig ist.",
-    "quickMore": "Mehr",
-    "firstVisit": {
-      "title": "Erstes Mal hier?",
-      "message": "Gold kann an einem Tag um 2% schwanken. Kostenlos anmelden und wir mailen Ihnen. Kein Spam.",
-      "cta": "Ich möchte die Alarme",
-      "dismiss": "Nur Preise ansehen"
-    },
-    "marketPulse": {
-      "label": "Heute:",
-      "gold": "Gold",
-      "silver": "Silber",
-      "period": "in 24h",
-      "viewMetal": "Ansehen"
-    },
-    "alertsCta": {
-      "title": "Möchten Sie benachrichtigt werden, wenn Gold sich bewegt?",
-      "desc": "Kostenlose E-Mail-Alarme. Kein Spam, nur wenn es wichtig ist.",
-      "cta": "Kostenlos anmelden"
-    }
+    "heroLink": "Preisalarme per E-Mail",
+    "quickMore": "Mehr"
   },
   "metals": {
     "gold": "Gold",

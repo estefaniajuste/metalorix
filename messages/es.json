@@ -39,9 +39,9 @@
     "investmentGuide": "Guía de inversión"
   },
   "home": {
-    "title": "No te pierdas un movimiento",
-    "titleAccent": "del oro o la plata.",
-    "subtitle": "Precios en vivo de 5 metales. Te avisamos por email cuando suban o bajen. Gratis y sin spam.",
+    "title": "Oro, plata y más —",
+    "titleAccent": "precios en vivo.",
+    "subtitle": "Cotización actualizada de 5 metales preciosos con gráficos, históricos y variación diaria.",
     "viewDashboard": "Ver Dashboard",
     "tools": "Herramientas",
     "skipToContent": "Saltar al contenido",
@@ -53,7 +53,6 @@
     "viewAllLearn": "Ver glosario completo",
     "exploreTitle": "Explora Metalorix",
     "quickPrices": "Precios en vivo",
-    "quickScrollPrices": "Ver precios ↓",
     "quickPricesDesc": "5 metales con gráficos y datos históricos",
     "quickTools": "Herramientas",
     "quickToolsDesc": "Ratio, conversor, calculadora DCA y más",
@@ -69,27 +68,8 @@
     "quickGuideDesc": "Cómo invertir en metales preciosos",
     "quickCalendar": "Calendario",
     "quickCalendarDesc": "Eventos económicos que mueven el mercado",
-    "heroCta": "Avísame cuando se mueva",
-    "heroCtaDesc": "Gratis. Sin tarjeta. Un solo email cuando importe.",
-    "quickMore": "Más",
-    "firstVisit": {
-      "title": "¿Primera vez aquí?",
-      "message": "El oro puede moverse 2% en un día. Suscríbete gratis y te avisamos por email cuando pase. Cero spam.",
-      "cta": "Quiero las alertas",
-      "dismiss": "Solo ver precios"
-    },
-    "marketPulse": {
-      "label": "Hoy:",
-      "gold": "Oro",
-      "silver": "Plata",
-      "period": "en 24h",
-      "viewMetal": "Ver"
-    },
-    "alertsCta": {
-      "title": "¿Quieres que te avisemos cuando el oro se mueva?",
-      "desc": "Alertas gratuitas por email. Sin spam, solo cuando importa.",
-      "cta": "Suscribirme gratis"
-    }
+    "heroLink": "Alertas de precio por email",
+    "quickMore": "Más"
   },
   "metals": {
     "gold": "Oro",
