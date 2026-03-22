@@ -39,9 +39,9 @@
     "investmentGuide": "Guía de inversión"
   },
   "home": {
-    "title": "Metales preciosos,",
-    "titleAccent": "al detalle.",
-    "subtitle": "Precios spot en tiempo real y analítica limpia para Oro (XAU), Plata (XAG) y Platino (XPT).",
+    "title": "No te pierdas un movimiento",
+    "titleAccent": "del oro o la plata.",
+    "subtitle": "Precios en vivo de 5 metales. Te avisamos por email cuando suban o bajen. Gratis y sin spam.",
     "viewDashboard": "Ver Dashboard",
     "tools": "Herramientas",
     "skipToContent": "Saltar al contenido",
@@ -69,21 +69,21 @@
     "quickGuideDesc": "Cómo invertir en metales preciosos",
     "quickCalendar": "Calendario",
     "quickCalendarDesc": "Eventos económicos que mueven el mercado",
-    "heroCta": "Consigue alertas de precio gratis",
-    "heroCtaDesc": "¿El oro se mueve? Te avisamos por email.",
+    "heroCta": "Avísame cuando se mueva",
+    "heroCtaDesc": "Gratis. Sin tarjeta. Un solo email cuando importe.",
     "quickMore": "Más",
     "firstVisit": {
-      "title": "Bienvenido a Metalorix",
-      "message": "Aquí tienes los precios en tiempo real. Suscríbete gratis y te avisaremos por email cuando el oro, plata o platino se muevan.",
-      "cta": "Activar alertas gratis",
-      "dismiss": "Entendido"
+      "title": "¿Primera vez aquí?",
+      "message": "El oro puede moverse 2% en un día. Suscríbete gratis y te avisamos por email cuando pase. Cero spam.",
+      "cta": "Quiero las alertas",
+      "dismiss": "Solo ver precios"
     },
     "marketPulse": {
-      "label": "Esta semana:",
+      "label": "Hoy:",
       "gold": "Oro",
       "silver": "Plata",
       "period": "en 24h",
-      "cta": "Recibir alertas"
+      "viewMetal": "Ver"
     },
     "alertsCta": {
       "title": "¿Quieres que te avisemos cuando el oro se mueva?",

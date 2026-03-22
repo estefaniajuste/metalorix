@@ -39,9 +39,9 @@
     "investmentGuide": "Investitionsleitfaden"
   },
   "home": {
-    "title": "Edelmetalle,",
-    "titleAccent": "im Detail.",
-    "subtitle": "Echtzeit-Spotpreise und professionelle Analysen für Gold (XAU), Silber (XAG) und Platin (XPT).",
+    "title": "Verpassen Sie keine Bewegung",
+    "titleAccent": "bei Gold oder Silber.",
+    "subtitle": "Live-Preise für 5 Metalle. Wir mailen Ihnen, wenn sie steigen oder fallen. Kostenlos, kein Spam.",
     "viewDashboard": "Dashboard anzeigen",
     "tools": "Werkzeuge",
     "skipToContent": "Zum Inhalt springen",
@@ -69,21 +69,21 @@
     "quickGuideDesc": "Wie man in Edelmetalle investiert",
     "quickCalendar": "Kalender",
     "quickCalendarDesc": "Wirtschaftsereignisse die den Markt bewegen",
-    "heroCta": "Kostenlose Preisalarme erhalten",
-    "heroCtaDesc": "Gold bewegt sich? Wir mailen Ihnen.",
+    "heroCta": "Benachrichtigen Sie mich bei Bewegungen",
+    "heroCtaDesc": "Kostenlos. Keine Karte nötig. Eine E-Mail, wenn es wichtig ist.",
     "quickMore": "Mehr",
     "firstVisit": {
-      "title": "Willkommen bei Metalorix",
-      "message": "Hier sind die Echtzeitpreise. Kostenlos anmelden und wir mailen Ihnen, wenn Gold, Silber oder Platin sich bewegen.",
-      "cta": "Kostenlose Alarme",
-      "dismiss": "Verstanden"
+      "title": "Erstes Mal hier?",
+      "message": "Gold kann an einem Tag um 2% schwanken. Kostenlos anmelden und wir mailen Ihnen. Kein Spam.",
+      "cta": "Ich möchte die Alarme",
+      "dismiss": "Nur Preise ansehen"
     },
     "marketPulse": {
-      "label": "Diese Woche:",
+      "label": "Heute:",
       "gold": "Gold",
       "silver": "Silber",
       "period": "in 24h",
-      "cta": "Alarme erhalten"
+      "viewMetal": "Ansehen"
     },
     "alertsCta": {
       "title": "Möchten Sie benachrichtigt werden, wenn Gold sich bewegt?",

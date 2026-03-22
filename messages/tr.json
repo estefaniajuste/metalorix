@@ -39,9 +39,9 @@
     "investmentGuide": "Yatırım rehberi"
   },
   "home": {
-    "title": "Kıymetli metaller,",
-    "titleAccent": "detaylı.",
-    "subtitle": "Altın (XAU), Gümüş (XAG) ve Platin (XPT) için gerçek zamanlı spot fiyatlar ve profesyonel analiz.",
+    "title": "Altın veya gümüşte",
+    "titleAccent": "hiçbir hareketi kaçırma.",
+    "subtitle": "5 metal canlı fiyatlar. Yükselip düştüğünde e-posta gönderiyoruz. Ücretsiz, spam yok.",
     "viewDashboard": "Paneli Görüntüle",
     "tools": "Araçlar",
     "skipToContent": "İçeriğe atla",
@@ -69,21 +69,21 @@
     "quickGuideDesc": "Kıymetli metallere nasıl yatırım yapılır",
     "quickCalendar": "Takvim",
     "quickCalendarDesc": "Piyasayı hareket ettiren ekonomik olaylar",
-    "heroCta": "Ücretsiz fiyat uyarıları al",
-    "heroCtaDesc": "Altın hareketi mi? Size e-posta göndeririz.",
+    "heroCta": "Hareket edince bana bildir",
+    "heroCtaDesc": "Ücretsiz. Kart gerekmez. Önemli olduğunda tek e-posta.",
     "quickMore": "Daha fazla",
     "firstVisit": {
-      "title": "Metalorix'e hoş geldiniz",
-      "message": "Gerçek zamanlı fiyatlar burada. Ücretsiz abone olun, altın, gümüş veya platin hareket ettiğinde e-posta göndereceğiz.",
-      "cta": "Ücretsiz uyarılar",
-      "dismiss": "Anladım"
+      "title": "İlk kez mi buradasınız?",
+      "message": "Altın bir günde %2 hareket edebilir. Ücretsiz abone olun, olduğunda bildirelim. Spam yok.",
+      "cta": "Uyarıları istiyorum",
+      "dismiss": "Sadece fiyatları gör"
     },
     "marketPulse": {
-      "label": "Bu hafta:",
+      "label": "Bugün:",
       "gold": "Altın",
       "silver": "Gümüş",
       "period": "24 saatte",
-      "cta": "Uyarı al"
+      "viewMetal": "Görüntüle"
     },
     "alertsCta": {
       "title": "Altın hareket ettiğinde size bildirelim mi?",
