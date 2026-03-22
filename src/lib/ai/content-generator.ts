@@ -1,7 +1,7 @@
 import { generateText, isConfigured, type GeminiLog } from "./gemini";
 import { getDb } from "@/lib/db";
 import { articles, newsSources, metalPrices, glossaryTerms, articleTranslations } from "@/lib/db/schema";
-import { desc, gte, eq, asc, and, inArray } from "drizzle-orm";
+import { desc, gte, eq, asc, and, inArray, like, not } from "drizzle-orm";
 import { fetchAllSpotPrices as fetchFromYahoo } from "@/lib/providers/yahoo-finance";
 import { METALS } from "@/lib/providers/metals";
 
@@ -76,6 +76,30 @@ async function getPricesWithFallback(): Promise<PriceData[]> {
       changePct: 0,
     })
   );
+}
+
+/** Returns today's morning daily article (non-cierre) if it exists. Used by evening to avoid repetition. */
+async function getTodayMorningArticle(): Promise<{ title: string; excerpt: string | null } | null> {
+  const db = getDb();
+  if (!db) return null;
+  try {
+    const dateSlug = new Date().toISOString().slice(0, 10);
+    const [row] = await db
+      .select({ title: articles.title, excerpt: articles.excerpt })
+      .from(articles)
+      .where(
+        and(
+          eq(articles.category, "daily"),
+          like(articles.slug, `%-${dateSlug}`),
+          not(like(articles.slug, "cierre-%"))
+        )
+      )
+      .orderBy(desc(articles.publishedAt))
+      .limit(1);
+    return row ? { title: row.title, excerpt: row.excerpt } : null;
+  } catch {
+    return null;
+  }
 }
 
 async function getRecentNews(hours: number = 24): Promise<NewsItem[]> {
@@ -419,6 +443,79 @@ El oro es el metal precioso por excelencia. Se utiliza como reserva de valor, en
   return { slug, title, excerpt, content, metals: ["XAU", "XAG", "XPT", "XPD", "HG"] };
 }
 
+/** Sunday evening: perspectivas fin de semana. More informative, less price-focused. Markets were closed. */
+async function generateSundayEveningArticle(
+  prices: PriceData[],
+  news: NewsItem[],
+  dateStr: string,
+  dateSlug: string,
+  glossaryInstructions: string,
+  log?: DailyGenerationLog
+): Promise<{
+  slug: string;
+  title: string;
+  excerpt: string;
+  content: string;
+  metals: string[];
+}> {
+  const prompt = `Eres un analista experto en metales preciosos, macroeconomía y geopolítica que escribe en español para inversores hispanohablantes.
+
+Es DOMINGO por la tarde, ${dateStr}. Los mercados han estado cerrados desde el viernes. Las fuentes de noticias suelen publicar poco en fin de semana.
+
+Escribe un artículo de PERSPECTIVAS Y CONTEXTO para la semana que comienza mañana. NO es un resumen de sesión (no hubo sesión). Debe ser MÁS INFORMATIVO e INTERESANTE que un simple "oro sube/plata baja":
+- Perspectivas para la semana: qué eventos clave hay (Fed, BCE, datos macro, cumbres)
+- Contexto geopolítico: tensiones, sanciones, relaciones que puedan afectar a los metales
+- Análisis educativo: por qué importa un dato, cómo interpretar indicadores
+- Niveles de referencia: dónde cerró el viernes cada metal (para contexto)
+- Qué vigilar: eventos concretos de la semana con fechas si es posible
+- Si hay pocas noticias nuevas, escribe sobre tendencias, ratios, o temas de fondo que interesen a quien invierte
+
+EVITA: repetir el mismo análisis que el sábado o el viernes. Si no hay novedades, ofrece valor con análisis, perspectivas o educación.
+
+NIVELES DE CIERRE DEL VIERNES (referencia):
+${formatPrices(prices)}
+
+NOTICIAS DEL FIN DE SEMANA (si hay pocas, usa contexto general):
+${formatNews(news)}
+
+INSTRUCCIONES:
+- 350-500 palabras. Conciso pero con valor.
+- Estructura: ## para secciones (Perspectivas, Contexto, Qué vigilar, Niveles de referencia)
+- Tono: informativo, útil, NO repetitivo
+- NO incluyas título ni fecha al inicio
+- CRÍTICO: NO insertes enlaces externos. Solo enlaces internos al glosario: [término](/learn/glossary/slug).
+${glossaryInstructions}
+
+Devuelve JSON:
+{
+  "titulo_seo": "Título (50-65 caracteres). Ejemplos: 'Qué vigilar esta semana: Fed, datos China y oro', 'Perspectivas metales: eventos clave del 24-28 marzo', 'Oro en $2.650: contexto y qué esperar esta semana'.",
+  "meta_descripcion": "Meta (140-155 caracteres). Perspectivas + qué vigilar + valor para el lector.",
+  "palabras_clave_url": "3-6 palabras. Ejemplo: 'perspectivas semana metales marzo' o 'qué vigilar oro fed'.",
+  "contenido": "Artículo completo. NO incluyas fuentes en el cuerpo.",
+  "fuentes": [{"titulo": "...", "url": "..."}]
+}
+
+Mínimo 2 fuentes, máximo 5. Devuelve SOLO el JSON.`;
+
+  const raw = await generateText(prompt, { retryOnEmpty: true, log: (e) => { if (log) log.geminiLog = e; } });
+  if (!raw) return buildMinimalEveningArticle(prices, dateStr, dateSlug);
+
+  const parsed = parseStructuredResponse(raw);
+  if (parsed) {
+    if (log) log.parseSuccess = true;
+    const keywordSlug = slugify(parsed.palabras_clave_url);
+    return {
+      slug: `cierre-${keywordSlug}-${dateSlug}`,
+      title: parsed.titulo_seo,
+      excerpt: parsed.meta_descripcion,
+      content: appendSources(parsed.contenido.trim(), parsed.fuentes ?? []),
+      metals: ["XAU", "XAG", "XPT", "XPD", "HG"],
+    };
+  }
+
+  return buildMinimalEveningArticle(prices, dateStr, dateSlug);
+}
+
 /** Evening summary: session close recap. Different from daily (morning). Slug prefixed with "cierre-" to avoid collision. */
 export async function generateEveningSummary(log?: DailyGenerationLog): Promise<{
   slug: string;
@@ -430,15 +527,17 @@ export async function generateEveningSummary(log?: DailyGenerationLog): Promise<
   const today = new Date();
   const dateStr = formatDate(today);
   const dateSlug = today.toISOString().slice(0, 10);
+  const isSunday = today.getDay() === 0;
 
   const prices = await getPricesWithFallback();
-  const news = await getRecentNews(12);
+  const news = await getRecentNews(isSunday ? 48 : 12);
+  const morningArticle = isSunday ? null : await getTodayMorningArticle();
 
   if (log) {
     log.pricesCount = prices.length;
     log.newsCount = news.length;
   }
-  console.log(`[ContentGenerator] generateEveningSummary: prices=${prices.length}, news=${news.length}`);
+  console.log(`[ContentGenerator] generateEveningSummary: isSunday=${isSunday}, prices=${prices.length}, news=${news.length}, morningArticle=${!!morningArticle}`);
 
   if (!isConfigured()) {
     console.warn("[ContentGenerator] Gemini not configured, using minimal evening article");
@@ -449,9 +548,27 @@ export async function generateEveningSummary(log?: DailyGenerationLog): Promise<
   const glossaryContext = await getGlossaryTermsForPrompt();
   const glossaryInstructions = buildGlossaryLinkingInstructions(glossaryContext);
 
+  if (isSunday) {
+    return generateSundayEveningArticle(prices, news, dateStr, dateSlug, glossaryInstructions, log);
+  }
+
+  const morningContext = morningArticle
+    ? `
+CRÍTICO - EVITA REPETIR:
+Ya se publicó un resumen MATINAL hoy con este enfoque:
+- Título: "${morningArticle.title}"
+- Resumen: ${morningArticle.excerpt ?? "(sin excerpt)"}
+
+Tu artículo de CIERRE debe ser CLARAMENTE DISTINTO. NO repitas el mismo análisis ni las mismas frases.
+- Enfócate en lo que ha pasado DESPUÉS del resumen matinal: movimientos intradía, datos macro publicados por la tarde, reacción del mercado a noticias que llegaron en la sesión.
+- Si las noticias son las mismas que esta mañana y no hubo desarrollos nuevos, escribe un cierre más breve destacando los niveles de cierre y la evolución intradía. No reescribas el mismo contenido.
+`
+    : "";
+
   const prompt = `Eres un analista experto en metales preciosos, macroeconomía y geopolítica que escribe en español para inversores hispanohablantes.
 
 Escribe un RESUMEN DE CIERRE DE SESIÓN del mercado de metales preciosos para hoy, ${dateStr}. Este artículo se publica tras el cierre de los mercados occidentales (NY, Londres). Es distinto del resumen matinal: aquí el foco es qué ha pasado DURANTE la sesión.
+${morningContext}
 
 CRÍTICO - LO MÁS SIGNIFICATIVO DE LA SESIÓN:
 Prioriza lo MÁS significativo, no solo subidas o bajadas de precios. Incluye: movimientos de precios relevantes, noticias geopolíticas, declaraciones de la Fed/BCE, datos macro publicados hoy, compras de bancos centrales, regulaciones, demanda industrial. Si la noticia más importante es una declaración de la Fed o un dato de empleo, eso debe destacar — no solo "oro sube 0.3%".
@@ -459,12 +576,12 @@ Prioriza lo MÁS significativo, no solo subidas o bajadas de precios. Incluye: m
 DATOS DE PRECIOS AL CIERRE:
 ${formatPrices(prices)}
 
-NOTICIAS RELEVANTES DE LAS ÚLTIMAS 12H:
+NOTICIAS RELEVANTES DE LAS ÚLTIMAS 12H (prioriza las más recientes; si son las mismas que esta mañana, no repitas el análisis):
 ${formatNews(news)}
 
 INSTRUCCIONES PARA EL CONTENIDO:
 - Escribe en español natural, profesional pero accesible
-- Longitud: 400-550 palabras (más conciso que el resumen matinal)
+- Longitud: 400-550 palabras (más conciso que el resumen matinal). Si no hay novedades respecto al matinal, acorta a 250-350 palabras y prioriza evolución intradía.
 - Estructura:
   1. Párrafo resumen: lo MÁS significativo de la sesión (precios, noticias, datos macro)
   2. Niveles de cierre por metal con variación intradía
