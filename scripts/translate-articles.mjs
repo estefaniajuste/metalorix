@@ -142,12 +142,18 @@ async function main() {
       const result = await translateToLocale(article.title, article.excerpt ?? "", article.content, locale);
 
       if (result) {
-        await sql`
+        const inserted = await sql`
           INSERT INTO article_translations (article_id, locale, title, excerpt, content) 
           VALUES (${article.id}, ${locale}, ${result.title}, ${result.excerpt}, ${result.content})
+          ON CONFLICT (article_id, locale) DO NOTHING
+          RETURNING id
         `;
-        totalTranslated++;
-        console.log(`  [${locale}] done`);
+        if (inserted.length > 0) {
+          totalTranslated++;
+          console.log(`  [${locale}] done`);
+        } else {
+          console.log(`  [${locale}] already exists, skip`);
+        }
       } else {
         console.log(`  [${locale}] FAILED`);
       }

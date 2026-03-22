@@ -544,6 +544,7 @@ export async function translateArticle(
     ar: "Arabic",
     tr: "Turkish",
     de: "German",
+    hi: "Hindi",
   };
 
   const localeName = localeNames[targetLocale] || targetLocale;
@@ -554,6 +555,7 @@ export async function translateArticle(
     ar: "- Consider AED/SAR for Gulf readers alongside USD\n- Reference Middle Eastern gold markets and demand where appropriate\n- Use Modern Standard Arabic",
     tr: "- Consider TRY examples alongside USD where relevant\n- Reference Turkish gold culture, CBRT, and Istanbul gold market where appropriate",
     de: "- Use standard German financial terminology\n- Reference both EUR and USD where relevant",
+    hi: "- Prefer INR examples alongside USD where relevant\n- Reference Indian gold culture, RBI, and domestic demand (jewelry, weddings) where appropriate\n- Use Devanagari script for Hindi terms when culturally fitting; otherwise Roman script is acceptable",
   };
 
   const adaptationRules = culturalAdaptation[targetLocale] || "";

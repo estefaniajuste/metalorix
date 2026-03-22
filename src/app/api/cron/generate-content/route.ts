@@ -29,7 +29,7 @@ import { routing } from "@/i18n/routing";
 import { getPathname } from "@/i18n/navigation";
 
 const ADMIN_EMAIL = "estefaniajuste@gmail.com";
-const EXPECTED_TRANSLATIONS = 5;
+const EXPECTED_TRANSLATIONS = 6; // en, zh, ar, tr, de, hi
 
 const CRON_SECRET = process.env.CRON_SECRET?.trim();
 /** Event articles only for exceptional moves (≥5%). Normal 2-3% moves are covered in daily/evening. */
@@ -316,12 +316,16 @@ export async function POST(request: NextRequest) {
 
     if (type === "translate") {
       try {
+        const translateLimit = Math.min(
+          Math.max(1, parseInt(url.searchParams.get("limit") || "5", 10) || 5),
+          100
+        );
         const untranslated = await db
           .select({ id: articles.id })
           .from(articles)
           .where(eq(articles.published, true))
           .orderBy(desc(articles.publishedAt))
-          .limit(5);
+          .limit(translateLimit);
 
         for (const { id } of untranslated) {
           const count = await translateArticle(id);

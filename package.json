@@ -12,6 +12,7 @@
     "db:push": "drizzle-kit push",
     "db:studio": "drizzle-kit studio",
     "glossary:translate-all": "npx tsx scripts/translate-glossary-all.ts",
+    "backfill:hindi": "node scripts/backfill-hindi.mjs",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:e2e": "playwright test",

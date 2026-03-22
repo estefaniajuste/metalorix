@@ -19,6 +19,7 @@ on:
           - news
           - alerts
           - learn
+          - learn-translate
           - indexing
       content_type:
         description: 'When job=content: daily, evening, weekly, auto, translate, replace_today, regenerate_translations, fix_slugs'
@@ -294,6 +295,31 @@ jobs:
           body=$(echo "$response" | head -n -1)
           echo "Status: $http_code"
           echo "Response: $body"
+
+  learn-translate:
+    if: github.event.inputs.job == 'learn-translate'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Translate Learn articles to Hindi
+        run: |
+          total=0
+          for i in {1..20}; do
+            echo "Iteration $i..."
+            response=$(curl -s -X POST \
+              -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+              -H "Content-Type: application/json" \
+              -d '{"action":"translate","locale":"hi","batchSize":25}' \
+              "${{ env.SERVICE_URL }}/api/learn/generate")
+            translated=$(echo "$response" | jq -r '.translated // 0')
+            remaining=$(echo "$response" | jq -r '.remaining // 0')
+            total=$((total + translated))
+            echo "Translated: $translated, Remaining: $remaining"
+            if [ "$remaining" = "0" ] || [ "$translated" = "0" ]; then
+              break
+            fi
+            sleep 5
+          done
+          echo "Done. Total translated: $total"
 
   submit-indexing:
     if: >
