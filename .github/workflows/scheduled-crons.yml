@@ -296,6 +296,19 @@ jobs:
           echo "Status: $http_code"
           echo "Response: $body"
 
+      - name: Translate new Learn articles to Hindi
+        if: steps.check.outputs.should_run == 'true'
+        run: |
+          echo "Translating Learn articles to Hindi..."
+          response=$(curl -s -X POST \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+            -H "Content-Type: application/json" \
+            -d '{"action":"translate","locale":"hi","batchSize":25}' \
+            "${{ env.SERVICE_URL }}/api/learn/generate")
+          translated=$(echo "$response" | jq -r '.translated // 0')
+          remaining=$(echo "$response" | jq -r '.remaining // 0')
+          echo "Translated: $translated, Remaining: $remaining"
+
   learn-translate:
     if: github.event.inputs.job == 'learn-translate'
     runs-on: ubuntu-latest
