@@ -15,6 +15,13 @@ const SLUGS = [
   "coin-grading-scale-ms-pf",
   "hyperinflation-episodes-and-gold",
   "volatility-comparison-across-metals",
+  "silver-chemical-symbol-ag",
+  "gold-chemical-symbol-au",
+  "troy-ounce-explained",
+  "gold-volatility-index-gvz",
+  "comparing-gold-etfs-in-europe",
+  "vat-on-gold-in-the-eu",
+  "gold-price-in-different-decades",
 ];
 
 const LANGUAGE_NAMES: Record<string, string> = {

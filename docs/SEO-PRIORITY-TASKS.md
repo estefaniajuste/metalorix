@@ -22,6 +22,7 @@ Tareas ejecutadas y pendientes por orden de prioridad.
 | Script | Uso |
 |--------|-----|
 | `update-learn-seo.ts [file.json]` | Actualiza seoTitle/metaDescription (EN) desde JSON o built-in |
-| `translate-learn-seo.ts` | Traduce los 4 artículos a es,zh,ar,tr,de |
+| `translate-learn-seo.ts` | Traduce seoTitle/metaDescription de 11 artículos Learn a es,zh,ar,tr,de |
+| `fix-article-slugs.ts` | Corrige slugs de noticias en/de/tr que usan español (ej. /en/news/metales-preciosos-...) |
 | `sync-internal-links.ts [slug...]` | Sincroniza relatedSlugs de topics → DB |
 | `analyze-gsc-ctr.ts Páginas.csv` | Lista páginas Learn con alto CTR potential |

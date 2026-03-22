@@ -11,6 +11,7 @@ import {
   translateArticle,
   validateArticleQuality,
   backfillTranslationSlugs,
+  fixArticleTranslationSlugs,
   type DailyGenerationLog,
   type ArticleQualityResult,
 } from "@/lib/ai/content-generator";
@@ -296,12 +297,21 @@ export async function POST(request: NextRequest) {
     }
   }
 
-  if (type === "translate" || type === "backfill-slugs") {
+  if (type === "translate" || type === "backfill-slugs" || type === "fix_slugs") {
     try {
       const backfilled = await backfillTranslationSlugs();
       if (backfilled > 0) generated.push(`backfilled slugs: ${backfilled}`);
     } catch (err) {
       console.error("Slug backfill failed:", err);
+    }
+
+    if (type === "fix_slugs") {
+      try {
+        const fixed = await fixArticleTranslationSlugs();
+        if (fixed > 0) generated.push(`fixed article slugs: ${fixed}`);
+      } catch (err) {
+        console.error("Fix article slugs failed:", err);
+      }
     }
 
     if (type === "translate") {

@@ -42,3 +42,6 @@ pgdata/
 /playwright-report/
 /blob-report/
 /playwright/.cache/
+
+# GSC exports (user data)
+*-gsc.csv

@@ -1,7 +1,7 @@
 import { generateText, isConfigured, type GeminiLog } from "./gemini";
 import { getDb } from "@/lib/db";
 import { articles, newsSources, metalPrices, glossaryTerms, articleTranslations } from "@/lib/db/schema";
-import { desc, gte, eq, asc, and } from "drizzle-orm";
+import { desc, gte, eq, asc, and, inArray } from "drizzle-orm";
 import { fetchAllSpotPrices as fetchFromYahoo } from "@/lib/providers/yahoo-finance";
 import { METALS } from "@/lib/providers/metals";
 
@@ -1055,6 +1055,92 @@ export async function getArticleTranslation(
   } catch {
     return null;
   }
+}
+
+/** Spanish keywords that indicate wrong-language slug in en/de/tr */
+const SPANISH_SLUG_PATTERNS = /\b(metales|preciosos|tensiones|sube|baja|caida|conflicto|oro|plata|platino|paladio|inflacion|mercado|precio|noticias|resumen|semanal|diario)\b/;
+
+function getKeywordPart(slug: string): string {
+  return slug.replace(/-\d{4}-\d{2}-\d{2}$/, "").toLowerCase();
+}
+
+/** Fix article_translations where en/de/tr use Spanish slug instead of localized. */
+export async function fixArticleTranslationSlugs(): Promise<number> {
+  const db = getDb();
+  if (!db || !isConfigured()) return 0;
+
+  let updated = 0;
+  try {
+    const allRows = await db
+      .select({
+        id: articleTranslations.id,
+        articleId: articleTranslations.articleId,
+        locale: articleTranslations.locale,
+        title: articleTranslations.title,
+        slug: articleTranslations.slug,
+      })
+      .from(articleTranslations)
+      .where(inArray(articleTranslations.locale, ["en", "de", "tr"]));
+
+    const baseSlugMap = new Map(
+      (await db.select({ id: articles.id, slug: articles.slug }).from(articles)).map((a) => [
+        a.id,
+        a.slug,
+      ])
+    );
+
+    const TARGET_LOCALES = ["en", "de", "tr"] as const;
+    const LANG_NAMES: Record<string, string> = { en: "English", de: "German", tr: "Turkish" };
+
+    for (const row of allRows) {
+      if (!TARGET_LOCALES.includes(row.locale as any)) continue;
+      if (!row.slug || !row.title) continue;
+
+      const baseSlug = baseSlugMap.get(row.articleId) ?? "";
+      const baseKw = getKeywordPart(baseSlug);
+      const trKw = getKeywordPart(row.slug);
+
+      const usesBaseSlug = trKw === baseKw;
+      const hasSpanishPattern = SPANISH_SLUG_PATTERNS.test(row.slug);
+      if (!usesBaseSlug && !hasSpanishPattern) continue;
+
+      const langName = LANG_NAMES[row.locale];
+      if (!langName) continue;
+
+      const prompt = `Given this ${langName} article title about precious metals, return 3-6 keywords for a URL slug.
+Title: "${row.title}"
+Return ONLY valid JSON: {"slug_keywords": "keyword1 keyword2 keyword3"}
+Keywords: lowercase, ${langName}, no date, no accents, hyphen-safe.`;
+
+      try {
+        const raw = await generateText(prompt);
+        if (!raw) continue;
+        const m = raw.match(/\{\s*"slug_keywords"\s*:\s*"([^"]+)"\s*\}/);
+        const keywords = m?.[1]?.trim();
+        if (!keywords) continue;
+
+        const keywordSlug = slugify(keywords);
+        if (!keywordSlug) continue;
+
+        const dateMatch = baseSlug.match(/\d{4}-\d{2}-\d{2}$/);
+        const dateSlug = dateMatch ? dateMatch[0] : new Date().toISOString().slice(0, 10);
+        const newSlug = `${keywordSlug}-${dateSlug}`;
+
+        await db
+          .update(articleTranslations)
+          .set({ slug: newSlug })
+          .where(eq(articleTranslations.id, row.id));
+
+        updated++;
+        console.log(`[FixSlug] ${row.locale} article ${row.articleId}: ${row.slug} -> ${newSlug}`);
+      } catch (err) {
+        console.error(`[FixSlug] Failed for ${row.id}:`, err);
+      }
+    }
+  } catch (err) {
+    console.error("[FixSlug] Error:", err);
+  }
+  return updated;
 }
 
 export async function backfillTranslationSlugs(): Promise<number> {

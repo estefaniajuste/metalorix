@@ -33,5 +33,10 @@ Se han compartido varias claves en conversaciones. Hay que rotarlas:
 - Redirects: revisar cobertura para URLs antiguas si cambias rutas
 - Metadata social: OpenGraph ya en páginas clave (layout, noticias, learn, productos)
 
+### Scripts útiles (tras actualizar SEO Learn)
+- `npx tsx scripts/translate-learn-seo.ts` — traduce seoTitle/metaDescription a es,zh,ar,tr,de
+- `npx tsx scripts/fix-article-slugs.ts` — corrige slugs de noticias en/de/tr con español
+- Workflow manual: job=content, content_type=fix_slugs — igual que el script, vía cron
+
 ---
 Última actualización: marzo 2026
