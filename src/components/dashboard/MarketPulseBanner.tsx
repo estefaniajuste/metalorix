@@ -1,8 +1,8 @@
 "use client";
 
-import { Link } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
 import { usePrices } from "@/lib/hooks/use-prices";
+
 export function MarketPulseBanner() {
   const t = useTranslations("home.marketPulse");
   const { prices } = usePrices();
@@ -32,12 +32,6 @@ export function MarketPulseBanner() {
           {pct.toFixed(2)}%
         </span>
         <span className="text-content-3">{t("period")}</span>
-        <Link
-          href="/alertas"
-          className="ml-auto text-brand-gold font-medium hover:underline text-xs sm:text-sm"
-        >
-          {t("cta")} →
-        </Link>
       </div>
     </div>
   );

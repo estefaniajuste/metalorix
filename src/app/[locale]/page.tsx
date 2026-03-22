@@ -3,7 +3,6 @@ import { Dashboard } from "@/components/dashboard/Dashboard";
 import { HomePreview } from "@/components/dashboard/HomePreview";
 import { FirstVisitWelcome } from "@/components/layout/FirstVisitWelcome";
 import { MarketPulseBanner } from "@/components/dashboard/MarketPulseBanner";
-import { AlertsCtaBar } from "@/components/dashboard/AlertsCtaBar";
 import { getTranslations, getLocale } from "next-intl/server";
 import { getPathname } from "@/i18n/navigation";
 import { getSpotPrices } from "@/lib/providers/spot-prices";
@@ -70,7 +69,6 @@ export default async function HomePage() {
       <FirstVisitWelcome />
       <MarketPulseBanner />
       <Dashboard />
-      <AlertsCtaBar />
       <HomePreview />
     </>
   );
