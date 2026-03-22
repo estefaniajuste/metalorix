@@ -78,3 +78,15 @@ Si cualquiera falla, **alertar al usuario inmediatamente**.
 5. `generateStaticParams` DEBE incluir todos los slugs (base + localizados)
 
 Ver `.cursor/rules/i18n-slugs.mdc` para detalles y ejemplos de código.
+
+---
+
+## Deploy a producción — Recordatorio obligatorio
+
+**Cuando un agente hace cambios que deben ir a producción**, al terminar DEBE:
+
+1. **Recordar al usuario** que haga commit y push si quiere que los cambios lleguen a metalorix.com
+2. Si el usuario lo pide, ejecutar `git add`, `git commit` y `git push origin main`
+3. Tras el push, verificar que el deploy se completó con éxito (`gh run list` + curl a producción)
+
+No asumir que los cambios están en producción solo porque el código está listo. Sin commit + push, la web no se actualiza.
