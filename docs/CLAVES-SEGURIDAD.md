@@ -64,7 +64,7 @@ Según `PENDIENTES.md`, estas claves pueden estar expuestas:
 ### INDEXNOW_KEY
 - **Función:** Acelera indexación en Bing (IndexNow)
 - **¿Ralentiza?** No. Solo afecta a Bing. Google usa sitemap + Indexing API
-- **Estado actual:** No está en el deploy de Cloud Run — aunque lo añadas a GitHub Secrets, no se pasa. Habría que añadir `INDEXNOW_KEY=${{ secrets.INDEXNOW_KEY }}` en `deploy-cloud-run.yml`
+- **Estado actual:** Ya se pasa en el deploy. Añade el secreto en GitHub → Secrets → INDEXNOW_KEY (por ejemplo un UUID) y el archivo `/{key}.txt` se sirve automáticamente vía rewrite
 - **Opcional:** Solo si quieres priorizar Bing
 
 ---

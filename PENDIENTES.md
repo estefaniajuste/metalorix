@@ -29,9 +29,9 @@ Se han compartido varias claves en conversaciones. Hay que rotarlas:
 
 ## Otras tareas pendientes
 
-- IndexNow: comprobar si la clave está configurada para Bing
-- Redirects: revisar cobertura para URLs antiguas
-- Metadata social: comprobar OpenGraph en páginas clave
+- IndexNow: añadir INDEXNOW_KEY en GitHub Secrets (UUID recomendado) y el deploy ya lo pasa. El archivo /{key}.txt se sirve por rewrite
+- Redirects: revisar cobertura para URLs antiguas si cambias rutas
+- Metadata social: OpenGraph ya en páginas clave (layout, noticias, learn, productos)
 
 ---
 Última actualización: marzo 2026

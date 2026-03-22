@@ -87,13 +87,17 @@ export async function POST(request: NextRequest) {
           dailyLog.saveError = `evening quality_rejected: ${quality.reasons.join("; ")}`;
           console.error("[Cron] Evening article REJECTED by quality gate:", quality.reasons);
         } else {
-          const articleId = await saveArticle(article, "daily");
+          let articleId = await saveArticle(article, "daily");
+          if (!articleId) {
+            console.warn("[Cron] saveArticle failed (evening), retrying once...");
+            articleId = await saveArticle(article, "daily");
+          }
           if (articleId) {
             generated.push(`evening: ${article.slug}`);
             articleIdsToTranslate.push(articleId);
             console.log(`[Cron] Evening article saved: ${article.slug} (id=${articleId})`);
           } else {
-            dailyLog.saveError = "saveArticle failed (evening)";
+            dailyLog.saveError = "saveArticle failed (evening) after retry";
           }
         }
       }
@@ -173,7 +177,11 @@ export async function POST(request: NextRequest) {
   if (type === "weekly" || (type === "auto" && new Date().getDay() === 0)) {
     const article = await generateWeeklySummary();
     if (article) {
-      const articleId = await saveArticle(article, "weekly");
+      let articleId = await saveArticle(article, "weekly");
+      if (!articleId) {
+        console.warn("[Cron] saveArticle failed (weekly), retrying once...");
+        articleId = await saveArticle(article, "weekly");
+      }
       if (articleId) {
         generated.push(`weekly: ${article.slug}`);
         articleIdsToTranslate.push(articleId);
@@ -229,7 +237,11 @@ export async function POST(request: NextRequest) {
             top.changePct
           );
           if (article) {
-            const articleId = await saveArticle(article, "event");
+            let articleId = await saveArticle(article, "event");
+            if (!articleId) {
+              console.warn("[Cron] saveArticle failed (event), retrying once...");
+              articleId = await saveArticle(article, "event");
+            }
             if (articleId) {
               generated.push(`event: ${article.slug} (${top.symbol} ${top.changePct >= 0 ? "+" : ""}${top.changePct.toFixed(1)}%)`);
               articleIdsToTranslate.push(articleId);

@@ -5,6 +5,12 @@ const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   output: "standalone",
+  async rewrites() {
+    return [
+      // IndexNow verification: /{key}.txt must serve the key for Bing
+      { source: "/:key([a-zA-Z0-9_-]+)\\.txt", destination: "/api/indexnow-verification?key=:key" },
+    ];
+  },
   async headers() {
     return [
       {

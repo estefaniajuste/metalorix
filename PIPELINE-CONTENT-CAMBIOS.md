@@ -39,8 +39,15 @@ Ejecutar manualmente el workflow con `job=content` y `content_type=translate`. E
 - Eliminado el bloque que rellenaba `dailyDebug` con prices/news cuando article era null (ya no debería ocurrir)
 
 ## Pendiente (no implementado)
-- **Workflow**: ejecutar `scrape-news` y `scrape-prices` **antes** de `generate-content` cuando `job=content` (ahora son jobs paralelos; si content corre solo, puede no haber noticias/precios frescos)
-- **Reintento de `saveArticle`** si falla (opcional)
+- Nada crítico.
+
+## Reintento de saveArticle (implementado)
+
+Si `saveArticle` falla, se reintenta una vez para daily, evening, weekly y event. Reduce `generated: []` por fallos transitorios de DB.
+
+## Workflow de contenido
+
+El job `prepare-content` en `scheduled-crons.yml` ejecuta **scrape-news** y **scrape-prices** *antes* de `generate-content`. `generate-content` tiene `needs: [prepare-content]`, por lo que siempre dispone de noticias y precios frescos cuando corre (incluyendo trigger manual con `job=content`).
 
 ## Flujo actual
 ```
