@@ -1,0 +1,121 @@
+/**
+ * Shared spot prices logic — used by API route and SSR.
+ * No rate limiting here; API route handles that.
+ */
+import { getDb } from "@/lib/db";
+import { metalPrices } from "@/lib/db/schema";
+import { fetchAllSpotPrices as fetchFromYahoo } from "@/lib/providers/yahoo-finance";
+import { fetchAllSpotPrices as fetchFromGoldApi } from "@/lib/providers/gold-api";
+import {
+  fetchAllSpotPrices as fetchFromTwelveData,
+  isConfigured as hasTwelveData,
+} from "@/lib/providers/twelve-data";
+import { MockProvider, METALS } from "@/lib/providers/metals";
+import type { MetalSpot } from "@/lib/providers/metals";
+
+const ALL_SYMBOLS = Object.keys(METALS);
+
+function ensureAllMetals(
+  prices: MetalSpot[],
+  fallback: MetalSpot[]
+): MetalSpot[] {
+  const bySymbol = new Map(prices.map((p) => [p.symbol, p]));
+  for (const fb of fallback) {
+    if (!bySymbol.has(fb.symbol)) {
+      bySymbol.set(fb.symbol, fb);
+    }
+  }
+  return ALL_SYMBOLS
+    .map((s) => bySymbol.get(s))
+    .filter((p): p is MetalSpot => !!p);
+}
+
+export async function getSpotPrices(): Promise<{
+  prices: MetalSpot[];
+  source: string;
+}> {
+  let dbPrices: MetalSpot[] = [];
+  let dbSource = false;
+
+  const db = getDb();
+  if (db) {
+    try {
+      const rows = await db.select().from(metalPrices);
+      if (rows.length > 0) {
+        const fifteenMinAgo = Date.now() - 15 * 60 * 1000;
+        const freshest = rows.reduce((a, b) =>
+          new Date(b.updatedAt) > new Date(a.updatedAt) ? b : a
+        );
+        if (new Date(freshest.updatedAt).getTime() > fifteenMinAgo) {
+          dbPrices = rows.map((r) => ({
+            symbol: r.symbol,
+            name: r.name,
+            price: parseFloat(r.priceUsd),
+            change: parseFloat(r.change24h ?? "0"),
+            changePct: parseFloat(r.changePct24h ?? "0"),
+            updatedAt: r.updatedAt.toISOString(),
+          }));
+          dbSource = true;
+        }
+      }
+    } catch (err) {
+      console.error("DB read failed:", err);
+    }
+  }
+
+  if (dbSource && dbPrices.length >= 3) {
+    return { source: "database", prices: dbPrices };
+  }
+
+  const yahooPrices = await fetchFromYahoo().catch(() => null);
+  if (yahooPrices && yahooPrices.length > 0) {
+    const merged = dbSource
+      ? ensureAllMetals(dbPrices, yahooPrices)
+      : yahooPrices;
+    if (merged.length >= 3) {
+      return {
+        source: dbSource ? "database+yahoo" : "yahoo",
+        prices: merged,
+      };
+    }
+  }
+
+  const goldApiPrices = await fetchFromGoldApi().catch(() => null);
+  if (goldApiPrices && goldApiPrices.length > 0) {
+    const merged = dbSource
+      ? ensureAllMetals(dbPrices, goldApiPrices)
+      : goldApiPrices;
+    if (merged.length >= 3) {
+      return {
+        source: dbSource ? "database+goldapi" : "goldapi",
+        prices: merged,
+      };
+    }
+  }
+
+  if (hasTwelveData()) {
+    const tdPrices = await fetchFromTwelveData().catch(() => null);
+    if (tdPrices && tdPrices.length > 0) {
+      const merged = ensureAllMetals(
+        dbPrices.length > 0 ? dbPrices : tdPrices,
+        tdPrices
+      );
+      if (merged.length >= 3) {
+        return {
+          source: dbSource ? "database+twelvedata" : "twelvedata",
+          prices: merged,
+        };
+      }
+    }
+  }
+
+  const mockPrices = await MockProvider.getSpotPrices();
+  const merged = ensureAllMetals(
+    dbPrices.length > 0 ? dbPrices : mockPrices,
+    mockPrices
+  );
+  return {
+    source: dbSource ? "database+mock" : "mock",
+    prices: merged,
+  };
+}

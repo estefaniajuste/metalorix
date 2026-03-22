@@ -100,8 +100,6 @@ export async function HomePreview() {
   const hasNews = latestArticles.length > 0;
   const hasGlossary = glossary.length > 0;
 
-  if (!hasNews && !hasGlossary) return null;
-
   const CATEGORY_LABELS: Record<string, string> = {
     daily: tc("daily"),
     weekly: tc("weekly"),
@@ -293,6 +291,33 @@ export async function HomePreview() {
                       {term.definition}
                     </p>
                   )}
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {!hasNews && !hasGlossary && (
+          <div>
+            <h2 className="text-xl font-bold text-content-0 mb-6">{t("exploreTitle")}</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              {[
+                { href: "/herramientas", title: "quickTools", desc: "quickToolsDesc" },
+                { href: "/guia-inversion", title: "quickGuide", desc: "quickGuideDesc" },
+                { href: "/learn", title: "quickLearn", desc: "quickLearnDesc" },
+                { href: "/noticias", title: "quickNews", desc: "quickNewsDesc" },
+              ].map(({ href, title, desc }) => (
+                <Link
+                  key={title}
+                  href={href as any}
+                  className="bg-surface-1 border border-border rounded-DEFAULT p-6 hover:border-border-hover hover:-translate-y-0.5 transition-all group"
+                >
+                  <h3 className="text-base font-semibold text-content-0 group-hover:text-brand-gold transition-colors">
+                    {t(title)}
+                  </h3>
+                  <p className="text-sm text-content-2 mt-1">
+                    {t(desc)}
+                  </p>
                 </Link>
               ))}
             </div>

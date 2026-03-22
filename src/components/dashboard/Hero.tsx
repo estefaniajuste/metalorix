@@ -1,13 +1,17 @@
 "use client";
 
+import { useState } from "react";
 import { Link } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
 
-const QUICK_LINKS = [
+const QUICK_LINKS_PRIMARY = [
   { key: "quickPrices", href: "#dashboard", icon: "chart", color: "#D6B35A" },
   { key: "quickNews", href: "/noticias", icon: "news", color: "#34D399" },
   { key: "quickTools", href: "/herramientas", icon: "tools", color: "#8B9DC3" },
   { key: "quickProducts", href: "/productos", icon: "box", color: "#B87333" },
+] as const;
+
+const QUICK_LINKS_SECONDARY = [
   { key: "quickGuide", href: "/guia-inversion", icon: "guide", color: "#A7B0BE" },
   { key: "quickLearn", href: "/learn", icon: "book", color: "#CED0CE" },
   { key: "quickCalendar", href: "/calendario-economico", icon: "calendar", color: "#6366F1" },
@@ -28,11 +32,35 @@ function QuickIcon({ icon, color }: { icon: string; color: string }) {
   return <>{icons[icon]}</>;
 }
 
+function QuickLinkItem({
+  keyName,
+  href,
+  icon,
+  color,
+  t,
+}: {
+  keyName: string;
+  href: string;
+  icon: string;
+  color: string;
+  t: (k: string) => string;
+}) {
+  const inner = (
+    <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-surface-1 border border-border rounded-full text-[11px] font-medium text-content-2 hover:text-content-0 hover:border-border-hover hover:shadow-sm transition-all cursor-pointer">
+      <QuickIcon icon={icon} color={color} />
+      {t(keyName)}
+    </span>
+  );
+  if (href.startsWith("#")) return <a href={href}>{inner}</a>;
+  return <Link href={href as any}>{inner}</Link>;
+}
+
 export function Hero() {
   const t = useTranslations("home");
+  const [showMore, setShowMore] = useState(false);
 
   return (
-    <section className="pt-8 pb-2 max-sm:pt-6">
+    <section className="pt-8 pb-2 max-sm:pt-6 animate-fade-in-up">
       <div className="max-w-[1200px] mx-auto px-6">
         <h1 className="text-[clamp(20px,3vw,28px)] font-bold text-content-0 tracking-tight mb-1">
           {t("title")}{" "}
@@ -54,17 +82,22 @@ export function Hero() {
           </Link>
           <span className="text-[10px] text-content-3 hidden sm:inline">{t("heroCtaDesc")}</span>
           <span className="w-px h-4 bg-border hidden sm:inline-block mx-1" />
-          {QUICK_LINKS.map(({ key, href, icon, color }) => {
-            const isAnchor = href.startsWith("#");
-            const inner = (
-              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-surface-1 border border-border rounded-full text-[11px] font-medium text-content-2 hover:text-content-0 hover:border-border-hover hover:shadow-sm transition-all cursor-pointer">
-                <QuickIcon icon={icon} color={color} />
-                {t(key as any)}
-              </span>
-            );
-            if (isAnchor) return <a key={key} href={href}>{inner}</a>;
-            return <Link key={key} href={href as any}>{inner}</Link>;
-          })}
+          {QUICK_LINKS_PRIMARY.map(({ key, href, icon, color }) => (
+            <QuickLinkItem key={key} keyName={key} href={href} icon={icon} color={color} t={t} />
+          ))}
+          {showMore ? (
+            QUICK_LINKS_SECONDARY.map(({ key, href, icon, color }) => (
+              <QuickLinkItem key={key} keyName={key} href={href} icon={icon} color={color} t={t} />
+            ))
+          ) : (
+            <button
+              type="button"
+              onClick={() => setShowMore(true)}
+              className="inline-flex items-center gap-1 px-3 py-1.5 text-[11px] font-medium text-content-3 hover:text-content-0 transition-colors"
+            >
+              {t("quickMore")}
+            </button>
+          )}
         </div>
       </div>
     </section>

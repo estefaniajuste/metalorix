@@ -15,7 +15,17 @@ export function CookieConsent() {
 
   useEffect(() => {
     const stored = localStorage.getItem(CONSENT_KEY);
-    setState(stored === "accepted" || stored === "rejected" ? (stored as ConsentState) : "pending");
+    const isPending = stored !== "accepted" && stored !== "rejected";
+    if (isPending) {
+      const timer = setTimeout(() => setState("pending"), 2500);
+      const handleShowBanner = () => setState("pending");
+      window.addEventListener("mtx-show-cookie-banner", handleShowBanner);
+      return () => {
+        clearTimeout(timer);
+        window.removeEventListener("mtx-show-cookie-banner", handleShowBanner);
+      };
+    }
+    setState(stored as ConsentState);
     const handleShowBanner = () => setState("pending");
     window.addEventListener("mtx-show-cookie-banner", handleShowBanner);
     return () => window.removeEventListener("mtx-show-cookie-banner", handleShowBanner);

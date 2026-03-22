@@ -9,7 +9,22 @@ interface PricesState {
   lastUpdate: Date | null;
 }
 
-let sharedState: PricesState = { prices: null, source: "loading", lastUpdate: null };
+declare global {
+  interface Window {
+    __MTX_INITIAL_PRICES__?: { prices: MetalSpot[]; source: string };
+  }
+}
+
+function getInitialState(): PricesState {
+  if (typeof window !== "undefined" && window.__MTX_INITIAL_PRICES__) {
+    const { prices, source } = window.__MTX_INITIAL_PRICES__;
+    return { prices, source, lastUpdate: new Date() };
+  }
+  return { prices: null, source: "loading", lastUpdate: null };
+}
+
+let sharedState: PricesState =
+  typeof window !== "undefined" ? getInitialState() : { prices: null, source: "loading", lastUpdate: null };
 let listeners: Set<() => void> = new Set();
 let fetchInFlight: Promise<void> | null = null;
 let intervalId: ReturnType<typeof setInterval> | null = null;

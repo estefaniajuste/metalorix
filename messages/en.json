@@ -69,7 +69,26 @@
     "quickCalendar": "Calendar",
     "quickCalendarDesc": "Economic events that move the market",
     "heroCta": "Get free price alerts",
-    "heroCtaDesc": "Gold moves? We'll email you."
+    "heroCtaDesc": "Gold moves? We'll email you.",
+    "quickMore": "More",
+    "firstVisit": {
+      "title": "Welcome to Metalorix",
+      "message": "Here are the real-time prices. Subscribe for free and we'll email you when gold, silver or platinum move.",
+      "cta": "Get free alerts",
+      "dismiss": "Got it"
+    },
+    "marketPulse": {
+      "label": "This week:",
+      "gold": "Gold",
+      "silver": "Silver",
+      "period": "in 24h",
+      "cta": "Get alerts"
+    },
+    "alertsCta": {
+      "title": "Want us to notify you when gold moves?",
+      "desc": "Free email alerts. No spam, only when it matters.",
+      "cta": "Subscribe for free"
+    }
   },
   "metals": {
     "gold": "Gold",

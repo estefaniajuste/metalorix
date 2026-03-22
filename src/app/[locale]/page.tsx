@@ -1,14 +1,24 @@
 import { Hero } from "@/components/dashboard/Hero";
 import { Dashboard } from "@/components/dashboard/Dashboard";
 import { HomePreview } from "@/components/dashboard/HomePreview";
+import { FirstVisitWelcome } from "@/components/layout/FirstVisitWelcome";
+import { MarketPulseBanner } from "@/components/dashboard/MarketPulseBanner";
+import { AlertsCtaBar } from "@/components/dashboard/AlertsCtaBar";
 import { getTranslations, getLocale } from "next-intl/server";
 import { getPathname } from "@/i18n/navigation";
+import { getSpotPrices } from "@/lib/providers/spot-prices";
 import type { Locale } from "@/i18n/routing";
 
 export default async function HomePage() {
   const t = await getTranslations("metadata");
   const locale = await getLocale();
   const pricePathPrefix = getPathname({ locale: locale as Locale, href: "/precio/[metal]" as any }).replace("[metal]", "");
+
+  const { prices, source } = await getSpotPrices();
+  const initialPricesScript =
+    prices.length > 0
+      ? `window.__MTX_INITIAL_PRICES__={prices:${JSON.stringify(prices)},source:"${source}"};`
+      : "";
 
   const organizationSchema = {
     "@context": "https://schema.org",
@@ -51,8 +61,16 @@ export default async function HomePage() {
           __html: JSON.stringify(websiteSchema),
         }}
       />
+      {initialPricesScript && (
+        <script
+          dangerouslySetInnerHTML={{ __html: initialPricesScript }}
+        />
+      )}
       <Hero />
+      <FirstVisitWelcome />
+      <MarketPulseBanner />
       <Dashboard />
+      <AlertsCtaBar />
       <HomePreview />
     </>
   );

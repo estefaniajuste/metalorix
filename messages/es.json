@@ -69,7 +69,26 @@
     "quickCalendar": "Calendario",
     "quickCalendarDesc": "Eventos económicos que mueven el mercado",
     "heroCta": "Consigue alertas de precio gratis",
-    "heroCtaDesc": "¿El oro se mueve? Te avisamos por email."
+    "heroCtaDesc": "¿El oro se mueve? Te avisamos por email.",
+    "quickMore": "Más",
+    "firstVisit": {
+      "title": "Bienvenido a Metalorix",
+      "message": "Aquí tienes los precios en tiempo real. Suscríbete gratis y te avisaremos por email cuando el oro, plata o platino se muevan.",
+      "cta": "Activar alertas gratis",
+      "dismiss": "Entendido"
+    },
+    "marketPulse": {
+      "label": "Esta semana:",
+      "gold": "Oro",
+      "silver": "Plata",
+      "period": "en 24h",
+      "cta": "Recibir alertas"
+    },
+    "alertsCta": {
+      "title": "¿Quieres que te avisemos cuando el oro se mueva?",
+      "desc": "Alertas gratuitas por email. Sin spam, solo cuando importa.",
+      "cta": "Suscribirme gratis"
+    }
   },
   "metals": {
     "gold": "Oro",

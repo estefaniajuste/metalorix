@@ -117,7 +117,7 @@ export function Dashboard() {
 
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
           {prices
-            ? prices.map((spot) => {
+            ? prices.map((spot, i) => {
                 const rangeKey = `${spot.symbol}_${activeRange}`;
                 const rangeHist = history[rangeKey];
                 const sparkline = rangeHist?.data
@@ -127,22 +127,31 @@ export function Dashboard() {
                   ? { change: rangeHist.change, changePct: rangeHist.changePct }
                   : undefined;
                 return (
-                  <MetalCard
+                  <div
                     key={spot.symbol}
-                    spot={spot}
-                    active={false}
-                    onClick={() => {}}
-                    sparklineData={sparkline}
-                    rangeChange={rangeChange}
-                    currency={currency}
-                    unit={unit}
-                    eurUsdRate={eurUsdRate}
-                    marketClosed={marketClosed}
-                  />
+                    className="animate-fade-in-up"
+                    style={{ animationDelay: `${i * 60}ms` }}
+                  >
+                    <MetalCard
+                      spot={spot}
+                      active={false}
+                      onClick={() => {}}
+                      sparklineData={sparkline}
+                      rangeChange={rangeChange}
+                      currency={currency}
+                      unit={unit}
+                      eurUsdRate={eurUsdRate}
+                      marketClosed={marketClosed}
+                    />
+                  </div>
                 );
               })
-            : (Object.keys(METALS) as MetalSymbol[]).map((symbol) => (
-                <div key={symbol} className="bg-surface-1 border border-border rounded-DEFAULT p-5">
+            : (Object.keys(METALS) as MetalSymbol[]).map((symbol, i) => (
+                <div
+                  key={symbol}
+                  className="bg-surface-1 border border-border rounded-DEFAULT p-5 animate-fade-in-up"
+                  style={{ animationDelay: `${i * 60}ms` }}
+                >
                   <div className="flex items-center gap-2.5 mb-3">
                     <div className="w-9 h-9 rounded-xs bg-surface-2 animate-shimmer" />
                     <div>

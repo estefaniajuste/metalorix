@@ -69,7 +69,26 @@
     "quickCalendar": "日历",
     "quickCalendarDesc": "影响市场的经济事件",
     "heroCta": "免费获取价格提醒",
-    "heroCtaDesc": "金价波动？我们邮件通知您。"
+    "heroCtaDesc": "金价波动？我们邮件通知您。",
+    "quickMore": "更多",
+    "firstVisit": {
+      "title": "欢迎使用 Metalorix",
+      "message": "这里是实时价格。免费订阅，当黄金、白银或铂金波动时我们将邮件通知您。",
+      "cta": "获取免费提醒",
+      "dismiss": "知道了"
+    },
+    "marketPulse": {
+      "label": "本周：",
+      "gold": "黄金",
+      "silver": "白银",
+      "period": "24小时内",
+      "cta": "获取提醒"
+    },
+    "alertsCta": {
+      "title": "想让金价波动时收到通知吗？",
+      "desc": "免费邮件提醒。无垃圾信息，仅在重要时发送。",
+      "cta": "免费订阅"
+    }
   },
   "metals": {
     "gold": "黄金",

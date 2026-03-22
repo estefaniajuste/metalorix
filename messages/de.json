@@ -69,7 +69,26 @@
     "quickCalendar": "Kalender",
     "quickCalendarDesc": "Wirtschaftsereignisse die den Markt bewegen",
     "heroCta": "Kostenlose Preisalarme erhalten",
-    "heroCtaDesc": "Gold bewegt sich? Wir mailen Ihnen."
+    "heroCtaDesc": "Gold bewegt sich? Wir mailen Ihnen.",
+    "quickMore": "Mehr",
+    "firstVisit": {
+      "title": "Willkommen bei Metalorix",
+      "message": "Hier sind die Echtzeitpreise. Kostenlos anmelden und wir mailen Ihnen, wenn Gold, Silber oder Platin sich bewegen.",
+      "cta": "Kostenlose Alarme",
+      "dismiss": "Verstanden"
+    },
+    "marketPulse": {
+      "label": "Diese Woche:",
+      "gold": "Gold",
+      "silver": "Silber",
+      "period": "in 24h",
+      "cta": "Alarme erhalten"
+    },
+    "alertsCta": {
+      "title": "Möchten Sie benachrichtigt werden, wenn Gold sich bewegt?",
+      "desc": "Kostenlose E-Mail-Alarme. Kein Spam, nur wenn es wichtig ist.",
+      "cta": "Kostenlos anmelden"
+    }
   },
   "metals": {
     "gold": "Gold",

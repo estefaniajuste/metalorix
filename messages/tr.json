@@ -69,7 +69,26 @@
     "quickCalendar": "Takvim",
     "quickCalendarDesc": "Piyasayı hareket ettiren ekonomik olaylar",
     "heroCta": "Ücretsiz fiyat uyarıları al",
-    "heroCtaDesc": "Altın hareketi mi? Size e-posta göndeririz."
+    "heroCtaDesc": "Altın hareketi mi? Size e-posta göndeririz.",
+    "quickMore": "Daha fazla",
+    "firstVisit": {
+      "title": "Metalorix'e hoş geldiniz",
+      "message": "Gerçek zamanlı fiyatlar burada. Ücretsiz abone olun, altın, gümüş veya platin hareket ettiğinde e-posta göndereceğiz.",
+      "cta": "Ücretsiz uyarılar",
+      "dismiss": "Anladım"
+    },
+    "marketPulse": {
+      "label": "Bu hafta:",
+      "gold": "Altın",
+      "silver": "Gümüş",
+      "period": "24 saatte",
+      "cta": "Uyarı al"
+    },
+    "alertsCta": {
+      "title": "Altın hareket ettiğinde size bildirelim mi?",
+      "desc": "Ücretsiz e-posta uyarıları. Spam yok, sadece önemli olduğunda.",
+      "cta": "Ücretsiz abone ol"
+    }
   },
   "metals": {
     "gold": "Altın",
