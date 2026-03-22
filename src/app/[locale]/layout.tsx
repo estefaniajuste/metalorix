@@ -10,6 +10,7 @@ import { NextIntlClientProvider, hasLocale } from "next-intl";
 import { getMessages, getTranslations, setRequestLocale } from "next-intl/server";
 import { WebVitals } from "../web-vitals";
 import { ServiceWorkerRegistration } from "@/components/layout/ServiceWorker";
+import { DynamicTitle } from "@/components/layout/DynamicTitle";
 import { AnalyticsLoader } from "@/components/layout/AnalyticsLoader";
 import { routing } from "@/i18n/routing";
 import { notFound } from "next/navigation";
@@ -148,6 +149,7 @@ export default async function LocaleLayout({
             <AnalyticsLoader />
             <WebVitals />
             <ServiceWorkerRegistration />
+            <DynamicTitle />
           </ThemeProvider>
         </NextIntlClientProvider>
       </body>

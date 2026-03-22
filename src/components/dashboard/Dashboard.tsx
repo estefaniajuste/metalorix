@@ -63,6 +63,20 @@ export function Dashboard() {
     });
   }, [activeRange, loadHistory]);
 
+  const [now, setNow] = useState(() => Date.now());
+  useEffect(() => {
+    const id = setInterval(() => setNow(Date.now()), 30_000);
+    return () => clearInterval(id);
+  }, []);
+
+  const dataTimestamp = prices
+    ? prices.reduce((latest, p) => {
+        const t = new Date(p.updatedAt).getTime();
+        return t > latest ? t : latest;
+      }, 0)
+    : 0;
+  const dataAge = dataTimestamp ? Math.max(1, Math.round((now - dataTimestamp) / 60_000)) : 0;
+
   const allSpotZero = prices
     ? prices.every((p) => Math.abs(p.changePct) < 0.01 && Math.abs(p.change) < 0.01)
     : false;
@@ -98,9 +112,9 @@ export function Dashboard() {
             >
               {statusLabel}
             </span>
-            {lastUpdate && (
+            {dataTimestamp && (
               <span className="text-[11px] text-content-3 font-normal ms-1 tabular-nums">
-                · {lastUpdate.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                · {t("updatedAgo", { minutes: dataAge })}
               </span>
             )}
           </h2>
