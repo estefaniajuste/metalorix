@@ -29,6 +29,7 @@ import {
 } from "@/lib/learn/slug-i18n";
 import { routing } from "@/i18n/routing";
 import { SetLocalePathOverrides } from "@/components/layout/SetLocalePathOverrides";
+import { ContextualToolCards, getToolsForArticle } from "@/components/tools/ContextualToolCards";
 import type { Locale } from "@/i18n/config";
 
 export const revalidate = 86400;
@@ -626,6 +627,20 @@ export default async function LearnArticlePage({
               {title}
             </h1>
 
+            <div className="flex items-center gap-3 mb-4 text-xs text-content-3">
+              {content && (
+                <span className="inline-flex items-center gap-1">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                  {Math.max(1, Math.round(content.split(/\s+/).length / 200))} {t("minRead")}
+                </span>
+              )}
+              {data?.article.updatedAt && (
+                <time dateTime={data.article.updatedAt.toISOString()}>
+                  {data.article.updatedAt.toLocaleDateString(locale, { year: "numeric", month: "short", day: "numeric" })}
+                </time>
+              )}
+            </div>
+
             <p className="text-lg text-content-2 leading-relaxed">
               {summary}
             </p>
@@ -643,22 +658,56 @@ export default async function LearnArticlePage({
           </header>
 
           {hasContent ? (
-            <div className="prose-metalorix text-content-1 leading-relaxed text-[15px] [&>p]:mb-5 [&>h2]:text-xl [&>h2]:font-bold [&>h2]:text-content-0 [&>h2]:mt-10 [&>h2]:mb-4 [&>h3]:text-lg [&>h3]:font-semibold [&>h3]:text-content-0 [&>h3]:mt-8 [&>h3]:mb-3 [&>ul]:list-disc [&>ul]:pl-5 [&>ul]:mb-5 [&>ol]:list-decimal [&>ol]:pl-5 [&>ol]:mb-5 [&>blockquote]:border-l-2 [&>blockquote]:border-brand-gold [&>blockquote]:pl-4 [&>blockquote]:italic [&>blockquote]:text-content-2 [&>blockquote]:my-6">
-              {strippedContent.split("\n").map((line, i) => {
-                if (!line.trim()) return null;
-                if (line.startsWith("## "))
-                  return <h2 key={i}>{line.slice(3)}</h2>;
-                if (line.startsWith("### "))
-                  return <h3 key={i}>{line.slice(4)}</h3>;
-                if (line.startsWith("- "))
-                  return (
-                    <ul key={i}>
-                      <li>{line.slice(2)}</li>
+            <>
+              {(() => {
+                const headings = strippedContent
+                  .split("\n")
+                  .filter((l) => l.startsWith("## ") || l.startsWith("### "))
+                  .map((l, i) => ({
+                    id: `section-${i}`,
+                    text: l.replace(/^#{2,3}\s+/, ""),
+                    level: l.startsWith("### ") ? 3 : 2,
+                  }));
+                if (headings.length < 3) return null;
+                return (
+                  <nav className="mb-8 p-4 rounded-lg bg-surface-1 border border-border" aria-label={t("tableOfContents")}>
+                    <p className="text-xs font-semibold text-content-2 uppercase tracking-wider mb-2">{t("tableOfContents")}</p>
+                    <ul className="space-y-1">
+                      {headings.map((h) => (
+                        <li key={h.id} className={h.level === 3 ? "ml-4" : ""}>
+                          <a href={`#${h.id}`} className="text-sm text-content-2 hover:text-brand-gold transition-colors leading-relaxed">
+                            {h.text}
+                          </a>
+                        </li>
+                      ))}
                     </ul>
-                  );
-                return <p key={i}>{line}</p>;
-              })}
-            </div>
+                  </nav>
+                );
+              })()}
+              <div className="prose-metalorix text-content-1 leading-relaxed text-[15px] [&>p]:mb-5 [&>h2]:text-xl [&>h2]:font-bold [&>h2]:text-content-0 [&>h2]:mt-10 [&>h2]:mb-4 [&>h3]:text-lg [&>h3]:font-semibold [&>h3]:text-content-0 [&>h3]:mt-8 [&>h3]:mb-3 [&>ul]:list-disc [&>ul]:pl-5 [&>ul]:mb-5 [&>ol]:list-decimal [&>ol]:pl-5 [&>ol]:mb-5 [&>blockquote]:border-l-2 [&>blockquote]:border-brand-gold [&>blockquote]:pl-4 [&>blockquote]:italic [&>blockquote]:text-content-2 [&>blockquote]:my-6">
+                {(() => {
+                  let headingIdx = -1;
+                  return strippedContent.split("\n").map((line, i) => {
+                    if (!line.trim()) return null;
+                    if (line.startsWith("## ")) {
+                      headingIdx++;
+                      return <h2 key={i} id={`section-${headingIdx}`}>{line.slice(3)}</h2>;
+                    }
+                    if (line.startsWith("### ")) {
+                      headingIdx++;
+                      return <h3 key={i} id={`section-${headingIdx}`}>{line.slice(4)}</h3>;
+                    }
+                    if (line.startsWith("- "))
+                      return (
+                        <ul key={i}>
+                          <li>{line.slice(2)}</li>
+                        </ul>
+                      );
+                    return <p key={i}>{line}</p>;
+                  });
+                })()}
+              </div>
+            </>
           ) : (
             <div className="p-8 rounded-lg border border-border bg-surface-1 text-center">
               <p className="text-content-2 mb-2">
@@ -726,31 +775,26 @@ export default async function LearnArticlePage({
             }}
           />
 
-          <div className="mt-8 pt-6 border-t border-border">
-            <h3 className="text-sm font-semibold text-content-2 mb-3">
-              {t("explorePlatform")}
-            </h3>
-            <div className="flex flex-wrap gap-3">
-              <Link
-                href="/"
-                className="inline-flex items-center gap-1.5 text-sm font-medium text-content-2 hover:text-brand-gold transition-colors"
-              >
-                {t("viewPrices")}
-              </Link>
-              <Link
-                href="/herramientas"
-                className="inline-flex items-center gap-1.5 text-sm font-medium text-content-2 hover:text-brand-gold transition-colors"
-              >
-                {t("viewTools")}
-              </Link>
-              <Link
-                href="/alertas"
-                className="inline-flex items-center gap-1.5 text-sm font-medium text-content-2 hover:text-brand-gold transition-colors"
-              >
-                {t("setAlerts")}
-              </Link>
-            </div>
-          </div>
+          <ContextualToolCards
+            toolIds={getToolsForArticle(baseClusterSlug, topic.slug)}
+            heading={t("tryTheseTools")}
+            labels={{
+              ratio: t("toolRatio"),
+              ratioHint: t("toolRatioHint"),
+              roi: t("toolRoi"),
+              roiHint: t("toolRoiHint"),
+              converter: t("toolConverter"),
+              converterHint: t("toolConverterHint"),
+              comparator: t("toolComparator"),
+              comparatorHint: t("toolComparatorHint"),
+              calendar: t("toolCalendar"),
+              calendarHint: t("toolCalendarHint"),
+              alerts: t("toolAlerts"),
+              alertsHint: t("toolAlertsHint"),
+              guide: t("toolGuide"),
+              guideHint: t("toolGuideHint"),
+            }}
+          />
 
           <footer className="mt-10 pt-6 border-t border-border">
             <div className="flex justify-between items-center">

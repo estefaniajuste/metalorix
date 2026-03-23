@@ -6,9 +6,10 @@ import { getAlternates } from "@/lib/seo/alternates";
 import type { Locale } from "@/i18n/routing";
 import { getDb } from "@/lib/db";
 import { articles, articleTranslations, glossaryTerms } from "@/lib/db/schema";
-import { eq, and } from "drizzle-orm";
+import { eq, and, ne, desc } from "drizzle-orm";
 import { injectGlossaryLinks } from "@/lib/ai/glossary-generator";
 import { ArticleShareBar } from "@/components/dashboard/ArticleShareBar";
+import { ContextualToolCards, getToolsForNews } from "@/components/tools/ContextualToolCards";
 
 async function getArticle(slug: string, locale: string) {
   const db = getDb();
@@ -73,6 +74,51 @@ async function getTranslation(articleId: number, locale: string) {
     return result[0] ?? null;
   } catch {
     return null;
+  }
+}
+
+async function getRelatedArticles(articleId: number, category: string, locale: string) {
+  const db = getDb();
+  if (!db) return [];
+
+  try {
+    const rows = await db
+      .select({
+        id: articles.id,
+        slug: articles.slug,
+        title: articles.title,
+        excerpt: articles.excerpt,
+        category: articles.category,
+        metals: articles.metals,
+        publishedAt: articles.publishedAt,
+      })
+      .from(articles)
+      .where(and(eq(articles.published, true), ne(articles.id, articleId)))
+      .orderBy(desc(articles.publishedAt))
+      .limit(12);
+
+    const withTranslations = await Promise.all(
+      rows.map(async (a) => {
+        if (locale === "es") return { ...a, displayTitle: a.title, displayExcerpt: a.excerpt, displaySlug: a.slug };
+        const [tr] = await db
+          .select({ title: articleTranslations.title, excerpt: articleTranslations.excerpt, slug: articleTranslations.slug })
+          .from(articleTranslations)
+          .where(and(eq(articleTranslations.articleId, a.id), eq(articleTranslations.locale, locale)))
+          .limit(1);
+        return {
+          ...a,
+          displayTitle: tr?.title ?? a.title,
+          displayExcerpt: tr?.excerpt ?? a.excerpt,
+          displaySlug: tr?.slug ?? a.slug,
+        };
+      })
+    );
+
+    const sameCategory = withTranslations.filter((a) => a.category === category);
+    const others = withTranslations.filter((a) => a.category !== category);
+    return [...sameCategory, ...others].slice(0, 4);
+  } catch {
+    return [];
   }
 }
 
@@ -254,6 +300,9 @@ export default async function ArticlePage({
   const displaySlug = translation?.slug ?? article.slug;
 
   const linkedContent = await injectGlossaryLinks(displayContent);
+  const relatedNews = await getRelatedArticles(article.id, article.category, locale);
+  const wordCount = displayContent ? displayContent.split(/\s+/).length : 0;
+  const readingMinutes = Math.max(1, Math.round(wordCount / 200));
 
   let glossarySlugsInLocale: Set<string> | undefined;
   {
@@ -370,6 +419,10 @@ export default async function ArticlePage({
                   })}
                 </time>
               )}
+              <span className="inline-flex items-center gap-1">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                {readingMinutes} {t("minRead")}
+              </span>
               <span>Metalorix</span>
             </div>
 
@@ -418,6 +471,59 @@ export default async function ArticlePage({
             />
           </div>
 
+          {relatedNews.length > 0 && (
+            <div className="mt-10 pt-8 border-t border-border">
+              <h2 className="text-lg font-bold text-content-0 mb-4">{t("relatedNews")}</h2>
+              <div className="grid gap-4 sm:grid-cols-2">
+                {relatedNews.map((r) => (
+                  <Link
+                    key={r.id}
+                    href={{ pathname: "/noticias/[slug]", params: { slug: r.displaySlug } }}
+                    className="group block p-4 rounded-lg bg-surface-1 border border-border hover:border-brand-gold/30 transition-colors"
+                  >
+                    <div className="flex items-center gap-2 mb-2">
+                      <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-[rgba(214,179,90,0.12)] text-brand-gold uppercase tracking-wider">
+                        {categoryLabel(r.category)}
+                      </span>
+                      {r.publishedAt && (
+                        <time className="text-[10px] text-content-3" dateTime={r.publishedAt.toISOString()}>
+                          {r.publishedAt.toLocaleDateString(locale, { month: "short", day: "numeric" })}
+                        </time>
+                      )}
+                    </div>
+                    <h3 className="text-sm font-semibold text-content-0 group-hover:text-brand-gold transition-colors leading-snug line-clamp-2">
+                      {r.displayTitle}
+                    </h3>
+                    {r.displayExcerpt && (
+                      <p className="mt-1 text-xs text-content-3 line-clamp-2">{r.displayExcerpt}</p>
+                    )}
+                  </Link>
+                ))}
+              </div>
+            </div>
+          )}
+
+          <ContextualToolCards
+            toolIds={getToolsForNews(article.metals)}
+            heading={t("tryTheseTools")}
+            labels={{
+              ratio: t("toolRatio"),
+              ratioHint: t("toolRatioHint"),
+              roi: t("toolRoi"),
+              roiHint: t("toolRoiHint"),
+              converter: t("toolConverter"),
+              converterHint: t("toolConverterHint"),
+              comparator: t("toolComparator"),
+              comparatorHint: t("toolComparatorHint"),
+              calendar: t("toolCalendar"),
+              calendarHint: t("toolCalendarHint"),
+              alerts: t("toolAlerts"),
+              alertsHint: t("toolAlertsHint"),
+              guide: t("toolGuide"),
+              guideHint: t("toolGuideHint"),
+            }}
+          />
+
           <footer className="mt-8 pt-8 border-t border-border">
             <div className="bg-surface-1 border border-border rounded-DEFAULT p-5">
               <p className="text-xs text-content-3 leading-relaxed">
@@ -454,7 +560,7 @@ export default async function ArticlePage({
                 href="/"
                 className="text-sm font-medium text-content-2 hover:text-brand-gold transition-colors"
               >
-                Dashboard
+                {tc("breadcrumbHome")}
               </Link>
             </div>
           </footer>
