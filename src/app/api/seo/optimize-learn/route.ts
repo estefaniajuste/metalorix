@@ -336,9 +336,15 @@ const OPTIMIZED_METADATA: {
 export async function POST(request: NextRequest) {
   if (CRON_SECRET) {
     const auth = request.headers.get("authorization");
-    const querySecret = request.nextUrl.searchParams.get("secret");
+    let bodySecret: string | undefined;
+    try {
+      const body = await request.clone().json();
+      bodySecret = body?.secret;
+    } catch {
+      /* no json body */
+    }
     const isAuthed =
-      auth === `Bearer ${CRON_SECRET}` || querySecret === CRON_SECRET;
+      auth === `Bearer ${CRON_SECRET}` || bodySecret === CRON_SECRET;
     if (!isAuthed) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
