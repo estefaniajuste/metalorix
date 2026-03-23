@@ -100,7 +100,7 @@ export async function generateMetadata({
   });
 
   return {
-    title: `${title} — Metalorix`,
+    title: `${title} | Metalorix`,
     description,
     openGraph: {
       title,
@@ -108,6 +108,11 @@ export async function generateMetadata({
       type: "article",
       url: alternates.canonical,
       publishedTime: article.publishedAt?.toISOString(),
+    },
+    twitter: {
+      card: "summary",
+      title,
+      description,
     },
     alternates,
   };

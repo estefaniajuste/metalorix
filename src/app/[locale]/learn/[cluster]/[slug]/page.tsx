@@ -179,13 +179,18 @@ export async function generateMetadata({
         },
       }));
       return {
-        title: `${title} — ${tl("breadcrumb")} | Metalorix`,
+        title: `${title} | Metalorix`,
         description,
         openGraph: {
-          title: `${title} — Metalorix`,
+          title,
           description,
           type: "article",
           url: alternates.canonical,
+        },
+        twitter: {
+          card: "summary",
+          title,
+          description,
         },
         alternates,
         ...(isLocaleMatch ? {} : { robots: { index: false } }),
@@ -210,13 +215,18 @@ export async function generateMetadata({
   }));
 
   return {
-    title: `${title} — ${tl("breadcrumb")} | Metalorix`,
+    title: `${title} | Metalorix`,
     description,
     openGraph: {
-      title: `${title} — Metalorix`,
+      title,
       description,
       type: "article",
       url: alternates.canonical,
+    },
+    twitter: {
+      card: "summary",
+      title,
+      description,
     },
     alternates,
   };
@@ -477,12 +487,56 @@ export default async function LearnArticlePage({
     },
   }));
 
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: tc("breadcrumbHome"),
+        item: `https://metalorix.com/${locale}`,
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: t("breadcrumb"),
+        item: `https://metalorix.com/${locale}/learn`,
+      },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: clusterName,
+        item: `https://metalorix.com/${locale}/learn/${locClusterSlug}`,
+      },
+      {
+        "@type": "ListItem",
+        position: 4,
+        name: title,
+      },
+    ],
+  };
+
+  const wordCount = content ? content.split(/\s+/).length : 0;
+
   const articleJsonLd: Record<string, unknown> = {
     "@context": "https://schema.org",
     "@type": "Article",
     headline: title,
     description: summary,
     url: alternates.canonical,
+    inLanguage: locale,
+    ...(wordCount > 0 && { wordCount }),
+    ...(data?.article.publishedAt && {
+      datePublished: data.article.publishedAt.toISOString(),
+    }),
+    ...(data?.article.updatedAt && {
+      dateModified: data.article.updatedAt.toISOString(),
+    }),
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": alternates.canonical,
+    },
     author: {
       "@type": "Organization",
       name: "Metalorix",
@@ -492,6 +546,10 @@ export default async function LearnArticlePage({
       "@type": "Organization",
       name: "Metalorix",
       url: "https://metalorix.com",
+      logo: {
+        "@type": "ImageObject",
+        url: "https://metalorix.com/favicon.png",
+      },
     },
   };
 
@@ -514,6 +572,10 @@ export default async function LearnArticlePage({
   return (
     <>
       <SetLocalePathOverrides hrefs={localeHrefs} />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
