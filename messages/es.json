@@ -335,7 +335,9 @@
     "otherMetals": "Otros metales",
     "notFound": "Metal no encontrado — Metalorix",
     "setAlert": "Crear alerta de precio",
-    "setAlertDesc": "Recibe un aviso cuando {metal} alcance tu precio objetivo"
+    "setAlertDesc": "Recibe un aviso cuando {metal} alcance tu precio objetivo",
+    "liveUpdated": "En vivo — actualizado cada 60 segundos",
+    "faqTitle": "Preguntas frecuentes sobre {metal}"
   },
   "panel": {
     "title": "Mi panel",
@@ -787,6 +789,14 @@
     "gramsOfSilver": "{n} gramos de plata",
     "historicalParity": "Paridad histórica (ratio 16)",
     "silverWouldBeWorthMore": "Si el ratio volviera a 16, la plata valdría {pct}% más"
+  },
+  "unitPrice": {
+    "heading": "Precio por unidad",
+    "unit": "Unidad",
+    "perOz": "Onza troy",
+    "perLb": "Libra (lb)",
+    "perGram": "Gramo",
+    "perKilo": "Kilogramo"
   },
   "metalPage": {
     "justNow": "Ahora mismo",

@@ -2,8 +2,9 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getTranslations, getLocale } from "next-intl/server";
 import { getAlternates } from "@/lib/seo/alternates";
-import { getMetalSEO, METAL_SEO } from "@/lib/seo/metal-content";
+import { getMetalSEO, METAL_SEO, type MetalFAQ } from "@/lib/seo/metal-content";
 import { MetalPageContent } from "@/components/dashboard/MetalPageContent";
+import { UnitPriceTable } from "@/components/dashboard/UnitPriceTable";
 import { ShareButton } from "@/components/dashboard/ShareButton";
 import { Link } from "@/i18n/navigation";
 import {
@@ -35,12 +36,15 @@ export async function generateMetadata({
     params: { metal: localizedSlug },
   });
 
+  const year = new Date().getFullYear();
+  const pageTitle = `${t("priceOf", { metal: seo.name })} [${year}] — Metalorix`;
+
   return {
-    title: `${t("priceOf", { metal: seo.name })} — Metalorix`,
+    title: pageTitle,
     description: seo.description,
     keywords: seo.keywords,
     openGraph: {
-      title: `${t("priceOf", { metal: seo.name })} — Metalorix`,
+      title: pageTitle,
       description: seo.description,
       type: "website",
       url: alternates.canonical,
@@ -52,7 +56,7 @@ export async function generateMetadata({
 function JsonLd({ slug, locale, canonicalUrl }: { slug: string; locale: string; canonicalUrl: string }) {
   const seo = getMetalSEO(slug, locale)!;
   const homeUrl = `https://metalorix.com/${locale}`;
-  const schemas = [
+  const schemas: Record<string, unknown>[] = [
     {
       "@context": "https://schema.org",
       "@type": "FinancialProduct",
@@ -71,6 +75,18 @@ function JsonLd({ slug, locale, canonicalUrl }: { slug: string; locale: string; 
       ],
     },
   ];
+
+  if (seo.faq && seo.faq.length > 0) {
+    schemas.push({
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      mainEntity: seo.faq.map((item) => ({
+        "@type": "Question",
+        name: item.question,
+        acceptedAnswer: { "@type": "Answer", text: item.answer },
+      })),
+    });
+  }
 
   return (
     <>
@@ -116,9 +132,15 @@ export default async function PrecioMetalPage({
           </nav>
 
           <div className="flex items-start justify-between gap-4 flex-wrap mb-3">
-            <h1 className="text-3xl sm:text-4xl font-extrabold text-content-0 tracking-tight">
-              {t("priceOf", { metal: seo.name })}
-            </h1>
+            <div>
+              <h1 className="text-3xl sm:text-4xl font-extrabold text-content-0 tracking-tight">
+                {t("priceOf", { metal: seo.name })}
+              </h1>
+              <p className="text-xs text-content-3 mt-1.5 flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-signal-up animate-pulse" />
+                {t("liveUpdated")}
+              </p>
+            </div>
             <div className="flex items-center gap-2">
               <Link
                 href="/alertas"
@@ -143,7 +165,11 @@ export default async function PrecioMetalPage({
 
           <MetalPageContent symbol={seo.symbol} />
 
-          <div className="mt-12 grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="mt-10">
+            <UnitPriceTable symbol={seo.symbol} />
+          </div>
+
+          <div className="mt-10 grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div className="lg:col-span-2">
               <div className="bg-surface-1 border border-border rounded-DEFAULT p-6">
                 <h2 className="text-xl font-bold text-content-0 mb-4">
@@ -188,6 +214,32 @@ export default async function PrecioMetalPage({
             </div>
           </div>
         </div>
+
+          {seo.faq && seo.faq.length > 0 && (
+            <div className="mt-10">
+              <h2 className="text-xl font-bold text-content-0 mb-5">
+                {t("faqTitle", { metal: seo.name })}
+              </h2>
+              <div className="space-y-4">
+                {(seo.faq as MetalFAQ[]).map((item, i) => (
+                  <details
+                    key={i}
+                    className="group bg-surface-1 border border-border rounded-DEFAULT overflow-hidden"
+                  >
+                    <summary className="flex items-center justify-between gap-3 p-5 cursor-pointer text-sm font-semibold text-content-0 hover:text-brand-gold transition-colors [&::-webkit-details-marker]:hidden list-none">
+                      {item.question}
+                      <svg className="w-4 h-4 text-content-3 transition-transform group-open:rotate-180 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                        <polyline points="6 9 12 15 18 9" />
+                      </svg>
+                    </summary>
+                    <div className="px-5 pb-5 text-sm text-content-2 leading-relaxed border-t border-border pt-4">
+                      {item.answer}
+                    </div>
+                  </details>
+                ))}
+              </div>
+            </div>
+          )}
       </section>
     </>
   );

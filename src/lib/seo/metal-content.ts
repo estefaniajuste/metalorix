@@ -1,5 +1,10 @@
 import type { MetalSymbol } from "@/lib/providers/metals";
 
+export interface MetalFAQ {
+  question: string;
+  answer: string;
+}
+
 export interface MetalSEO {
   slug: string;
   symbol: MetalSymbol;
@@ -9,6 +14,7 @@ export interface MetalSEO {
   about: string;
   keywords: string[];
   facts: string[];
+  faq?: MetalFAQ[];
 }
 
 export const METAL_SEO: Record<string, MetalSEO> = {
@@ -35,6 +41,12 @@ export const METAL_SEO: Record<string, MetalSEO> = {
       "La demanda de oro proviene de joyería (~50%), inversión (~25%), bancos centrales (~15%) y tecnología (~10%).",
       "El ratio oro/plata mide cuántas onzas de plata se necesitan para comprar una onza de oro. Históricamente oscila entre 40x y 90x.",
     ],
+    faq: [
+      { question: "¿Qué mueve el precio del oro hoy?", answer: "Los principales factores son las decisiones de tipos de interés de la Fed, los datos de inflación (IPC), la fortaleza del dólar (DXY), las tensiones geopolíticas y las compras de los bancos centrales." },
+      { question: "¿Cuánto vale una onza de oro?", answer: "El precio varía en tiempo real. Puedes consultar la cotización actualizada al segundo en esta misma página, junto con el gráfico histórico y el cambio diario." },
+      { question: "¿Es buen momento para invertir en oro?", answer: "El oro históricamente sube en periodos de inflación alta, incertidumbre geopolítica y tipos de interés bajos. Es un activo de refugio, no de especulación a corto plazo." },
+      { question: "¿Cómo puedo invertir en oro?", answer: "Las formas más comunes son: oro físico (lingotes, monedas), ETFs (GLD, IAU), acciones de mineras, y futuros en COMEX. Cada una tiene diferentes costes, riesgos y liquidez." },
+    ],
   },
   plata: {
     slug: "plata",
@@ -58,6 +70,11 @@ export const METAL_SEO: Record<string, MetalSEO> = {
       "La industria solar consume aproximadamente el 10% de la producción mundial de plata anualmente, una cifra que crece cada año.",
       "México, Perú y China son los tres mayores productores mundiales de plata.",
       "La plata es significativamente más volátil que el oro: sus movimientos diarios suelen ser 1,5-2x mayores en términos porcentuales.",
+    ],
+    faq: [
+      { question: "¿Por qué la plata es más volátil que el oro?", answer: "La plata tiene un mercado más pequeño y una fuerte demanda industrial (~55%), lo que la hace más sensible tanto a ciclos económicos como a movimientos especulativos." },
+      { question: "¿Qué relación tiene la plata con la energía solar?", answer: "Los paneles solares usan pasta de plata como conductor. Con la expansión global de la energía solar, la demanda industrial de plata crece cada año, lo que puede sostener los precios a largo plazo." },
+      { question: "¿Qué es el ratio oro/plata?", answer: "Mide cuántas onzas de plata se necesitan para comprar una de oro. Cuando supera 80x, la plata se considera infravalorada históricamente. Puedes seguir este ratio en tiempo real en Metalorix." },
     ],
   },
   platino: {
@@ -83,6 +100,10 @@ export const METAL_SEO: Record<string, MetalSEO> = {
       "La industria automotriz consume cerca del 40% de la demanda de platino para catalizadores de emisiones.",
       "Históricamente el platino cotizaba por encima del oro. La inversión del ratio (platino más barato que el oro) es un fenómeno relativamente reciente.",
     ],
+    faq: [
+      { question: "¿Por qué el platino es más barato que el oro?", answer: "Desde 2015, la menor demanda automotriz (por el declive del diésel) y el auge de los ETFs de oro han invertido la relación histórica. El platino aún se considera infravalorado por muchos analistas." },
+      { question: "¿Cómo afecta Sudáfrica al precio del platino?", answer: "Sudáfrica produce el 70% del platino mundial. Cortes de electricidad, huelgas mineras o inestabilidad política en el país pueden reducir la oferta y disparar el precio." },
+    ],
   },
   paladio: {
     slug: "paladio",
@@ -106,6 +127,10 @@ export const METAL_SEO: Record<string, MetalSEO> = {
       "El paladio se usa principalmente en catalizadores de coches de gasolina, absorbiendo más del 80% de la demanda.",
       "En 2022 el paladio alcanzó máximos históricos por encima de $3.000/oz debido a sanciones a Rusia y escasez de suministro.",
       "El paladio es 15 veces más raro que el platino y 30 veces más raro que el oro en la corteza terrestre.",
+    ],
+    faq: [
+      { question: "¿Por qué el paladio es tan caro?", answer: "El paladio tiene una oferta muy concentrada (Rusia 40%, Sudáfrica 35%) y una demanda inelástica de la industria automotriz para catalizadores. Cualquier disrupción geopolítica puede generar déficits de oferta." },
+      { question: "¿Qué alternativas tiene el paladio en la industria?", answer: "Algunas fábricas han sustituido parcialmente el paladio por platino en catalizadores de gasolina. A largo plazo, la electrificación del transporte reducirá la demanda de catalizadores." },
     ],
   },
   cobre: {
@@ -131,6 +156,10 @@ export const METAL_SEO: Record<string, MetalSEO> = {
       "La demanda de cobre para centros de datos de IA ha crecido exponencialmente desde 2024.",
       "El London Metal Exchange (LME) registró volúmenes récord de negociación de cobre en 2025.",
     ],
+    faq: [
+      { question: "¿Por qué el cobre se llama 'Doctor Copper'?", answer: "Porque su precio se considera un indicador adelantado de la economía global. Al ser esencial para construcción, manufactura e infraestructura, una subida del cobre suele anticipar crecimiento económico." },
+      { question: "¿Cómo afecta la transición energética al cobre?", answer: "Los vehículos eléctricos usan 3-4x más cobre que los convencionales. La expansión de renovables, redes eléctricas y centros de datos de IA están generando un déficit estructural de cobre a largo plazo." },
+    ],
   },
 };
 
@@ -147,6 +176,12 @@ const METAL_SEO_EN: Record<string, Omit<MetalSEO, "slug" | "symbol">> = {
       "Gold demand comes from jewellery (~50%), investment (~25%), central banks (~15%) and technology (~10%).",
       "The gold/silver ratio measures how many ounces of silver are needed to buy one ounce of gold. Historically it ranges between 40x and 90x.",
     ],
+    faq: [
+      { question: "What moves the gold price today?", answer: "The main factors are Fed interest rate decisions, inflation data (CPI), US dollar strength (DXY), geopolitical tensions and central bank purchases." },
+      { question: "How much is an ounce of gold worth?", answer: "The price changes in real time. You can check the updated quote on this page, along with the historical chart and daily change." },
+      { question: "Is it a good time to invest in gold?", answer: "Gold historically rises during high inflation, geopolitical uncertainty and low interest rates. It is a safe-haven asset, not a short-term speculation vehicle." },
+      { question: "How can I invest in gold?", answer: "The most common ways are: physical gold (bars, coins), ETFs (GLD, IAU), mining stocks, and COMEX futures. Each has different costs, risks and liquidity." },
+    ],
   },
   plata: {
     name: "Silver",
@@ -159,6 +194,11 @@ const METAL_SEO_EN: Record<string, Omit<MetalSEO, "slug" | "symbol">> = {
       "The solar industry consumes approximately 10% of the world's annual silver production, a figure that grows every year.",
       "Mexico, Peru and China are the three largest silver producers in the world.",
       "Silver is significantly more volatile than gold: its daily movements are typically 1.5-2x larger in percentage terms.",
+    ],
+    faq: [
+      { question: "Why is silver more volatile than gold?", answer: "Silver has a smaller market and strong industrial demand (~55%), making it more sensitive to both economic cycles and speculative movements." },
+      { question: "What is the relationship between silver and solar energy?", answer: "Solar panels use silver paste as a conductor. With global solar expansion, industrial silver demand grows each year, potentially supporting prices long-term." },
+      { question: "What is the gold/silver ratio?", answer: "It measures how many ounces of silver are needed to buy one ounce of gold. When it exceeds 80x, silver is considered historically undervalued. Track this ratio live on Metalorix." },
     ],
   },
   platino: {
@@ -173,6 +213,10 @@ const METAL_SEO_EN: Record<string, Omit<MetalSEO, "slug" | "symbol">> = {
       "The automotive industry consumes about 40% of platinum demand for catalytic converters.",
       "Historically, platinum traded above gold. The inversion of this ratio (platinum cheaper than gold) is a relatively recent phenomenon.",
     ],
+    faq: [
+      { question: "Why is platinum cheaper than gold?", answer: "Since 2015, lower automotive demand (diesel decline) and the rise of gold ETFs have inverted the historical relationship. Many analysts still consider platinum undervalued." },
+      { question: "How does South Africa affect the platinum price?", answer: "South Africa produces 70% of the world's platinum. Power cuts, mining strikes or political instability can reduce supply and spike the price." },
+    ],
   },
   paladio: {
     name: "Palladium",
@@ -186,6 +230,10 @@ const METAL_SEO_EN: Record<string, Omit<MetalSEO, "slug" | "symbol">> = {
       "In 2022, palladium hit all-time highs above $3,000/oz due to Russian sanctions and supply shortages.",
       "Palladium is 15 times rarer than platinum and 30 times rarer than gold in the Earth's crust.",
     ],
+    faq: [
+      { question: "Why is palladium so expensive?", answer: "Palladium has highly concentrated supply (Russia 40%, South Africa 35%) and inelastic automotive demand for catalytic converters. Any geopolitical disruption can create supply deficits." },
+      { question: "What alternatives does palladium have in industry?", answer: "Some manufacturers have partially substituted palladium with platinum in gasoline catalysts. Long-term, transport electrification will reduce catalytic converter demand." },
+    ],
   },
   cobre: {
     name: "Copper",
@@ -198,6 +246,10 @@ const METAL_SEO_EN: Record<string, Omit<MetalSEO, "slug" | "symbol">> = {
       "Copper is essential for the energy transition: an electric vehicle uses 3-4 times more copper than a conventional one.",
       "Copper demand for AI data centres has grown exponentially since 2024.",
       "The London Metal Exchange (LME) recorded record copper trading volumes in 2025.",
+    ],
+    faq: [
+      { question: "Why is copper called 'Doctor Copper'?", answer: "Because its price is considered a leading indicator of the global economy. Being essential for construction, manufacturing and infrastructure, a rising copper price often anticipates economic growth." },
+      { question: "How does the energy transition affect copper?", answer: "EVs use 3-4x more copper than conventional vehicles. The expansion of renewables, power grids and AI data centres are creating a structural long-term copper deficit." },
     ],
   },
 };

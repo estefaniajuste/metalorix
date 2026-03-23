@@ -335,7 +335,9 @@
     "otherMetals": "معادن أخرى",
     "notFound": "المعدن غير موجود — Metalorix",
     "setAlert": "تعيين تنبيه سعر",
-    "setAlertDesc": "استلم إشعاراً عندما يصل {metal} إلى سعرك المستهدف"
+    "setAlertDesc": "استلم إشعاراً عندما يصل {metal} إلى سعرك المستهدف",
+    "liveUpdated": "مباشر — يتم التحديث كل 60 ثانية",
+    "faqTitle": "أسئلة شائعة عن {metal}"
   },
   "panel": {
     "title": "لوحتي",
@@ -787,6 +789,14 @@
     "gramsOfSilver": "{n} غرام من الفضة",
     "historicalParity": "التكافؤ التاريخي (نسبة 16)",
     "silverWouldBeWorthMore": "لو عادت النسبة إلى 16، لارتفعت قيمة الفضة بنسبة {pct}%"
+  },
+  "unitPrice": {
+    "heading": "السعر حسب الوحدة",
+    "unit": "الوحدة",
+    "perOz": "أونصة تروي",
+    "perLb": "رطل (lb)",
+    "perGram": "غرام",
+    "perKilo": "كيلوغرام"
   },
   "metalPage": {
     "justNow": "الآن",

@@ -335,7 +335,9 @@
     "otherMetals": "Diğer metaller",
     "notFound": "Metal bulunamadı — Metalorix",
     "setAlert": "Fiyat uyarısı ayarla",
-    "setAlertDesc": "{metal} hedef fiyatınıza ulaştığında bildirim alın"
+    "setAlertDesc": "{metal} hedef fiyatınıza ulaştığında bildirim alın",
+    "liveUpdated": "Canlı — her 60 saniyede güncellenir",
+    "faqTitle": "{metal} hakkında sık sorulan sorular"
   },
   "panel": {
     "title": "Panelim",
@@ -787,6 +789,14 @@
     "gramsOfSilver": "{n} gram gümüş",
     "historicalParity": "Tarihsel parite (oran 16)",
     "silverWouldBeWorthMore": "Oran 16'ya dönerse, gümüş %{pct} daha değerli olurdu"
+  },
+  "unitPrice": {
+    "heading": "Birim başına fiyat",
+    "unit": "Birim",
+    "perOz": "Troy ons",
+    "perLb": "Libre (lb)",
+    "perGram": "Gram",
+    "perKilo": "Kilogram"
   },
   "metalPage": {
     "justNow": "Şimdi",

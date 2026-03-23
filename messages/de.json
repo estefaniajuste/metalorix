@@ -335,7 +335,9 @@
     "otherMetals": "Andere Metalle",
     "notFound": "Metall nicht gefunden — Metalorix",
     "setAlert": "Preisalarm einrichten",
-    "setAlertDesc": "Benachrichtigung erhalten, wenn {metal} Ihren Zielpreis erreicht"
+    "setAlertDesc": "Benachrichtigung erhalten, wenn {metal} Ihren Zielpreis erreicht",
+    "liveUpdated": "Live — alle 60 Sekunden aktualisiert",
+    "faqTitle": "Häufig gestellte Fragen zu {metal}"
   },
   "panel": {
     "title": "Mein Panel",
@@ -787,6 +789,14 @@
     "gramsOfSilver": "{n} Gramm Silber",
     "historicalParity": "Historische Parität (Verhältnis 16)",
     "silverWouldBeWorthMore": "Würde das Verhältnis auf 16 zurückkehren, wäre Silber {pct}% mehr wert"
+  },
+  "unitPrice": {
+    "heading": "Preis pro Einheit",
+    "unit": "Einheit",
+    "perOz": "Feinunze",
+    "perLb": "Pfund (lb)",
+    "perGram": "Gramm",
+    "perKilo": "Kilogramm"
   },
   "metalPage": {
     "justNow": "Gerade eben",

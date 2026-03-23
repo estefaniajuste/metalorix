@@ -335,7 +335,9 @@
     "otherMetals": "其他金属",
     "notFound": "未找到该金属 — Metalorix",
     "setAlert": "设置价格提醒",
-    "setAlertDesc": "{metal}达到目标价格时通知您"
+    "setAlertDesc": "{metal}达到目标价格时通知您",
+    "liveUpdated": "实时 — 每60秒更新",
+    "faqTitle": "关于{metal}的常见问题"
   },
   "panel": {
     "title": "我的面板",
@@ -787,6 +789,14 @@
     "gramsOfSilver": "{n}克白银",
     "historicalParity": "历史平价（比率16）",
     "silverWouldBeWorthMore": "如果比率回到16，白银将升值{pct}%"
+  },
+  "unitPrice": {
+    "heading": "单位价格",
+    "unit": "单位",
+    "perOz": "金衡盎司",
+    "perLb": "磅 (lb)",
+    "perGram": "克",
+    "perKilo": "千克"
   },
   "metalPage": {
     "justNow": "刚刚",

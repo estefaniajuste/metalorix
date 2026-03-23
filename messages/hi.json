@@ -335,7 +335,9 @@
     "otherMetals": "Other metals",
     "notFound": "Metal not found — Metalorix",
     "setAlert": "Set price alert",
-    "setAlertDesc": "Get notified when {metal} reaches your target price"
+    "setAlertDesc": "Get notified when {metal} reaches your target price",
+    "liveUpdated": "लाइव — हर 60 सेकंड अपडेट",
+    "faqTitle": "{metal} के बारे में अक्सर पूछे जाने वाले प्रश्न"
   },
   "panel": {
     "title": "मेरा पैनल",
@@ -787,6 +789,14 @@
     "gramsOfSilver": "{n} grams of silver",
     "historicalParity": "Historical parity (ratio 16)",
     "silverWouldBeWorthMore": "If the ratio returned to 16, silver would be worth {pct}% more"
+  },
+  "unitPrice": {
+    "heading": "इकाई मूल्य",
+    "unit": "इकाई",
+    "perOz": "ट्रॉय औंस",
+    "perLb": "पाउंड (lb)",
+    "perGram": "ग्राम",
+    "perKilo": "किलोग्राम"
   },
   "metalPage": {
     "justNow": "Just now",
