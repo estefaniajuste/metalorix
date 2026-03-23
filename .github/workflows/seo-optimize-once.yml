@@ -8,10 +8,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Call optimize-learn API
+        env:
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
         run: |
           response=$(curl -s -w "\n%{http_code}" -X POST \
-            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
-            "https://metalorix.com/api/seo/optimize-learn")
+            "https://metalorix.com/api/seo/optimize-learn?secret=${CRON_SECRET}")
           body=$(echo "$response" | head -n -1)
           http_code=$(echo "$response" | tail -1)
           echo "HTTP: $http_code"
