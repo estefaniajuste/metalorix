@@ -69,7 +69,16 @@
     "quickCalendar": "Takvim",
     "quickCalendarDesc": "Piyasayı hareket ettiren ekonomik olaylar",
     "heroLink": "E-posta ile fiyat uyarıları",
-    "quickMore": "Daha fazla"
+    "quickMore": "Daha fazla",
+    "viewAllTools": "Tüm araçlar",
+    "quickRatio": "Altın/Gümüş Oranı",
+    "quickRatioDesc": "Canlı oran ve analiz",
+    "quickRoi": "ROI Hesaplayıcı",
+    "quickRoiDesc": "Geçmiş getirileri simüle et",
+    "quickConverter": "Döviz Çevirici",
+    "quickConverterDesc": "11 para biriminde fiyatlar",
+    "quickComparator": "Metal Karşılaştırıcı",
+    "quickComparatorDesc": "Performansı karşılaştır"
   },
   "metals": {
     "gold": "Altın",
@@ -564,7 +573,8 @@
     "toolAlerts": "Fiyat Uyarıları",
     "toolAlertsHint": "Metaller hedefinize ulaştığında bildirim alın",
     "toolGuide": "Yatırım Rehberi",
-    "toolGuideHint": "ETF'ler, fiziksel altın, stratejiler karşılaştırmalı"
+    "toolGuideHint": "ETF'ler, fiziksel altın, stratejiler karşılaştırmalı",
+    "tryCta": "Dene"
   },
   "goldToday": {
     "title": "Bugün altın fiyatı",
@@ -755,7 +765,8 @@
     "toolAlerts": "Fiyat Uyarıları",
     "toolAlertsHint": "Metaller hedefinize ulaştığında bildirim alın",
     "toolGuide": "Yatırım Rehberi",
-    "toolGuideHint": "ETF'ler, fiziksel altın, stratejiler karşılaştırmalı"
+    "toolGuideHint": "ETF'ler, fiziksel altın, stratejiler karşılaştırmalı",
+    "tryCta": "Dene"
   },
   "ratioContent": {
     "currentRatio": "Güncel Altın/Gümüş Oranı",

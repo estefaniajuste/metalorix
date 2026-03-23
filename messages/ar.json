@@ -69,7 +69,16 @@
     "quickCalendar": "التقويم",
     "quickCalendarDesc": "أحداث اقتصادية تحرك السوق",
     "heroLink": "تنبيهات الأسعار بالبريد",
-    "quickMore": "المزيد"
+    "quickMore": "المزيد",
+    "viewAllTools": "جميع الأدوات",
+    "quickRatio": "نسبة الذهب/الفضة",
+    "quickRatioDesc": "نسبة حية وتحليل",
+    "quickRoi": "حاسبة العائد",
+    "quickRoiDesc": "محاكاة عوائد سابقة",
+    "quickConverter": "محول العملات",
+    "quickConverterDesc": "أسعار بـ 11 عملة",
+    "quickComparator": "مقارن المعادن",
+    "quickComparatorDesc": "قارن الأداء"
   },
   "metals": {
     "gold": "الذهب",
@@ -564,7 +573,8 @@
     "toolAlerts": "تنبيهات الأسعار",
     "toolAlertsHint": "احصل على إشعار عندما تصل المعادن لهدفك",
     "toolGuide": "دليل الاستثمار",
-    "toolGuideHint": "صناديق ETF، الذهب المادي، استراتيجيات مقارنة"
+    "toolGuideHint": "صناديق ETF، الذهب المادي، استراتيجيات مقارنة",
+    "tryCta": "جرّبها"
   },
   "goldToday": {
     "title": "سعر الذهب اليوم",
@@ -755,7 +765,8 @@
     "toolAlerts": "تنبيهات الأسعار",
     "toolAlertsHint": "احصل على إشعار عندما تصل المعادن لهدفك",
     "toolGuide": "دليل الاستثمار",
-    "toolGuideHint": "صناديق ETF، الذهب المادي، استراتيجيات مقارنة"
+    "toolGuideHint": "صناديق ETF، الذهب المادي، استراتيجيات مقارنة",
+    "tryCta": "جرّبها"
   },
   "ratioContent": {
     "currentRatio": "نسبة الذهب/الفضة الحالية",

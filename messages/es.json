@@ -69,7 +69,16 @@
     "quickCalendar": "Calendario",
     "quickCalendarDesc": "Eventos económicos que mueven el mercado",
     "heroLink": "Alertas de precio por email",
-    "quickMore": "Más"
+    "quickMore": "Más",
+    "viewAllTools": "Todas las herramientas",
+    "quickRatio": "Ratio Oro/Plata",
+    "quickRatioDesc": "Ratio en vivo y análisis",
+    "quickRoi": "Calculadora ROI",
+    "quickRoiDesc": "Simula rentabilidad pasada",
+    "quickConverter": "Conversor de Divisas",
+    "quickConverterDesc": "Precios en 11 monedas",
+    "quickComparator": "Comparador de Metales",
+    "quickComparatorDesc": "Compara rendimiento"
   },
   "metals": {
     "gold": "Oro",
@@ -564,7 +573,8 @@
     "toolAlerts": "Alertas de Precio",
     "toolAlertsHint": "Recibe avisos cuando los metales alcancen tu objetivo",
     "toolGuide": "Guía de Inversión",
-    "toolGuideHint": "ETFs, oro físico, estrategias comparadas"
+    "toolGuideHint": "ETFs, oro físico, estrategias comparadas",
+    "tryCta": "Probar"
   },
   "goldToday": {
     "title": "Precio del oro hoy",
@@ -755,7 +765,8 @@
     "toolAlerts": "Alertas de Precio",
     "toolAlertsHint": "Recibe avisos cuando los metales alcancen tu objetivo",
     "toolGuide": "Guía de Inversión",
-    "toolGuideHint": "ETFs, oro físico, estrategias comparadas"
+    "toolGuideHint": "ETFs, oro físico, estrategias comparadas",
+    "tryCta": "Probar"
   },
   "ratioContent": {
     "currentRatio": "Ratio Oro/Plata actual",

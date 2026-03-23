@@ -114,6 +114,39 @@ export function getToolsForNews(metals: string[] | null): string[] {
   return tools.slice(0, 3);
 }
 
+interface InlineCalloutProps {
+  toolId: string;
+  label: string;
+  hint: string;
+  cta: string;
+}
+
+export function InlineToolCallout({ toolId, label, hint, cta }: InlineCalloutProps) {
+  const tool = TOOL_CATALOG[toolId];
+  if (!tool) return null;
+
+  return (
+    <Link
+      href={tool.href as any}
+      className="my-8 flex items-center gap-3 p-3.5 rounded-lg border-l-[3px] border-brand-gold bg-[rgba(214,179,90,0.04)] hover:bg-[rgba(214,179,90,0.08)] transition-colors group"
+    >
+      <span className="text-xl flex-shrink-0">{tool.icon}</span>
+      <div className="flex-1 min-w-0">
+        <span className="text-sm font-semibold text-content-0 group-hover:text-brand-gold transition-colors">
+          {label}
+        </span>
+        <span className="text-xs text-content-3 ml-2">{hint}</span>
+      </div>
+      <span className="text-xs font-semibold text-brand-gold flex-shrink-0 flex items-center gap-1">
+        {cta}
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+          <polyline points="9 18 15 12 9 6" />
+        </svg>
+      </span>
+    </Link>
+  );
+}
+
 interface Props {
   toolIds: string[];
   labels: Record<string, string>;

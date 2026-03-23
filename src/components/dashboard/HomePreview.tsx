@@ -323,6 +323,53 @@ export async function HomePreview() {
             </div>
           </div>
         )}
+
+        <div className={hasNews || hasGlossary ? "mt-14" : "mt-10"}>
+          <div className="flex items-center justify-between mb-6">
+            <div>
+              <h2 className="text-xl font-bold text-content-0 flex items-center gap-2">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#D6B35A" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="flex-shrink-0">
+                  <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
+                  <line x1="8" y1="21" x2="16" y2="21" />
+                  <line x1="12" y1="17" x2="12" y2="21" />
+                </svg>
+                {t("quickTools")}
+              </h2>
+              <p className="text-sm text-content-2 mt-1">{t("quickToolsDesc")}</p>
+            </div>
+            <Link
+              href="/herramientas"
+              className="text-sm font-semibold text-brand-gold hover:underline flex-shrink-0 flex items-center gap-1"
+            >
+              {t("viewAllTools")}
+              <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                <polyline points="9 18 15 12 9 6" />
+              </svg>
+            </Link>
+          </div>
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+            {([
+              { href: "/ratio-oro-plata", icon: "⚖️", title: "quickRatio", desc: "quickRatioDesc" },
+              { href: "/calculadora-rentabilidad", icon: "📈", title: "quickRoi", desc: "quickRoiDesc" },
+              { href: "/conversor-divisas", icon: "💱", title: "quickConverter", desc: "quickConverterDesc" },
+              { href: "/comparador", icon: "📊", title: "quickComparator", desc: "quickComparatorDesc" },
+              { href: "/calendario-economico", icon: "📅", title: "quickCalendar", desc: "quickCalendarDesc" },
+              { href: "/guia-inversion", icon: "📖", title: "quickGuide", desc: "quickGuideDesc" },
+            ] as const).map(({ href, icon, title, desc }) => (
+              <Link
+                key={title}
+                href={href as any}
+                className="bg-surface-1 border border-border rounded-DEFAULT p-4 hover:border-brand-gold/30 hover:-translate-y-0.5 transition-all group text-center"
+              >
+                <span className="text-2xl block mb-2">{icon}</span>
+                <h3 className="text-xs font-semibold text-content-0 group-hover:text-brand-gold transition-colors">
+                  {t(title)}
+                </h3>
+                <p className="text-[10px] text-content-3 mt-0.5 leading-snug">{t(desc)}</p>
+              </Link>
+            ))}
+          </div>
+        </div>
       </div>
     </section>
   );

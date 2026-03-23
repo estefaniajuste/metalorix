@@ -9,7 +9,7 @@ import { articles, articleTranslations, glossaryTerms } from "@/lib/db/schema";
 import { eq, and, ne, desc } from "drizzle-orm";
 import { injectGlossaryLinks } from "@/lib/ai/glossary-generator";
 import { ArticleShareBar } from "@/components/dashboard/ArticleShareBar";
-import { ContextualToolCards, getToolsForNews } from "@/components/tools/ContextualToolCards";
+import { ContextualToolCards, InlineToolCallout, getToolsForNews } from "@/components/tools/ContextualToolCards";
 
 async function getArticle(slug: string, locale: string) {
   const db = getDb();
@@ -439,27 +439,46 @@ export default async function ArticlePage({
             {(() => {
               const lines = linkedContent.split("\n");
               let inSources = false;
-              return lines.map((paragraph, i) => {
-                if (!paragraph.trim()) return null;
+              let h2Count = 0;
+              const inlineToolId = getToolsForNews(article.metals)[0];
+              const elements: React.ReactNode[] = [];
+              lines.forEach((paragraph, i) => {
+                if (!paragraph.trim()) return;
                 const sourcesHeading = /^##\s*(Fuentes|Sources|Quellen|Kaynaklar|المصادر|来源)\s*$/i;
                 if (sourcesHeading.test(paragraph)) inSources = true;
                 if (paragraph.startsWith("## ")) {
-                  return (
+                  h2Count++;
+                  if (h2Count === 3 && inlineToolId) {
+                    elements.push(
+                      <InlineToolCallout
+                        key="inline-tool"
+                        toolId={inlineToolId}
+                        label={t(`tool${inlineToolId.charAt(0).toUpperCase()}${inlineToolId.slice(1)}` as any)}
+                        hint={t(`tool${inlineToolId.charAt(0).toUpperCase()}${inlineToolId.slice(1)}Hint` as any)}
+                        cta={t("tryCta")}
+                      />
+                    );
+                  }
+                  elements.push(
                     <h2 key={i}>{renderInlineLinks(paragraph.replace("## ", ""), glossarySlugsInLocale, inSources)}</h2>
                   );
+                  return;
                 }
                 if (paragraph.startsWith("### ")) {
-                  return (
+                  elements.push(
                     <h3 key={i}>{renderInlineLinks(paragraph.replace("### ", ""), glossarySlugsInLocale, inSources)}</h3>
                   );
+                  return;
                 }
                 if (paragraph.startsWith("- ")) {
-                  return (
+                  elements.push(
                     <li key={i} className="ml-5 list-disc">{renderInlineLinks(paragraph.slice(2), glossarySlugsInLocale, inSources)}</li>
                   );
+                  return;
                 }
-                return <p key={i}>{renderInlineLinks(paragraph, glossarySlugsInLocale, inSources)}</p>;
+                elements.push(<p key={i}>{renderInlineLinks(paragraph, glossarySlugsInLocale, inSources)}</p>);
               });
+              return elements;
             })()}
           </div>
 

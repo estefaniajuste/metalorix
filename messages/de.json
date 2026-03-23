@@ -69,7 +69,16 @@
     "quickCalendar": "Kalender",
     "quickCalendarDesc": "Wirtschaftsereignisse die den Markt bewegen",
     "heroLink": "Preisalarme per E-Mail",
-    "quickMore": "Mehr"
+    "quickMore": "Mehr",
+    "viewAllTools": "Alle Tools",
+    "quickRatio": "Gold/Silber-Ratio",
+    "quickRatioDesc": "Live-Ratio & Analyse",
+    "quickRoi": "ROI-Rechner",
+    "quickRoiDesc": "Vergangene Renditen simulieren",
+    "quickConverter": "Währungsrechner",
+    "quickConverterDesc": "Preise in 11 Währungen",
+    "quickComparator": "Metallvergleich",
+    "quickComparatorDesc": "Leistung vergleichen"
   },
   "metals": {
     "gold": "Gold",
@@ -564,7 +573,8 @@
     "toolAlerts": "Preisalarme",
     "toolAlertsHint": "Benachrichtigung bei Zielpreis erhalten",
     "toolGuide": "Investmentleitfaden",
-    "toolGuideHint": "ETFs, physisches Gold, Strategien im Vergleich"
+    "toolGuideHint": "ETFs, physisches Gold, Strategien im Vergleich",
+    "tryCta": "Ausprobieren"
   },
   "goldToday": {
     "title": "Goldpreis heute",
@@ -755,7 +765,8 @@
     "toolAlerts": "Preisalarme",
     "toolAlertsHint": "Benachrichtigung bei Zielpreis erhalten",
     "toolGuide": "Investmentleitfaden",
-    "toolGuideHint": "ETFs, physisches Gold, Strategien im Vergleich"
+    "toolGuideHint": "ETFs, physisches Gold, Strategien im Vergleich",
+    "tryCta": "Ausprobieren"
   },
   "ratioContent": {
     "currentRatio": "Aktuelles Gold/Silber-Verhältnis",

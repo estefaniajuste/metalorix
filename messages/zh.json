@@ -69,7 +69,16 @@
     "quickCalendar": "日历",
     "quickCalendarDesc": "影响市场的经济事件",
     "heroLink": "邮件价格提醒",
-    "quickMore": "更多"
+    "quickMore": "更多",
+    "viewAllTools": "所有工具",
+    "quickRatio": "金银比",
+    "quickRatioDesc": "实时比率与分析",
+    "quickRoi": "收益计算器",
+    "quickRoiDesc": "模拟历史收益",
+    "quickConverter": "货币转换器",
+    "quickConverterDesc": "11种货币价格",
+    "quickComparator": "金属比较器",
+    "quickComparatorDesc": "对比表现"
   },
   "metals": {
     "gold": "黄金",
@@ -564,7 +573,8 @@
     "toolAlerts": "价格提醒",
     "toolAlertsHint": "金属达到目标价时获得通知",
     "toolGuide": "投资指南",
-    "toolGuideHint": "ETF、实物黄金、策略对比"
+    "toolGuideHint": "ETF、实物黄金、策略对比",
+    "tryCta": "试试看"
   },
   "goldToday": {
     "title": "今日黄金价格",
@@ -755,7 +765,8 @@
     "toolAlerts": "价格提醒",
     "toolAlertsHint": "金属达到目标价时获得通知",
     "toolGuide": "投资指南",
-    "toolGuideHint": "ETF、实物黄金、策略对比"
+    "toolGuideHint": "ETF、实物黄金、策略对比",
+    "tryCta": "试试看"
   },
   "ratioContent": {
     "currentRatio": "当前金银比",

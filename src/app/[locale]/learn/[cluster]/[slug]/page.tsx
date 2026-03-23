@@ -29,7 +29,7 @@ import {
 } from "@/lib/learn/slug-i18n";
 import { routing } from "@/i18n/routing";
 import { SetLocalePathOverrides } from "@/components/layout/SetLocalePathOverrides";
-import { ContextualToolCards, getToolsForArticle } from "@/components/tools/ContextualToolCards";
+import { ContextualToolCards, InlineToolCallout, getToolsForArticle } from "@/components/tools/ContextualToolCards";
 import type { Locale } from "@/i18n/config";
 
 export const revalidate = 86400;
@@ -687,24 +687,44 @@ export default async function LearnArticlePage({
               <div className="prose-metalorix text-content-1 leading-relaxed text-[15px] [&>p]:mb-5 [&>h2]:text-xl [&>h2]:font-bold [&>h2]:text-content-0 [&>h2]:mt-10 [&>h2]:mb-4 [&>h3]:text-lg [&>h3]:font-semibold [&>h3]:text-content-0 [&>h3]:mt-8 [&>h3]:mb-3 [&>ul]:list-disc [&>ul]:pl-5 [&>ul]:mb-5 [&>ol]:list-decimal [&>ol]:pl-5 [&>ol]:mb-5 [&>blockquote]:border-l-2 [&>blockquote]:border-brand-gold [&>blockquote]:pl-4 [&>blockquote]:italic [&>blockquote]:text-content-2 [&>blockquote]:my-6">
                 {(() => {
                   let headingIdx = -1;
-                  return strippedContent.split("\n").map((line, i) => {
-                    if (!line.trim()) return null;
+                  let h2Count = 0;
+                  const inlineToolId = getToolsForArticle(baseClusterSlug, topic.slug)[0];
+                  const elements: React.ReactNode[] = [];
+                  strippedContent.split("\n").forEach((line, i) => {
+                    if (!line.trim()) return;
                     if (line.startsWith("## ")) {
+                      h2Count++;
+                      if (h2Count === 3 && inlineToolId) {
+                        elements.push(
+                          <InlineToolCallout
+                            key="inline-tool"
+                            toolId={inlineToolId}
+                            label={t(`tool${inlineToolId.charAt(0).toUpperCase()}${inlineToolId.slice(1)}` as any)}
+                            hint={t(`tool${inlineToolId.charAt(0).toUpperCase()}${inlineToolId.slice(1)}Hint` as any)}
+                            cta={t("tryCta")}
+                          />
+                        );
+                      }
                       headingIdx++;
-                      return <h2 key={i} id={`section-${headingIdx}`}>{line.slice(3)}</h2>;
+                      elements.push(<h2 key={i} id={`section-${headingIdx}`}>{line.slice(3)}</h2>);
+                      return;
                     }
                     if (line.startsWith("### ")) {
                       headingIdx++;
-                      return <h3 key={i} id={`section-${headingIdx}`}>{line.slice(4)}</h3>;
+                      elements.push(<h3 key={i} id={`section-${headingIdx}`}>{line.slice(4)}</h3>);
+                      return;
                     }
-                    if (line.startsWith("- "))
-                      return (
+                    if (line.startsWith("- ")) {
+                      elements.push(
                         <ul key={i}>
                           <li>{line.slice(2)}</li>
                         </ul>
                       );
-                    return <p key={i}>{line}</p>;
+                      return;
+                    }
+                    elements.push(<p key={i}>{line}</p>);
                   });
+                  return elements;
                 })()}
               </div>
             </>
