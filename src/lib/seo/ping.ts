@@ -7,6 +7,7 @@ export async function pingSearchEngines(): Promise<{ pinged: string[]; failed: s
   const targets = [
     { name: "Google", url: `https://www.google.com/ping?sitemap=${encodeURIComponent(SITEMAP_URL)}` },
     { name: "Bing", url: `https://www.bing.com/ping?sitemap=${encodeURIComponent(SITEMAP_URL)}` },
+    { name: "Yandex", url: `https://webmaster.yandex.com/ping?sitemap=${encodeURIComponent(SITEMAP_URL)}` },
   ];
 
   for (const target of targets) {
