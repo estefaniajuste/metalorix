@@ -21,6 +21,9 @@ const CURRENCY_PAIRS: Record<string, { ticker: string; fallback: number }> = {
   INR: { ticker: "INRUSD=X", fallback: 0.012 },
   MXN: { ticker: "MXNUSD=X", fallback: 0.058 },
   BRL: { ticker: "BRLUSD=X", fallback: 0.20 },
+  TRY: { ticker: "TRYUSD=X", fallback: 0.031 },
+  AED: { ticker: "AEDUSD=X", fallback: 0.272 },
+  SAR: { ticker: "SARUSD=X", fallback: 0.267 },
 };
 
 let cachedRates: { rates: ForexRates; fetchedAt: number } | null = null;

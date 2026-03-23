@@ -18,6 +18,16 @@ export const routing = defineRouting({
       hi: "/mulya/[metal]",
     },
 
+    "/precio/[metal]/[currency]": {
+      es: "/precio/[metal]/[currency]",
+      en: "/price/[metal]/[currency]",
+      de: "/preis/[metal]/[currency]",
+      zh: "/jiage/[metal]/[currency]",
+      ar: "/sier/[metal]/[currency]",
+      tr: "/fiyat/[metal]/[currency]",
+      hi: "/mulya/[metal]/[currency]",
+    },
+
     "/precio-oro-hoy": {
       es: "/precio-oro-hoy",
       en: "/gold-price-today",

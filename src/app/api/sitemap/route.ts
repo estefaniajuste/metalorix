@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { getProductSlugsByLocale } from "@/lib/data/product-slugs";
+import { CURRENCY_PAGES } from "@/lib/data/currency-pages";
 
 export const dynamic = "force-dynamic";
 
@@ -162,6 +163,14 @@ export async function GET() {
     const paths: Record<string, string> = {};
     for (const loc of LOCALES) paths[loc] = `/${loc}/${PRICE_PATHS[loc]}/${slugsByLocale[loc]}`;
     urls.push(urlEntry(paths, "daily", 0.9, today));
+  }
+
+  for (const [, slugsByLocale] of Object.entries(METAL_SLUGS)) {
+    for (const curr of CURRENCY_PAGES) {
+      const paths: Record<string, string> = {};
+      for (const loc of LOCALES) paths[loc] = `/${loc}/${PRICE_PATHS[loc]}/${slugsByLocale[loc]}/${curr.slug}`;
+      urls.push(urlEntry(paths, "daily", 0.7, today));
+    }
   }
 
   for (const slug of PRODUCT_SLUGS) {

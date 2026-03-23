@@ -1117,5 +1117,17 @@
     "futuresCon3": "Günlük finansman maliyetleri (rollover/swap)",
     "futuresCon4": "Yüksek duygusal oynaklık",
     "futuresCost": "Değişken (spreadler + gecelik finansman)"
+  },
+  "currencyPrice": {
+    "title": "{metal} Fiyatı {currency} Cinsinden",
+    "description": "{metal} fiyatı {currency} ({code}) cinsinden gerçek zamanlı. Ons, gram ve kilogram başına güncel kotasyon.",
+    "perOz": "ons başına ({currency})",
+    "perGram": "gram başına ({currency})",
+    "perKilo": "kilo başına ({currency})",
+    "unit": "Birim",
+    "whyTitle": "{metal} fiyatını neden {currency} cinsinden takip etmelisiniz?",
+    "whyText": "{currency} ({code}) ile işlem yapıyorsanız, {metal} yatırımınızın gerçek maliyeti döviz kuruna bağlıdır. {metal} USD cinsinden yükselse bile, gerçek getiri yerel para biriminizin gücüne göre değişebilir.",
+    "allCurrencies": "Tüm para birimlerinde görüntüle",
+    "otherCurrencies": "Diğer para birimleri"
   }
 }

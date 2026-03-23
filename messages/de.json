@@ -353,7 +353,21 @@
     "lastUpdated": "Letzte Aktualisierung: März 2026",
     "privacyPolicy": "Datenschutzrichtlinie",
     "termsOfService": "Nutzungsbedingungen",
-    "legalNotice": "Impressum",
+    "legalNotice": {
+      "identifyingDataContent": "Gemäß der Informationspflicht nach dem spanischen Gesetz 34/2002 über Dienste der Informationsgesellschaft und elektronischen Geschäftsverkehr (LSSI-CE) wird hiermit mitgeteilt, dass diese Website, metalorix.com, Eigentum ihres Inhabers ist und von diesem betrieben wird (im Folgenden 'Metalorix').",
+      "contactLabel": "Kontakt:",
+      "siteObjectiveContent": "Metalorix ist eine Informationsplattform über Edelmetalle (Gold, Silber und Platin), die Echtzeit-Preisdaten, Analysetools, KI-generierte Artikel und E-Mail-Alarme bietet.",
+      "noAdviceP1": "Die auf metalorix.com bereitgestellten Informationen dienen ausschließlich zu Informations- und Bildungszwecken.",
+      "noAdviceP1Bold": "Sie stellen keine Finanz- oder Anlageberatung dar und sind keine Kauf- oder Verkaufsempfehlung für Vermögenswerte.",
+      "noAdviceP2": "Die angezeigten Preise können bis zu 15 Minuten gegenüber dem Markt verzögert sein. Metalorix garantiert nicht die Richtigkeit, Vollständigkeit oder Aktualität der veröffentlichten Daten.",
+      "noAdviceP3": "Vor jeder Anlageentscheidung wird empfohlen, einen qualifizierten und ordnungsgemäß registrierten Finanzberater zu konsultieren.",
+      "ipP1": "Alle Inhalte der Website (Texte, Grafiken, Bilder, Design, Quellcode, Logos) sind Eigentum von Metalorix oder Dritten, die deren Nutzung genehmigt haben. Sie sind durch die geltenden Gesetze zum Schutz des geistigen und gewerblichen Eigentums geschützt.",
+      "ipP2": "KI-generierte Artikel werden als solche gekennzeichnet und sind Eigentum von Metalorix.",
+      "liabilityP1": "Metalorix übernimmt keine Verantwortung für Entscheidungen, die auf Grundlage der auf dieser Website veröffentlichten Informationen getroffen werden, noch für daraus entstehende Schäden.",
+      "liabilityP2": "Metalorix garantiert keine ununterbrochene Dienstverfügbarkeit. Unterbrechungen können durch Wartung oder technische Gründe auftreten.",
+      "externalLinksContent": "Diese Website kann Links zu Websites Dritter enthalten. Metalorix ist nicht verantwortlich für den Inhalt oder die Datenschutzpraktiken dieser Websites.",
+      "applicableLawContent": "Diese Bedingungen unterliegen spanischem Recht. Für Streitigkeiten aus dem Zugriff auf oder der Nutzung dieser Website sind die Gerichte am Wohnsitz des Inhabers zuständig."
+    },
     "legalTitle": "Impressum",
     "identifyingData": "Identifikationsdaten",
     "siteObjective": "Zweck der Website",
@@ -429,21 +443,6 @@
       "disclaimerContent": "Die Plattform wird 'wie besehen' bereitgestellt. Metalorix übernimmt keinerlei Gewährleistung. Metalorix haftet in keinem Fall für finanzielle Verluste, die aus der Nutzung der bereitgestellten Informationen entstehen.",
       "modificationsContent": "Metalorix behält sich das Recht vor, diese Nutzungsbedingungen jederzeit zu ändern.",
       "contactContent": "Für Anfragen:"
-    },
-    "legalNotice": {
-      "identifyingDataContent": "Gemäß der Informationspflicht nach dem spanischen Gesetz 34/2002 über Dienste der Informationsgesellschaft und elektronischen Geschäftsverkehr (LSSI-CE) wird hiermit mitgeteilt, dass diese Website, metalorix.com, Eigentum ihres Inhabers ist und von diesem betrieben wird (im Folgenden 'Metalorix').",
-      "contactLabel": "Kontakt:",
-      "siteObjectiveContent": "Metalorix ist eine Informationsplattform über Edelmetalle (Gold, Silber und Platin), die Echtzeit-Preisdaten, Analysetools, KI-generierte Artikel und E-Mail-Alarme bietet.",
-      "noAdviceP1": "Die auf metalorix.com bereitgestellten Informationen dienen ausschließlich zu Informations- und Bildungszwecken.",
-      "noAdviceP1Bold": "Sie stellen keine Finanz- oder Anlageberatung dar und sind keine Kauf- oder Verkaufsempfehlung für Vermögenswerte.",
-      "noAdviceP2": "Die angezeigten Preise können bis zu 15 Minuten gegenüber dem Markt verzögert sein. Metalorix garantiert nicht die Richtigkeit, Vollständigkeit oder Aktualität der veröffentlichten Daten.",
-      "noAdviceP3": "Vor jeder Anlageentscheidung wird empfohlen, einen qualifizierten und ordnungsgemäß registrierten Finanzberater zu konsultieren.",
-      "ipP1": "Alle Inhalte der Website (Texte, Grafiken, Bilder, Design, Quellcode, Logos) sind Eigentum von Metalorix oder Dritten, die deren Nutzung genehmigt haben. Sie sind durch die geltenden Gesetze zum Schutz des geistigen und gewerblichen Eigentums geschützt.",
-      "ipP2": "KI-generierte Artikel werden als solche gekennzeichnet und sind Eigentum von Metalorix.",
-      "liabilityP1": "Metalorix übernimmt keine Verantwortung für Entscheidungen, die auf Grundlage der auf dieser Website veröffentlichten Informationen getroffen werden, noch für daraus entstehende Schäden.",
-      "liabilityP2": "Metalorix garantiert keine ununterbrochene Dienstverfügbarkeit. Unterbrechungen können durch Wartung oder technische Gründe auftreten.",
-      "externalLinksContent": "Diese Website kann Links zu Websites Dritter enthalten. Metalorix ist nicht verantwortlich für den Inhalt oder die Datenschutzpraktiken dieser Websites.",
-      "applicableLawContent": "Diese Bedingungen unterliegen spanischem Recht. Für Streitigkeiten aus dem Zugriff auf oder der Nutzung dieser Website sind die Gerichte am Wohnsitz des Inhabers zuständig."
     }
   },
   "metalNames": {
@@ -1104,5 +1103,17 @@
     "futuresCon3": "Tägliche Finanzierungskosten (Rollover/Swap)",
     "futuresCon4": "Hohe emotionale Volatilität",
     "futuresCost": "Variabel (Spreads + Übernachtfinanzierung)"
+  },
+  "currencyPrice": {
+    "title": "{metal}-Preis in {currency}",
+    "description": "Aktueller {metal}-Preis in {currency} ({code}). Aktualisierter Kurs pro Unze, Gramm und Kilogramm.",
+    "perOz": "pro Unze ({currency})",
+    "perGram": "pro Gramm ({currency})",
+    "perKilo": "pro Kilo ({currency})",
+    "unit": "Einheit",
+    "whyTitle": "Warum den {metal}-Preis in {currency} verfolgen?",
+    "whyText": "Wenn Sie in {currency} ({code}) handeln, hängen die realen Kosten Ihrer {metal}-Investition vom Wechselkurs ab. Selbst wenn {metal} in USD steigt, kann Ihre tatsächliche Rendite je nach Stärke Ihrer Landeswährung variieren.",
+    "allCurrencies": "In allen Währungen anzeigen",
+    "otherCurrencies": "Andere Währungen"
   }
 }

@@ -2,196 +2,124 @@ import { ImageResponse } from "next/og";
 import { resolveMetalSlug } from "@/lib/utils/metal-slugs";
 
 export const runtime = "edge";
+export const alt = "Metal price";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
-export const alt = "Metal price in real time — Metalorix";
 
-const METAL_I18N: Record<string, Record<string, { name: string; title: string; subtitle: string }>> = {
-  oro: {
-    es: { name: "Oro", title: "Precio del Oro", subtitle: "Cotización en tiempo real, gráfico interactivo y análisis" },
-    en: { name: "Gold", title: "Gold Price", subtitle: "Real-time quote, interactive chart and analysis" },
-    ar: { name: "الذهب", title: "سعر الذهب", subtitle: "سعر فوري في الوقت الفعلي، رسم بياني تفاعلي وتحليل" },
-    de: { name: "Gold", title: "Goldpreis", subtitle: "Echtzeit-Kurs, interaktiver Chart und Analyse" },
-    tr: { name: "Altın", title: "Altın Fiyatı", subtitle: "Gerçek zamanlı kur, etkileşimli grafik ve analiz" },
-    zh: { name: "黄金", title: "黄金价格", subtitle: "实时报价、交互式图表和分析" },
-  },
-  plata: {
-    es: { name: "Plata", title: "Precio de la Plata", subtitle: "Cotización en tiempo real, gráfico interactivo y análisis" },
-    en: { name: "Silver", title: "Silver Price", subtitle: "Real-time quote, interactive chart and analysis" },
-    ar: { name: "الفضة", title: "سعر الفضة", subtitle: "سعر فوري في الوقت الفعلي، رسم بياني تفاعلي وتحليل" },
-    de: { name: "Silber", title: "Silberpreis", subtitle: "Echtzeit-Kurs, interaktiver Chart und Analyse" },
-    tr: { name: "Gümüş", title: "Gümüş Fiyatı", subtitle: "Gerçek zamanlı kur, etkileşimli grafik ve analiz" },
-    zh: { name: "白银", title: "白银价格", subtitle: "实时报价、交互式图表和分析" },
-  },
-  platino: {
-    es: { name: "Platino", title: "Precio del Platino", subtitle: "Cotización en tiempo real, gráfico interactivo y análisis" },
-    en: { name: "Platinum", title: "Platinum Price", subtitle: "Real-time quote, interactive chart and analysis" },
-    ar: { name: "البلاتين", title: "سعر البلاتين", subtitle: "سعر فوري في الوقت الفعلي، رسم بياني تفاعلي وتحليل" },
-    de: { name: "Platin", title: "Platinpreis", subtitle: "Echtzeit-Kurs, interaktiver Chart und Analyse" },
-    tr: { name: "Platin", title: "Platin Fiyatı", subtitle: "Gerçek zamanlı kur, etkileşimli grafik ve analiz" },
-    zh: { name: "铂金", title: "铂金价格", subtitle: "实时报价、交互式图表和分析" },
-  },
-  paladio: {
-    es: { name: "Paladio", title: "Precio del Paladio", subtitle: "Cotización en tiempo real, gráfico interactivo y análisis" },
-    en: { name: "Palladium", title: "Palladium Price", subtitle: "Real-time quote, interactive chart and analysis" },
-    ar: { name: "البلاديوم", title: "سعر البلاديوم", subtitle: "سعر فوري في الوقت الفعلي، رسم بياني تفاعلي وتحليل" },
-    de: { name: "Palladium", title: "Palladiumpreis", subtitle: "Echtzeit-Kurs, interaktiver Chart und Analyse" },
-    tr: { name: "Paladyum", title: "Paladyum Fiyatı", subtitle: "Gerçek zamanlı kur, etkileşimli grafik ve analiz" },
-    zh: { name: "钯金", title: "钯金价格", subtitle: "实时报价、交互式图表和分析" },
-  },
-  cobre: {
-    es: { name: "Cobre", title: "Precio del Cobre", subtitle: "Cotización en tiempo real, gráfico interactivo y análisis" },
-    en: { name: "Copper", title: "Copper Price", subtitle: "Real-time quote, interactive chart and analysis" },
-    ar: { name: "النحاس", title: "سعر النحاس", subtitle: "سعر فوري في الوقت الفعلي، رسم بياني تفاعلي وتحليل" },
-    de: { name: "Kupfer", title: "Kupferpreis", subtitle: "Echtzeit-Kurs, interaktiver Chart und Analyse" },
-    tr: { name: "Bakır", title: "Bakır Fiyatı", subtitle: "Gerçek zamanlı kur, etkileşimli grafik ve analiz" },
-    zh: { name: "铜", title: "铜价格", subtitle: "实时报价、交互式图表和分析" },
-  },
+const METAL_INFO: Record<string, { name: string; symbol: string; color: string }> = {
+  oro: { name: "Gold", symbol: "XAU", color: "#D6B35A" },
+  plata: { name: "Silver", symbol: "XAG", color: "#A7B0BE" },
+  platino: { name: "Platinum", symbol: "XPT", color: "#8B9DC3" },
+  paladio: { name: "Palladium", symbol: "XPD", color: "#CED0CE" },
+  cobre: { name: "Copper", symbol: "HG", color: "#B87333" },
 };
 
-const METAL_DATA: Record<string, { symbol: string; color: string }> = {
-  oro: { symbol: "XAU", color: "#D6B35A" },
-  plata: { symbol: "XAG", color: "#A7B0BE" },
-  platino: { symbol: "XPT", color: "#8B9DC3" },
-  paladio: { symbol: "XPD", color: "#CED0CE" },
-  cobre: { symbol: "HG", color: "#B87333" },
+const NAMES_I18N: Record<string, Record<string, string>> = {
+  oro: { es: "Oro", en: "Gold", de: "Gold", zh: "黄金", ar: "الذهب", tr: "Altın", hi: "सोना" },
+  plata: { es: "Plata", en: "Silver", de: "Silber", zh: "白银", ar: "الفضة", tr: "Gümüş", hi: "चांदी" },
+  platino: { es: "Platino", en: "Platinum", de: "Platin", zh: "铂金", ar: "البلاتين", tr: "Platin", hi: "प्लैटिनम" },
+  paladio: { es: "Paladio", en: "Palladium", de: "Palladium", zh: "钯金", ar: "البلاديوم", tr: "Paladyum", hi: "पैलेडियम" },
+  cobre: { es: "Cobre", en: "Copper", de: "Kupfer", zh: "铜", ar: "النحاس", tr: "Bakır", hi: "तांबा" },
 };
 
-export function generateImageMetadata({ params }: { params: { locale: string; metal: string } }) {
-  const internalSlug = resolveMetalSlug(params.metal) ?? params.metal;
-  const data = METAL_DATA[internalSlug];
-  const texts = METAL_I18N[internalSlug]?.en;
-  return [
-    {
-      id: "og",
-      alt: data && texts ? `${texts.title} (${data.symbol}) — Metalorix` : alt,
-      size,
-      contentType,
-    },
-  ];
+const LABELS: Record<string, { priceToday: string; liveData: string }> = {
+  es: { priceToday: "Precio hoy", liveData: "Datos en tiempo real" },
+  en: { priceToday: "Price today", liveData: "Live data" },
+  de: { priceToday: "Preis heute", liveData: "Echtzeitdaten" },
+  zh: { priceToday: "今日价格", liveData: "实时数据" },
+  ar: { priceToday: "السعر اليوم", liveData: "بيانات مباشرة" },
+  tr: { priceToday: "Bugünkü fiyat", liveData: "Canlı veri" },
+  hi: { priceToday: "आज का भाव", liveData: "लाइव डेटा" },
+};
+
+type PricesApiRow = { symbol?: string; price?: number };
+
+function pricesApiUrl(): string {
+  const base = (process.env.NEXT_PUBLIC_URL || "https://metalorix.com").replace(/\/$/, "");
+  return `${base}/api/prices`;
 }
 
-export default async function OgImage({ params }: { params: { locale: string; metal: string } }) {
-  const locale = params.locale || "es";
-  const internalSlug = resolveMetalSlug(params.metal) ?? params.metal;
-  const data = METAL_DATA[internalSlug] ?? METAL_DATA.oro;
-  const texts = METAL_I18N[internalSlug]?.[locale] || METAL_I18N[internalSlug]?.es || METAL_I18N.oro.es;
-
-  return new ImageResponse(
-    (
+export default async function OGImage({ params }: { params: { locale: string; metal: string } }) {
+  const { locale, metal } = params;
+  const internalSlug = resolveMetalSlug(metal) ?? metal;
+  const info = METAL_INFO[internalSlug];
+  if (!info) {
+    return new ImageResponse(
       <div
         style={{
+          display: "flex",
           width: "100%",
           height: "100%",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
+          background: "#0B0F17",
           alignItems: "center",
-          background: "linear-gradient(135deg, #0B0F17 0%, #151B2B 50%, #0B0F17 100%)",
-          fontFamily: "system-ui, sans-serif",
+          justifyContent: "center",
         }}
       >
-        <div
-          style={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            right: 0,
-            height: "4px",
-            background: `linear-gradient(90deg, transparent, ${data.color}, transparent)`,
-          }}
-        />
+        <div style={{ color: "#D6B35A", fontSize: 60, fontWeight: "bold" }}>Metalorix</div>
+      </div>,
+      { ...size }
+    );
+  }
 
-        <div
-          style={{
-            width: "96px",
-            height: "96px",
-            borderRadius: "50%",
-            background: `linear-gradient(135deg, ${data.color}33, ${data.color}11)`,
-            border: `2px solid ${data.color}66`,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            marginBottom: "32px",
-          }}
-        >
+  const metalName = NAMES_I18N[internalSlug]?.[locale] || info.name;
+  const label = LABELS[locale] || LABELS.en;
+
+  let priceText = "";
+  try {
+    const res = await fetch(pricesApiUrl(), { next: { revalidate: 60 } });
+    if (res.ok) {
+      const data = (await res.json()) as { prices?: PricesApiRow[] };
+      const spot = data.prices?.find((p) => p.symbol === info.symbol);
+      if (spot != null && typeof spot.price === "number") {
+        priceText = `$${spot.price.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+      }
+    }
+  } catch {
+    /* OG still renders without price */
+  }
+
+  return new ImageResponse(
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        width: "100%",
+        height: "100%",
+        background: "linear-gradient(135deg, #0B0F17 0%, #121826 50%, #1a2035 100%)",
+        padding: "60px",
+        fontFamily: "sans-serif",
+      }}
+    >
+      <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
+        <div style={{ width: "12px", height: "12px", borderRadius: "50%", background: "#34D399" }} />
+        <div style={{ color: "#8891a5", fontSize: "22px" }}>{label.liveData}</div>
+      </div>
+
+      <div style={{ display: "flex", flexDirection: "column", flex: 1, justifyContent: "center" }}>
+        <div style={{ color: "#8891a5", fontSize: "28px", marginBottom: "8px" }}>
+          {info.symbol}/USD · {label.priceToday}
+        </div>
+        <div style={{ color: "#f1f3f7", fontSize: "72px", fontWeight: "800", letterSpacing: "-2px" }}>{metalName}</div>
+        {priceText ? (
           <div
             style={{
-              width: "20px",
-              height: "20px",
-              borderRadius: "50%",
-              background: data.color,
-            }}
-          />
-        </div>
-
-        <div
-          style={{
-            fontSize: "52px",
-            fontWeight: 800,
-            color: "#EAEDF3",
-            marginBottom: "8px",
-            letterSpacing: "-1px",
-          }}
-        >
-          {texts.title}
-        </div>
-
-        <div
-          style={{
-            fontSize: "24px",
-            fontWeight: 600,
-            color: data.color,
-            marginBottom: "24px",
-            letterSpacing: "4px",
-          }}
-        >
-          {data.symbol}/USD
-        </div>
-
-        <div
-          style={{
-            fontSize: "20px",
-            color: "#8B95A8",
-            maxWidth: "600px",
-            textAlign: "center",
-            lineHeight: 1.5,
-          }}
-        >
-          {texts.subtitle}
-        </div>
-
-        <div
-          style={{
-            position: "absolute",
-            bottom: "28px",
-            display: "flex",
-            alignItems: "center",
-            gap: "10px",
-          }}
-        >
-          <div
-            style={{
-              width: "28px",
-              height: "28px",
-              borderRadius: "6px",
-              background: "linear-gradient(135deg, #D6B35A, #B8962E)",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              fontSize: "14px",
-              fontWeight: 800,
-              color: "#0B0F17",
+              color: info.color,
+              fontSize: "80px",
+              fontWeight: "800",
+              marginTop: "8px",
+              letterSpacing: "-2px",
             }}
           >
-            M
+            {priceText}
           </div>
-          <span style={{ color: "#4A5568", fontSize: "16px" }}>
-            metalorix.com
-          </span>
-        </div>
+        ) : null}
       </div>
-    ),
+
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+        <div style={{ color: info.color, fontSize: "32px", fontWeight: "bold" }}>Metalorix</div>
+        <div style={{ color: "#5a6478", fontSize: "20px" }}>metalorix.com</div>
+      </div>
+    </div>,
     { ...size }
   );
 }

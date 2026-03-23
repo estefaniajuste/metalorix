@@ -353,7 +353,21 @@
     "lastUpdated": "Last updated: March 2026",
     "privacyPolicy": "Privacy policy",
     "termsOfService": "Terms of service",
-    "legalNotice": "Legal notice",
+    "legalNotice": {
+      "identifyingDataContent": "In compliance with the duty of information established by Spanish Law 34/2002 on Information Society Services and Electronic Commerce (LSSI-CE), please note that this website, metalorix.com, is owned and managed by its holder (hereinafter \"Metalorix\").",
+      "contactLabel": "Contact:",
+      "siteObjectiveContent": "Metalorix is an informational platform about precious metals (gold, silver and platinum) offering real-time price data, analysis tools, AI-generated articles and email alerts.",
+      "noAdviceP1": "The information provided on metalorix.com is purely informational and educational.",
+      "noAdviceP1Bold": "It does not constitute financial or investment advice, nor a recommendation to buy or sell any asset.",
+      "noAdviceP2": "Displayed prices may be delayed by up to 15 minutes from the market. Metalorix does not guarantee the accuracy, completeness or timeliness of published data.",
+      "noAdviceP3": "Before making any investment decision, it is recommended to consult a qualified and duly registered financial advisor.",
+      "ipP1": "All website content (text, graphics, images, design, source code, logos) is the property of Metalorix or third parties who have authorized its use. They are protected by applicable intellectual and industrial property laws.",
+      "ipP2": "AI-generated articles are identified as such and are the property of Metalorix.",
+      "liabilityP1": "Metalorix is not responsible for decisions made based on the information published on this website, nor for any damages arising from its use.",
+      "liabilityP2": "Metalorix does not guarantee continuous and uninterrupted service availability. Interruptions may occur due to maintenance or technical reasons.",
+      "externalLinksContent": "This site may contain links to third-party websites. Metalorix is not responsible for the content or privacy practices of those sites.",
+      "applicableLawContent": "These terms are governed by Spanish law. For any dispute arising from access to or use of this website, the parties submit to the courts of the holder's domicile."
+    },
     "legalTitle": "Legal notice",
     "identifyingData": "Identifying data",
     "siteObjective": "Site objective",
@@ -429,21 +443,6 @@
       "disclaimerContent": "The Platform is provided \"as is\". Metalorix offers no warranties of any kind. Under no circumstances shall Metalorix be liable for financial losses arising from the use of the information provided.",
       "modificationsContent": "Metalorix reserves the right to modify these Terms of Service at any time.",
       "contactContent": "For any enquiry:"
-    },
-    "legalNotice": {
-      "identifyingDataContent": "In compliance with the duty of information established by Spanish Law 34/2002 on Information Society Services and Electronic Commerce (LSSI-CE), please note that this website, metalorix.com, is owned and managed by its holder (hereinafter \"Metalorix\").",
-      "contactLabel": "Contact:",
-      "siteObjectiveContent": "Metalorix is an informational platform about precious metals (gold, silver and platinum) offering real-time price data, analysis tools, AI-generated articles and email alerts.",
-      "noAdviceP1": "The information provided on metalorix.com is purely informational and educational.",
-      "noAdviceP1Bold": "It does not constitute financial or investment advice, nor a recommendation to buy or sell any asset.",
-      "noAdviceP2": "Displayed prices may be delayed by up to 15 minutes from the market. Metalorix does not guarantee the accuracy, completeness or timeliness of published data.",
-      "noAdviceP3": "Before making any investment decision, it is recommended to consult a qualified and duly registered financial advisor.",
-      "ipP1": "All website content (text, graphics, images, design, source code, logos) is the property of Metalorix or third parties who have authorized its use. They are protected by applicable intellectual and industrial property laws.",
-      "ipP2": "AI-generated articles are identified as such and are the property of Metalorix.",
-      "liabilityP1": "Metalorix is not responsible for decisions made based on the information published on this website, nor for any damages arising from its use.",
-      "liabilityP2": "Metalorix does not guarantee continuous and uninterrupted service availability. Interruptions may occur due to maintenance or technical reasons.",
-      "externalLinksContent": "This site may contain links to third-party websites. Metalorix is not responsible for the content or privacy practices of those sites.",
-      "applicableLawContent": "These terms are governed by Spanish law. For any dispute arising from access to or use of this website, the parties submit to the courts of the holder's domicile."
     }
   },
   "metalNames": {
@@ -1104,5 +1103,17 @@
     "futuresCon3": "Daily financing costs (rollover/swap)",
     "futuresCon4": "High emotional volatility",
     "futuresCost": "Variable (spreads + overnight financing)"
+  },
+  "currencyPrice": {
+    "title": "{metal} Price in {currency}",
+    "description": "Real-time {metal} price in {currency} ({code}). Updated quote per ounce, gram and kilogram.",
+    "perOz": "per ounce ({currency})",
+    "perGram": "per gram ({currency})",
+    "perKilo": "per kilo ({currency})",
+    "unit": "Unit",
+    "whyTitle": "Why track {metal} price in {currency}?",
+    "whyText": "If you operate in {currency} ({code}), the real cost of your {metal} investment depends on the exchange rate. Even if {metal} rises in USD, your actual return may vary based on the strength of your local currency.",
+    "allCurrencies": "View in all currencies",
+    "otherCurrencies": "Other currencies"
   }
 }

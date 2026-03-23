@@ -353,7 +353,21 @@
     "lastUpdated": "最后更新：2026年3月",
     "privacyPolicy": "隐私政策",
     "termsOfService": "服务条款",
-    "legalNotice": "法律声明",
+    "legalNotice": {
+      "identifyingDataContent": "根据西班牙第 34/2002 号《信息社会服务和电子商务法》(LSSI-CE) 规定的信息披露义务，特此告知本网站 metalorix.com 由其所有者拥有和运营（以下简称'Metalorix'）。",
+      "contactLabel": "联系方式：",
+      "siteObjectiveContent": "Metalorix 是一个关于贵金属（黄金、白银和铂金）的信息平台，提供实时价格数据、分析工具、AI 生成的文章和电子邮件提醒。",
+      "noAdviceP1": "metalorix.com 上提供的信息仅供参考和教育目的。",
+      "noAdviceP1Bold": "不构成财务或投资建议，也不构成买卖任何资产的建议。",
+      "noAdviceP2": "显示的价格可能与市场延迟最多 15 分钟。Metalorix 不保证已发布数据的准确性、完整性或时效性。",
+      "noAdviceP3": "在做出任何投资决定之前，建议咨询合格且正式注册的财务顾问。",
+      "ipP1": "网站的所有内容（文字、图形、图片、设计、源代码、标识）均为 Metalorix 或已授权使用的第三方所有。受适用的知识产权和工业产权法保护。",
+      "ipP2": "AI 生成的文章会标明其性质，属于 Metalorix 所有。",
+      "liabilityP1": "Metalorix 不对基于本网站发布信息做出的决定承担责任，也不对因使用而产生的任何损害承担责任。",
+      "liabilityP2": "Metalorix 不保证服务的持续和不间断可用性。可能因维护或技术原因发生中断。",
+      "externalLinksContent": "本网站可能包含第三方网站的链接。Metalorix 不对这些网站的内容或隐私做法负责。",
+      "applicableLawContent": "本条款受西班牙法律管辖。对于因访问或使用本网站而产生的任何争议，双方服从网站所有者住所地法院的管辖。"
+    },
     "legalTitle": "法律声明",
     "identifyingData": "身份信息",
     "siteObjective": "网站目的",
@@ -429,21 +443,6 @@
       "disclaimerContent": "平台按'原样'提供。Metalorix 不提供任何形式的保证。Metalorix 在任何情况下均不对因使用所提供信息而导致的财务损失承担责任。",
       "modificationsContent": "Metalorix 保留随时修改本服务条款的权利。",
       "contactContent": "如有任何疑问："
-    },
-    "legalNotice": {
-      "identifyingDataContent": "根据西班牙第 34/2002 号《信息社会服务和电子商务法》(LSSI-CE) 规定的信息披露义务，特此告知本网站 metalorix.com 由其所有者拥有和运营（以下简称'Metalorix'）。",
-      "contactLabel": "联系方式：",
-      "siteObjectiveContent": "Metalorix 是一个关于贵金属（黄金、白银和铂金）的信息平台，提供实时价格数据、分析工具、AI 生成的文章和电子邮件提醒。",
-      "noAdviceP1": "metalorix.com 上提供的信息仅供参考和教育目的。",
-      "noAdviceP1Bold": "不构成财务或投资建议，也不构成买卖任何资产的建议。",
-      "noAdviceP2": "显示的价格可能与市场延迟最多 15 分钟。Metalorix 不保证已发布数据的准确性、完整性或时效性。",
-      "noAdviceP3": "在做出任何投资决定之前，建议咨询合格且正式注册的财务顾问。",
-      "ipP1": "网站的所有内容（文字、图形、图片、设计、源代码、标识）均为 Metalorix 或已授权使用的第三方所有。受适用的知识产权和工业产权法保护。",
-      "ipP2": "AI 生成的文章会标明其性质，属于 Metalorix 所有。",
-      "liabilityP1": "Metalorix 不对基于本网站发布信息做出的决定承担责任，也不对因使用而产生的任何损害承担责任。",
-      "liabilityP2": "Metalorix 不保证服务的持续和不间断可用性。可能因维护或技术原因发生中断。",
-      "externalLinksContent": "本网站可能包含第三方网站的链接。Metalorix 不对这些网站的内容或隐私做法负责。",
-      "applicableLawContent": "本条款受西班牙法律管辖。对于因访问或使用本网站而产生的任何争议，双方服从网站所有者住所地法院的管辖。"
     }
   },
   "metalNames": {
@@ -1104,5 +1103,17 @@
     "futuresCon3": "每日融资成本（展期/掉期）",
     "futuresCon4": "情绪波动剧烈",
     "futuresCost": "可变（点差 + 隔夜融资费用）"
+  },
+  "currencyPrice": {
+    "title": "{metal}{currency}价格",
+    "description": "{metal}{currency}（{code}）实时价格。每盎司、每克和每公斤最新报价。",
+    "perOz": "每盎司（{currency}）",
+    "perGram": "每克（{currency}）",
+    "perKilo": "每公斤（{currency}）",
+    "unit": "单位",
+    "whyTitle": "为什么关注{metal}的{currency}价格？",
+    "whyText": "如果您使用{currency}（{code}）交易，{metal}投资的实际成本取决于汇率。即使{metal}美元价格上涨，您的实际收益也可能因当地货币强弱而异。",
+    "allCurrencies": "查看所有货币",
+    "otherCurrencies": "其他货币"
   }
 }
