@@ -28,11 +28,11 @@ const PATHNAMES: Record<string, Record<string, string>> = {
 };
 
 const METAL_SLUGS: Record<string, Record<string, string>> = {
-  oro: { es: "oro", en: "gold", de: "gold", zh: "gold", ar: "gold", tr: "altin", hi: "sona" },
-  plata: { es: "plata", en: "silver", de: "silber", zh: "silver", ar: "silver", tr: "gumus", hi: "chandi" },
-  platino: { es: "platino", en: "platinum", de: "platin", zh: "platinum", ar: "platinum", tr: "platin", hi: "platinam" },
-  paladio: { es: "paladio", en: "palladium", de: "palladium", zh: "palladium", ar: "palladium", tr: "paladyum", hi: "palladium" },
-  cobre: { es: "cobre", en: "copper", de: "kupfer", zh: "copper", ar: "copper", tr: "bakir", hi: "tamba" },
+  oro: { es: "oro", en: "gold", de: "gold", zh: "huangjin", ar: "dhahab", tr: "altin", hi: "sona" },
+  plata: { es: "plata", en: "silver", de: "silber", zh: "baiyin", ar: "fiddah", tr: "gumus", hi: "chandi" },
+  platino: { es: "platino", en: "platinum", de: "platin", zh: "bojin", ar: "blatiin", tr: "platin", hi: "platinam" },
+  paladio: { es: "paladio", en: "palladium", de: "palladium", zh: "bajin", ar: "baladiyum", tr: "paladyum", hi: "palladium" },
+  cobre: { es: "cobre", en: "copper", de: "kupfer", zh: "tong", ar: "nuhas", tr: "bakir", hi: "tamba" },
 };
 
 const PRICE_PATHS: Record<string, string> = {

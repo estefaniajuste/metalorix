@@ -76,6 +76,20 @@ export function middleware(request: NextRequest) {
   const lower = pathname.toLowerCase();
   const segments = lower.split("/").filter(Boolean);
 
+  // Redirect old English metal slugs in zh/ar to localized slugs
+  const OLD_METAL_REDIRECTS: Record<string, Record<string, string>> = {
+    zh: { gold: "huangjin", silver: "baiyin", platinum: "bojin", palladium: "bajin", copper: "tong" },
+    ar: { gold: "dhahab", silver: "fiddah", platinum: "blatiin", palladium: "baladiyum", copper: "nuhas" },
+  };
+  if (segments.length >= 3 && (segments[0] === "zh" || segments[0] === "ar")) {
+    const remap = OLD_METAL_REDIRECTS[segments[0]];
+    const lastSeg = segments[segments.length - 1];
+    if (remap && remap[lastSeg]) {
+      const newPath = `/${segments.slice(0, -1).join("/")}/${remap[lastSeg]}`;
+      return NextResponse.redirect(new URL(newPath, request.url), 301);
+    }
+  }
+
   // Handle /{locale}/{legacy-learn-segment}[/...] → /{locale}/{correct-learn-path}[/...]
   if (segments.length >= 2 && LOCALES.has(segments[0])) {
     const locale = segments[0];
