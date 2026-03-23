@@ -4,9 +4,9 @@ export async function pingSearchEngines(): Promise<{ pinged: string[]; failed: s
   const pinged: string[] = [];
   const failed: string[] = [];
 
+  // Google and Bing deprecated their /ping?sitemap= endpoints (404/410).
+  // Only Yandex still accepts sitemap pings via URL.
   const targets = [
-    { name: "Google", url: `https://www.google.com/ping?sitemap=${encodeURIComponent(SITEMAP_URL)}` },
-    { name: "Bing", url: `https://www.bing.com/ping?sitemap=${encodeURIComponent(SITEMAP_URL)}` },
     { name: "Yandex", url: `https://webmaster.yandex.com/ping?sitemap=${encodeURIComponent(SITEMAP_URL)}` },
   ];
 
