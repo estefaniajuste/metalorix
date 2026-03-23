@@ -78,7 +78,13 @@
     "quickConverter": "Währungsrechner",
     "quickConverterDesc": "Preise in 11 Währungen",
     "quickComparator": "Metallvergleich",
-    "quickComparatorDesc": "Leistung vergleichen"
+    "quickComparatorDesc": "Leistung vergleichen",
+    "emailCta": "Kostenlose Preisalarme erhalten",
+    "emailCtaDesc": "Nur Ihre E-Mail. Kein Spam. Intelligente Alarme bei Marktbewegungen.",
+    "emailPlaceholder": "ihre@email.com",
+    "emailBtn": "Abonnieren",
+    "emailSuccess": "Abonnement abgeschlossen! Überprüfen Sie Ihre E-Mail.",
+    "emailError": "Verbindungsfehler. Versuchen Sie es erneut."
   },
   "metals": {
     "gold": "Gold",

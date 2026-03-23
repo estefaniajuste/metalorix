@@ -110,6 +110,7 @@ export default async function PrecioMetalPage({
   const t = await getTranslations("prices");
   const tc = await getTranslations("common");
   const tf = await getTranslations("footer");
+  const tn = await getTranslations("nav");
   const localizedSlug = getLocalizedMetalSlug(seo.slug, locale);
   const alternates = getAlternates(locale, {
     pathname: "/precio/[metal]",
@@ -240,6 +241,49 @@ export default async function PrecioMetalPage({
               </div>
             </div>
           )}
+
+          <div className="mt-10">
+            <h2 className="text-base font-semibold text-content-3 mb-4">
+              {t("relatedSearches")}
+            </h2>
+            <div className="flex flex-wrap gap-2">
+              {seo.slug === "oro" && (
+                <>
+                  <Link href="/precio-oro-hoy" className="text-xs px-3 py-1.5 rounded-full border border-border text-content-2 hover:text-brand-gold hover:border-brand-gold transition-colors">
+                    {seo.name} — {t("priceOf", { metal: seo.name })}
+                  </Link>
+                  <Link href="/precio-gramo-oro" className="text-xs px-3 py-1.5 rounded-full border border-border text-content-2 hover:text-brand-gold hover:border-brand-gold transition-colors">
+                    {seo.name} / {tc("gram")}
+                  </Link>
+                </>
+              )}
+              {(seo.slug === "oro" || seo.slug === "plata") && (
+                <Link href="/ratio-oro-plata" className="text-xs px-3 py-1.5 rounded-full border border-border text-content-2 hover:text-brand-gold hover:border-brand-gold transition-colors">
+                  {tn("ratio")}
+                </Link>
+              )}
+              <Link href="/conversor-divisas" className="text-xs px-3 py-1.5 rounded-full border border-border text-content-2 hover:text-brand-gold hover:border-brand-gold transition-colors">
+                {seo.name} — EUR, GBP, JPY, INR
+              </Link>
+              <Link href="/calculadora-rentabilidad" className="text-xs px-3 py-1.5 rounded-full border border-border text-content-2 hover:text-brand-gold hover:border-brand-gold transition-colors">
+                ROI {seo.name}
+              </Link>
+              <Link href="/herramientas" className="text-xs px-3 py-1.5 rounded-full border border-border text-content-2 hover:text-brand-gold hover:border-brand-gold transition-colors">
+                DCA {seo.name}
+              </Link>
+              <Link href="/guia-inversion" className="text-xs px-3 py-1.5 rounded-full border border-border text-content-2 hover:text-brand-gold hover:border-brand-gold transition-colors">
+                {seo.name} — {tf("investmentGuide")}
+              </Link>
+              {otherMetals.slice(0, 3).map((m) => (
+                <Link key={m.slug} href={{ pathname: "/precio/[metal]" as const, params: { metal: m.localSlug } }} className="text-xs px-3 py-1.5 rounded-full border border-border text-content-2 hover:text-brand-gold hover:border-brand-gold transition-colors">
+                  {t("priceOf", { metal: m.name })}
+                </Link>
+              ))}
+              <Link href="/alertas" className="text-xs px-3 py-1.5 rounded-full border border-border text-content-2 hover:text-brand-gold hover:border-brand-gold transition-colors">
+                {t("setAlert")} — {seo.name}
+              </Link>
+            </div>
+          </div>
       </section>
     </>
   );

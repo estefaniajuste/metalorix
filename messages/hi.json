@@ -78,7 +78,13 @@
     "quickConverter": "मुद्रा परिवर्तक",
     "quickConverterDesc": "11 मुद्राओं में कीमतें",
     "quickComparator": "धातु तुलनाकर्ता",
-    "quickComparatorDesc": "प्रदर्शन की तुलना करें"
+    "quickComparatorDesc": "प्रदर्शन की तुलना करें",
+    "emailCta": "मुफ्त मूल्य अलर्ट प्राप्त करें",
+    "emailCtaDesc": "बस आपका ईमेल। कोई स्पैम नहीं। बाजार में हलचल पर स्मार्ट अलर्ट।",
+    "emailPlaceholder": "your@email.com",
+    "emailBtn": "सदस्यता लें",
+    "emailSuccess": "सदस्यता पूर्ण! अपना ईमेल जांचें।",
+    "emailError": "कनेक्शन त्रुटि। पुनः प्रयास करें।"
   },
   "metals": {
     "gold": "सोना",

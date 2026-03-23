@@ -78,7 +78,13 @@
     "quickConverter": "Currency Converter",
     "quickConverterDesc": "Prices in 11 currencies",
     "quickComparator": "Metal Comparator",
-    "quickComparatorDesc": "Compare performance"
+    "quickComparatorDesc": "Compare performance",
+    "emailCta": "Get free price alerts",
+    "emailCtaDesc": "Just your email. No spam. Smart alerts when the market moves.",
+    "emailPlaceholder": "you@email.com",
+    "emailBtn": "Subscribe",
+    "emailSuccess": "Subscription complete! Check your email.",
+    "emailError": "Connection error. Try again."
   },
   "metals": {
     "gold": "Gold",

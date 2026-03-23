@@ -78,7 +78,13 @@
     "quickConverter": "货币转换器",
     "quickConverterDesc": "11种货币价格",
     "quickComparator": "金属比较器",
-    "quickComparatorDesc": "对比表现"
+    "quickComparatorDesc": "对比表现",
+    "emailCta": "获取免费价格提醒",
+    "emailCtaDesc": "只需您的邮箱。无垃圾邮件。市场波动时智能提醒。",
+    "emailPlaceholder": "your@email.com",
+    "emailBtn": "订阅",
+    "emailSuccess": "订阅成功！请查看您的邮箱。",
+    "emailError": "连接错误，请重试。"
   },
   "metals": {
     "gold": "黄金",

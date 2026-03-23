@@ -78,7 +78,13 @@
     "quickConverter": "Döviz Çevirici",
     "quickConverterDesc": "11 para biriminde fiyatlar",
     "quickComparator": "Metal Karşılaştırıcı",
-    "quickComparatorDesc": "Performansı karşılaştır"
+    "quickComparatorDesc": "Performansı karşılaştır",
+    "emailCta": "Ücretsiz fiyat alarmları alın",
+    "emailCtaDesc": "Sadece e-postanız. Spam yok. Piyasa hareket ettiğinde akıllı alarmlar.",
+    "emailPlaceholder": "siz@email.com",
+    "emailBtn": "Abone ol",
+    "emailSuccess": "Abonelik tamamlandı! E-postanızı kontrol edin.",
+    "emailError": "Bağlantı hatası. Tekrar deneyin."
   },
   "metals": {
     "gold": "Altın",

@@ -1,4 +1,5 @@
 import { Link } from "@/i18n/navigation";
+import { HomeEmailCapture } from "@/components/dashboard/HomeEmailCapture";
 import { getTranslations, getLocale } from "next-intl/server";
 import { getLocalizedClusterSlug } from "@/lib/learn/slug-i18n";
 import { getCategoryLabel } from "@/lib/data/glossary-categories";
@@ -369,6 +370,10 @@ export async function HomePreview() {
               </Link>
             ))}
           </div>
+        </div>
+
+        <div className="mt-10">
+          <HomeEmailCapture />
         </div>
       </div>
     </section>

@@ -1,15 +1,28 @@
 {
-  "name": "Metalorix — Precios de Metales Preciosos",
+  "name": "Metalorix — Gold, Silver & Platinum Prices",
   "short_name": "Metalorix",
-  "description": "Precios spot en tiempo real para Oro, Plata y Platino. Gráficos profesionales y herramientas de trading.",
+  "description": "Real-time spot prices for Gold, Silver, Platinum, Palladium and Copper. Professional charts, tools and market analysis.",
   "start_url": "/",
+  "scope": "/",
   "display": "standalone",
   "background_color": "#0B0F17",
   "theme_color": "#D6B35A",
   "orientation": "portrait-primary",
-  "categories": ["finance", "business"],
-  "lang": "es",
+  "categories": ["finance", "business", "news"],
+  "lang": "en",
+  "dir": "ltr",
+  "prefer_related_applications": false,
   "icons": [
+    {
+      "src": "/favicon.svg",
+      "type": "image/svg+xml",
+      "sizes": "any"
+    },
+    {
+      "src": "/favicon.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    },
     {
       "src": "/icon-192.png",
       "sizes": "192x192",
@@ -21,11 +34,29 @@
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "Gold Price",
+      "url": "/en/price/gold",
+      "description": "Real-time gold price"
     },
     {
-      "src": "/favicon.png",
-      "sizes": "32x32",
-      "type": "image/png"
+      "name": "Silver Price",
+      "url": "/en/price/silver",
+      "description": "Real-time silver price"
+    },
+    {
+      "name": "Gold/Silver Ratio",
+      "url": "/en/gold-silver-ratio",
+      "description": "Live gold/silver ratio"
+    },
+    {
+      "name": "Price Alerts",
+      "url": "/en/alerts",
+      "description": "Set price alerts"
     }
   ]
 }

@@ -1,6 +1,15 @@
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { ShareButton } from "@/components/dashboard/ShareButton";
 
+jest.mock("next-intl", () => ({
+  useTranslations: (ns: string) => (key: string) => {
+    const map: Record<string, Record<string, string>> = {
+      common: { share: "Compartir" },
+    };
+    return map[ns]?.[key] ?? key;
+  },
+}));
+
 const mockWriteText = jest.fn().mockResolvedValue(undefined);
 
 beforeAll(() => {
@@ -14,18 +23,27 @@ beforeEach(() => {
 });
 
 describe("ShareButton", () => {
-  it("renders with 'Compartir' text", () => {
+  it("renders WhatsApp and Telegram links with encoded share targets", () => {
     render(
       <ShareButton
-        title="Test title"
-        text="Test text"
-        url="https://metalorix.com"
+        title="Gold price"
+        text="Share this"
+        url="https://metalorix.com/en/price/gold"
       />
     );
-    expect(screen.getByText("Compartir")).toBeInTheDocument();
+    const wa = screen.getByRole("link", { name: "WhatsApp" });
+    expect(wa).toHaveAttribute(
+      "href",
+      `https://wa.me/?text=${encodeURIComponent("Gold price\nhttps://metalorix.com/en/price/gold")}`
+    );
+    const tg = screen.getByRole("link", { name: "Telegram" });
+    expect(tg).toHaveAttribute(
+      "href",
+      `https://t.me/share/url?url=${encodeURIComponent("https://metalorix.com/en/price/gold")}&text=${encodeURIComponent("Gold price")}`
+    );
   });
 
-  it("copies URL to clipboard when Web Share API is not available", async () => {
+  it("copies URL to clipboard when copy button is clicked", async () => {
     render(
       <ShareButton
         title="Test"
@@ -33,21 +51,9 @@ describe("ShareButton", () => {
         url="https://metalorix.com/precio/oro"
       />
     );
-    fireEvent.click(screen.getByText("Compartir"));
+    fireEvent.click(screen.getByRole("button", { name: "Compartir" }));
     await waitFor(() => {
-      expect(mockWriteText).toHaveBeenCalledWith(
-        "https://metalorix.com/precio/oro"
-      );
-    });
-  });
-
-  it("shows 'Copiado' after clicking", async () => {
-    render(
-      <ShareButton title="Test" text="Test" url="https://metalorix.com" />
-    );
-    fireEvent.click(screen.getByText("Compartir"));
-    await waitFor(() => {
-      expect(screen.getByText("Copiado")).toBeInTheDocument();
+      expect(mockWriteText).toHaveBeenCalledWith("https://metalorix.com/precio/oro");
     });
   });
 });

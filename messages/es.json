@@ -78,7 +78,13 @@
     "quickConverter": "Conversor de Divisas",
     "quickConverterDesc": "Precios en 11 monedas",
     "quickComparator": "Comparador de Metales",
-    "quickComparatorDesc": "Compara rendimiento"
+    "quickComparatorDesc": "Compara rendimiento",
+    "emailCta": "Recibe alertas de precios gratis",
+    "emailCtaDesc": "Solo tu email. Sin spam. Alertas inteligentes cuando el mercado se mueve.",
+    "emailPlaceholder": "tu@email.com",
+    "emailBtn": "Suscribirse",
+    "emailSuccess": "¡Suscripción completada! Revisa tu email.",
+    "emailError": "Error de conexión. Inténtalo de nuevo."
   },
   "metals": {
     "gold": "Oro",
