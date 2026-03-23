@@ -26,6 +26,24 @@ const PATHNAMES: Record<string, Record<string, string>> = {
   "/aviso-legal": { es: "/es/aviso-legal", en: "/en/legal-notice", de: "/de/impressum", zh: "/zh/falv-shengming", ar: "/ar/ishaar-qanuni", tr: "/tr/yasal-uyari", hi: "/hi/vidhey-suchna" },
   "/terminos": { es: "/es/terminos", en: "/en/terms", de: "/de/agb", zh: "/zh/tiaokuan", ar: "/ar/shurut", tr: "/tr/sartlar", hi: "/hi/sharten" },
   "/privacidad": { es: "/es/privacidad", en: "/en/privacy", de: "/de/datenschutz", zh: "/zh/yinsi", ar: "/ar/khususiyah", tr: "/tr/gizlilik", hi: "/hi/gagta" },
+  "/comparar/oro-vs-bitcoin": {
+    es: "/es/comparar/oro-vs-bitcoin",
+    en: "/en/compare/gold-vs-bitcoin",
+    de: "/de/vergleich/gold-vs-bitcoin",
+    zh: "/zh/bijiao/huangjin-vs-bitcoin",
+    ar: "/ar/muqarana/dhahab-vs-bitcoin",
+    tr: "/tr/karsilastir/altin-vs-bitcoin",
+    hi: "/hi/tulana/sona-vs-bitcoin",
+  },
+  "/comparar/oro-vs-sp500": {
+    es: "/es/comparar/oro-vs-sp500",
+    en: "/en/compare/gold-vs-sp500",
+    de: "/de/vergleich/gold-vs-sp500",
+    zh: "/zh/bijiao/huangjin-vs-sp500",
+    ar: "/ar/muqarana/dhahab-vs-sp500",
+    tr: "/tr/karsilastir/altin-vs-sp500",
+    hi: "/hi/tulana/sona-vs-sp500",
+  },
 };
 
 const METAL_SLUGS: Record<string, Record<string, string>> = {
@@ -38,6 +56,16 @@ const METAL_SLUGS: Record<string, Record<string, string>> = {
 
 const PRICE_PATHS: Record<string, string> = {
   es: "precio", en: "price", de: "preis", zh: "jiage", ar: "sier", tr: "fiyat", hi: "mulya",
+};
+
+const HISTORICAL_SEGMENT: Record<string, string> = {
+  es: "historico",
+  en: "history",
+  de: "historie",
+  zh: "lishi",
+  ar: "tarikhi",
+  tr: "gecmis",
+  hi: "itihaas",
 };
 
 const PRODUCT_SLUGS = [
@@ -96,6 +124,8 @@ const FREQ_PRIO: Record<string, [string, number]> = {
   "/aviso-legal": ["yearly", 0.3],
   "/terminos": ["yearly", 0.3],
   "/privacidad": ["yearly", 0.3],
+  "/comparar/oro-vs-bitcoin": ["weekly", 0.75],
+  "/comparar/oro-vs-sp500": ["weekly", 0.75],
 };
 
 function esc(s: string): string {
@@ -163,6 +193,14 @@ export async function GET() {
     const paths: Record<string, string> = {};
     for (const loc of LOCALES) paths[loc] = `/${loc}/${PRICE_PATHS[loc]}/${slugsByLocale[loc]}`;
     urls.push(urlEntry(paths, "daily", 0.9, today));
+  }
+
+  for (const [, slugsByLocale] of Object.entries(METAL_SLUGS)) {
+    const paths: Record<string, string> = {};
+    for (const loc of LOCALES) {
+      paths[loc] = `/${loc}/${PRICE_PATHS[loc]}/${slugsByLocale[loc]}/${HISTORICAL_SEGMENT[loc]}`;
+    }
+    urls.push(urlEntry(paths, "weekly", 0.85, today));
   }
 
   for (const [, slugsByLocale] of Object.entries(METAL_SLUGS)) {

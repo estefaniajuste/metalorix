@@ -28,6 +28,16 @@ export const routing = defineRouting({
       hi: "/mulya/[metal]/[currency]",
     },
 
+    "/precio/[metal]/historico": {
+      es: "/precio/[metal]/historico",
+      en: "/price/[metal]/history",
+      de: "/preis/[metal]/historie",
+      zh: "/jiage/[metal]/lishi",
+      ar: "/sier/[metal]/tarikhi",
+      tr: "/fiyat/[metal]/gecmis",
+      hi: "/mulya/[metal]/itihaas",
+    },
+
     "/precio-oro-hoy": {
       es: "/precio-oro-hoy",
       en: "/gold-price-today",
@@ -86,6 +96,26 @@ export const routing = defineRouting({
       ar: "/muqarin",
       tr: "/karsilastirma",
       hi: "/tulana",
+    },
+
+    "/comparar/oro-vs-bitcoin": {
+      es: "/comparar/oro-vs-bitcoin",
+      en: "/compare/gold-vs-bitcoin",
+      de: "/vergleich/gold-vs-bitcoin",
+      zh: "/bijiao/huangjin-vs-bitcoin",
+      ar: "/muqarana/dhahab-vs-bitcoin",
+      tr: "/karsilastir/altin-vs-bitcoin",
+      hi: "/tulana/sona-vs-bitcoin",
+    },
+
+    "/comparar/oro-vs-sp500": {
+      es: "/comparar/oro-vs-sp500",
+      en: "/compare/gold-vs-sp500",
+      de: "/vergleich/gold-vs-sp500",
+      zh: "/bijiao/huangjin-vs-sp500",
+      ar: "/muqarana/dhahab-vs-sp500",
+      tr: "/karsilastir/altin-vs-sp500",
+      hi: "/tulana/sona-vs-sp500",
     },
 
     "/ratio-oro-plata": {
