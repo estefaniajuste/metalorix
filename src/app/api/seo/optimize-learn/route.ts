@@ -3,7 +3,7 @@ import { getDb } from "@/lib/db";
 import { learnArticles, learnArticleLocalizations } from "@/lib/db/schema";
 import { eq, and } from "drizzle-orm";
 
-const CRON_SECRET = process.env.CRON_SECRET;
+const CRON_SECRET = process.env.CRON_SECRET?.trim();
 
 /**
  * Optimized SEO metadata for top learn articles by Google impressions.
@@ -335,7 +335,7 @@ const OPTIMIZED_METADATA: {
 
 export async function POST(request: NextRequest) {
   if (CRON_SECRET) {
-    const auth = request.headers.get("authorization");
+    const auth = request.headers.get("authorization")?.trim();
     let bodySecret: string | undefined;
     try {
       const body = await request.clone().json();
