@@ -9,7 +9,7 @@ import {
 import { eq, and, gte, lte, sql, max, min, ne } from "drizzle-orm";
 import { sendEmail } from "@/lib/email/resend";
 import { priceAlertEmail, smartAlertEmail, week52AlertEmail, ratioAlertEmail } from "@/lib/email/templates";
-import { buildUnsubscribeUrl } from "@/app/api/unsubscribe/route";
+import { buildUnsubscribeUrl } from "@/lib/alerts/unsubscribe";
 
 interface PriceSnapshot {
   symbol: string;

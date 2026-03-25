@@ -1,19 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createHmac } from "crypto";
 import { getDb } from "@/lib/db";
 import { users, alerts } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
-
-function generateToken(userId: number, email: string): string {
-  const secret = process.env.CRON_SECRET || "metalorix-dev-secret";
-  return createHmac("sha256", secret).update(`${userId}:${email}`).digest("hex");
-}
-
-export function buildUnsubscribeUrl(userId: number, email: string): string {
-  const token = generateToken(userId, email);
-  const base = process.env.NEXT_PUBLIC_URL || "https://metalorix.com";
-  return `${base}/api/unsubscribe?uid=${userId}&token=${token}`;
-}
+import { validateUnsubscribeToken } from "@/lib/alerts/unsubscribe";
 
 export async function GET(request: NextRequest) {
   const uid = request.nextUrl.searchParams.get("uid");
@@ -47,8 +36,7 @@ export async function GET(request: NextRequest) {
     });
   }
 
-  const expected = generateToken(user.id, user.email);
-  if (token !== expected) {
+  if (!validateUnsubscribeToken(user.id, user.email, token)) {
     return new NextResponse(errorPage("Invalid or expired link."), {
       status: 403,
       headers: { "Content-Type": "text/html" },
