@@ -3,6 +3,7 @@ import { Link } from "@/i18n/navigation";
 import { notFound } from "next/navigation";
 import { getTranslations, getLocale } from "next-intl/server";
 import { getAlternates } from "@/lib/seo/alternates";
+import { howToSchema, organizationSchema } from "@/lib/seo/schemas";
 import { getDb } from "@/lib/db";
 import {
   learnArticles,
@@ -16,6 +17,7 @@ import { TAXONOMY } from "@/lib/learn/taxonomy";
 import { suggestInternalLinks } from "@/lib/learn/internal-links";
 import { LearnBreadcrumb } from "@/components/learn/LearnBreadcrumb";
 import { RelatedArticles } from "@/components/learn/RelatedArticles";
+import { LearnPriceBanner } from "@/components/learn/LearnPriceBanner";
 import {
   getLocalizedCluster,
   getLocalizedSubcluster,
@@ -418,30 +420,71 @@ export default async function LearnArticlePage({
   const data = await getArticleData(topic.slug, locale);
 
   const linkSuggestions = suggestInternalLinks(topic.slug, 6);
-  const relatedArticles = await Promise.all(
-    ((data?.links || []).length > 0
-      ? data!.links.map((l) => ({
+  const relatedArticlesBases = (data?.links || []).length > 0
+    ? data!.links.map((l) => ({
+        slug: l.targetSlug,
+        clusterSlug: topic.clusterSlug,
+        title: l.anchor || l.targetSlug,
+        difficulty: topic.difficulty,
+        linkType: l.linkType,
+      }))
+    : linkSuggestions.map((l) => {
+        const tp = getTopicBySlug(l.targetSlug);
+        return {
           slug: l.targetSlug,
-          clusterSlug: topic.clusterSlug,
-          title: l.anchor || l.targetSlug,
-          difficulty: topic.difficulty,
+          clusterSlug: tp?.clusterSlug || baseClusterSlug,
+          title: l.suggestedAnchor,
+          difficulty: tp?.difficulty || "beginner",
           linkType: l.linkType,
-        }))
-      : linkSuggestions.map((l) => {
-          const tp = getTopicBySlug(l.targetSlug);
-          return {
-            slug: l.targetSlug,
-            clusterSlug: tp?.clusterSlug || baseClusterSlug,
-            title: l.suggestedAnchor,
-            difficulty: tp?.difficulty || "beginner",
-            linkType: l.linkType,
-          };
-        })
-    ).map(async (article) => ({
-      ...article,
-      localizedSlug: await getLocalizedArticleSlug(article.slug, locale),
-      localizedClusterSlug: getLocalizedClusterSlug(article.clusterSlug, locale),
-    }))
+        };
+      });
+
+  // Fetch summary + word count for related articles to enrich the cards
+  const db2 = getDb();
+  const relatedSummaries = db2
+    ? await (async () => {
+        try {
+          const slugs = relatedArticlesBases.map((a) => a.slug);
+          if (slugs.length === 0) return new Map<string, { summary: string; wordCount: number }>();
+          const { inArray: inArrayFn } = await import("drizzle-orm");
+          const rows = await db2
+            .select({
+              slug: learnArticles.slug,
+              summary: learnArticleLocalizations.summary,
+              content: learnArticleLocalizations.content,
+            })
+            .from(learnArticles)
+            .innerJoin(
+              learnArticleLocalizations,
+              eq(learnArticleLocalizations.articleId, learnArticles.id)
+            )
+            .where(
+              eq(learnArticleLocalizations.locale, locale)
+            )
+            .then((all) => all.filter((r) => slugs.includes(r.slug)));
+          const map = new Map<string, { summary: string; wordCount: number }>();
+          for (const r of rows) {
+            map.set(r.slug, {
+              summary: r.summary || "",
+              wordCount: r.content ? r.content.split(/\s+/).length : 0,
+            });
+          }
+          return map;
+        } catch { return new Map<string, { summary: string; wordCount: number }>(); }
+      })()
+    : new Map<string, { summary: string; wordCount: number }>();
+
+  const relatedArticles = await Promise.all(
+    relatedArticlesBases.map(async (article) => {
+      const extra = relatedSummaries.get(article.slug);
+      return {
+        ...article,
+        summary: extra?.summary?.slice(0, 120) || "",
+        readingTimeMin: extra?.wordCount ? Math.max(1, Math.round(extra.wordCount / 200)) : undefined,
+        localizedSlug: await getLocalizedArticleSlug(article.slug, locale),
+        localizedClusterSlug: getLocalizedClusterSlug(article.clusterSlug, locale),
+      };
+    })
   );
 
   const title = data?.localization.title || topic.titleEn;
@@ -570,6 +613,40 @@ export default async function LearnArticlePage({
         }
       : null;
 
+  // HowTo schema for guide/practical articles — extracts ## headings as steps
+  const HOW_TO_TYPES = ["guide", "practical", "how-to", "tutorial"];
+  const howToJsonLd =
+    HOW_TO_TYPES.includes(topic.articleType) && hasContent && data?.localization
+      ? (() => {
+          const steps: { name: string; text: string }[] = [];
+          const lines = strippedContent.split("\n");
+          let currentStep: { name: string; lines: string[] } | null = null;
+          for (const line of lines) {
+            if (line.startsWith("## ")) {
+              if (currentStep && currentStep.lines.some((l) => l.trim().length > 0)) {
+                steps.push({ name: currentStep.name, text: currentStep.lines.join(" ").trim().slice(0, 300) });
+              }
+              currentStep = { name: line.replace(/^## /, "").trim(), lines: [] };
+            } else if (currentStep && line.trim().length > 0 && !line.startsWith("#")) {
+              currentStep.lines.push(line.trim());
+            }
+          }
+          if (currentStep && currentStep.lines.some((l) => l.trim().length > 0)) {
+            steps.push({ name: currentStep.name, text: currentStep.lines.join(" ").trim().slice(0, 300) });
+          }
+          if (steps.length < 2) return null;
+          return howToSchema({
+            name: title,
+            description: data.localization.summary || "",
+            steps,
+            url: alternates.canonical || "",
+            locale,
+          });
+        })()
+      : null;
+
+  const orgJsonLd = organizationSchema();
+
   return (
     <>
       <SetLocalePathOverrides hrefs={localeHrefs} />
@@ -587,6 +664,16 @@ export default async function LearnArticlePage({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
         />
       )}
+      {howToJsonLd && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(howToJsonLd) }}
+        />
+      )}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd) }}
+      />
 
       <article className="py-[var(--section-py)]">
         <div className="mx-auto max-w-[780px] px-6">
@@ -603,6 +690,8 @@ export default async function LearnArticlePage({
             locale={locale}
             ariaLabel={tc("breadcrumbNav")}
           />
+
+          <LearnPriceBanner clusterSlug={baseClusterSlug} articleSlug={topic.slug} locale={locale} />
 
           <header className="mb-8">
             <div className="flex items-center gap-2 mb-4 flex-wrap">
@@ -817,7 +906,22 @@ export default async function LearnArticlePage({
           />
 
           <footer className="mt-10 pt-6 border-t border-border">
-            <div className="flex justify-between items-center">
+            <div className="bg-surface-1 border border-brand-gold/20 rounded-DEFAULT p-6 text-center">
+              <p className="text-sm font-semibold text-content-0 mb-1">{tc("alertPromo")}</p>
+              <p className="text-xs text-content-3 mb-4">{tc("alertPromoDesc")}</p>
+              <Link
+                href="/alertas"
+                className="inline-flex items-center gap-2 text-sm font-bold text-[#0B0F17] bg-brand-gold hover:brightness-110 transition-all px-5 py-2 rounded-sm"
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+                  <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9" />
+                  <path d="M13.73 21a2 2 0 01-3.46 0" />
+                </svg>
+                {tc("alertPromoCta")}
+              </Link>
+            </div>
+
+            <div className="mt-6 flex justify-between items-center">
               <Link
                 href={{ pathname: "/learn/[cluster]" as const, params: { cluster: locClusterSlug } }}
                 className="inline-flex items-center gap-2 text-sm font-medium text-content-2 hover:text-brand-gold transition-colors"

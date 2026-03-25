@@ -90,3 +90,50 @@ export function faqSchema(items: { question: string; answer: string }[]) {
 export function schemaTag(schema: Record<string, unknown>) {
   return JSON.stringify(schema);
 }
+
+export function howToSchema(opts: {
+  name: string;
+  description: string;
+  steps: { name: string; text: string }[];
+  url: string;
+  locale: string;
+}) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    name: opts.name,
+    description: opts.description,
+    inLanguage: opts.locale,
+    url: opts.url,
+    step: opts.steps.map((s, i) => ({
+      "@type": "HowToStep",
+      position: i + 1,
+      name: s.name,
+      text: s.text,
+    })),
+  };
+}
+
+export function organizationSchema() {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: "Metalorix",
+    url: "https://metalorix.com",
+    logo: {
+      "@type": "ImageObject",
+      url: "https://metalorix.com/favicon.png",
+      width: 512,
+      height: 512,
+    },
+    description:
+      "Precious metals price tracking platform for gold, silver, platinum, palladium and copper.",
+    sameAs: [],
+    contactPoint: {
+      "@type": "ContactPoint",
+      contactType: "customer support",
+      email: "hola@metalorix.com",
+      availableLanguage: ["Spanish", "English", "German", "Chinese", "Arabic", "Turkish"],
+    },
+  };
+}

@@ -5,8 +5,8 @@ import { getTranslations, getLocale } from "next-intl/server";
 import { getAlternates } from "@/lib/seo/alternates";
 import type { Locale } from "@/i18n/routing";
 import { getDb } from "@/lib/db";
-import { articles, articleTranslations, glossaryTerms } from "@/lib/db/schema";
-import { eq, and, ne, desc } from "drizzle-orm";
+import { articles, articleTranslations, glossaryTerms, learnArticles, learnArticleLocalizations } from "@/lib/db/schema";
+import { eq, and, ne, desc, sql } from "drizzle-orm";
 import { injectGlossaryLinks } from "@/lib/ai/glossary-generator";
 import { ArticleShareBar } from "@/components/dashboard/ArticleShareBar";
 import { ContextualToolCards, InlineToolCallout, getToolsForNews } from "@/components/tools/ContextualToolCards";
@@ -117,6 +117,67 @@ async function getRelatedArticles(articleId: number, category: string, locale: s
     const sameCategory = withTranslations.filter((a) => a.category === category);
     const others = withTranslations.filter((a) => a.category !== category);
     return [...sameCategory, ...others].slice(0, 4);
+  } catch {
+    return [];
+  }
+}
+
+async function getRelatedLearnArticles(metals: string[] | null, locale: string, limit = 3) {
+  const db = getDb();
+  if (!db || !metals || metals.length === 0) return [];
+  try {
+    // Find published learn articles that match the metals in this news article
+    const rows = await db
+      .select({
+        slug: learnArticles.slug,
+        clusterSlug: sql<string>`(SELECT slug FROM learn_clusters WHERE id = ${learnArticles.clusterId})`,
+        locTitle: learnArticleLocalizations.title,
+        locSlug: learnArticleLocalizations.slug,
+        locSummary: learnArticleLocalizations.summary,
+        locContent: learnArticleLocalizations.content,
+        difficulty: learnArticles.difficulty,
+      })
+      .from(learnArticles)
+      .innerJoin(
+        learnArticleLocalizations,
+        and(
+          eq(learnArticleLocalizations.articleId, learnArticles.id),
+          eq(learnArticleLocalizations.locale, locale)
+        )
+      )
+      .where(
+        and(
+          eq(learnArticles.status, "published"),
+          eq(learnArticles.isPillar, true)
+        )
+      )
+      .orderBy(desc(learnArticles.publishedAt))
+      .limit(20);
+
+    // Filter to those that mention the metals
+    const metalSymbolMap: Record<string, string[]> = {
+      XAU: ["gold", "oro", "XAU"],
+      XAG: ["silver", "plata", "XAG"],
+      XPT: ["platinum", "platino", "XPT"],
+      XPD: ["palladium", "paladio", "XPD"],
+      HG: ["copper", "cobre", "HG"],
+    };
+    const relevantKeywords = metals.flatMap((m) => metalSymbolMap[m] ?? [m.toLowerCase()]);
+
+    const matched = rows.filter((r) => {
+      const text = `${r.locTitle} ${r.locSummary}`.toLowerCase();
+      return relevantKeywords.some((kw) => text.includes(kw));
+    });
+
+    return (matched.length >= limit ? matched : rows).slice(0, limit).map((r) => ({
+      slug: r.slug,
+      clusterSlug: r.clusterSlug || "investment",
+      localizedSlug: r.locSlug ?? r.slug,
+      title: r.locTitle,
+      summary: r.locSummary?.slice(0, 100) ?? "",
+      readingTimeMin: r.locContent ? Math.max(1, Math.round(r.locContent.split(/\s+/).length / 200)) : 3,
+      difficulty: r.difficulty,
+    }));
   } catch {
     return [];
   }
@@ -301,6 +362,7 @@ export default async function ArticlePage({
 
   const linkedContent = await injectGlossaryLinks(displayContent);
   const relatedNews = await getRelatedArticles(article.id, article.category, locale);
+  const relatedLearn = await getRelatedLearnArticles(article.metals, locale, 3);
   const wordCount = displayContent ? displayContent.split(/\s+/).length : 0;
   const readingMinutes = Math.max(1, Math.round(wordCount / 200));
 
@@ -515,6 +577,42 @@ export default async function ArticlePage({
                     </h3>
                     {r.displayExcerpt && (
                       <p className="mt-1 text-xs text-content-3 line-clamp-2">{r.displayExcerpt}</p>
+                    )}
+                  </Link>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {relatedLearn.length > 0 && (
+            <div className="mt-10 pt-8 border-t border-border">
+              <h2 className="text-lg font-bold text-content-0 mb-4">{t("learnMore")}</h2>
+              <div className="grid gap-3 sm:grid-cols-3">
+                {relatedLearn.map((article) => (
+                  <Link
+                    key={article.slug}
+                    href={{
+                      pathname: "/learn/[cluster]/[slug]" as const,
+                      params: { cluster: article.clusterSlug, slug: article.localizedSlug },
+                    }}
+                    className="group flex flex-col gap-2 p-4 rounded-lg border border-border bg-surface-1 hover:border-brand-gold/40 hover:bg-surface-2 transition-all"
+                  >
+                    <div className="flex items-center gap-2">
+                      <span className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-surface-2 text-content-3">
+                        {article.difficulty}
+                      </span>
+                      <span className="text-[10px] text-content-3 inline-flex items-center gap-1">
+                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+                        </svg>
+                        {article.readingTimeMin} min
+                      </span>
+                    </div>
+                    <span className="text-sm font-semibold text-content-0 group-hover:text-brand-gold transition-colors leading-snug">
+                      {article.title}
+                    </span>
+                    {article.summary && (
+                      <p className="text-xs text-content-3 line-clamp-2 leading-relaxed">{article.summary}</p>
                     )}
                   </Link>
                 ))}
