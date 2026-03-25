@@ -1307,5 +1307,30 @@
     "faq3q": "Is this index reliable for investment decisions?",
     "faq3a": "The index is a sentiment indicator, not a price predictor. It should be used as a complementary tool alongside fundamental analysis, market news and your personal investment horizon.",
     "disclaimer": "This index is for informational purposes only and does not constitute financial advice or a buy/sell recommendation. Commodity markets are highly volatile. Only invest what you can afford to lose."
+  },
+  "dealers": {
+    "pageTitle": "Where to Buy and Sell Precious Metals",
+    "pageDesc": "Directory of verified dealers and stores to buy gold, silver, platinum and palladium in your country. Trusted online platforms and physical stores.",
+    "breadcrumb": "Where to buy",
+    "countriesTitle": "Select your country",
+    "countriesDesc": "Find precious metals dealers in your country: from major online platforms to specialist physical stores.",
+    "countryTitle": "Where to buy precious metals in {country}",
+    "countryDesc": "Verified precious metals dealers in {country}: trusted physical stores and online platforms to buy gold, silver and other metals.",
+    "dealersFound": "{n} dealers",
+    "visitWebsite": "Visit website",
+    "typeOnline": "Online",
+    "typePhysical": "Physical store",
+    "typeBoth": "Online & physical",
+    "filterAll": "All",
+    "filterOnline": "Online only",
+    "filterPhysical": "Physical only",
+    "metalsAccepted": "Metals",
+    "featured": "Featured",
+    "backToCountries": "View all countries",
+    "noResults": "No dealers match the selected filter.",
+    "disclaimer": "Important disclaimer",
+    "disclaimerText": "Metalorix lists these dealers for informational purposes only. We do not receive commission from links, we do not guarantee service availability or accuracy of information. We recommend verifying directly with the dealer before conducting any transaction. Investing in precious metals carries risks.",
+    "seoKeywords": "where to buy gold, where to buy silver, precious metals dealers, buy physical gold, gold stores",
+    "allMetals": "All metals"
   }
 }

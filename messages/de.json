@@ -1307,5 +1307,30 @@
     "faq3q": "Ist der Index zuverlässig?",
     "faq3a": "Stimmungsindikator, kein Preisvorhersager.",
     "disclaimer": "Nur zu Informationszwecken. Keine Anlageberatung."
+  },
+  "dealers": {
+    "pageTitle": "Wo man Edelmetalle kaufen und verkaufen kann",
+    "pageDesc": "Verzeichnis verifizierter Händler und Geschäfte für den Kauf von Gold, Silber, Platin und Palladium in Ihrem Land.",
+    "breadcrumb": "Wo kaufen",
+    "countriesTitle": "Wählen Sie Ihr Land",
+    "countriesDesc": "Finden Sie Edelmetallhändler in Ihrem Land: von großen Online-Plattformen bis hin zu spezialisierten Fachgeschäften.",
+    "countryTitle": "Wo man Edelmetalle in {country} kauft",
+    "countryDesc": "Verifizierte Edelmetallhändler in {country}: vertrauenswürdige Geschäfte und Online-Plattformen für Gold, Silber und andere Metalle.",
+    "dealersFound": "{n} Händler",
+    "visitWebsite": "Website besuchen",
+    "typeOnline": "Online",
+    "typePhysical": "Stationäres Geschäft",
+    "typeBoth": "Online & stationär",
+    "filterAll": "Alle",
+    "filterOnline": "Nur online",
+    "filterPhysical": "Nur stationär",
+    "metalsAccepted": "Metalle",
+    "featured": "Empfohlen",
+    "backToCountries": "Alle Länder anzeigen",
+    "noResults": "Keine Händler entsprechen dem gewählten Filter.",
+    "disclaimer": "Wichtiger Hinweis",
+    "disclaimerText": "Metalorix listet diese Händler nur zu Informationszwecken auf. Wir erhalten keine Provision für Links und übernehmen keine Garantie für Verfügbarkeit oder Richtigkeit der Informationen. Bitte überprüfen Sie alle Details direkt beim Händler.",
+    "seoKeywords": "wo Gold kaufen, wo Silber kaufen, Edelmetallhändler, physisches Gold kaufen",
+    "allMetals": "Alle Metalle"
   }
 }

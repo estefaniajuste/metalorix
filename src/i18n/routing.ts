@@ -287,6 +287,26 @@ export const routing = defineRouting({
       tr: "/gizlilik",
       hi: "/gagta",
     },
+
+    "/donde-comprar": {
+      es: "/donde-comprar",
+      en: "/where-to-buy",
+      de: "/wo-kaufen",
+      zh: "/goumai-didian",
+      ar: "/amakin-alshira",
+      tr: "/nereden-alinir",
+      hi: "/kahan-kharidem",
+    },
+
+    "/donde-comprar/[country]": {
+      es: "/donde-comprar/[country]",
+      en: "/where-to-buy/[country]",
+      de: "/wo-kaufen/[country]",
+      zh: "/goumai-didian/[country]",
+      ar: "/amakin-alshira/[country]",
+      tr: "/nereden-alinir/[country]",
+      hi: "/kahan-kharidem/[country]",
+    },
   },
 });
 

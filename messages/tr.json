@@ -1321,5 +1321,30 @@
     "faq3q": "Bu endeks güvenilir mi?",
     "faq3a": "Duygu göstergesidir, fiyat tahminleyicisi değil.",
     "disclaimer": "Yalnızca bilgi amaçlıdır. Yatırım tavsiyesi değildir."
+  },
+  "dealers": {
+    "pageTitle": "Kıymetli Maden Nerede Alınır ve Satılır",
+    "pageDesc": "Ülkenizdeki altın, gümüş, platin ve paladyum almak için doğrulanmış bayi ve mağaza rehberi.",
+    "breadcrumb": "Nereden alınır",
+    "countriesTitle": "Ülkenizi seçin",
+    "countriesDesc": "Ülkenizdeki kıymetli maden bayilerini bulun: büyük çevrimiçi platformlardan uzman fiziksel mağazalara kadar.",
+    "countryTitle": "{country}'de kıymetli maden nerede alınır",
+    "countryDesc": "{country}'deki doğrulanmış kıymetli maden bayileri: altın, gümüş ve diğer metalleri satın almak için güvenilir mağazalar ve çevrimiçi platformlar.",
+    "dealersFound": "{n} bayi",
+    "visitWebsite": "Web sitesini ziyaret et",
+    "typeOnline": "Çevrimiçi",
+    "typePhysical": "Fiziksel mağaza",
+    "typeBoth": "Çevrimiçi ve fiziksel",
+    "filterAll": "Tümü",
+    "filterOnline": "Yalnızca çevrimiçi",
+    "filterPhysical": "Yalnızca fiziksel",
+    "metalsAccepted": "Metaller",
+    "featured": "Öne çıkan",
+    "backToCountries": "Tüm ülkeleri görüntüle",
+    "noResults": "Seçilen filtreyle eşleşen bayi yok.",
+    "disclaimer": "Önemli uyarı",
+    "disclaimerText": "Metalorix bu bayileri yalnızca bilgi amaçlı listelemektedir. Bağlantılardan komisyon almıyoruz, hizmet disponibilite veya bilgi doğruluğunu garanti etmiyoruz. Herhangi bir işlem yapmadan önce doğrudan bayi ile iletişime geçmenizi öneririz.",
+    "seoKeywords": "altın nerede alınır, kıymetli maden bayileri, fiziksel altın satın al",
+    "allMetals": "Tüm metaller"
   }
 }

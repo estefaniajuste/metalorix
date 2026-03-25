@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getProductSlugsByLocale } from "@/lib/data/product-slugs";
 import { CURRENCY_PAGES } from "@/lib/data/currency-pages";
+import { DEALER_COUNTRIES, DEALER_BASE_PATHS } from "@/lib/data/dealers";
 
 export const dynamic = "force-dynamic";
 
@@ -28,6 +29,7 @@ const PATHNAMES: Record<string, Record<string, string>> = {
   "/aviso-legal": { es: "/es/aviso-legal", en: "/en/legal-notice", de: "/de/impressum", zh: "/zh/falv-shengming", ar: "/ar/ishaar-qanuni", tr: "/tr/yasal-uyari", hi: "/hi/vidhey-suchna" },
   "/terminos": { es: "/es/terminos", en: "/en/terms", de: "/de/agb", zh: "/zh/tiaokuan", ar: "/ar/shurut", tr: "/tr/sartlar", hi: "/hi/sharten" },
   "/privacidad": { es: "/es/privacidad", en: "/en/privacy", de: "/de/datenschutz", zh: "/zh/yinsi", ar: "/ar/khususiyah", tr: "/tr/gizlilik", hi: "/hi/gagta" },
+  "/donde-comprar": { es: "/es/donde-comprar", en: "/en/where-to-buy", de: "/de/wo-kaufen", zh: "/zh/goumai-didian", ar: "/ar/amakin-alshira", tr: "/tr/nereden-alinir", hi: "/hi/kahan-kharidem" },
   "/comparar/oro-vs-bitcoin": {
     es: "/es/comparar/oro-vs-bitcoin",
     en: "/en/compare/gold-vs-bitcoin",
@@ -130,6 +132,7 @@ const FREQ_PRIO: Record<string, [string, number]> = {
   "/privacidad": ["yearly", 0.3],
   "/comparar/oro-vs-bitcoin": ["weekly", 0.75],
   "/comparar/oro-vs-sp500": ["weekly", 0.75],
+  "/donde-comprar": ["monthly", 0.7],
 };
 
 function esc(s: string): string {
@@ -219,6 +222,16 @@ export async function GET() {
     const paths: Record<string, string> = {};
     const locSlugs = getProductSlugsByLocale(slug);
     for (const loc of LOCALES) paths[loc] = `/${loc}/${PRODUCT_BASE[loc]}/${locSlugs[loc] ?? slug}`;
+    urls.push(urlEntry(paths, "monthly", 0.6, today));
+  }
+
+  for (const country of DEALER_COUNTRIES) {
+    const paths: Record<string, string> = {};
+    for (const loc of LOCALES) {
+      const base = DEALER_BASE_PATHS[loc] ?? "/where-to-buy";
+      const countrySlug = country.slug[loc] ?? country.slug.en;
+      paths[loc] = `/${loc}${base}/${countrySlug}`;
+    }
     urls.push(urlEntry(paths, "monthly", 0.6, today));
   }
 

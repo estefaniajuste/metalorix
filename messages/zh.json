@@ -1307,5 +1307,30 @@
     "faq3q": "这个指数可靠吗？",
     "faq3a": "这是情绪指标，不是价格预测器。",
     "disclaimer": "仅供参考，不构成投资建议。"
+  },
+  "dealers": {
+    "pageTitle": "在哪里购买和出售贵金属",
+    "pageDesc": "在您所在国家购买黄金、白银、铂金和钯金的认证经销商和店铺目录。",
+    "breadcrumb": "购买地点",
+    "countriesTitle": "选择您的国家",
+    "countriesDesc": "在您的国家找到贵金属经销商：从大型在线平台到专业实体店。",
+    "countryTitle": "在{country}购买贵金属的地方",
+    "countryDesc": "在{country}经过验证的贵金属经销商：购买黄金、白银和其他金属的可信实体店和在线平台。",
+    "dealersFound": "{n} 家经销商",
+    "visitWebsite": "访问网站",
+    "typeOnline": "在线",
+    "typePhysical": "实体店",
+    "typeBoth": "在线和实体",
+    "filterAll": "全部",
+    "filterOnline": "仅在线",
+    "filterPhysical": "仅实体",
+    "metalsAccepted": "金属",
+    "featured": "推荐",
+    "backToCountries": "查看所有国家",
+    "noResults": "没有符合所选筛选条件的经销商。",
+    "disclaimer": "重要免责声明",
+    "disclaimerText": "Metalorix仅出于信息目的列出这些经销商。我们不从链接中获得佣金，不保证服务可用性或信息准确性。建议您在进行任何交易前直接与经销商核实。",
+    "seoKeywords": "在哪里购买黄金, 购买实物黄金, 贵金属经销商",
+    "allMetals": "所有金属"
   }
 }

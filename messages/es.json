@@ -1307,5 +1307,30 @@
     "faq3q": "¿Es fiable este índice para tomar decisiones de inversión?",
     "faq3a": "El índice es un indicador de sentimiento, no un predictor de precios. Debe usarse como una herramienta complementaria junto con análisis fundamental, noticias del mercado y tu horizonte de inversión personal.",
     "disclaimer": "Este índice es meramente informativo y no constituye asesoramiento financiero ni recomendación de compra o venta. Los mercados de materias primas son altamente volátiles. Invierte solo lo que puedas permitirte perder."
+  },
+  "dealers": {
+    "pageTitle": "Dónde comprar y vender metales preciosos",
+    "pageDesc": "Directorio de dealers y tiendas verificadas para comprar oro, plata, platino y paladio en tu país. Plataformas online y tiendas físicas de confianza.",
+    "breadcrumb": "Dónde comprar",
+    "countriesTitle": "Selecciona tu país",
+    "countriesDesc": "Encuentra dealers de metales preciosos en tu país: desde grandes plataformas online hasta tiendas físicas especializadas.",
+    "countryTitle": "Dónde comprar metales preciosos en {country}",
+    "countryDesc": "Dealers verificados de metales preciosos en {country}: tiendas físicas y plataformas online de confianza para comprar oro, plata y otros metales.",
+    "dealersFound": "{n} dealers",
+    "visitWebsite": "Visitar web",
+    "typeOnline": "Online",
+    "typePhysical": "Tienda física",
+    "typeBoth": "Online y físico",
+    "filterAll": "Todos",
+    "filterOnline": "Solo online",
+    "filterPhysical": "Solo físico",
+    "metalsAccepted": "Metales",
+    "featured": "Destacado",
+    "backToCountries": "Ver todos los países",
+    "noResults": "No hay dealers que coincidan con el filtro seleccionado.",
+    "disclaimer": "Aviso importante",
+    "disclaimerText": "Metalorix incluye estos dealers con fines informativos únicamente. No recibimos comisión por los enlaces, no garantizamos la disponibilidad de los servicios ni la exactitud de la información. Te recomendamos verificar directamente con el dealer antes de realizar cualquier operación. La inversión en metales preciosos conlleva riesgos.",
+    "seoKeywords": "dónde comprar oro, dónde comprar plata, dealers metales preciosos, comprar oro físico, tiendas de oro",
+    "allMetals": "Todos los metales"
   }
 }
