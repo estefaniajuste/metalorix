@@ -73,6 +73,7 @@ export function Nav() {
     { href: "/", label: t("dashboard") },
     { href: "#precios", label: t("prices"), hasDropdown: true },
     { href: "/productos", label: t("products") },
+    { href: "/donde-comprar", label: t("whereToBuy") },
     { href: "/herramientas", label: t("tools") },
     { href: "/guia-inversion", label: t("guide") },
     { href: "/noticias", label: t("news") },

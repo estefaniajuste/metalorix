@@ -20,7 +20,8 @@
     "homeLink": "Metalorix Startseite",
     "metalPrices": "Metallpreise",
     "learn": "Lernen",
-    "changeLanguage": "Sprache ändern"
+    "changeLanguage": "Sprache ändern",
+    "whereToBuy": "Wo Kaufen"
   },
   "footer": {
     "prices": "Preise",
@@ -178,7 +179,8 @@
     "instantEmail": "Sofortige E-Mail",
     "instantEmailDesc": "Alle Alarme werden direkt an Ihr Postfach gesendet. Keine App, keine Push-Benachrichtigungen.",
     "checkPrices": "Echtzeit-Preise prüfen:",
-    "goldPrice": "Goldpreis"
+    "goldPrice": "Goldpreis",
+    "comingSoon": "Demnächst"
   },
   "cookie": {
     "message": "Wir verwenden essenzielle Cookies und Google Analytics, um zu verstehen, wie die Website genutzt wird. Wir verwenden keine Werbe-Cookies.",
@@ -929,9 +931,7 @@
     "emailLabel": "E-Mail-Adresse",
     "emailPlaceholder": "ihre@email.com",
     "autoAlerts": "Automatische Benachrichtigungen inklusive",
-    "highLow52": "52-Wochen-Hochs und -Tiefs",
     "sharpMoves": "Starke Bewegungen (>2 % täglich)",
-    "ratioExtremes": "Gold-Silber-Verhältnis in Extremzonen",
     "hideCustom": "▾ Benutzerdefinierte Alarme ausblenden",
     "addPriceAlerts": "▸ Preisalarme hinzufügen",
     "priceAbove": "Steigt über",
@@ -944,6 +944,10 @@
     "cancelAnytime": "Jederzeit kündbar. Kein Spam.",
     "errorSubscribe": "Fehler beim Abonnieren",
     "errorConnection": "Verbindungsfehler. Bitte erneut versuchen.",
+    "apiNew": "Bitte prüfen Sie Ihren Posteingang — wir haben Ihnen eine Willkommens-E-Mail gesendet.",
+    "apiExisting": "Sie sind bereits für automatische Benachrichtigungen angemeldet.",
+    "apiAlertsCreated": "Alarm erstellt! Sie können Ihre Alarme im Panel verwalten.",
+    "manageAlertsLink": "Zum Panel →",
     "gold": "Gold",
     "silver": "Silber",
     "platinum": "Platin",

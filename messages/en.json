@@ -20,7 +20,8 @@
     "homeLink": "Metalorix home",
     "metalPrices": "Metal prices",
     "learn": "Learn",
-    "changeLanguage": "Change language"
+    "changeLanguage": "Change language",
+    "whereToBuy": "Where to Buy"
   },
   "footer": {
     "prices": "Prices",
@@ -230,7 +231,8 @@
     "instantEmail": "Instant email",
     "instantEmailDesc": "All alerts are sent directly to your inbox. No app, no push notifications.",
     "checkPrices": "Check real-time prices:",
-    "goldPrice": "Gold Price"
+    "goldPrice": "Gold Price",
+    "comingSoon": "Coming soon"
   },
   "cookie": {
     "message": "We use essential cookies and Google Analytics to understand how the site is used. We do not use advertising cookies.",
@@ -981,9 +983,7 @@
     "emailLabel": "Email address",
     "emailPlaceholder": "you@email.com",
     "autoAlerts": "Automatic alerts included",
-    "highLow52": "52-week highs and lows",
     "sharpMoves": "Sharp movements (>2% daily)",
-    "ratioExtremes": "Gold/silver ratio in extreme zones",
     "hideCustom": "▾ Hide custom alerts",
     "addPriceAlerts": "▸ Add price level alerts",
     "priceAbove": "Goes above",
@@ -996,6 +996,10 @@
     "cancelAnytime": "Cancel anytime. No spam.",
     "errorSubscribe": "Subscription error",
     "errorConnection": "Connection error. Please try again.",
+    "apiNew": "Check your inbox — we've sent you a welcome email.",
+    "apiExisting": "You're already subscribed to automatic alerts.",
+    "apiAlertsCreated": "Alert created! You can manage your alerts in the panel.",
+    "manageAlertsLink": "Go to panel →",
     "gold": "Gold",
     "silver": "Silver",
     "platinum": "Platinum",

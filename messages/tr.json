@@ -20,7 +20,8 @@
     "homeLink": "Metalorix ana sayfa",
     "metalPrices": "Metal fiyatları",
     "learn": "Öğren",
-    "changeLanguage": "Dil değiştir"
+    "changeLanguage": "Dil değiştir",
+    "whereToBuy": "Nereden Alınır"
   },
   "footer": {
     "prices": "Fiyatlar",
@@ -178,7 +179,8 @@
     "instantEmail": "Anında e-posta",
     "instantEmailDesc": "Tüm uyarılar doğrudan gelen kutunuza gönderilir. Uygulama yok, anlık bildirim yok.",
     "checkPrices": "Gerçek zamanlı fiyatlara bakın:",
-    "goldPrice": "Altın Fiyatı"
+    "goldPrice": "Altın Fiyatı",
+    "comingSoon": "Yakında"
   },
   "cookie": {
     "message": "Sitenin nasıl kullanıldığını anlamak için temel çerezler ve Google Analytics kullanıyoruz. Reklam çerezleri kullanmıyoruz.",
@@ -943,9 +945,7 @@
     "emailLabel": "E-posta adresi",
     "emailPlaceholder": "siz@email.com",
     "autoAlerts": "Otomatik uyarılar dahil",
-    "highLow52": "52 haftalık en yüksek ve en düşük seviyeler",
     "sharpMoves": "Sert hareketler (günlük >%2)",
-    "ratioExtremes": "Altın/gümüş oranı aşırı bölgelerde",
     "hideCustom": "▾ Özel uyarıları gizle",
     "addPriceAlerts": "▸ Fiyat seviyesi uyarısı ekle",
     "priceAbove": "Üzerine çıkarsa",
@@ -958,6 +958,10 @@
     "cancelAnytime": "İstediğiniz zaman iptal edebilirsiniz. Spam yok.",
     "errorSubscribe": "Abonelik hatası",
     "errorConnection": "Bağlantı hatası. Lütfen tekrar deneyin.",
+    "apiNew": "Gelen kutunuzu kontrol edin — size bir hoş geldiniz e-postası gönderdik.",
+    "apiExisting": "Otomatik uyarılara zaten abonesiniz.",
+    "apiAlertsCreated": "Uyarı oluşturuldu! Uyarılarınızı panelde yönetebilirsiniz.",
+    "manageAlertsLink": "Panele git →",
     "gold": "Altın",
     "silver": "Gümüş",
     "platinum": "Platin",

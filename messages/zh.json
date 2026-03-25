@@ -20,7 +20,8 @@
     "homeLink": "Metalorix 首页",
     "metalPrices": "金属价格",
     "learn": "学习",
-    "changeLanguage": "切换语言"
+    "changeLanguage": "切换语言",
+    "whereToBuy": "购买地点"
   },
   "footer": {
     "prices": "价格",
@@ -178,7 +179,8 @@
     "instantEmail": "即时邮件",
     "instantEmailDesc": "所有提醒直接发送到您的邮箱。无需应用，无需推送通知。",
     "checkPrices": "查看实时价格：",
-    "goldPrice": "黄金价格"
+    "goldPrice": "黄金价格",
+    "comingSoon": "即将推出"
   },
   "cookie": {
     "message": "我们使用必要的Cookie和Google Analytics来了解网站的使用情况。我们不使用广告Cookie。",
@@ -929,9 +931,7 @@
     "emailLabel": "电子邮箱",
     "emailPlaceholder": "you@email.com",
     "autoAlerts": "自动提醒已包含",
-    "highLow52": "52周新高与新低",
     "sharpMoves": "剧烈波动（日涨跌幅>2%）",
-    "ratioExtremes": "金银比进入极端区间",
     "hideCustom": "▾ 隐藏自定义提醒",
     "addPriceAlerts": "▸ 添加价格提醒",
     "priceAbove": "上涨至",
@@ -944,6 +944,10 @@
     "cancelAnytime": "随时可取消订阅，绝无垃圾邮件。",
     "errorSubscribe": "订阅失败",
     "errorConnection": "连接错误，请重试。",
+    "apiNew": "请查看收件箱 — 我们已发送欢迎邮件。",
+    "apiExisting": "您已订阅自动提醒。",
+    "apiAlertsCreated": "提醒已创建！您可以在面板中管理您的提醒。",
+    "manageAlertsLink": "前往面板 →",
     "gold": "黄金",
     "silver": "白银",
     "platinum": "铂金",

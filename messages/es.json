@@ -20,7 +20,8 @@
     "homeLink": "Inicio de Metalorix",
     "metalPrices": "Precios de metales",
     "learn": "Aprender",
-    "changeLanguage": "Cambiar idioma"
+    "changeLanguage": "Cambiar idioma",
+    "whereToBuy": "Dónde Comprar"
   },
   "footer": {
     "prices": "Precios",
@@ -230,7 +231,8 @@
     "instantEmail": "Email instantáneo",
     "instantEmailDesc": "Todas las alertas llegan directamente a tu correo. Sin app, sin notificaciones push.",
     "checkPrices": "Consulta los precios en tiempo real:",
-    "goldPrice": "Precio del Oro"
+    "goldPrice": "Precio del Oro",
+    "comingSoon": "Próximamente"
   },
   "cookie": {
     "message": "Usamos cookies esenciales y Google Analytics para entender cómo se usa el sitio. No usamos cookies de publicidad.",
@@ -981,9 +983,7 @@
     "emailLabel": "Correo electrónico",
     "emailPlaceholder": "tu@email.com",
     "autoAlerts": "Alertas automáticas incluidas",
-    "highLow52": "Máximos y mínimos de 52 semanas",
     "sharpMoves": "Movimientos bruscos (>2% diario)",
-    "ratioExtremes": "Ratio oro/plata en zonas extremas",
     "hideCustom": "▾ Ocultar alertas personalizadas",
     "addPriceAlerts": "▸ Añadir alertas de nivel de precio",
     "priceAbove": "Sube a",
@@ -996,6 +996,10 @@
     "cancelAnytime": "Podrás cancelar en cualquier momento. Sin spam.",
     "errorSubscribe": "Error al suscribirse",
     "errorConnection": "Error de conexión. Inténtalo de nuevo.",
+    "apiNew": "Revisa tu bandeja de entrada — te hemos enviado un email de bienvenida.",
+    "apiExisting": "Ya estás suscrito a las alertas automáticas.",
+    "apiAlertsCreated": "¡Alerta creada! Puedes gestionar tus alertas en el panel.",
+    "manageAlertsLink": "Ir al panel →",
     "gold": "Oro",
     "silver": "Plata",
     "platinum": "Platino",
