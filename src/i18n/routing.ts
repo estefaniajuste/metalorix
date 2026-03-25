@@ -78,6 +78,26 @@ export const routing = defineRouting({
       hi: "/laabh-ganak",
     },
 
+    "/valor-joyas": {
+      es: "/valor-joyas",
+      en: "/jewelry-value-calculator",
+      de: "/schmuck-wert-rechner",
+      zh: "/zhusbao-jiazhi-jisuan",
+      ar: "/hasibat-qimat-almujawaharat",
+      tr: "/mucevher-deger-hesaplayici",
+      hi: "/jewellery-mulya-ganak",
+    },
+
+    "/fear-greed": {
+      es: "/miedo-codicia-metales",
+      en: "/fear-greed-metals",
+      de: "/angst-gier-metalle",
+      zh: "/kongju-tanlan-zhishu",
+      ar: "/maqyas-alkhawf-altamaa",
+      tr: "/korku-acgozluluk-endeksi",
+      hi: "/bhay-lobh-soochank",
+    },
+
     "/conversor-divisas": {
       es: "/conversor-divisas",
       en: "/currency-converter",

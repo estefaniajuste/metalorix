@@ -12,6 +12,8 @@ const PATHNAMES: Record<string, Record<string, string>> = {
   "/": { es: "/es", en: "/en", zh: "/zh", ar: "/ar", tr: "/tr", de: "/de", hi: "/hi" },
   "/herramientas": { es: "/es/herramientas", en: "/en/tools", de: "/de/werkzeuge", zh: "/zh/gongju", ar: "/ar/adawat", tr: "/tr/araclar", hi: "/hi/upakar" },
   "/calculadora-rentabilidad": { es: "/es/calculadora-rentabilidad", en: "/en/roi-calculator", de: "/de/renditerechner", zh: "/zh/shouyi-jisuan", ar: "/ar/hasibat-alarabah", tr: "/tr/getiri-hesaplayici", hi: "/hi/laabh-ganak" },
+  "/valor-joyas": { es: "/es/valor-joyas", en: "/en/jewelry-value-calculator", de: "/de/schmuck-wert-rechner", zh: "/zh/zhusbao-jiazhi-jisuan", ar: "/ar/hasibat-qimat-almujawaharat", tr: "/tr/mucevher-deger-hesaplayici", hi: "/hi/jewellery-mulya-ganak" },
+  "/fear-greed": { es: "/es/miedo-codicia-metales", en: "/en/fear-greed-metals", de: "/de/angst-gier-metalle", zh: "/zh/kongju-tanlan-zhishu", ar: "/ar/maqyas-alkhawf-altamaa", tr: "/tr/korku-acgozluluk-endeksi", hi: "/hi/bhay-lobh-soochank" },
   "/conversor-divisas": { es: "/es/conversor-divisas", en: "/en/currency-converter", de: "/de/waehrungsrechner", zh: "/zh/huobi-zhuanhua", ar: "/ar/muhawwil-alumlat", tr: "/tr/doviz-cevirici", hi: "/hi/mudra-badlav" },
   "/comparador": { es: "/es/comparador", en: "/en/comparator", de: "/de/vergleich", zh: "/zh/bijiao", ar: "/ar/muqarin", tr: "/tr/karsilastirma", hi: "/hi/tulana" },
   "/ratio-oro-plata": { es: "/es/ratio-oro-plata", en: "/en/gold-silver-ratio", de: "/de/gold-silber-verhaeltnis", zh: "/zh/jin-yin-bi", ar: "/ar/nisbat-althahab-alfiddah", tr: "/tr/altin-gumus-orani", hi: "/hi/sona-chandi-anupat" },
@@ -110,6 +112,8 @@ const GLOSSARY_CLUSTER: Record<string, string> = {
 const FREQ_PRIO: Record<string, [string, number]> = {
   "/herramientas": ["weekly", 0.8],
   "/calculadora-rentabilidad": ["monthly", 0.7],
+  "/valor-joyas": ["weekly", 0.8],
+  "/fear-greed": ["daily", 0.9],
   "/conversor-divisas": ["monthly", 0.7],
   "/comparador": ["monthly", 0.7],
   "/ratio-oro-plata": ["daily", 0.8],
