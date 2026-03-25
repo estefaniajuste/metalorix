@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
+import { Link } from "@/i18n/navigation";
 
 interface CustomAlert {
   symbol: string;
@@ -11,11 +12,13 @@ interface CustomAlert {
 
 export function SubscribeForm() {
   const t = useTranslations("subscribeForm");
+  const locale = useLocale();
   const [email, setEmail] = useState("");
   const [customAlerts, setCustomAlerts] = useState<CustomAlert[]>([]);
   const [showCustom, setShowCustom] = useState(false);
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
-  const [message, setMessage] = useState("");
+  const [messageKey, setMessageKey] = useState<"apiNew" | "apiExisting" | "apiAlertsCreated">("apiNew");
+  const [isNewUser, setIsNewUser] = useState(false);
 
   const METALS = [
     { symbol: "XAU", name: t("gold"), color: "#D6B35A" },
@@ -59,20 +62,21 @@ export function SubscribeForm() {
       const res = await fetch("/api/alerts/subscribe", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, alerts: alertsPayload }),
+        body: JSON.stringify({ email, alerts: alertsPayload, locale }),
       });
 
       const data = await res.json();
       if (res.ok) {
         setStatus("success");
-        setMessage(data.message);
+        setIsNewUser(data.isNew);
+        setMessageKey(data.messageKey ?? (data.isNew ? "apiNew" : "apiExisting"));
       } else {
         setStatus("error");
-        setMessage(data.error || t("errorSubscribe"));
+        setMessageKey("apiExisting");
+        setIsNewUser(false);
       }
     } catch {
       setStatus("error");
-      setMessage(t("errorConnection"));
     }
   }
 
@@ -83,7 +87,18 @@ export function SubscribeForm() {
         <h3 className="text-lg font-bold text-content-0 mb-2">
           {t("subscriptionComplete")}
         </h3>
-        <p className="text-sm text-content-2 leading-relaxed">{message}</p>
+        <p className="text-sm text-content-2 leading-relaxed mb-4">{t(messageKey)}</p>
+        {isNewUser && (
+          <p className="text-xs text-content-3 mb-4">
+            {email}
+          </p>
+        )}
+        <Link
+          href="/panel"
+          className="inline-flex items-center gap-1 text-sm font-semibold text-brand-gold hover:text-brand-gold-hover transition-colors"
+        >
+          {t("manageAlertsLink")}
+        </Link>
       </div>
     );
   }
@@ -118,16 +133,8 @@ export function SubscribeForm() {
           </div>
           <div className="space-y-1.5 text-xs text-content-2">
             <div className="flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-signal-up flex-shrink-0" />
-              {t("highLow52")}
-            </div>
-            <div className="flex items-center gap-2">
               <span className="w-1.5 h-1.5 rounded-full bg-signal-down flex-shrink-0" />
               {t("sharpMoves")}
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-brand-gold flex-shrink-0" />
-              {t("ratioExtremes")}
             </div>
           </div>
         </div>
@@ -214,7 +221,7 @@ export function SubscribeForm() {
         </button>
 
         {status === "error" && (
-          <p role="alert" className="text-xs text-signal-down text-center mt-3">{message}</p>
+          <p role="alert" className="text-xs text-signal-down text-center mt-3">{t("errorSubscribe")}</p>
         )}
 
         <p className="text-[10px] text-content-3 text-center mt-3">

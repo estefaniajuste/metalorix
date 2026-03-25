@@ -24,12 +24,12 @@ export default async function AlertasPage() {
   const locale = await getLocale();
 
   const alertTypes = [
-    { titleKey: "priceLevel" as const, descKey: "priceLevelDesc" as const, icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12" /></svg> },
-    { titleKey: "sharpMove" as const, descKey: "sharpMoveDesc" as const, icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" /></svg> },
-    { titleKey: "highLow" as const, descKey: "highLowDesc" as const, icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18" /><polyline points="17 6 23 6 23 12" /></svg> },
-    { titleKey: "ratioAlert" as const, descKey: "ratioAlertDesc" as const, icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><line x1="12" y1="1" x2="12" y2="23" /><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" /></svg> },
-    { titleKey: "technicalCross" as const, descKey: "technicalCrossDesc" as const, icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><line x1="18" y1="20" x2="18" y2="10" /><line x1="12" y1="20" x2="12" y2="4" /><line x1="6" y1="20" x2="6" y2="14" /></svg> },
-    { titleKey: "instantEmail" as const, descKey: "instantEmailDesc" as const, icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" /></svg> },
+    { titleKey: "priceLevel" as const, descKey: "priceLevelDesc" as const, live: true, icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12" /></svg> },
+    { titleKey: "sharpMove" as const, descKey: "sharpMoveDesc" as const, live: true, icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" /></svg> },
+    { titleKey: "instantEmail" as const, descKey: "instantEmailDesc" as const, live: true, icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" /></svg> },
+    { titleKey: "highLow" as const, descKey: "highLowDesc" as const, live: false, icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18" /><polyline points="17 6 23 6 23 12" /></svg> },
+    { titleKey: "ratioAlert" as const, descKey: "ratioAlertDesc" as const, live: false, icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><line x1="12" y1="1" x2="12" y2="23" /><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" /></svg> },
+    { titleKey: "technicalCross" as const, descKey: "technicalCrossDesc" as const, live: false, icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><line x1="18" y1="20" x2="18" y2="10" /><line x1="12" y1="20" x2="12" y2="4" /><line x1="6" y1="20" x2="6" y2="14" /></svg> },
   ];
 
   return (
@@ -56,9 +56,16 @@ export default async function AlertasPage() {
             {alertTypes.map((type) => (
               <div
                 key={type.titleKey}
-                className="bg-surface-1 border border-border rounded-DEFAULT p-6 hover:border-border-hover transition-colors"
+                className={`bg-surface-1 border rounded-DEFAULT p-6 transition-colors ${type.live ? "border-border hover:border-border-hover" : "border-border opacity-60"}`}
               >
-                <div className="text-brand-gold mb-3">{type.icon}</div>
+                <div className="flex items-start justify-between mb-3">
+                  <div className="text-brand-gold">{type.icon}</div>
+                  {!type.live && (
+                    <span className="text-[10px] font-semibold uppercase tracking-wider text-content-3 border border-border rounded-xs px-1.5 py-0.5">
+                      {t("comingSoon")}
+                    </span>
+                  )}
+                </div>
                 <h3 className="text-base font-semibold text-content-0 mb-2">
                   {t(type.titleKey)}
                 </h3>

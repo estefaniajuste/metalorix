@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getDb } from "@/lib/db";
 import { users, alerts } from "@/lib/db/schema";
-import { eq } from "drizzle-orm";
+import { eq, and } from "drizzle-orm";
 import { sendEmail } from "@/lib/email/resend";
 import { welcomeEmail } from "@/lib/email/templates";
 import { rateLimit, getClientIp } from "@/lib/rate-limit";
@@ -24,7 +24,7 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  let body: { email: string; alerts?: Array<{ symbol: string; type: string; threshold: number }> };
+  let body: { email: string; locale?: string; alerts?: Array<{ symbol: string; type: string; threshold: number }> };
   try {
     body = await request.json();
   } catch {
@@ -35,6 +35,7 @@ export async function POST(request: NextRequest) {
   if (!email || !email.includes("@")) {
     return NextResponse.json({ error: "Invalid email" }, { status: 400 });
   }
+  const locale = body.locale ?? "es";
 
   try {
     // Find or create user
@@ -58,11 +59,24 @@ export async function POST(request: NextRequest) {
       isNew = true;
     }
 
-    // Create custom alerts if provided
+    // Create custom alerts if provided (skip duplicates)
     let alertsCreated = 0;
     if (body.alerts && Array.isArray(body.alerts)) {
       for (const a of body.alerts) {
         if (!a.symbol || !a.type || !a.threshold) continue;
+        const existing = await db
+          .select({ id: alerts.id })
+          .from(alerts)
+          .where(
+            and(
+              eq(alerts.userId, userId),
+              eq(alerts.symbol, a.symbol),
+              eq(alerts.alertType, a.type),
+              eq(alerts.threshold, a.threshold.toFixed(4))
+            )
+          )
+          .limit(1);
+        if (existing.length > 0) continue;
         await db.insert(alerts).values({
           userId,
           symbol: a.symbol,
@@ -73,21 +87,19 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Send welcome email to new subscribers
+    // Send welcome email to new subscribers with correct locale
     if (isNew) {
-      const { subject, html } = welcomeEmail();
+      const { subject, html } = welcomeEmail(locale);
       await sendEmail({ to: email, subject, html }).catch(() => {});
     }
+
+    const messageKey = isNew ? "apiNew" : alertsCreated > 0 ? "apiAlertsCreated" : "apiExisting";
 
     return NextResponse.json({
       ok: true,
       isNew,
       alertsCreated,
-      message: isNew
-        ? "Subscription complete!"
-        : alertsCreated > 0
-          ? `${alertsCreated} alert(s) created`
-          : "You are already subscribed to smart alerts.",
+      messageKey,
     });
   } catch (err) {
     console.error("Subscribe error:", err);
