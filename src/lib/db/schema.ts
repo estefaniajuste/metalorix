@@ -183,6 +183,7 @@ export const users = pgTable("users", {
   avatarUrl: varchar("avatar_url", { length: 500 }),
   provider: varchar("provider", { length: 50 }), // google, email
   tier: varchar("tier", { length: 20 }).notNull().default("free"), // free, premium
+  unsubscribed: boolean("unsubscribed").notNull().default(false),
   createdAt: timestamp("created_at", { withTimezone: true })
     .notNull()
     .defaultNow(),

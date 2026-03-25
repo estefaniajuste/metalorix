@@ -1,13 +1,15 @@
 import { getDb } from "@/lib/db";
 import {
   metalPrices,
+  priceHistory,
   alerts,
   alertHistory,
   users,
 } from "@/lib/db/schema";
-import { eq, and, gte, lte, sql } from "drizzle-orm";
+import { eq, and, gte, lte, sql, max, min, ne } from "drizzle-orm";
 import { sendEmail } from "@/lib/email/resend";
-import { priceAlertEmail, smartAlertEmail } from "@/lib/email/templates";
+import { priceAlertEmail, smartAlertEmail, week52AlertEmail, ratioAlertEmail } from "@/lib/email/templates";
+import { buildUnsubscribeUrl } from "@/app/api/unsubscribe/route";
 
 interface PriceSnapshot {
   symbol: string;
@@ -55,7 +57,16 @@ async function getActiveAlerts() {
     })
     .from(alerts)
     .innerJoin(users, eq(alerts.userId, users.id))
-    .where(eq(alerts.active, true));
+    .where(and(eq(alerts.active, true), eq(users.unsubscribed, false)));
+}
+
+async function getSubscribers() {
+  const db = getDb();
+  if (!db) return [];
+  return db
+    .select({ id: users.id, email: users.email })
+    .from(users)
+    .where(eq(users.unsubscribed, false));
 }
 
 async function recordTrigger(
@@ -123,6 +134,7 @@ export async function checkCustomAlerts(): Promise<number> {
         ? (locale === "en" ? `Price above $${threshold.toFixed(2)}` : `Precio por encima de $${threshold.toFixed(2)}`)
         : (locale === "en" ? `Price below $${threshold.toFixed(2)}` : `Precio por debajo de $${threshold.toFixed(2)}`);
 
+    const unsubUrl = buildUnsubscribeUrl(alert.userId, alert.email);
     const { subject, html } = priceAlertEmail({
       metalName: metalName(alert.symbol, locale),
       symbol: alert.symbol,
@@ -130,6 +142,7 @@ export async function checkCustomAlerts(): Promise<number> {
       condition: conditionText,
       threshold,
       locale,
+      unsubscribeUrl: unsubUrl,
     });
 
     const sent = await sendEmail({ to: alert.email, subject, html });
@@ -153,9 +166,7 @@ export async function checkSmartAlerts(): Promise<number> {
   // Check for big daily moves (>2%)
   const bigMovers = prices.filter((p) => Math.abs(p.changePct) >= 2);
   if (bigMovers.length > 0) {
-    const allSubscribers = await db
-      .select({ email: users.email, id: users.id })
-      .from(users);
+    const allSubscribers = await getSubscribers();
 
     if (allSubscribers.length > 0) {
       const moversText = bigMovers
@@ -164,17 +175,6 @@ export async function checkSmartAlerts(): Promise<number> {
             `${metalName(m.symbol)} ${m.changePct > 0 ? "+" : ""}${Math.abs(m.changePct).toFixed(1)}%`
         )
         .join(", ");
-
-      const { subject, html } = smartAlertEmail({
-        title: moversText,
-        description: `Significant moves detected in the precious metals market in the last 24 hours.`,
-        metals: prices.map((p) => ({
-          name: metalName(p.symbol),
-          symbol: p.symbol,
-          price: p.price,
-          changePct: p.changePct,
-        })),
-      });
 
       // Rate limit: check if we sent a smart alert in the last 4h
       const fourHoursAgo = new Date(Date.now() - 4 * 60 * 60 * 1000);
@@ -191,6 +191,18 @@ export async function checkSmartAlerts(): Promise<number> {
 
       if (recentSmartAlerts.length === 0) {
         for (const sub of allSubscribers) {
+          const unsubUrl = buildUnsubscribeUrl(sub.id, sub.email);
+          const { subject, html } = smartAlertEmail({
+            title: moversText,
+            description: `Significant moves detected in the precious metals market in the last 24 hours.`,
+            metals: prices.map((p) => ({
+              name: metalName(p.symbol),
+              symbol: p.symbol,
+              price: p.price,
+              changePct: p.changePct,
+            })),
+            unsubscribeUrl: unsubUrl,
+          });
           const sent = await sendEmail({ to: sub.email, subject, html });
           if (sent) triggered++;
         }
@@ -209,13 +221,131 @@ export async function checkSmartAlerts(): Promise<number> {
   return triggered;
 }
 
+export async function check52WeekAlerts(): Promise<number> {
+  const db = getDb();
+  if (!db) return 0;
+
+  const prices = await getPrices();
+  if (prices.length === 0) return 0;
+
+  const subscribers = await getSubscribers();
+  if (subscribers.length === 0) return 0;
+
+  const since52w = new Date(Date.now() - 52 * 7 * 24 * 60 * 60 * 1000);
+  const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
+  let triggered = 0;
+
+  for (const metal of prices) {
+    const [stats] = await db
+      .select({
+        high: max(priceHistory.priceUsd),
+        low: min(priceHistory.priceUsd),
+      })
+      .from(priceHistory)
+      .where(and(eq(priceHistory.symbol, metal.symbol), gte(priceHistory.timestamp, since52w)));
+
+    if (!stats?.high || !stats?.low) continue;
+    const high52 = parseFloat(stats.high);
+    const low52 = parseFloat(stats.low);
+
+    const isHigh = metal.price >= high52;
+    const isLow = metal.price <= low52;
+    if (!isHigh && !isLow) continue;
+
+    const marker = `52W_${isHigh ? "HIGH" : "LOW"}_${metal.symbol}`;
+    const recent = await db
+      .select({ id: alertHistory.id })
+      .from(alertHistory)
+      .where(and(gte(alertHistory.triggeredAt, oneDayAgo), sql`${alertHistory.message} LIKE ${`${marker}:%`}`))
+      .limit(1);
+    if (recent.length > 0) continue;
+
+    for (const sub of subscribers) {
+      const unsubUrl = buildUnsubscribeUrl(sub.id, sub.email);
+      const { subject, html } = week52AlertEmail({
+        metalName: metalName(metal.symbol),
+        symbol: metal.symbol,
+        currentPrice: metal.price,
+        weekRecord: isHigh ? high52 : low52,
+        isHigh,
+        unsubscribeUrl: unsubUrl,
+      });
+      const sent = await sendEmail({ to: sub.email, subject, html });
+      if (sent) triggered++;
+    }
+
+    await db.insert(alertHistory).values({
+      alertId: null,
+      userId: null,
+      message: `${marker}: ${metal.price.toFixed(2)}`,
+      priceAtTrigger: metal.price.toFixed(4),
+    });
+  }
+
+  return triggered;
+}
+
+export async function checkRatioAlert(): Promise<number> {
+  const db = getDb();
+  if (!db) return 0;
+
+  const prices = await getPrices();
+  const xau = prices.find((p) => p.symbol === "XAU");
+  const xag = prices.find((p) => p.symbol === "XAG");
+  if (!xau || !xag || xag.price === 0) return 0;
+
+  const ratio = xau.price / xag.price;
+  const isHigh = ratio >= 88;
+  const isLow = ratio <= 55;
+  if (!isHigh && !isLow) return 0;
+
+  const subscribers = await getSubscribers();
+  if (subscribers.length === 0) return 0;
+
+  const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
+  const marker = `RATIO_${isHigh ? "HIGH" : "LOW"}`;
+  const recent = await db
+    .select({ id: alertHistory.id })
+    .from(alertHistory)
+    .where(and(gte(alertHistory.triggeredAt, oneDayAgo), sql`${alertHistory.message} LIKE ${`${marker}:%`}`))
+    .limit(1);
+  if (recent.length > 0) return 0;
+
+  let triggered = 0;
+  for (const sub of subscribers) {
+    const unsubUrl = buildUnsubscribeUrl(sub.id, sub.email);
+    const { subject, html } = ratioAlertEmail({
+      currentRatio: ratio,
+      xauPrice: xau.price,
+      xagPrice: xag.price,
+      isHigh,
+      unsubscribeUrl: unsubUrl,
+    });
+    const sent = await sendEmail({ to: sub.email, subject, html });
+    if (sent) triggered++;
+  }
+
+  await db.insert(alertHistory).values({
+    alertId: null,
+    userId: null,
+    message: `${marker}: ${ratio.toFixed(2)}`,
+    priceAtTrigger: xau.price.toFixed(4),
+  });
+
+  return triggered;
+}
+
 export async function runAlertEngine(): Promise<{
   customTriggered: number;
   smartTriggered: number;
+  week52Triggered: number;
+  ratioTriggered: number;
 }> {
-  const [customTriggered, smartTriggered] = await Promise.all([
+  const [customTriggered, smartTriggered, week52Triggered, ratioTriggered] = await Promise.all([
     checkCustomAlerts(),
     checkSmartAlerts(),
+    check52WeekAlerts(),
+    checkRatioAlert(),
   ]);
-  return { customTriggered, smartTriggered };
+  return { customTriggered, smartTriggered, week52Triggered, ratioTriggered };
 }

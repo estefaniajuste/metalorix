@@ -170,6 +170,35 @@ export default async function PrecioMetalPage({
             <UnitPriceTable symbol={seo.symbol} />
           </div>
 
+          {/* Alert CTA banner */}
+          <div className="mt-10 bg-gradient-to-r from-brand-gold/10 to-brand-gold/5 border border-brand-gold/20 rounded-DEFAULT p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div className="flex items-center gap-4">
+              <div className="flex-shrink-0 w-10 h-10 rounded-sm bg-brand-gold/20 flex items-center justify-center text-brand-gold">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                  <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9" />
+                  <path d="M13.73 21a2 2 0 01-3.46 0" />
+                </svg>
+              </div>
+              <div>
+                <p className="text-sm font-semibold text-content-0">
+                  {t("setAlert")} — {seo.name}
+                </p>
+                <p className="text-xs text-content-2 mt-0.5">
+                  {t("setAlertDesc", { metal: seo.name })}
+                </p>
+              </div>
+            </div>
+            <Link
+              href="/alertas"
+              className="flex-shrink-0 inline-flex items-center gap-2 px-5 py-2.5 bg-brand-gold text-[#0B0F17] text-sm font-bold rounded-sm hover:brightness-110 transition-all"
+            >
+              {t("setAlert")}
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+                <polyline points="9 18 15 12 9 6" />
+              </svg>
+            </Link>
+          </div>
+
           <div className="mt-10 grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div className="lg:col-span-2">
               <div className="bg-surface-1 border border-border rounded-DEFAULT p-6">
