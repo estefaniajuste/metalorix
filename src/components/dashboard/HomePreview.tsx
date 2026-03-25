@@ -7,6 +7,7 @@ import type { Locale } from "@/i18n/routing";
 import { getDb } from "@/lib/db";
 import { articles, articleTranslations, glossaryTerms } from "@/lib/db/schema";
 import { eq, desc, and, inArray } from "drizzle-orm";
+import { DEALER_COUNTRIES, getDealersByCountry, getCountryName } from "@/lib/data/dealers";
 
 const METAL_COLORS: Record<string, string> = {
   XAU: "#D6B35A",
@@ -373,9 +374,70 @@ export async function HomePreview() {
         </div>
 
         <div className="mt-10">
+          <DealersBanner locale={locale} t={t} />
+        </div>
+
+        <div className="mt-10">
           <HomeEmailCapture />
         </div>
       </div>
     </section>
+  );
+}
+
+interface DealersBannerProps {
+  locale: string;
+  t: Awaited<ReturnType<typeof getTranslations<"home">>>;
+}
+
+function DealersBanner({ locale, t }: DealersBannerProps) {
+  const featured = DEALER_COUNTRIES.filter((c) => getDealersByCountry(c.code).length > 0).slice(0, 8);
+
+  return (
+    <div className="rounded-DEFAULT border border-border bg-surface-1 p-6">
+      <div className="flex items-start justify-between gap-4 mb-5">
+        <div>
+          <h2 className="text-lg font-bold text-content-0 flex items-center gap-2">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#D6B35A" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="flex-shrink-0" aria-hidden="true">
+              <circle cx="12" cy="12" r="10" />
+              <line x1="2" y1="12" x2="22" y2="12" />
+              <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+            </svg>
+            {t("dealersBannerTitle")}
+          </h2>
+          <p className="text-sm text-content-2 mt-1 max-w-lg">
+            {t("dealersBannerDesc")}
+          </p>
+        </div>
+        <Link
+          href="/donde-comprar"
+          className="flex-shrink-0 text-sm font-semibold text-brand-gold hover:underline flex items-center gap-1"
+        >
+          {t("dealersBannerCta")}
+          <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
+            <polyline points="9 18 15 12 9 6" />
+          </svg>
+        </Link>
+      </div>
+
+      <div className="flex flex-wrap gap-2">
+        {featured.map((country) => {
+          const slug = country.slug[locale] ?? country.slug.en;
+          const name = getCountryName(country, locale);
+          const count = getDealersByCountry(country.code).length;
+          return (
+            <Link
+              key={country.code}
+              href={{ pathname: "/donde-comprar/[country]" as const, params: { country: slug } }}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-surface-2 border border-border hover:border-brand-gold/30 hover:bg-surface-3 transition-colors text-sm text-content-1"
+            >
+              <span aria-hidden="true">{country.flagEmoji}</span>
+              <span className="font-medium">{name}</span>
+              <span className="text-xs text-content-3">({count})</span>
+            </Link>
+          );
+        })}
+      </div>
+    </div>
   );
 }
