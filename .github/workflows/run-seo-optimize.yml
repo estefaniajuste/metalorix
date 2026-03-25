@@ -1,0 +1,46 @@
+name: Run SEO Optimize
+
+on:
+  workflow_dispatch:
+
+env:
+  SERVICE_URL: https://metalorix.com
+
+jobs:
+  optimize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Push optimized metadata to DB
+        run: |
+          echo "Running optimize-learn..."
+          response=$(curl -s -w "\n%{http_code}" -X POST \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+            "${{ env.SERVICE_URL }}/api/seo/optimize-learn")
+          http_code=$(echo "$response" | tail -1)
+          body=$(echo "$response" | head -n -1)
+          echo "Status: $http_code"
+          echo "$body" | python3 -m json.tool 2>/dev/null || echo "$body"
+          if [ "$http_code" != "200" ]; then echo "::error::optimize-learn failed"; exit 1; fi
+
+      - name: Retranslate FAQ to all locales (batch 1)
+        run: |
+          echo "Running retranslate-faq (limit=20)..."
+          response=$(curl -s -w "\n%{http_code}" -X POST \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+            "${{ env.SERVICE_URL }}/api/seo/retranslate-faq?limit=20")
+          http_code=$(echo "$response" | tail -1)
+          body=$(echo "$response" | head -n -1)
+          echo "Status: $http_code"
+          echo "$body" | python3 -m json.tool 2>/dev/null || echo "$body"
+
+      - name: Retranslate FAQ to all locales (batch 2)
+        run: |
+          echo "Running retranslate-faq (limit=20, batch 2)..."
+          response=$(curl -s -w "\n%{http_code}" -X POST \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+            "${{ env.SERVICE_URL }}/api/seo/retranslate-faq?limit=20")
+          http_code=$(echo "$response" | tail -1)
+          body=$(echo "$response" | head -n -1)
+          echo "Status: $http_code"
+          echo "$body" | python3 -m json.tool 2>/dev/null || echo "$body"
