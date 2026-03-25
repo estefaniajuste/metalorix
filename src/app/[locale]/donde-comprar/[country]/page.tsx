@@ -105,6 +105,23 @@ export default async function CountryDealersPage({ params }: Props) {
     })),
   };
 
+  const physicalDealers = dealers.filter(
+    (d) => (d.type === "physical" || d.type === "both") && d.city
+  );
+  const localBusinessSchemas = physicalDealers.map((d) => ({
+    "@context": "https://schema.org",
+    "@type": "FinancialService",
+    name: d.name,
+    url: d.website,
+    description:
+      d.description[locale] ?? d.description.en ?? d.description.es ?? "",
+    address: {
+      "@type": "PostalAddress",
+      addressLocality: d.city,
+      addressCountry: countryData.code.toUpperCase(),
+    },
+  }));
+
   const tValues = {
     filterAll: t("filterAll"),
     filterOnline: t("filterOnline"),
@@ -129,6 +146,13 @@ export default async function CountryDealersPage({ params }: Props) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListSchema) }}
       />
+      {localBusinessSchemas.map((s, i) => (
+        <script
+          key={i}
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(s) }}
+        />
+      ))}
 
       <section className="py-[var(--section-py)]">
         <div className="mx-auto max-w-[1200px] px-6">

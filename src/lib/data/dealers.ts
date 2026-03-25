@@ -111,6 +111,30 @@ export const DEALER_COUNTRIES: DealerCountry[] = [
     slug: { es: "canada", en: "canada", de: "kanada", zh: "jianada", ar: "kanada", tr: "kanada", hi: "canada" },
     nameI18n: { es: "Canadá", en: "Canada", de: "Kanada", zh: "加拿大", ar: "كندا", tr: "Kanada", hi: "Canada" },
   },
+  {
+    code: "at",
+    flagEmoji: "🇦🇹",
+    slug: { es: "austria", en: "austria", de: "oesterreich", zh: "aodili", ar: "alnimsawy", tr: "avusturya", hi: "austria" },
+    nameI18n: { es: "Austria", en: "Austria", de: "Österreich", zh: "奥地利", ar: "النمسا", tr: "Avusturya", hi: "Austria" },
+  },
+  {
+    code: "ae",
+    flagEmoji: "🇦🇪",
+    slug: { es: "emiratos-arabes", en: "uae", de: "vae", zh: "alian", ar: "al-imarat", tr: "bae", hi: "uae" },
+    nameI18n: { es: "Emiratos Árabes", en: "UAE", de: "VAE", zh: "阿联酋", ar: "الإمارات", tr: "BAE", hi: "UAE" },
+  },
+  {
+    code: "ar",
+    flagEmoji: "🇦🇷",
+    slug: { es: "argentina", en: "argentina", de: "argentinien", zh: "agenting", ar: "alargentina", tr: "arjantin", hi: "argentina" },
+    nameI18n: { es: "Argentina", en: "Argentina", de: "Argentinien", zh: "阿根廷", ar: "الأرجنتين", tr: "Arjantin", hi: "Argentina" },
+  },
+  {
+    code: "co",
+    flagEmoji: "🇨🇴",
+    slug: { es: "colombia", en: "colombia", de: "kolumbien", zh: "gelunbiya", ar: "kolombya", tr: "kolombiya", hi: "colombia" },
+    nameI18n: { es: "Colombia", en: "Colombia", de: "Kolumbien", zh: "哥伦比亚", ar: "كولومبيا", tr: "Kolombiya", hi: "Colombia" },
+  },
 ];
 
 export const DEALERS: Dealer[] = [
@@ -505,6 +529,257 @@ export const DEALERS: Dealer[] = [
       es: "Empresa estatal china líder en el sector del oro, con cientos de tiendas en todo el país.",
       en: "China's leading state-owned gold company, with hundreds of stores across the country.",
       zh: "中国领先的国有黄金企业，在全国设有数百家门店。",
+    },
+  },
+
+  // ── Austria ───────────────────────────────────────────────────────────────
+  {
+    id: "bitpanda",
+    name: "Bitpanda Metals",
+    countryCode: "at",
+    type: "online",
+    metals: ["XAU", "XAG", "XPT", "XPD"],
+    website: "https://www.bitpanda.com/en/metals",
+    featured: true,
+    description: {
+      es: "La mayor plataforma europea de inversión digital, con sede en Viena, permite comprar fracciones de metales preciosos físicos almacenados en bóvedas certificadas.",
+      en: "Europe's largest digital investment platform, headquartered in Vienna, allows buying fractions of physical precious metals stored in certified vaults.",
+      de: "Europas größte digitale Investitionsplattform mit Sitz in Wien ermöglicht den Kauf von Bruchteilen physischer Edelmetalle in zertifizierten Tresoren.",
+      zh: "总部位于维也纳的欧洲最大数字投资平台，允许购买存储在认证金库中的实物贵金属的部分份额。",
+      ar: "أكبر منصة استثمار رقمية في أوروبا، مقرها فيينا، تتيح شراء أجزاء من المعادن الثمينة المادية المخزنة في خزائن معتمدة.",
+      tr: "Viyana merkezli Avrupa'nın en büyük dijital yatırım platformu, sertifikalı kasalarda saklanan fiziksel kıymetli metallerin fraksiyonlarını satın almanıza olanak tanır.",
+    },
+  },
+  {
+    id: "munze-oesterreich",
+    name: "Münze Österreich (Austrian Mint)",
+    countryCode: "at",
+    type: "both",
+    metals: ["XAU", "XAG"],
+    website: "https://www.muenzeoesterreich.at",
+    city: "Viena",
+    featured: true,
+    description: {
+      es: "La Casa de la Moneda de Austria, productora de la mundialmente famosa moneda Filarmónica de Viena en oro y plata, con venta directa al público.",
+      en: "The Austrian Mint, producer of the world-famous Vienna Philharmonic coin in gold and silver, with direct sales to the public.",
+      de: "Die Münze Österreich, Produzentin der weltbekannten Wiener Philharmoniker Münze in Gold und Silber, mit Direktverkauf an die Öffentlichkeit.",
+      zh: "奥地利造币厂，世界著名维也纳爱乐乐团金银纪念币的生产商，提供直销服务。",
+    },
+  },
+
+  // ── UAE (Emiratos Árabes) ──────────────────────────────────────────────────
+  {
+    id: "dubai-gold-souk",
+    name: "Dubai Gold Souk",
+    countryCode: "ae",
+    type: "physical",
+    metals: ["XAU", "XAG"],
+    city: "Dubái",
+    website: "https://www.visitdubai.com/en/places-to-visit/gold-souk",
+    featured: true,
+    description: {
+      es: "El mayor mercado de oro del mundo, ubicado en el barrio de Deira de Dubái, con más de 300 joyeros y dealers de lingotes y monedas.",
+      en: "The world's largest gold market, located in Dubai's Deira district, with over 300 jewellers and bullion and coin dealers.",
+      de: "Der größte Goldmarkt der Welt im Deira-Viertel von Dubai mit über 300 Juwelieren und Barren- und Münzhändlern.",
+      ar: "أكبر سوق للذهب في العالم، يقع في حي ديرة بدبي، مع أكثر من 300 صائغ وتاجر سبائك وعملات.",
+    },
+  },
+  {
+    id: "emirates-gold",
+    name: "Emirates Gold",
+    countryCode: "ae",
+    type: "both",
+    metals: ["XAU", "XAG"],
+    website: "https://www.emiratesgold.ae",
+    city: "Dubái",
+    featured: true,
+    description: {
+      es: "Refinería de oro de la LBMA ubicada en Dubái, con venta directa de lingotes certificados Good Delivery al mercado minorista.",
+      en: "LBMA-accredited gold refinery based in Dubai, with direct sale of Good Delivery certified bars to the retail market.",
+      de: "LBMA-akkreditierte Goldraffinerie in Dubai mit Direktverkauf von Good Delivery-zertifizierten Barren an den Einzelhandel.",
+      ar: "مصفاة ذهب معتمدة من LBMA في دبي، مع بيع مباشر للسبائك المعتمدة Good Delivery للسوق التجزئة.",
+    },
+  },
+  {
+    id: "dgcx",
+    name: "DGCX — Dubai Gold & Commodities Exchange",
+    countryCode: "ae",
+    type: "online",
+    metals: ["XAU", "XAG", "XPT"],
+    website: "https://www.dgcx.ae",
+    city: "Dubái",
+    description: {
+      es: "Bolsa de materias primas de Dubái que permite la negociación de futuros y físico de metales preciosos a inversores acreditados.",
+      en: "Dubai commodities exchange enabling trading of precious metals futures and physical delivery to accredited investors.",
+      ar: "بورصة دبي للسلع تتيح تداول العقود الآجلة وتسليم المعادن الثمينة المادية للمستثمرين المعتمدين.",
+    },
+  },
+
+  // ── Argentina ─────────────────────────────────────────────────────────────
+  {
+    id: "cnm-argentina",
+    name: "Casa Nacional de la Moneda Argentina",
+    countryCode: "ar",
+    type: "both",
+    metals: ["XAU", "XAG"],
+    website: "https://www.casademoneda.gob.ar",
+    city: "Buenos Aires",
+    featured: true,
+    description: {
+      es: "La Casa de la Moneda oficial de Argentina, dependiente del Ministerio de Economía, produce y comercializa monedas de oro y plata de inversión.",
+      en: "Argentina's official mint, under the Ministry of Economy, produces and sells investment gold and silver coins.",
+    },
+  },
+  {
+    id: "banco-nacion-ar",
+    name: "Banco de la Nación Argentina — Metales",
+    countryCode: "ar",
+    type: "both",
+    metals: ["XAU", "XAG"],
+    website: "https://www.bna.com.ar",
+    city: "Buenos Aires",
+    description: {
+      es: "El mayor banco público de Argentina ofrece compra y venta de monedas de oro y plata en sus sucursales, con precios regulados.",
+      en: "Argentina's largest public bank offers buying and selling of gold and silver coins at its branches, with regulated prices.",
+    },
+  },
+  {
+    id: "metalon-ar",
+    name: "Metalon",
+    countryCode: "ar",
+    type: "online",
+    metals: ["XAU", "XAG"],
+    website: "https://www.metalon.com.ar",
+    description: {
+      es: "Plataforma argentina para la compra y venta de metales preciosos online con custodia en bóveda certificada.",
+      en: "Argentine platform for online buying and selling of precious metals with custody in a certified vault.",
+    },
+  },
+
+  // ── Colombia ──────────────────────────────────────────────────────────────
+  {
+    id: "banco-republica-co",
+    name: "Banco de la República — Museo del Oro",
+    countryCode: "co",
+    type: "physical",
+    metals: ["XAU"],
+    website: "https://www.banrepcultural.org/bogota/museo-del-oro",
+    city: "Bogotá",
+    featured: true,
+    description: {
+      es: "El Banco Central de Colombia gestiona el Museo del Oro y comercializa réplicas y monedas oficiales de oro para coleccionistas e inversores.",
+      en: "Colombia's Central Bank manages the Gold Museum and sells official gold coins and replicas for collectors and investors.",
+    },
+  },
+  {
+    id: "oro-colombia",
+    name: "OroCompra Colombia",
+    countryCode: "co",
+    type: "both",
+    metals: ["XAU", "XAG"],
+    website: "https://www.orocompra.com.co",
+    city: "Medellín",
+    description: {
+      es: "Empresa colombiana especializada en la compra y venta de oro físico, con tiendas en Medellín y Bogotá.",
+      en: "Colombian company specialising in buying and selling physical gold, with stores in Medellín and Bogotá.",
+    },
+  },
+
+  // ── Más dealers para Francia ──────────────────────────────────────────────
+  {
+    id: "godot-fils",
+    name: "Godot & Fils",
+    countryCode: "fr",
+    type: "both",
+    metals: ["XAU", "XAG", "XPT"],
+    website: "https://www.godot-et-fils.fr",
+    city: "París",
+    description: {
+      es: "Casa numismática parisina con más de un siglo de historia, especializada en monedas de oro y plata de inversión y colección.",
+      en: "Parisian numismatic house with over a century of history, specialising in investment and collectible gold and silver coins.",
+      de: "Pariser Numismatikhaus mit über einem Jahrhundert Geschichte, spezialisiert auf Anlage- und Sammlermünzen aus Gold und Silber.",
+    },
+  },
+  {
+    id: "monnaie-paris",
+    name: "La Monnaie de Paris",
+    countryCode: "fr",
+    type: "both",
+    metals: ["XAU", "XAG"],
+    website: "https://www.monnaiedeparis.fr",
+    city: "París",
+    featured: true,
+    description: {
+      es: "La casa de la moneda oficial de Francia y la más antigua del mundo (864 d.C.), produce y vende monedas de oro y plata directamente al público.",
+      en: "France's official mint and the world's oldest (864 AD), produces and sells gold and silver coins directly to the public.",
+      de: "Frankreichs offizielle Münzanstalt und die älteste der Welt (864 n. Chr.), produziert und verkauft Gold- und Silbermünzen direkt an die Öffentlichkeit.",
+    },
+  },
+  {
+    id: "goldavenue-fr",
+    name: "Gold Avenue",
+    countryCode: "fr",
+    type: "online",
+    metals: ["XAU", "XAG", "XPT", "XPD"],
+    website: "https://www.goldavenue.com",
+    description: {
+      es: "Plataforma online de MKS PAMP Group para comprar y almacenar metales preciosos en bóvedas suizas, disponible para clientes franceses.",
+      en: "MKS PAMP Group's online platform to buy and store precious metals in Swiss vaults, available for French customers.",
+    },
+  },
+
+  // ── Más dealers para Italia ───────────────────────────────────────────────
+  {
+    id: "bolognino-it",
+    name: "Bolognino",
+    countryCode: "it",
+    type: "both",
+    metals: ["XAU", "XAG"],
+    website: "https://www.bolognino.it",
+    city: "Turín",
+    description: {
+      es: "Histórica numismática italiana con tienda física en Turín y venta online de monedas y lingotes de inversión.",
+      en: "Historic Italian numismatic shop with physical store in Turin and online sale of investment coins and bars.",
+    },
+  },
+  {
+    id: "monetarium-it",
+    name: "Monetarium",
+    countryCode: "it",
+    type: "both",
+    metals: ["XAU", "XAG"],
+    website: "https://www.monetarium.it",
+    city: "Roma",
+    description: {
+      es: "Dealer romano especializado en monedas antiguas y metales preciosos de inversión, con décadas de experiencia.",
+      en: "Roman dealer specialising in ancient coins and investment precious metals, with decades of experience.",
+    },
+  },
+
+  // ── Más dealers para Portugal ─────────────────────────────────────────────
+  {
+    id: "numisma-pt",
+    name: "Numisma",
+    countryCode: "pt",
+    type: "both",
+    metals: ["XAU", "XAG"],
+    website: "https://www.numisma.pt",
+    city: "Lisboa",
+    description: {
+      es: "Numismática portuguesa con tienda física en Lisboa y amplia selección de monedas de oro y plata para inversión.",
+      en: "Portuguese numismatic shop with physical store in Lisbon and wide selection of investment gold and silver coins.",
+    },
+  },
+  {
+    id: "ouronovo-pt",
+    name: "OuroNovo",
+    countryCode: "pt",
+    type: "online",
+    metals: ["XAU", "XAG"],
+    website: "https://www.ouronovo.pt",
+    description: {
+      es: "Plataforma online portuguesa para la compra de oro y plata de inversión con precios competitivos y envío seguro.",
+      en: "Portuguese online platform for buying investment gold and silver with competitive prices and secure delivery.",
     },
   },
 
