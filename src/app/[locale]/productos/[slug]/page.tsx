@@ -8,6 +8,7 @@ import { getAllLocalizedSlugsForBase, getBaseProductSlug } from "@/lib/data/prod
 import { ProductSpotPrice } from "@/components/products/ProductSpotPrice";
 import { TaxByCountrySelector } from "@/components/products/TaxByCountrySelector";
 import type { MetalSymbol } from "@/lib/providers/metals";
+import { DEALER_COUNTRIES, getDealersByCountry, getCountryName } from "@/lib/data/dealers";
 
 export function generateStaticParams() {
   const params: { slug: string }[] = [];
@@ -46,6 +47,54 @@ export async function generateMetadata({
     },
     alternates,
   };
+}
+
+interface WhereToBuyCardProps {
+  locale: string;
+  t: Awaited<ReturnType<typeof getTranslations<"products">>>;
+}
+
+function WhereToBuyCard({ locale, t }: WhereToBuyCardProps) {
+  const featured = DEALER_COUNTRIES.filter((c) => getDealersByCountry(c.code).length > 0).slice(0, 6);
+
+  return (
+    <div className="bg-surface-1 border border-border rounded-DEFAULT p-5">
+      <div className="flex items-center gap-2 mb-1">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#D6B35A" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="10" />
+          <line x1="2" y1="12" x2="22" y2="12" />
+          <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+        </svg>
+        <h3 className="text-base font-semibold text-content-0">{t("whereToBuyTitle")}</h3>
+      </div>
+      <p className="text-xs text-content-3 mb-4">{t("whereToBuyDesc")}</p>
+      <div className="flex flex-wrap gap-1.5 mb-4">
+        {featured.map((country) => {
+          const slug = country.slug[locale] ?? country.slug.en;
+          const name = getCountryName(country, locale);
+          return (
+            <Link
+              key={country.code}
+              href={{ pathname: "/donde-comprar/[country]" as const, params: { country: slug } }}
+              className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-surface-2 border border-border hover:border-brand-gold/30 transition-colors text-xs text-content-1"
+            >
+              <span aria-hidden="true">{country.flagEmoji}</span>
+              <span>{name}</span>
+            </Link>
+          );
+        })}
+      </div>
+      <Link
+        href="/donde-comprar"
+        className="inline-flex items-center gap-1 text-xs font-semibold text-brand-gold hover:underline"
+      >
+        {t("whereToBuyCta")}
+        <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" aria-hidden="true">
+          <polyline points="9 18 15 12 9 6" />
+        </svg>
+      </Link>
+    </div>
+  );
 }
 
 function CheckIcon() {
@@ -334,6 +383,9 @@ export default async function ProductoPage({
                 isInvestmentGold={product.investmentGold}
                 metal={product.metal}
               />
+
+              {/* Where to buy */}
+              <WhereToBuyCard locale={locale} t={t} />
 
               {/* Related products */}
               {relatedProducts.length > 0 && (
