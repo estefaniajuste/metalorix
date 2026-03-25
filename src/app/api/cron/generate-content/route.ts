@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getDb } from "@/lib/db";
-import { articles, articleTranslations, metalPrices } from "@/lib/db/schema";
-import { eq, desc, gte, lt, and, like, not, inArray } from "drizzle-orm";
+import { articles, articleTranslations, metalPrices, learnArticles, learnArticleLocalizations } from "@/lib/db/schema";
+import { eq, desc, gte, lt, and, like, not, inArray, notInArray, sql } from "drizzle-orm";
 import {
   generateDailySummary,
   generateEveningSummary,
@@ -21,7 +21,7 @@ import {
   expandTermsWithoutContent,
   getGlossaryTermCount,
 } from "@/lib/ai/glossary-generator";
-import { generateBatch } from "@/lib/learn/generate";
+import { generateBatch, translateArticle as translateLearnArticle } from "@/lib/learn/generate";
 import { sendWeeklyNewsletter } from "@/lib/email/newsletter";
 import { sendEmail } from "@/lib/email/resend";
 import { pingSearchEngines, pingIndexNow } from "@/lib/seo/ping";
@@ -371,6 +371,44 @@ export async function POST(request: NextRequest) {
       }
     } catch (err) {
       console.error("Learn article generation failed:", err);
+    }
+  }
+
+  // Spanish learn translations: ensure published learn articles have es localization
+  const PRIORITY_LOCALES = ["es", "de"];
+  if (type === "translate-learn-es" || type === "auto") {
+    for (const priorityLocale of PRIORITY_LOCALES) {
+      try {
+        const alreadyTranslated = db
+          .select({ articleId: learnArticleLocalizations.articleId })
+          .from(learnArticleLocalizations)
+          .where(eq(learnArticleLocalizations.locale, priorityLocale));
+
+        const pendingLearn = await db
+          .select({ slug: learnArticles.slug })
+          .from(learnArticles)
+          .where(
+            and(
+              eq(learnArticles.status, "published"),
+              notInArray(learnArticles.id, alreadyTranslated)
+            )
+          )
+          .limit(5);
+
+        if (pendingLearn.length > 0) {
+          let translated = 0;
+          for (const { slug } of pendingLearn) {
+            const r = await translateLearnArticle(slug, priorityLocale);
+            if (r.success) translated++;
+            await new Promise((r) => setTimeout(r, 1500));
+          }
+          if (translated > 0) {
+            generated.push(`learn-${priorityLocale}: ${translated}/${pendingLearn.length} articles translated`);
+          }
+        }
+      } catch (err) {
+        console.error(`Learn ${priorityLocale} translation failed:`, err);
+      }
     }
   }
 

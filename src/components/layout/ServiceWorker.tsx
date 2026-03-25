@@ -4,8 +4,8 @@ import { useEffect } from "react";
 
 function gtagEvent(name: string, params?: Record<string, string>) {
   const consent = localStorage.getItem("mtx-cookie-consent");
-  if (consent === "accepted" && typeof window.gtag === "function") {
-    window.gtag("event", name, params);
+  if (consent === "accepted" && typeof (window as any).gtag === "function") {
+    (window as any).gtag("event", name, params);
   }
 }
 
@@ -26,8 +26,16 @@ export function ServiceWorkerRegistration() {
     };
     window.addEventListener("beforeinstallprompt", onPrompt);
 
-    if (window.matchMedia("(display-mode: standalone)").matches) {
-      gtagEvent("pwa_open", { mode: "standalone" });
+    // Detectar si se abre desde "Añadir a pantalla de inicio" (Chrome/Edge: display-mode, iOS: navigator.standalone)
+    const isStandalone =
+      window.matchMedia("(display-mode: standalone)").matches ||
+      (navigator as { standalone?: boolean }).standalone === true;
+    if (isStandalone) {
+      const sessionKey = "mtx_pwa_open_sent";
+      if (!sessionStorage.getItem(sessionKey)) {
+        gtagEvent("pwa_open", { mode: "standalone" });
+        sessionStorage.setItem(sessionKey, "1");
+      }
     }
 
     return () => {

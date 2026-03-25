@@ -560,6 +560,18 @@ export async function translateArticle(
 
   const adaptationRules = culturalAdaptation[targetLocale] || "";
 
+  let faqSection = "";
+  let faqSchemaNote = "";
+  if (en.faq) {
+    try {
+      const faqItems = JSON.parse(en.faq);
+      if (Array.isArray(faqItems) && faqItems.length > 0) {
+        faqSection = `\n\nFAQ (translate questions and answers):\n${JSON.stringify(faqItems)}`;
+        faqSchemaNote = `,\n  "faq": [{"question": "translated Q", "answer": "translated A"}, ...]`;
+      }
+    } catch { /* ignore malformed faq */ }
+  }
+
   const prompt = `Translate this educational article about precious metals to ${localeName}.
 
 RULES:
@@ -581,7 +593,7 @@ Return a JSON object:
   "metaDescription": "translated meta description",
   "summary": "translated summary",
   "keyIdea": "translated key idea",
-  "content": "translated full content (markdown format)"
+  "content": "translated full content (markdown format)"${faqSchemaNote}
 }
 
 ENGLISH ORIGINAL:
@@ -592,7 +604,7 @@ Summary: ${en.summary}
 Key Idea: ${en.keyIdea}
 
 Content:
-${en.content}
+${en.content}${faqSection}
 
 Return ONLY the JSON. No markdown blocks.`;
 
@@ -620,6 +632,11 @@ Return ONLY the JSON. No markdown blocks.`;
       )
       .limit(1);
 
+    let translatedFaq = en.faq;
+    if (translated.faq && Array.isArray(translated.faq) && translated.faq.length > 0) {
+      translatedFaq = JSON.stringify(translated.faq);
+    }
+
     const locData = {
       slug: slugifyTitle(translated.title),
       title: translated.title,
@@ -630,7 +647,7 @@ Return ONLY the JSON. No markdown blocks.`;
       keyIdea: translated.keyIdea || "",
       content: translated.content,
       keyTakeaways: en.keyTakeaways,
-      faq: en.faq,
+      faq: translatedFaq,
       translationStatus: "done" as const,
       translatedAt: new Date(),
       updatedAt: new Date(),
