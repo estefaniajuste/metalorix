@@ -12,6 +12,7 @@ import {
   getAllMetalSlugs,
   getLocalizedMetalSlug,
 } from "@/lib/utils/metal-slugs";
+import { DEALER_COUNTRIES, getDealersByCountry } from "@/lib/data/dealers";
 
 export const revalidate = 60;
 
@@ -94,6 +95,58 @@ function JsonLd({ slug, locale, canonicalUrl }: { slug: string; locale: string; 
         <script key={i} type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
       ))}
     </>
+  );
+}
+
+function WhereToBuyBlock({
+  locale,
+  metalName,
+  t,
+}: {
+  locale: string;
+  metalName: string;
+  t: Awaited<ReturnType<typeof getTranslations<"prices">>>;
+}) {
+  const featured = DEALER_COUNTRIES.filter(
+    (c) => getDealersByCountry(c.code).length > 0
+  ).slice(0, 6);
+
+  return (
+    <div className="bg-surface-1 border border-border rounded-DEFAULT p-6 mt-6">
+      <h3 className="text-base font-semibold text-content-0 mb-1">
+        {t("whereToBuyTitle", { metal: metalName })}
+      </h3>
+      <p className="text-xs text-content-3 mb-4 leading-relaxed">
+        {t("whereToBuyDesc")}
+      </p>
+      <div className="flex flex-wrap gap-2 mb-4">
+        {featured.map((c) => {
+          const slug = c.slug[locale] ?? c.slug.en;
+          return (
+            <Link
+              key={c.code}
+              href={{
+                pathname: "/donde-comprar/[country]" as const,
+                params: { country: slug },
+              }}
+              className="flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-full bg-surface-2 border border-border text-content-1 hover:text-brand-gold hover:border-brand-gold transition-colors"
+            >
+              <span>{c.flagEmoji}</span>
+              <span>{c.nameI18n[locale] ?? c.nameI18n.en}</span>
+            </Link>
+          );
+        })}
+      </div>
+      <Link
+        href="/donde-comprar"
+        className="text-xs font-semibold text-brand-gold hover:brightness-110 transition-colors flex items-center gap-1"
+      >
+        {t("whereToBuyCta")}
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+          <polyline points="9 18 15 12 9 6" />
+        </svg>
+      </Link>
+    </div>
   );
 }
 
@@ -236,6 +289,8 @@ export default async function PrecioMetalPage({
                   ))}
                 </div>
               </div>
+
+              <WhereToBuyBlock locale={locale} metalName={seo.name} t={t} />
 
               <div className="bg-surface-1 border border-border rounded-DEFAULT p-6 mt-6">
                 <h3 className="text-base font-semibold text-content-0 mb-3">{tf("legalNotice")}</h3>
