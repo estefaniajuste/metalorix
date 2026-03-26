@@ -404,7 +404,11 @@
     "setAlert": "Set price alert",
     "setAlertDesc": "Get notified when {metal} reaches your target price",
     "liveUpdated": "Live — updated every 60 seconds",
-    "faqTitle": "Frequently asked questions about {metal}"
+    "faqTitle": "Frequently asked questions about {metal}",
+    "whereToBuyTitle": "Where to buy {metal}",
+    "whereToBuyDesc": "Find verified dealers and trusted stores in your country.",
+    "whereToBuyCta": "View all countries",
+    "relatedSearches": "Related searches"
   },
   "historicalPrice": {
     "title": "{metal} Price History",

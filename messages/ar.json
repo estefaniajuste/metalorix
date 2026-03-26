@@ -352,7 +352,11 @@
     "setAlert": "تعيين تنبيه سعر",
     "setAlertDesc": "استلم إشعاراً عندما يصل {metal} إلى سعرك المستهدف",
     "liveUpdated": "مباشر — يتم التحديث كل 60 ثانية",
-    "faqTitle": "أسئلة شائعة عن {metal}"
+    "faqTitle": "أسئلة شائعة عن {metal}",
+    "whereToBuyTitle": "أين تشتري {metal}",
+    "whereToBuyDesc": "ابحث عن تجار موثوقين ومتاجر موثوقة في بلدك.",
+    "whereToBuyCta": "عرض جميع الدول",
+    "relatedSearches": "عمليات بحث ذات صلة"
   },
   "historicalPrice": {
     "title": "تاريخ سعر {metal}",

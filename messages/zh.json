@@ -352,7 +352,11 @@
     "setAlert": "设置价格提醒",
     "setAlertDesc": "{metal}达到目标价格时通知您",
     "liveUpdated": "实时 — 每60秒更新",
-    "faqTitle": "关于{metal}的常见问题"
+    "faqTitle": "关于{metal}的常见问题",
+    "whereToBuyTitle": "在哪里购买{metal}",
+    "whereToBuyDesc": "在您的国家找到经过验证的经销商和可信商店。",
+    "whereToBuyCta": "查看所有国家",
+    "relatedSearches": "相关搜索"
   },
   "historicalPrice": {
     "title": "{metal}历史价格",

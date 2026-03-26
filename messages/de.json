@@ -352,7 +352,11 @@
     "setAlert": "Preisalarm einrichten",
     "setAlertDesc": "Benachrichtigung erhalten, wenn {metal} Ihren Zielpreis erreicht",
     "liveUpdated": "Live — alle 60 Sekunden aktualisiert",
-    "faqTitle": "Häufig gestellte Fragen zu {metal}"
+    "faqTitle": "Häufig gestellte Fragen zu {metal}",
+    "whereToBuyTitle": "{metal} kaufen — wo und wie",
+    "whereToBuyDesc": "Finden Sie verifizierte Händler und vertrauenswürdige Geschäfte in Ihrem Land.",
+    "whereToBuyCta": "Alle Länder anzeigen",
+    "relatedSearches": "Verwandte Suchanfragen"
   },
   "historicalPrice": {
     "title": "{metal} Preisverlauf",

@@ -351,7 +351,11 @@
     "setAlert": "मूल्य अलर्ट सेट करें",
     "setAlertDesc": "जब {metal} आपके लक्ष्य मूल्य पर पहुंचे तो सूचना पाएं",
     "liveUpdated": "लाइव — हर 60 सेकंड अपडेट",
-    "faqTitle": "{metal} के बारे में अक्सर पूछे जाने वाले प्रश्न"
+    "faqTitle": "{metal} के बारे में अक्सर पूछे जाने वाले प्रश्न",
+    "whereToBuyTitle": "{metal} कहाँ खरीदें",
+    "whereToBuyDesc": "अपने देश में सत्यापित डीलरों और विश्वसनीय स्टोरों को खोजें।",
+    "whereToBuyCta": "सभी देश देखें",
+    "relatedSearches": "संबंधित खोजें"
   },
   "historicalPrice": {
     "title": "{metal} मूल्य इतिहास",

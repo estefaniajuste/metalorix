@@ -352,7 +352,11 @@
     "setAlert": "Fiyat uyarısı ayarla",
     "setAlertDesc": "{metal} hedef fiyatınıza ulaştığında bildirim alın",
     "liveUpdated": "Canlı — her 60 saniyede güncellenir",
-    "faqTitle": "{metal} hakkında sık sorulan sorular"
+    "faqTitle": "{metal} hakkında sık sorulan sorular",
+    "whereToBuyTitle": "{metal} nerede satın alınır",
+    "whereToBuyDesc": "Ülkenizdeki doğrulanmış bayileri ve güvenilir mağazaları bulun.",
+    "whereToBuyCta": "Tüm ülkeleri görüntüle",
+    "relatedSearches": "İlgili aramalar"
   },
   "historicalPrice": {
     "title": "{metal} Fiyat Geçmişi",
