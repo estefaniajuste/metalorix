@@ -17,6 +17,7 @@ interface DealerCardProps {
     visitWebsite: string;
     metalsAccepted: string;
     featured: string;
+    verified: string;
   };
 }
 
@@ -72,6 +73,14 @@ export function DealerCard({ dealer, locale, t }: DealerCardProps) {
 
       <div className="flex items-center gap-2 flex-wrap">
         <TypeBadge type={dealer.type} t={t} />
+        {dealer.verified && (
+          <span className="inline-flex items-center gap-1 text-[11px] font-semibold px-2 py-0.5 rounded-full border border-emerald-500/30 bg-emerald-500/8 text-emerald-400">
+            <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <polyline points="20 6 9 17 4 12" />
+            </svg>
+            {t.verified}
+          </span>
+        )}
         <div className="flex gap-1">
           {dealer.metals.map((metal) => (
             <span

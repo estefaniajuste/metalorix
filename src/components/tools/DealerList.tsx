@@ -21,6 +21,7 @@ interface DealerListProps {
     visitWebsite: string;
     metalsAccepted: string;
     featured: string;
+    verified: string;
   };
 }
 

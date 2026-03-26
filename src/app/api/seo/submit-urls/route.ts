@@ -6,7 +6,7 @@ import { getDb } from "@/lib/db";
 import { articles, articleTranslations } from "@/lib/db/schema";
 import { eq, desc, inArray } from "drizzle-orm";
 import { pingSearchEngines, pingIndexNow } from "@/lib/seo/ping";
-import { DEALER_COUNTRIES, DEALER_BASE_PATHS } from "@/lib/data/dealers";
+import { DEALER_COUNTRIES, DEALER_BASE_PATHS, getCitiesByCountry } from "@/lib/data/dealers";
 
 const BASE = "https://metalorix.com";
 const CRON_SECRET = process.env.CRON_SECRET;
@@ -56,7 +56,17 @@ export async function POST(request: NextRequest) {
       const slug = country.slug[loc] ?? country.slug.en;
       urls.push(`${BASE}/${loc}${base}/${slug}`);
     }
+    const cities = getCitiesByCountry(country.code);
+    for (const cityEntry of cities) {
+      for (const loc of routing.locales) {
+        const base = DEALER_BASE_PATHS[loc] ?? "/where-to-buy";
+        const slug = country.slug[loc] ?? country.slug.en;
+        urls.push(`${BASE}/${loc}${base}/${slug}/${cityEntry.slug}`);
+      }
+    }
   }
+
+  urls.push(...allLocaleUrls("/donde-comprar/mejores"));
 
   for (const slug of INTERNAL_METAL_SLUGS) {
     const localizedSlug = getLocalizedMetalSlug(slug, "es");

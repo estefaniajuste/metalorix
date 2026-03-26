@@ -92,6 +92,29 @@ export default async function DondeComprarPage() {
             {t("countriesDesc")}
           </p>
 
+          {/* Best dealers banner */}
+          <Link
+            href="/donde-comprar/mejores"
+            className="flex items-center justify-between gap-4 p-5 mb-10 rounded-DEFAULT bg-brand-gold/5 border border-brand-gold/20 hover:border-brand-gold/40 transition-colors group"
+          >
+            <div className="flex items-center gap-4">
+              <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-brand-gold/10 flex items-center justify-center text-brand-gold">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                </svg>
+              </div>
+              <div>
+                <p className="font-semibold text-sm text-content-0 group-hover:text-brand-gold transition-colors">
+                  {t("bestTitle")}
+                </p>
+                <p className="text-xs text-content-3 mt-0.5">{t("bestDesc")}</p>
+              </div>
+            </div>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" className="flex-shrink-0 text-content-3 group-hover:text-brand-gold transition-colors" aria-hidden="true">
+              <polyline points="9 18 15 12 9 6" />
+            </svg>
+          </Link>
+
           <h2 className="text-lg font-bold text-content-0 mb-6">
             {t("countriesTitle")}
           </h2>

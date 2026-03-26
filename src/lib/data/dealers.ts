@@ -11,6 +11,7 @@ export interface Dealer {
   description: Partial<Record<string, string>>;
   city?: string;
   featured?: boolean;
+  verified?: boolean;
 }
 
 export interface DealerCountry {
@@ -210,6 +211,7 @@ export const DEALERS: Dealer[] = [
     website: "https://www.fnmt.es/coleccionistas",
     city: "Madrid",
     featured: true,
+    verified: true,
     description: {
       es: "La casa de la moneda oficial de España, dependiente del Banco de España, produce y vende monedas coleccionables y de inversión directamente al público.",
       en: "Spain's official mint, under the Bank of Spain, produces and sells collectible and investment coins directly to the public.",
@@ -279,6 +281,7 @@ export const DEALERS: Dealer[] = [
     website: "https://www.degussa-goldhandel.de",
     city: "Frankfurt",
     featured: true,
+    verified: true,
     description: {
       es: "Uno de los mayores dealers de metales preciosos de Europa, con tiendas físicas en varias ciudades alemanas y venta online.",
       en: "One of Europe's largest precious metals dealers, with physical stores in several German cities and online sales.",
@@ -326,6 +329,7 @@ export const DEALERS: Dealer[] = [
     metals: ["XAU", "XAG", "XPT", "XPD"],
     website: "https://www.apmex.com",
     featured: true,
+    verified: true,
     description: {
       es: "El mayor minorista online de metales preciosos de Estados Unidos, con más de 30.000 productos y millones de clientes.",
       en: "The largest online precious metals retailer in the United States, with over 30,000 products and millions of customers.",
@@ -398,6 +402,7 @@ export const DEALERS: Dealer[] = [
     website: "https://www.royalmint.com/invest",
     city: "Llantrisant",
     featured: true,
+    verified: true,
     description: {
       es: "La Casa de la Moneda oficial del Reino Unido, que ofrece monedas de inversión y lingotes directamente al público.",
       en: "The UK's official mint, offering investment coins and bars directly to the public.",
@@ -457,6 +462,7 @@ export const DEALERS: Dealer[] = [
     website: "https://www.iar.com.tr",
     city: "İstanbul",
     featured: true,
+    verified: true,
     description: {
       es: "La refinería de oro más grande de Turquía, con venta directa de lingotes y monedas certificadas.",
       en: "Turkey's largest gold refinery, with direct sale of certified bars and coins.",
@@ -487,6 +493,7 @@ export const DEALERS: Dealer[] = [
     website: "https://www.mmtcpamp.com",
     city: "Nueva Delhi",
     featured: true,
+    verified: true,
     description: {
       es: "Joint venture oficial entre el Gobierno de India y PAMP Suisse para la venta de oro y plata certificados.",
       en: "Official joint venture between the Government of India and PAMP Suisse for certified gold and silver sales.",
@@ -595,6 +602,7 @@ export const DEALERS: Dealer[] = [
     website: "https://www.muenzeoesterreich.at",
     city: "Viena",
     featured: true,
+    verified: true,
     description: {
       es: "La Casa de la Moneda de Austria, productora de la mundialmente famosa moneda Filarmónica de Viena en oro y plata, con venta directa al público.",
       en: "The Austrian Mint, producer of the world-famous Vienna Philharmonic coin in gold and silver, with direct sales to the public.",
@@ -629,6 +637,7 @@ export const DEALERS: Dealer[] = [
     website: "https://www.emiratesgold.ae",
     city: "Dubái",
     featured: true,
+    verified: true,
     description: {
       es: "Refinería de oro de la LBMA ubicada en Dubái, con venta directa de lingotes certificados Good Delivery al mercado minorista.",
       en: "LBMA-accredited gold refinery based in Dubai, with direct sale of Good Delivery certified bars to the retail market.",
@@ -745,6 +754,7 @@ export const DEALERS: Dealer[] = [
     website: "https://www.monnaiedeparis.fr",
     city: "París",
     featured: true,
+    verified: true,
     description: {
       es: "La casa de la moneda oficial de Francia y la más antigua del mundo (864 d.C.), produce y vende monedas de oro y plata directamente al público.",
       en: "France's official mint and the world's oldest (864 AD), produces and sells gold and silver coins directly to the public.",
@@ -829,6 +839,7 @@ export const DEALERS: Dealer[] = [
     website: "https://www.pamp.com",
     city: "Mendrisio",
     featured: true,
+    verified: true,
     description: {
       es: "Una de las refinerías de metales preciosos más reputadas del mundo, referencia global en lingotes certificados.",
       en: "One of the world's most reputable precious metals refineries, a global reference for certified bars.",
@@ -892,6 +903,7 @@ export const DEALERS: Dealer[] = [
     website: "https://www.italpreziosi.it",
     city: "Arezzo",
     featured: true,
+    verified: true,
     description: {
       es: "Refinería italiana de referencia con venta directa de lingotes y monedas de inversión, sede en Arezzo, capital del oro italiano.",
       en: "Italy's reference refinery with direct sale of investment bars and coins, headquartered in Arezzo, the Italian gold capital.",
@@ -964,6 +976,7 @@ export const DEALERS: Dealer[] = [
     website: "https://www.perthmint.com",
     city: "Perth",
     featured: true,
+    verified: true,
     description: {
       es: "La ceca más antigua de Australia y uno de los mayores productores de monedas y lingotes de oro del mundo, con garantía del gobierno de Australia Occidental.",
       en: "Australia's oldest mint and one of the world's largest producers of gold coins and bars, backed by the Western Australian Government.",
@@ -1010,6 +1023,7 @@ export const DEALERS: Dealer[] = [
     website: "https://www.mint.ca",
     city: "Ottawa",
     featured: true,
+    verified: true,
     description: {
       es: "La casa de la moneda oficial de Canadá, productora de las mundialmente conocidas monedas Maple Leaf de oro y plata, con venta directa.",
       en: "Canada's official mint, producer of the world-renowned gold and silver Maple Leaf coins, with direct sales.",
@@ -1069,6 +1083,7 @@ export const DEALERS: Dealer[] = [
     metals: ["XAU", "XAG", "XPT"],
     website: "https://www.bullionvault.com",
     featured: true,
+    verified: true,
     description: {
       es: "La mayor plataforma online del mundo para comprar y vender oro y plata físicos en bóvedas bancarias en Zurich, Londres, Nueva York, Toronto y Singapur.",
       en: "The world's largest online platform for buying and selling physical gold and silver in bank vaults in Zurich, London, New York, Toronto and Singapore.",
@@ -1102,6 +1117,7 @@ export const DEALERS: Dealer[] = [
     website: "https://www.tanaka.co.jp",
     city: "Tokio",
     featured: true,
+    verified: true,
     description: {
       es: "Uno de los mayores refinadores y distribuidores de metales preciosos de Japón, con más de 130 años de historia y tiendas en Tokio y otras ciudades.",
       en: "One of Japan's largest precious metals refiners and distributors, with over 130 years of history and stores in Tokyo and other cities.",
@@ -1320,6 +1336,7 @@ export const DEALERS: Dealer[] = [
     website: "https://www.mennica.com.pl",
     city: "Varsovia",
     featured: true,
+    verified: true,
     description: {
       es: "La casa de la moneda oficial de Polonia, con siglos de historia, produce y vende monedas de oro y plata directamente al público.",
       en: "Poland's official mint, with centuries of history, produces and sells gold and silver coins directly to the public.",
@@ -1355,6 +1372,40 @@ export const DEALERS: Dealer[] = [
     },
   },
 ];
+
+export function slugifyCity(city: string): string {
+  return city
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
+export interface CityEntry {
+  city: string;
+  slug: string;
+}
+
+export function getCitiesByCountry(countryCode: string): CityEntry[] {
+  const seen = new Set<string>();
+  const cities: CityEntry[] = [];
+  for (const d of DEALERS) {
+    if (d.countryCode !== countryCode || !d.city) continue;
+    const slug = slugifyCity(d.city);
+    if (!seen.has(slug)) {
+      seen.add(slug);
+      cities.push({ city: d.city, slug });
+    }
+  }
+  return cities;
+}
+
+export function getDealersByCity(countryCode: string, citySlug: string): Dealer[] {
+  return DEALERS.filter(
+    (d) => d.countryCode === countryCode && d.city && slugifyCity(d.city) === citySlug
+  );
+}
 
 export function getDealersByCountry(countryCode: string): Dealer[] {
   return DEALERS.filter((d) => d.countryCode === countryCode);

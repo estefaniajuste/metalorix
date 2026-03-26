@@ -298,6 +298,16 @@ export const routing = defineRouting({
       hi: "/kahan-kharidem",
     },
 
+    "/donde-comprar/mejores": {
+      es: "/donde-comprar/mejores",
+      en: "/where-to-buy/best",
+      de: "/wo-kaufen/beste",
+      zh: "/goumai-didian/zuijia",
+      ar: "/amakin-alshira/afdal",
+      tr: "/nereden-alinir/en-iyi",
+      hi: "/kahan-kharidem/sabse-achhe",
+    },
+
     "/donde-comprar/[country]": {
       es: "/donde-comprar/[country]",
       en: "/where-to-buy/[country]",
@@ -306,6 +316,16 @@ export const routing = defineRouting({
       ar: "/amakin-alshira/[country]",
       tr: "/nereden-alinir/[country]",
       hi: "/kahan-kharidem/[country]",
+    },
+
+    "/donde-comprar/[country]/[city]": {
+      es: "/donde-comprar/[country]/[city]",
+      en: "/where-to-buy/[country]/[city]",
+      de: "/wo-kaufen/[country]/[city]",
+      zh: "/goumai-didian/[country]/[city]",
+      ar: "/amakin-alshira/[country]/[city]",
+      tr: "/nereden-alinir/[country]/[city]",
+      hi: "/kahan-kharidem/[country]/[city]",
     },
   },
 });
