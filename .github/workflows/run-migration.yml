@@ -1,0 +1,13 @@
+name: Run DB Migration
+on:
+  workflow_dispatch:
+jobs:
+  migrate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Call migrate endpoint
+        run: |
+          RESULT=$(curl -s -X POST https://metalorix.com/api/cron/migrate \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}")
+          echo "$RESULT"
+          echo "$RESULT" | grep -q '"ok":true' && echo "Migration OK" || echo "Migration may have failed"
