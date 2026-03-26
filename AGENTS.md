@@ -90,3 +90,77 @@ Ver `.cursor/rules/i18n-slugs.mdc` para detalles y ejemplos de código.
 3. Tras el push, verificar que el deploy se completó con éxito (`gh run list` + curl a producción)
 
 No asumir que los cambios están en producción solo porque el código está listo. Sin commit + push, la web no se actualiza.
+
+---
+
+## Backlog de funcionalidades pendientes
+
+> Estado a marzo 2026. Actualizar cuando se implementen.
+
+### Alertas técnicas (`technicalCross`)
+- **Estado**: marcadas como "Próximamente" en `/alertas` (badge + opacidad reducida en UI)
+- **Qué son**: alertas cuando un indicador técnico cruza un umbral (medias móviles, RSI…)
+- **Complejidad**: alta — requiere calcular indicadores sobre `price_history`
+- **Archivos a tocar**: `src/lib/alerts/engine.ts`, `src/app/[locale]/alertas/page.tsx`, `src/components/alerts/SubscribeForm.tsx`
+
+### Marketplace P2P (tablón de anuncios)
+- **Estado**: pospuesto hasta tener masa crítica de usuarios
+- **Modelo decidido**: tablón sin intermediación de pagos; Metalorix nunca toca dinero
+- **Contacto**: directo entre usuarios (email o WhatsApp)
+- **Requisito legal**: términos que eximen de responsabilidad a Metalorix
+- **Dependencia**: se desarrolla junto al perfil de usuario mejorado
+
+### Perfil de usuario mejorado
+- **Estado**: pendiente, va unido al marketplace
+- **Panel actual** (`/panel`): solo muestra alertas activas e historial de disparos
+- **Mejoras acordadas**: historial de operaciones (cuando haya marketplace), preferencias de notificación
+
+### Limpieza técnica
+- **Borrar `src/app/api/cron/migrate/route.ts`**: endpoint temporal para aplicar la migración `users.unsubscribed`. La migración ya está en producción; el archivo puede eliminarse.
+
+---
+
+## Tareas manuales pendientes del usuario
+
+> Estas tareas NO puede hacerlas el agente. Son acciones que requiere acceso humano a Google Search Console. Cuando el usuario las complete, eliminar el bloque correspondiente de este archivo.
+
+### Google Search Console — Indexación directorio de dealers
+
+El directorio de dealers (`/donde-comprar`) fue implementado en marzo 2026 con ~200+ URLs nuevas. El usuario debe solicitar indexación manualmente en GSC (Inspección de URLs → Solicitar indexación).
+
+**Orden de prioridad:**
+
+1. **Página "Mejores dealers"** (alta intención de backlinks):
+   - `https://metalorix.com/en/where-to-buy/best`
+   - `https://metalorix.com/es/donde-comprar/mejores`
+   - (y las versiones en de, zh, ar, tr, hi)
+
+2. **Países nuevos** añadidos en marzo 2026 (Japón, Holanda, Brasil, Bélgica, Corea del Sur, Polonia):
+   - `https://metalorix.com/en/where-to-buy/japan`
+   - `https://metalorix.com/en/where-to-buy/netherlands`
+   - `https://metalorix.com/en/where-to-buy/brazil`
+   - `https://metalorix.com/en/where-to-buy/belgium`
+   - `https://metalorix.com/en/where-to-buy/south-korea`
+   - `https://metalorix.com/en/where-to-buy/poland`
+
+3. **Páginas de ciudad en inglés** (alta intención local, poca competencia):
+   - `/en/where-to-buy/united-kingdom/london`
+   - `/en/where-to-buy/germany/frankfurt`
+   - `/en/where-to-buy/germany/munich`
+   - `/en/where-to-buy/spain/madrid`
+   - `/en/where-to-buy/france/paris`
+   - `/en/where-to-buy/japan/tokyo`
+   - `/en/where-to-buy/australia/perth`
+   - `/en/where-to-buy/australia/sydney`
+   - `/en/where-to-buy/canada/ottawa`
+   - `/en/where-to-buy/turkey/istanbul`
+   - `/en/where-to-buy/india/new-delhi`
+   - `/en/where-to-buy/uae/dubai`
+   - `/en/where-to-buy/poland/warsaw`
+   - `/en/where-to-buy/south-korea/seoul`
+   - `/en/where-to-buy/brazil/sao-paulo`
+   - `/en/where-to-buy/italy/arezzo`
+   - `/en/where-to-buy/italy/rome`
+   - `/en/where-to-buy/portugal/lisbon`
+   - `/en/where-to-buy/austria/vienna`
+   - `/en/where-to-buy/netherlands/amsterdam`
