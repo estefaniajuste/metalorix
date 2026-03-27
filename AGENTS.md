@@ -116,7 +116,7 @@ No asumir que los cambios están en producción solo porque el código está lis
 - **Mejoras acordadas**: historial de operaciones (cuando haya marketplace), preferencias de notificación
 
 ### Limpieza técnica
-- **Borrar `src/app/api/cron/migrate/route.ts`**: endpoint temporal para aplicar la migración `users.unsubscribed`. La migración ya está en producción; el archivo puede eliminarse.
+- ~~**Borrar `src/app/api/cron/migrate/route.ts`**~~ — eliminado en marzo 2026.
 
 ---
 
@@ -151,10 +151,7 @@ El directorio de dealers (`/donde-comprar`) fue implementado en marzo 2026 con ~
 
 **Orden de prioridad:**
 
-1. **Página "Mejores dealers"** (alta intención de backlinks):
-   - `https://metalorix.com/en/where-to-buy/best`
-   - `https://metalorix.com/es/donde-comprar/mejores`
-   - (y las versiones en de, zh, ar, tr, hi)
+1. ~~**Página "Mejores dealers"** — INDEXADA (marzo 2026)~~ ✓
 
 2. **Países nuevos** añadidos en marzo 2026 (Japón, Holanda, Brasil, Bélgica, Corea del Sur, Polonia):
    - `https://metalorix.com/en/where-to-buy/japan`
