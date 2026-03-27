@@ -117,7 +117,7 @@ const OPTIMIZED_METADATA: {
     locale: "en",
     seoTitle: "Gold vs Silver vs Platinum Volatility: Which Swings Most?",
     metaDescription:
-      "Silver is 50-80% more volatile than gold, platinum more than both. Compare annualized volatility across precious metals with 10-year data and position sizing tips.",
+      "Silver is 50-80% more volatile than gold, platinum even more. Compare annualized volatility across all precious metals with 10-year data and sizing tips.",
     faq: [
       { question: "Which precious metal is the most volatile?", answer: "Platinum is typically the most volatile precious metal, followed closely by silver. Both show 50-80% higher annualized volatility than gold over 10-year periods." },
       { question: "Is silver more volatile than gold?", answer: "Yes. Silver's annualized volatility is roughly 1.5x that of gold. Silver tends to rise more in bull markets but fall harder in downturns." },
@@ -524,7 +524,7 @@ const OPTIMIZED_METADATA: {
     locale: "en",
     seoTitle: "French Assignats: Paper Money Hyperinflation Case Study",
     metaDescription:
-      "France's assignats (1789-1796) collapsed from face value to near zero after massive money printing. What the world's first paper money hyperinflation teaches investors.",
+      "France's assignats (1789-1796) collapsed to near zero after massive money printing. What the world's first paper hyperinflation teaches gold investors.",
   },
 
   // ───────── SPANISH (es) ─────────
@@ -876,7 +876,7 @@ const OPTIMIZED_METADATA: {
     locale: "es",
     seoTitle: "Asignados Franceses: Caso de Estudio en Hiperinflación",
     metaDescription:
-      "Los asignados de Francia (1789-1796) colapsaron de valor nominal a casi cero tras una masiva impresión de dinero. Qué enseña el primer caso de hiperinflación moderno.",
+      "Los asignados de Francia (1789-1796) colapsaron hasta casi cero tras una impresión masiva de dinero. Qué enseña el primer caso de hiperinflación moderno.",
   },
 
   // ───────── GERMAN (de) — top 10 by impressions ─────────
