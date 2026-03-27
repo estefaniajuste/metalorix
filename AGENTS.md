@@ -120,6 +120,27 @@ No asumir que los cambios están en producción solo porque el código está lis
 
 ---
 
+## Ideas futuras — pendientes de valorar
+
+### Tablón de anuncios / marketplace usuario a usuario
+
+**Idea:** Permitir que usuarios publiquen anuncios para comprar o vender metales preciosos físicos entre particulares (monedas, lingotes, joyas).
+
+**Estado:** Descartado por ahora. Retomar cuando el directorio de dealers esté asentado.
+
+**Por qué se descartó (marzo 2026):**
+- **Riesgo legal alto:** intermediar en transacciones entre particulares implica responsabilidad legal (fraude, lavado de dinero, regulación financiera según país). Requiere asesoría legal antes de implementar.
+- **Complejidad técnica:** sistema de usuarios vendedores, moderación de anuncios, gestión de disputas, pagos o escrow.
+- **Alternativa más segura implementada:** directorio de dealers verificados por país (`/donde-comprar`), que ofrece valor similar (conectar compradores con vendedores) sin los riesgos del marketplace.
+
+**Cuando se retome, considerar:**
+- Empezar solo como tablón informativo (sin pagos en la plataforma): el usuario publica su anuncio con contacto externo
+- Limitar a países con regulación más laxa o donde Metalorix tenga base legal clara
+- Añadir disclaimer legal muy visible en cada anuncio
+- Moderación manual de anuncios antes de publicar
+
+---
+
 ## Tareas manuales pendientes del usuario
 
 > Estas tareas NO puede hacerlas el agente. Son acciones que requiere acceso humano a Google Search Console. Cuando el usuario las complete, eliminar el bloque correspondiente de este archivo.

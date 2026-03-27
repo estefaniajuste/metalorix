@@ -115,9 +115,14 @@ const OPTIMIZED_METADATA: {
   {
     slug: "volatility-comparison-across-metals",
     locale: "en",
-    seoTitle: "Precious Metals Volatility: Historical Comparison",
+    seoTitle: "Gold vs Silver vs Platinum Volatility: Which Swings Most?",
     metaDescription:
-      "Compare the annualized volatility of gold, silver, platinum, and palladium. Historical data reveals silver and platinum swing 50-80% more than gold.",
+      "Silver is 50-80% more volatile than gold, platinum more than both. Compare annualized volatility across precious metals with 10-year data and position sizing tips.",
+    faq: [
+      { question: "Which precious metal is the most volatile?", answer: "Platinum is typically the most volatile precious metal, followed closely by silver. Both show 50-80% higher annualized volatility than gold over 10-year periods." },
+      { question: "Is silver more volatile than gold?", answer: "Yes. Silver's annualized volatility is roughly 1.5x that of gold. Silver tends to rise more in bull markets but fall harder in downturns." },
+      { question: "Why is gold less volatile than silver?", answer: "Gold's deep liquidity ($150B+ daily volume), central bank holdings, and reserve-asset status all reduce its volatility compared to silver's smaller, more industrial market." },
+    ],
   },
   {
     slug: "gold-volatility-index-gvz",
@@ -481,6 +486,46 @@ const OPTIMIZED_METADATA: {
     metaDescription:
       "Gold deposits in quartz veins form when hot mineral-rich fluids cool in rock fractures. How to identify gold-bearing quartz, where to look, and extraction.",
   },
+  {
+    slug: "gold-vs-cpi-over-time",
+    locale: "en",
+    seoTitle: "Gold vs CPI: 50-Year Inflation Chart & Data",
+    metaDescription:
+      "Has gold kept up with inflation? Compare gold prices vs the Consumer Price Index from 1970 to 2025. Data shows gold outpaced CPI in most long-term periods.",
+    faq: [
+      { question: "Does gold beat inflation over time?", answer: "Over 50-year periods, gold has generally outpaced CPI inflation. However, in shorter periods (10-20 years), gold can significantly underperform or overperform depending on the starting point." },
+      { question: "What is the correlation between gold and CPI?", answer: "Gold has a moderate positive correlation with CPI over the long term, but the relationship is noisy short-term. Gold tends to spike during inflationary surprises rather than tracking CPI linearly." },
+    ],
+  },
+  {
+    slug: "the-cot-report-for-gold-reading-commitment-of-traders-data",
+    locale: "en",
+    seoTitle: "COT Report for Gold: How to Read Futures Positioning",
+    metaDescription:
+      "The CFTC Commitment of Traders report shows who holds gold futures — commercials, speculators, and small traders. How to read COT data and spot contrarian signals.",
+    faq: [
+      { question: "What is the COT report for gold?", answer: "The COT (Commitment of Traders) report, published weekly by the CFTC, shows the net long/short positions of commercial hedgers, large speculators, and small traders in gold futures markets." },
+      { question: "How do you use the COT report to trade gold?", answer: "Extreme speculator long positions are contrarian bearish, while extreme short positions are contrarian bullish. Most traders look for COT extremes combined with price action confirmation." },
+    ],
+  },
+  {
+    slug: "swiss-gold-refining-hub",
+    locale: "en",
+    seoTitle: "Why Switzerland Refines 70% of the World's Gold",
+    metaDescription:
+      "Switzerland processes over 2,000 tonnes of gold annually. Why Valcambi, PAMP Suisse, and Argor-Heraeus chose Switzerland as the global gold refining hub.",
+    faq: [
+      { question: "Why is Switzerland the world's largest gold refiner?", answer: "Switzerland's combination of political neutrality, strong banking secrecy, skilled workforce, central European location, and centuries of trade in precious metals made it the natural hub for global gold refining." },
+      { question: "What are the main gold refineries in Switzerland?", answer: "The four major Swiss refineries are Valcambi (in Balerna), PAMP Suisse (in Castel San Pietro), Argor-Heraeus (in Mendrisio), and MKS PAMP. Together they process roughly 70% of global gold supply." },
+    ],
+  },
+  {
+    slug: "assignats-and-inflation",
+    locale: "en",
+    seoTitle: "French Assignats: Paper Money Hyperinflation Case Study",
+    metaDescription:
+      "France's assignats (1789-1796) collapsed from face value to near zero after massive money printing. What the world's first paper money hyperinflation teaches investors.",
+  },
 
   // ───────── SPANISH (es) ─────────
   {
@@ -535,9 +580,9 @@ const OPTIMIZED_METADATA: {
   {
     slug: "volatility-comparison-across-metals",
     locale: "es",
-    seoTitle: "Volatilidad de Metales Preciosos: Comparación Histórica",
+    seoTitle: "Oro vs Plata vs Platino: ¿Qué Metal Oscila Más?",
     metaDescription:
-      "Compara la volatilidad anualizada de oro, plata, platino y paladio. La plata y el platino oscilan un 50-80% más que el oro según datos históricos.",
+      "La plata es un 50-80% más volátil que el oro y el platino supera a ambos. Volatilidad anualizada histórica de los 4 metales preciosos y cómo afecta tu cartera.",
   },
   {
     slug: "gold-volatility-index-gvz",
@@ -804,6 +849,34 @@ const OPTIMIZED_METADATA: {
     seoTitle: "Metales Preciosos vs Metales Base: Diferencias Clave",
     metaDescription:
       "Los metales preciosos (oro, plata, platino) son raros y resistentes a la corrosión. Los metales base (cobre, zinc, níquel) son comunes. Comparación completa.",
+  },
+  {
+    slug: "gold-vs-cpi-over-time",
+    locale: "es",
+    seoTitle: "Oro vs IPC: Gráfico de Inflación a 50 Años",
+    metaDescription:
+      "¿Ha protegido el oro contra la inflación? Comparamos el precio del oro con el Índice de Precios al Consumo desde 1970. Datos históricos y análisis.",
+  },
+  {
+    slug: "the-cot-report-for-gold-reading-commitment-of-traders-data",
+    locale: "es",
+    seoTitle: "Informe COT del Oro: Cómo Leer el Posicionamiento en Futuros",
+    metaDescription:
+      "El informe COT de la CFTC muestra quién tiene futuros de oro — coberturistas, especuladores, pequeños traders. Cómo interpretarlo y detectar señales contrarias.",
+  },
+  {
+    slug: "swiss-gold-refining-hub",
+    locale: "es",
+    seoTitle: "Por Qué Suiza Refina el 70% del Oro Mundial",
+    metaDescription:
+      "Suiza procesa más de 2.000 toneladas de oro al año. Por qué Valcambi, PAMP Suisse y Argor-Heraeus eligieron Suiza como centro mundial de refinado de oro.",
+  },
+  {
+    slug: "assignats-and-inflation",
+    locale: "es",
+    seoTitle: "Asignados Franceses: Caso de Estudio en Hiperinflación",
+    metaDescription:
+      "Los asignados de Francia (1789-1796) colapsaron de valor nominal a casi cero tras una masiva impresión de dinero. Qué enseña el primer caso de hiperinflación moderno.",
   },
 
   // ───────── GERMAN (de) — top 10 by impressions ─────────
