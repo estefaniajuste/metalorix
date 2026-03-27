@@ -21,6 +21,7 @@ on:
           - learn
           - learn-translate
           - indexing
+          - optimize-learn
       content_type:
         description: 'When job=content: daily, evening, weekly, auto, translate, replace_today, regenerate_translations, fix_slugs'
         required: false
@@ -380,6 +381,25 @@ jobs:
           body=$(echo "$response" | head -n -1)
           echo "Status: $http_code"
           echo "Response: $body"
+
+  optimize-learn-titles:
+    if: github.event.inputs.job == 'optimize-learn'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Apply optimized SEO titles to learn articles
+        run: |
+          response=$(curl -s -w "\n%{http_code}" -X POST \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+            -H "Content-Type: application/json" \
+            "${{ env.SERVICE_URL }}/api/seo/optimize-learn")
+          http_code=$(echo "$response" | tail -1)
+          body=$(echo "$response" | head -n -1)
+          echo "Status: $http_code"
+          echo "Response: $body"
+          if [ "$http_code" -ge 400 ]; then
+            echo "::error::optimize-learn failed with status $http_code"
+            exit 1
+          fi
 
   ping-sitemap:
     if: >
