@@ -77,6 +77,21 @@ async function getTranslation(articleId: number, locale: string) {
   }
 }
 
+/** Returns a map of locale → slug for all translations of an article. */
+async function getAllTranslationSlugs(articleId: number): Promise<Record<string, string>> {
+  const db = getDb();
+  if (!db) return {};
+  try {
+    const rows = await db
+      .select({ locale: articleTranslations.locale, slug: articleTranslations.slug })
+      .from(articleTranslations)
+      .where(eq(articleTranslations.articleId, articleId));
+    return Object.fromEntries(rows.map((r) => [r.locale, r.slug]));
+  } catch {
+    return {};
+  }
+}
+
 async function getRelatedArticles(articleId: number, category: string, locale: string) {
   const db = getDb();
   if (!db) return [];
@@ -199,12 +214,21 @@ export async function generateMetadata({
   const translation = await getTranslation(article.id, locale);
   const title = translation?.title ?? article.title;
   const description = translation?.excerpt ?? article.excerpt ?? article.title;
-  const metaSlug = translation?.slug ?? article.slug;
 
-  const alternates = getAlternates(locale, {
+  // Fetch all translation slugs to build correct per-locale hreflang alternates.
+  // Without this, all locales would share the same slug (wrong language in URL).
+  const slugsByLocale = await getAllTranslationSlugs(article.id);
+
+  const alternates = getAlternates(locale, (loc) => ({
     pathname: "/noticias/[slug]",
-    params: { slug: metaSlug },
-  });
+    params: {
+      slug: loc === "es" ? article.slug : (slugsByLocale[loc] ?? article.slug),
+    },
+  }));
+
+  // Detect wrong-language slug (e.g. /en/news/metales-... instead of /en/news/precious-...)
+  const correctSlug = locale === "es" ? article.slug : (translation?.slug ?? article.slug);
+  const hasWrongSlug = params.slug !== correctSlug;
 
   return {
     title: `${title} | Metalorix`,
@@ -222,6 +246,9 @@ export async function generateMetadata({
       description,
     },
     alternates,
+    // Prevent indexing when the URL slug doesn't match the locale's canonical slug.
+    // The correct slug URL will be indexed via the canonical alternate.
+    ...(hasWrongSlug && { robots: { index: false, follow: true } }),
   };
 }
 
