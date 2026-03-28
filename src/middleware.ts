@@ -110,6 +110,28 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL("/learn", request.url), 301);
   }
 
+  // Redirect learn articles accessed under the wrong cluster slug.
+  // Google indexed some articles under a cluster they no longer belong to.
+  // Map: wrong-cluster/slug → correct-cluster/slug (locale-agnostic, slug stays the same).
+  const LEARN_WRONG_CLUSTER_REDIRECTS: Record<string, string> = {
+    "ratios-analytics/volatility-comparison-across-metals": "comparisons/volatility-comparison-across-metals",
+    "ratios-analytics/liquidity-comparison-across-metals": "comparisons/liquidity-comparison-across-metals",
+  };
+  if (segments.length >= 3 && LOCALES.has(segments[0])) {
+    const locale = segments[0];
+    const learnSegment = LEARN_PATHS[locale]?.replace("/", "") || "learn";
+    if (segments[1] === learnSegment && segments.length >= 4) {
+      const wrongKey = `${segments[2]}/${segments[3]}`;
+      const correctPath = LEARN_WRONG_CLUSTER_REDIRECTS[wrongKey];
+      if (correctPath) {
+        return NextResponse.redirect(
+          new URL(`/${locale}/${learnSegment}/${correctPath}`, request.url),
+          301
+        );
+      }
+    }
+  }
+
   const alias = PATH_ALIASES[lower];
   if (alias) {
     const rewritten = new URL(alias, request.url);
