@@ -375,20 +375,20 @@ export async function POST(request: NextRequest) {
       });
       if (result.succeeded > 0) {
         generated.push(`learn: ${result.succeeded}/${result.processed} articles generated`);
-        // Revalidate ISR cache for generated pages so new content appears immediately.
+        const learnNewUrls: string[] = [];
         for (const r of result.results) {
           if (!r.success) continue;
           const topic = getTopicBySlug(r.slug);
           if (!topic) continue;
           for (const loc of routing.locales) {
             const clusterSlug = getLocalizedClusterSlug(topic.clusterSlug, loc);
-            try {
-              revalidatePath(`/${loc}/learn/${clusterSlug}/${r.slug}`);
-            } catch {
-              // revalidatePath is best-effort; ignore errors
-            }
+            // Revalidate ISR cache so new content is visible immediately
+            try { revalidatePath(`/${loc}/learn/${clusterSlug}/${r.slug}`); } catch { /* best-effort */ }
+            learnNewUrls.push(`https://metalorix.com/${loc}/learn/${clusterSlug}/${r.slug}`);
           }
         }
+        // Ping IndexNow so Google/Bing discover the new content fast
+        if (learnNewUrls.length) await pingIndexNow(learnNewUrls);
       }
     } catch (err) {
       console.error("Learn article generation failed:", err);
