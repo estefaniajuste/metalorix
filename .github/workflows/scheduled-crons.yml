@@ -18,10 +18,11 @@ on:
           - glossary
           - news
           - alerts
-          - learn
-          - learn-translate
-          - indexing
-          - optimize-learn
+      - learn
+      - learn-priority
+      - learn-translate
+      - indexing
+      - optimize-learn
       content_type:
         description: 'When job=content: daily, evening, weekly, auto, translate, replace_today, regenerate_translations, fix_slugs'
         required: false
@@ -311,6 +312,25 @@ jobs:
           body=$(echo "$response" | head -n -1)
           echo "Status: $http_code"
           echo "Response: $body"
+
+  learn-priority:
+    if: github.event.inputs.job == 'learn-priority'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Force-generate high-priority learn articles (by slug)
+        run: |
+          SLUGS="volatility-comparison-across-metals,comparing-gold-etfs-in-europe,liquidity-comparison-across-metals"
+          response=$(curl -s -w "\n%{http_code}" -X POST \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+            "${{ env.SERVICE_URL }}/api/cron/generate-content?type=learn&slugs=${SLUGS}")
+          http_code=$(echo "$response" | tail -1)
+          body=$(echo "$response" | head -n -1)
+          echo "Status: $http_code"
+          echo "Response: $body"
+          if [ "$http_code" -ge 400 ]; then
+            echo "::error::learn-priority failed with status $http_code"
+            exit 1
+          fi
 
       - name: Translate new Learn articles to Hindi
         if: steps.check.outputs.should_run == 'true'

@@ -356,15 +356,19 @@ export async function POST(request: NextRequest) {
     }
   }
 
-  // Learn articles: generate 3 new articles per run (08:00 and 16:00 UTC), only topics without content
+  // Learn articles: generate 3 new articles per run (08:00 and 16:00 UTC), only topics without content.
+  // Pass ?slugs=slug1,slug2 to force-regenerate specific articles (ignores onlyMissing).
   if (type === "learn" || type === "auto") {
     try {
+      const slugsParam = url.searchParams.get("slugs");
+      const specificSlugs = slugsParam ? slugsParam.split(",").map((s) => s.trim()).filter(Boolean) : undefined;
       const result = await generateBatch({
         batchId: `cron-${Date.now()}`,
         locale: "en",
         dryRun: false,
-        limit: 3,
-        onlyMissing: true,
+        limit: specificSlugs ? specificSlugs.length : 3,
+        onlyMissing: !specificSlugs,
+        slugs: specificSlugs,
       });
       if (result.succeeded > 0) {
         generated.push(`learn: ${result.succeeded}/${result.processed} articles generated`);
