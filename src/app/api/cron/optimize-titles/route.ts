@@ -9,7 +9,7 @@ import { getPathname } from "@/i18n/navigation";
 
 export const maxDuration = 300;
 
-const CRON_SECRET = process.env.CRON_SECRET;
+const CRON_SECRET = process.env.CRON_SECRET?.trim();
 const BASE = "https://metalorix.com";
 
 // Titles that signal generic, low-quality SEO (case-insensitive match)
@@ -97,7 +97,7 @@ JSON:`;
 
 export async function POST(request: NextRequest) {
   if (CRON_SECRET) {
-    const auth = request.headers.get("authorization");
+    const auth = request.headers.get("authorization")?.trim();
     if (auth !== `Bearer ${CRON_SECRET}`) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
