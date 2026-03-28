@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { getDb } from "@/lib/db";
 import { articles, articleTranslations, metalPrices, learnArticles, learnArticleLocalizations } from "@/lib/db/schema";
 import { eq, desc, gte, lt, and, like, not, inArray, notInArray, sql } from "drizzle-orm";
@@ -22,6 +23,8 @@ import {
   getGlossaryTermCount,
 } from "@/lib/ai/glossary-generator";
 import { generateBatch, translateArticle as translateLearnArticle } from "@/lib/learn/generate";
+import { getTopicBySlug } from "@/lib/learn/topics";
+import { getLocalizedClusterSlug } from "@/lib/learn/slug-i18n";
 import { sendWeeklyNewsletter } from "@/lib/email/newsletter";
 import { sendEmail } from "@/lib/email/resend";
 import { pingSearchEngines, pingIndexNow } from "@/lib/seo/ping";
@@ -372,6 +375,20 @@ export async function POST(request: NextRequest) {
       });
       if (result.succeeded > 0) {
         generated.push(`learn: ${result.succeeded}/${result.processed} articles generated`);
+        // Revalidate ISR cache for generated pages so new content appears immediately.
+        for (const r of result.results) {
+          if (!r.success) continue;
+          const topic = getTopicBySlug(r.slug);
+          if (!topic) continue;
+          for (const loc of routing.locales) {
+            const clusterSlug = getLocalizedClusterSlug(topic.clusterSlug, loc);
+            try {
+              revalidatePath(`/${loc}/learn/${clusterSlug}/${r.slug}`);
+            } catch {
+              // revalidatePath is best-effort; ignore errors
+            }
+          }
+        }
       }
     } catch (err) {
       console.error("Learn article generation failed:", err);

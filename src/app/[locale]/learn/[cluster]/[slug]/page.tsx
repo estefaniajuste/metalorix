@@ -34,7 +34,7 @@ import { SetLocalePathOverrides } from "@/components/layout/SetLocalePathOverrid
 import { ContextualToolCards, InlineToolCallout, getToolsForArticle } from "@/components/tools/ContextualToolCards";
 import type { Locale } from "@/i18n/config";
 
-export const revalidate = 86400;
+export const revalidate = 3600;
 
 async function getArticleData(slug: string, locale: string) {
   const db = getDb();
