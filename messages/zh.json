@@ -21,7 +21,8 @@
     "metalPrices": "金属价格",
     "learn": "学习",
     "changeLanguage": "切换语言",
-    "whereToBuy": "购买地点"
+    "whereToBuy": "购买地点",
+    "buy": "购买"
   },
   "footer": {
     "prices": "价格",

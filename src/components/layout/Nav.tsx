@@ -1,6 +1,6 @@
 "use client";
 
-import { Link } from "@/i18n/navigation";
+import { Link, usePathname } from "@/i18n/navigation";
 import { useEffect, useRef, useState } from "react";
 import { useTranslations, useLocale } from "next-intl";
 import { Logo } from "./Logo";
@@ -44,21 +44,42 @@ function CloseIcon() {
   );
 }
 
-function ChevronDown() {
+function ChevronDown({ open }: { open: boolean }) {
   return (
-    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+    <svg
+      width="10"
+      height="10"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2.5"
+      strokeLinecap="round"
+      className={`transition-transform duration-150 ${open ? "rotate-180" : ""}`}
+    >
       <polyline points="6 9 12 15 18 9" />
     </svg>
   );
 }
 
+function BellIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+      <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+      <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+    </svg>
+  );
+}
+
+type DropdownId = "prices" | "buy" | "learn" | null;
+
 export function Nav() {
   const { theme, toggle } = useTheme();
   const t = useTranslations("nav");
   const locale = useLocale();
+  const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [dropdownOpen, setDropdownOpen] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
+  const [openDropdown, setOpenDropdown] = useState<DropdownId>(null);
+  const navRef = useRef<HTMLElement>(null);
 
   const metalLinks: { href: any; label: string; symbol: string; color: string }[] = [
     { href: { pathname: "/precio/[metal]" as const, params: { metal: getLocalizedMetalSlug("oro", locale) } }, label: t("gold"), symbol: "XAU", color: "#D6B35A" },
@@ -69,27 +90,47 @@ export function Nav() {
     { href: "/ratio-oro-plata" as const, label: t("ratio"), symbol: "⚖️", color: "#D6B35A" },
   ];
 
-  const navItems = [
-    { href: "/", label: t("dashboard") },
-    { href: "#precios", label: t("prices"), hasDropdown: true },
-    { href: "/productos", label: t("products") },
-    { href: "/donde-comprar", label: t("whereToBuy") },
-    { href: "/herramientas", label: t("tools") },
-    { href: "/guia-inversion", label: t("guide") },
-    { href: "/noticias", label: t("news") },
-    { href: "/learn", label: t("learn") },
-    { href: "/alertas", label: t("alerts") },
+  const buyLinks = [
+    { href: "/productos" as const, label: t("products") },
+    { href: "/donde-comprar" as const, label: t("whereToBuy") },
   ];
+
+  const learnLinks = [
+    { href: "/guia-inversion" as const, label: t("guide") },
+    { href: "/learn" as const, label: t("learn") },
+    { href: "/noticias" as const, label: t("news") },
+  ];
+
+  const toggleDropdown = (id: DropdownId) => {
+    setOpenDropdown((prev) => (prev === id ? null : id));
+  };
+
+  const isPricesActive = pathname.startsWith("/precio/") || pathname === "/ratio-oro-plata";
+  const isBuyActive = pathname.startsWith("/productos") || pathname.startsWith("/donde-comprar");
+  const isToolsActive = pathname.startsWith("/herramientas");
+  const isLearnActive =
+    pathname.startsWith("/guia-inversion") ||
+    pathname.startsWith("/learn") ||
+    pathname.startsWith("/noticias");
+  const isAlertsActive = pathname.startsWith("/alertas");
+
+  function navLinkClass(active: boolean) {
+    return `flex items-center gap-1 px-3.5 py-2 rounded-xs text-sm font-medium transition-colors ${
+      active
+        ? "text-brand-gold bg-surface-2"
+        : "text-content-2 hover:text-content-0 hover:bg-surface-2"
+    }`;
+  }
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
-        setDropdownOpen(false);
+      if (navRef.current && !navRef.current.contains(e.target as Node)) {
+        setOpenDropdown(null);
       }
     }
     function handleKeyDown(e: KeyboardEvent) {
       if (e.key === "Escape") {
-        if (dropdownOpen) setDropdownOpen(false);
+        if (openDropdown) setOpenDropdown(null);
         if (mobileOpen) setMobileOpen(false);
       }
     }
@@ -99,69 +140,131 @@ export function Nav() {
       document.removeEventListener("mousedown", handleClickOutside);
       document.removeEventListener("keydown", handleKeyDown);
     };
-  }, [dropdownOpen, mobileOpen]);
+  }, [openDropdown, mobileOpen]);
 
   useEffect(() => {
     document.body.style.overflow = mobileOpen ? "hidden" : "";
-    return () => { document.body.style.overflow = ""; };
+    return () => {
+      document.body.style.overflow = "";
+    };
   }, [mobileOpen]);
 
   return (
     <>
-      <nav className="sticky top-0 z-50 h-16 bg-surface-1 border-b border-border backdrop-blur-xl transition-colors duration-250 ease-smooth">
+      <nav
+        ref={navRef}
+        className="sticky top-0 z-50 h-16 bg-surface-1 border-b border-border backdrop-blur-xl transition-colors duration-250 ease-smooth"
+      >
         <div className="mx-auto max-w-[1200px] px-6 h-full flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2.5" aria-label={t("homeLink")}>
+          <Link href="/" className="flex items-center gap-2.5 flex-shrink-0" aria-label={t("homeLink")}>
             <Logo className="h-8 w-auto" />
           </Link>
 
           {/* Desktop nav */}
-          <div className="hidden md:flex items-center gap-1.5">
-            {navItems.map((item) =>
-              item.hasDropdown ? (
-                <div key={item.href} className="relative" ref={dropdownRef}>
-                  <button
-                    onClick={() => setDropdownOpen(!dropdownOpen)}
-                    aria-expanded={dropdownOpen}
-                    aria-haspopup="menu"
-                    className="flex items-center gap-1 px-3.5 py-2 rounded-xs text-sm font-medium text-content-2 hover:text-content-0 hover:bg-surface-2 transition-colors"
-                  >
-                    {item.label}
-                    <ChevronDown />
-                  </button>
-                  {dropdownOpen && (
-                    <div role="menu" aria-label={t("metalPrices")} className="absolute top-full start-0 mt-1 w-48 bg-surface-1 border border-border rounded-DEFAULT shadow-card py-1.5 z-50">
-                      {metalLinks.map((metal) => (
-                        <Link
-                          key={typeof metal.href === "string" ? metal.href : metal.href.params.metal}
-                          href={metal.href as any}
-                          role="menuitem"
-                          onClick={() => setDropdownOpen(false)}
-                          className="flex items-center gap-3 px-4 py-2.5 text-sm text-content-2 hover:text-content-0 hover:bg-surface-2 transition-colors"
-                        >
-                          <span
-                            className="w-2.5 h-2.5 rounded-full flex-shrink-0"
-                            style={{ backgroundColor: metal.color }}
-                          />
-                          <span className="font-medium">{metal.label}</span>
-                          <span className="text-xs text-content-3 ms-auto">{metal.symbol}</span>
-                        </Link>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              ) : (
-                <Link
-                  key={item.href}
-                  href={item.href as any}
-                  className="px-3.5 py-2 rounded-xs text-sm font-medium text-content-2 hover:text-content-0 hover:bg-surface-2 transition-colors"
+          <div className="hidden md:flex items-center gap-1">
+            {/* Prices dropdown */}
+            <div className="relative">
+              <button
+                onClick={() => toggleDropdown("prices")}
+                aria-expanded={openDropdown === "prices"}
+                aria-haspopup="menu"
+                className={navLinkClass(isPricesActive)}
+              >
+                {t("prices")}
+                <ChevronDown open={openDropdown === "prices"} />
+              </button>
+              {openDropdown === "prices" && (
+                <div
+                  role="menu"
+                  aria-label={t("metalPrices")}
+                  className="absolute top-full start-0 mt-1 w-52 bg-surface-1 border border-border rounded-DEFAULT shadow-card py-1.5 z-50"
                 >
-                  {item.label}
-                </Link>
-              )
-            )}
+                  {metalLinks.map((metal) => (
+                    <Link
+                      key={typeof metal.href === "string" ? metal.href : metal.href.params.metal}
+                      href={metal.href}
+                      role="menuitem"
+                      onClick={() => setOpenDropdown(null)}
+                      className="flex items-center gap-3 px-4 py-2.5 text-sm text-content-2 hover:text-content-0 hover:bg-surface-2 transition-colors"
+                    >
+                      <span
+                        className="w-2.5 h-2.5 rounded-full flex-shrink-0"
+                        style={{ backgroundColor: metal.color }}
+                      />
+                      <span className="font-medium">{metal.label}</span>
+                      <span className="text-xs text-content-3 ms-auto">{metal.symbol}</span>
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Buy dropdown */}
+            <div className="relative">
+              <button
+                onClick={() => toggleDropdown("buy")}
+                aria-expanded={openDropdown === "buy"}
+                aria-haspopup="menu"
+                className={navLinkClass(isBuyActive)}
+              >
+                {t("buy")}
+                <ChevronDown open={openDropdown === "buy"} />
+              </button>
+              {openDropdown === "buy" && (
+                <div role="menu" className="absolute top-full start-0 mt-1 w-48 bg-surface-1 border border-border rounded-DEFAULT shadow-card py-1.5 z-50">
+                  {buyLinks.map((link) => (
+                    <Link
+                      key={link.href}
+                      href={link.href as any}
+                      role="menuitem"
+                      onClick={() => setOpenDropdown(null)}
+                      className="block px-4 py-2.5 text-sm font-medium text-content-2 hover:text-content-0 hover:bg-surface-2 transition-colors"
+                    >
+                      {link.label}
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Tools link */}
+            <Link
+              href={"/herramientas" as any}
+              className={navLinkClass(isToolsActive)}
+            >
+              {t("tools")}
+            </Link>
+
+            {/* Learn dropdown */}
+            <div className="relative">
+              <button
+                onClick={() => toggleDropdown("learn")}
+                aria-expanded={openDropdown === "learn"}
+                aria-haspopup="menu"
+                className={navLinkClass(isLearnActive)}
+              >
+                {t("learn")}
+                <ChevronDown open={openDropdown === "learn"} />
+              </button>
+              {openDropdown === "learn" && (
+                <div role="menu" className="absolute top-full start-0 mt-1 w-44 bg-surface-1 border border-border rounded-DEFAULT shadow-card py-1.5 z-50">
+                  {learnLinks.map((link) => (
+                    <Link
+                      key={link.href}
+                      href={link.href as any}
+                      role="menuitem"
+                      onClick={() => setOpenDropdown(null)}
+                      className="block px-4 py-2.5 text-sm font-medium text-content-2 hover:text-content-0 hover:bg-surface-2 transition-colors"
+                    >
+                      {link.label}
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
 
-          <div className="flex items-center gap-2.5">
+          <div className="flex items-center gap-2">
             <LanguageSwitcher />
 
             <button
@@ -171,6 +274,19 @@ export function Nav() {
             >
               {theme === "dark" ? <SunIcon /> : <MoonIcon />}
             </button>
+
+            {/* Alerts CTA button — desktop only */}
+            <Link
+              href={"/alertas" as any}
+              className={`hidden md:flex items-center gap-1.5 px-4 py-2 text-sm font-semibold rounded-xs transition-all ${
+                isAlertsActive
+                  ? "bg-brand-gold/80 text-[#0B0F17]"
+                  : "bg-brand-gold text-[#0B0F17] hover:brightness-110 active:scale-95"
+              }`}
+            >
+              <BellIcon />
+              {t("alerts")}
+            </Link>
 
             <button
               className="md:hidden w-10 h-10 rounded-xs flex items-center justify-center text-content-1 hover:bg-surface-2"
@@ -184,42 +300,89 @@ export function Nav() {
         </div>
       </nav>
 
-      {/* Mobile nav - outside <nav> so backdrop-blur doesn't break fixed positioning */}
+      {/* Mobile nav — outside <nav> so backdrop-blur doesn't break fixed positioning */}
       {mobileOpen && (
-        <div role="dialog" aria-label={t("openMenu")} className="md:hidden fixed top-16 inset-x-0 bottom-0 bg-surface-1 border-t border-border p-4 z-40 overflow-y-auto">
-          {navItems.map((item) =>
-            item.hasDropdown ? (
-              <div key={item.href}>
-                <div className="px-4 py-2 text-xs font-semibold text-content-3 uppercase tracking-wider">
-                  {t("prices")}
-                </div>
-                {metalLinks.map((metal) => (
-                  <Link
-                    key={typeof metal.href === "string" ? metal.href : metal.href.params.metal}
-                    href={metal.href as any}
-                    className="flex items-center gap-3 px-4 py-3 rounded-sm text-base font-medium text-content-2 hover:text-content-0 hover:bg-surface-2 transition-colors"
-                    onClick={() => setMobileOpen(false)}
-                  >
-                    <span
-                      className="w-2.5 h-2.5 rounded-full flex-shrink-0"
-                      style={{ backgroundColor: metal.color }}
-                    />
-                    {metal.label}
-                    <span className="text-xs text-content-3 ms-auto">{metal.symbol}</span>
-                  </Link>
-                ))}
-              </div>
-            ) : (
+        <div
+          role="dialog"
+          aria-label={t("openMenu")}
+          className="md:hidden fixed top-16 inset-x-0 bottom-0 bg-surface-1 border-t border-border z-40 overflow-y-auto"
+        >
+          <div className="p-4 space-y-0.5">
+            {/* Alerts CTA — prominent at the top on mobile */}
+            <Link
+              href={"/alertas" as any}
+              className="flex items-center justify-center gap-2 px-4 py-3.5 mb-3 text-base font-semibold bg-brand-gold text-[#0B0F17] rounded-xs hover:brightness-110 transition-all"
+              onClick={() => setMobileOpen(false)}
+            >
+              <BellIcon />
+              {t("alerts")}
+            </Link>
+
+            {/* Prices section */}
+            <div className="px-4 pt-3 pb-1 text-xs font-semibold text-content-3 uppercase tracking-wider">
+              {t("prices")}
+            </div>
+            {metalLinks.map((metal) => (
               <Link
-                key={item.href}
-                href={item.href as any}
-                className="block px-4 py-3.5 rounded-sm text-base font-medium text-content-2 hover:text-content-0 hover:bg-surface-2 transition-colors"
+                key={typeof metal.href === "string" ? metal.href : metal.href.params.metal}
+                href={metal.href}
+                className="flex items-center gap-3 px-4 py-3 rounded-sm text-base font-medium text-content-2 hover:text-content-0 hover:bg-surface-2 transition-colors"
                 onClick={() => setMobileOpen(false)}
               >
-                {item.label}
+                <span
+                  className="w-2.5 h-2.5 rounded-full flex-shrink-0"
+                  style={{ backgroundColor: metal.color }}
+                />
+                {metal.label}
+                <span className="text-xs text-content-3 ms-auto">{metal.symbol}</span>
               </Link>
-            )
-          )}
+            ))}
+
+            <div className="h-px bg-border my-3" />
+
+            {/* Buy section */}
+            <div className="px-4 pb-1 text-xs font-semibold text-content-3 uppercase tracking-wider">
+              {t("buy")}
+            </div>
+            {buyLinks.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href as any}
+                className="block px-4 py-3 rounded-sm text-base font-medium text-content-2 hover:text-content-0 hover:bg-surface-2 transition-colors"
+                onClick={() => setMobileOpen(false)}
+              >
+                {link.label}
+              </Link>
+            ))}
+
+            <div className="h-px bg-border my-3" />
+
+            {/* Tools */}
+            <Link
+              href={"/herramientas" as any}
+              className="block px-4 py-3 rounded-sm text-base font-medium text-content-2 hover:text-content-0 hover:bg-surface-2 transition-colors"
+              onClick={() => setMobileOpen(false)}
+            >
+              {t("tools")}
+            </Link>
+
+            <div className="h-px bg-border my-3" />
+
+            {/* Learn section */}
+            <div className="px-4 pb-1 text-xs font-semibold text-content-3 uppercase tracking-wider">
+              {t("learn")}
+            </div>
+            {learnLinks.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href as any}
+                className="block px-4 py-3 rounded-sm text-base font-medium text-content-2 hover:text-content-0 hover:bg-surface-2 transition-colors"
+                onClick={() => setMobileOpen(false)}
+              >
+                {link.label}
+              </Link>
+            ))}
+          </div>
         </div>
       )}
     </>
