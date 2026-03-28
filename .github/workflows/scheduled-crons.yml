@@ -18,11 +18,11 @@ on:
           - glossary
           - news
           - alerts
-      - learn
-      - learn-priority
-      - learn-translate
-      - indexing
-      - optimize-learn
+          - learn
+          - learn-priority
+          - learn-translate
+          - indexing
+          - optimize-learn
       content_type:
         description: 'When job=content: daily, evening, weekly, auto, translate, replace_today, regenerate_translations, fix_slugs'
         required: false
