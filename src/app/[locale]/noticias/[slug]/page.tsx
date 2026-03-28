@@ -86,7 +86,11 @@ async function getAllTranslationSlugs(articleId: number): Promise<Record<string,
       .select({ locale: articleTranslations.locale, slug: articleTranslations.slug })
       .from(articleTranslations)
       .where(eq(articleTranslations.articleId, articleId));
-    return Object.fromEntries(rows.map((r) => [r.locale, r.slug]));
+    const result: Record<string, string> = {};
+    for (const r of rows) {
+      if (r.slug) result[r.locale] = r.slug;
+    }
+    return result;
   } catch {
     return {};
   }
