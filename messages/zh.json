@@ -89,7 +89,11 @@
     "emailPlaceholder": "your@email.com",
     "emailBtn": "订阅",
     "emailSuccess": "订阅成功！请查看您的邮箱。",
-    "emailError": "连接错误，请重试。"
+    "emailError": "连接错误，请重试。",
+    "anchorPrices": "价格",
+    "anchorNews": "新闻",
+    "anchorTools": "工具",
+    "anchorDealers": "经销商"
   },
   "metals": {
     "gold": "黄金",
@@ -339,7 +343,16 @@
     "sources": "信息来源",
     "checkPrices": "查看实时价格：",
     "viewDashboard": "查看仪表盘",
-    "goldPrice": "黄金价格"
+    "goldPrice": "黄金价格",
+    "filterAll": "全部",
+    "filterByType": "按类型",
+    "filterByMetal": "按金属",
+    "allMetals": "所有金属",
+    "prev": "上一页",
+    "next": "下一页",
+    "page": "第 {current} 页，共 {total} 页",
+    "articlesCount": "{count} 篇文章",
+    "noResults": "没有符合所选筛选条件的文章。"
   },
   "prices": {
     "priceOf": "{metal}今日价格",
@@ -878,7 +891,13 @@
     "coins": "金币",
     "bars": "金条",
     "filterProducts": "筛选产品",
-    "noProducts": "该筛选条件下无产品。"
+    "noProducts": "该筛选条件下无产品。",
+    "sortBy": "排序方式",
+    "sortDefault": "默认",
+    "sortPurity": "纯度（高→低）",
+    "sortWeightDesc": "重量（高→低）",
+    "sortWeightAsc": "重量（低→高）",
+    "sortLiquidity": "流动性（高→低）"
   },
   "investmentTable": {
     "method": "方式",
@@ -1370,5 +1389,14 @@
     "citiesSection": "按城市浏览",
     "cityBreadcrumb": "城市",
     "citySeoKeywords": "在{city}购买黄金,{city}贵金属经销商,{city}黄金商店"
+  },
+  "search": {
+    "placeholder": "搜索文章、工具、产品...",
+    "noResults": "未找到结果",
+    "articles": "新闻",
+    "learn": "学习",
+    "products": "产品",
+    "tools": "工具",
+    "hint": "按 Ctrl+K 搜索"
   }
 }

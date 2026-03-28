@@ -89,7 +89,11 @@
     "emailPlaceholder": "tu@email.com",
     "emailBtn": "Suscribirse",
     "emailSuccess": "¡Suscripción completada! Revisa tu email.",
-    "emailError": "Error de conexión. Inténtalo de nuevo."
+    "emailError": "Error de conexión. Inténtalo de nuevo.",
+    "anchorPrices": "Precios",
+    "anchorNews": "Noticias",
+    "anchorTools": "Herramientas",
+    "anchorDealers": "Dealers"
   },
   "metals": {
     "gold": "Oro",
@@ -332,7 +336,13 @@
     "creating": "Creando...",
     "createAlertBtn": "Crear alerta",
     "googleLogin": "Continuar con Google",
-    "or": "o"
+    "or": "o",
+    "preferences": "Preferencias",
+    "defaultCurrency": "Moneda por defecto",
+    "defaultUnit": "Unidad por defecto",
+    "favorites": "Metales favoritos",
+    "favoritesEmpty": "Toca una estrella para añadir metales favoritos",
+    "prefsSaved": "Guardado"
   },
   "metadata": {
     "title": "Metalorix — Precios de Oro, Plata y Platino",
@@ -391,7 +401,16 @@
     "sources": "Fuentes de información",
     "checkPrices": "Consulta los precios en tiempo real:",
     "viewDashboard": "Ver Dashboard",
-    "goldPrice": "Precio del Oro"
+    "goldPrice": "Precio del Oro",
+    "filterAll": "Todos",
+    "filterByType": "Por tipo",
+    "filterByMetal": "Por metal",
+    "allMetals": "Todos los metales",
+    "prev": "Anterior",
+    "next": "Siguiente",
+    "page": "Página {current} de {total}",
+    "articlesCount": "{count} artículos",
+    "noResults": "No hay artículos que coincidan con los filtros seleccionados."
   },
   "prices": {
     "priceOf": "Precio de {metal} hoy",
@@ -930,7 +949,21 @@
     "coins": "Monedas",
     "bars": "Lingotes",
     "filterProducts": "Filtrar productos",
-    "noProducts": "No hay productos para este filtro."
+    "noProducts": "No hay productos para este filtro.",
+    "sortBy": "Ordenar por",
+    "sortDefault": "Por defecto",
+    "sortPurity": "Pureza (mayor → menor)",
+    "sortWeightDesc": "Peso (mayor → menor)",
+    "sortWeightAsc": "Peso (menor → mayor)",
+    "sortLiquidity": "Liquidez (mayor → menor)",
+    "compare": "Comparar",
+    "compareHint": "Selecciona 2-3 productos para comparar",
+    "compareMax": "Máximo 3 productos",
+    "exitCompare": "Salir de comparación",
+    "selected": "seleccionados",
+    "compareTitle": "Comparativa de productos",
+    "compareNow": "Ver comparativa",
+    "clearCompare": "Limpiar"
   },
   "investmentTable": {
     "method": "Método",
@@ -1370,5 +1403,14 @@
     "citiesSection": "Explorar por ciudad",
     "cityBreadcrumb": "Ciudades",
     "citySeoKeywords": "comprar oro {city}, dealers metales preciosos {city}, tiendas oro {city}"
+  },
+  "search": {
+    "placeholder": "Buscar artículos, herramientas, productos...",
+    "noResults": "No se encontraron resultados",
+    "articles": "Noticias",
+    "learn": "Aprender",
+    "products": "Productos",
+    "tools": "Herramientas",
+    "hint": "Pulsa Ctrl+K para buscar"
   }
 }

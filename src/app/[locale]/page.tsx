@@ -1,6 +1,7 @@
 import { Hero } from "@/components/dashboard/Hero";
 import { Dashboard } from "@/components/dashboard/Dashboard";
 import { HomePreview } from "@/components/dashboard/HomePreview";
+import { MobileSectionNav } from "@/components/dashboard/MobileSectionNav";
 import { getTranslations, getLocale } from "next-intl/server";
 import { getPathname } from "@/i18n/navigation";
 import { getSpotPrices } from "@/lib/providers/spot-prices";
@@ -64,8 +65,9 @@ export default async function HomePage() {
         />
       )}
       <Hero />
-      <Dashboard />
+      <div id="prices"><Dashboard /></div>
       <HomePreview />
+      <MobileSectionNav />
     </>
   );
 }

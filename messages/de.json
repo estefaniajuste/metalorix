@@ -89,7 +89,11 @@
     "emailPlaceholder": "ihre@email.com",
     "emailBtn": "Abonnieren",
     "emailSuccess": "Abonnement abgeschlossen! Überprüfen Sie Ihre E-Mail.",
-    "emailError": "Verbindungsfehler. Versuchen Sie es erneut."
+    "emailError": "Verbindungsfehler. Versuchen Sie es erneut.",
+    "anchorPrices": "Preise",
+    "anchorNews": "Nachrichten",
+    "anchorTools": "Tools",
+    "anchorDealers": "Händler"
   },
   "metals": {
     "gold": "Gold",
@@ -339,7 +343,16 @@
     "sources": "Informationsquellen",
     "checkPrices": "Echtzeit-Preise prüfen:",
     "viewDashboard": "Dashboard anzeigen",
-    "goldPrice": "Goldpreis"
+    "goldPrice": "Goldpreis",
+    "filterAll": "Alle",
+    "filterByType": "Nach Typ",
+    "filterByMetal": "Nach Metall",
+    "allMetals": "Alle Metalle",
+    "prev": "Zurück",
+    "next": "Weiter",
+    "page": "Seite {current} von {total}",
+    "articlesCount": "{count} Artikel",
+    "noResults": "Keine Artikel entsprechen den ausgewählten Filtern."
   },
   "prices": {
     "priceOf": "Preis von {metal} heute",
@@ -878,7 +891,13 @@
     "coins": "Münzen",
     "bars": "Barren",
     "filterProducts": "Produkte filtern",
-    "noProducts": "Keine Produkte für diesen Filter."
+    "noProducts": "Keine Produkte für diesen Filter.",
+    "sortBy": "Sortieren nach",
+    "sortDefault": "Standard",
+    "sortPurity": "Reinheit (hoch → niedrig)",
+    "sortWeightDesc": "Gewicht (hoch → niedrig)",
+    "sortWeightAsc": "Gewicht (niedrig → hoch)",
+    "sortLiquidity": "Liquidität (hoch → niedrig)"
   },
   "investmentTable": {
     "method": "Methode",
@@ -1370,5 +1389,14 @@
     "citiesSection": "Nach Stadt durchsuchen",
     "cityBreadcrumb": "Städte",
     "citySeoKeywords": "Gold kaufen {city}, Edelmetallhändler {city}, Goldgeschäfte {city}"
+  },
+  "search": {
+    "placeholder": "Artikel, Tools, Produkte suchen...",
+    "noResults": "Keine Ergebnisse gefunden",
+    "articles": "Nachrichten",
+    "learn": "Lernen",
+    "products": "Produkte",
+    "tools": "Werkzeuge",
+    "hint": "Strg+K zum Suchen drücken"
   }
 }

@@ -3,6 +3,22 @@
 import { useEffect, useState, useCallback } from "react";
 import { useTranslations, useLocale } from "next-intl";
 
+const METALS = [
+  { symbol: "XAU", nameKey: "gold" as const, color: "#D6B35A" },
+  { symbol: "XAG", nameKey: "silver" as const, color: "#A7B0BE" },
+  { symbol: "XPT", nameKey: "platinum" as const, color: "#8B9DC3" },
+  { symbol: "XPD", nameKey: "palladium" as const, color: "#CED0CE" },
+  { symbol: "HG", nameKey: "copper" as const, color: "#B87333" },
+] as const;
+
+const CURRENCIES = ["USD", "EUR", "GBP", "CHF", "JPY"] as const;
+const UNITS = ["oz", "g", "kg"] as const;
+
+interface Preferences {
+  currency: string;
+  unit: string;
+}
+
 interface UserData {
   id: number;
   email: string;
@@ -30,6 +46,13 @@ export function UserPanel() {
   const [loginStatus, setLoginStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
   const [loginError, setLoginError] = useState("");
   const [loading, setLoading] = useState(true);
+
+  // Preferences
+  const [prefs, setPrefs] = useState<Preferences>({ currency: "USD", unit: "oz" });
+  const [prefsSaved, setPrefsSaved] = useState(false);
+
+  // Favorites
+  const [favorites, setFavorites] = useState<string[]>([]);
 
   // New alert form
   const [newSymbol, setNewSymbol] = useState("XAU");
@@ -68,6 +91,33 @@ export function UserPanel() {
       setLoading(false);
     });
   }, [fetchUser, fetchAlerts]);
+
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem("mtx-preferences");
+      if (stored) setPrefs(JSON.parse(stored));
+    } catch {}
+    try {
+      const stored = localStorage.getItem("mtx-favorites");
+      if (stored) setFavorites(JSON.parse(stored));
+    } catch {}
+  }, []);
+
+  const updatePrefs = (patch: Partial<Preferences>) => {
+    const next = { ...prefs, ...patch };
+    setPrefs(next);
+    localStorage.setItem("mtx-preferences", JSON.stringify(next));
+    setPrefsSaved(true);
+    setTimeout(() => setPrefsSaved(false), 1500);
+  };
+
+  const toggleFavorite = (symbol: string) => {
+    const next = favorites.includes(symbol)
+      ? favorites.filter((s) => s !== symbol)
+      : [...favorites, symbol];
+    setFavorites(next);
+    localStorage.setItem("mtx-favorites", JSON.stringify(next));
+  };
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -229,6 +279,99 @@ export function UserPanel() {
         >
           {t("logout")}
         </button>
+      </div>
+
+      {/* Preferences */}
+      <div className="bg-surface-1 border border-border rounded-DEFAULT p-4">
+        <div className="flex items-center justify-between mb-3">
+          <h3 className="text-base font-semibold text-content-0">
+            {t("preferences")}
+          </h3>
+          {prefsSaved && (
+            <span className="text-xs text-signal-up font-medium">
+              {t("prefsSaved")}
+            </span>
+          )}
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label className="block text-xs text-content-3 mb-1">
+              {t("defaultCurrency")}
+            </label>
+            <select
+              value={prefs.currency}
+              onChange={(e) => updatePrefs({ currency: e.target.value })}
+              className="w-full px-3 py-2 bg-surface-0 border border-border rounded-sm text-sm text-content-0 outline-none focus:border-brand-gold"
+            >
+              {CURRENCIES.map((c) => (
+                <option key={c} value={c}>{c}</option>
+              ))}
+            </select>
+          </div>
+          <div>
+            <label className="block text-xs text-content-3 mb-1">
+              {t("defaultUnit")}
+            </label>
+            <select
+              value={prefs.unit}
+              onChange={(e) => updatePrefs({ unit: e.target.value })}
+              className="w-full px-3 py-2 bg-surface-0 border border-border rounded-sm text-sm text-content-0 outline-none focus:border-brand-gold"
+            >
+              {UNITS.map((u) => (
+                <option key={u} value={u}>{u}</option>
+              ))}
+            </select>
+          </div>
+        </div>
+      </div>
+
+      {/* Favorites */}
+      <div className="bg-surface-1 border border-border rounded-DEFAULT p-4">
+        <h3 className="text-base font-semibold text-content-0 mb-3">
+          {t("favorites")}
+        </h3>
+        <div className="flex flex-wrap gap-2 mb-3">
+          {METALS.map((metal) => {
+            const active = favorites.includes(metal.symbol);
+            return (
+              <button
+                key={metal.symbol}
+                onClick={() => toggleFavorite(metal.symbol)}
+                className="flex items-center gap-2 px-3 py-1.5 bg-surface-0 border border-border rounded-sm text-sm text-content-0 hover:border-border-hover transition-colors"
+              >
+                <span
+                  className="w-2.5 h-2.5 rounded-full shrink-0"
+                  style={{ backgroundColor: metal.color }}
+                />
+                {tm(metal.nameKey)}
+                <span
+                  className="text-base leading-none transition-colors"
+                  style={{ color: active ? "#D6B35A" : "var(--text-3)" }}
+                >
+                  ★
+                </span>
+              </button>
+            );
+          })}
+        </div>
+        {favorites.length === 0 ? (
+          <p className="text-xs text-content-3">{t("favoritesEmpty")}</p>
+        ) : (
+          <div className="flex flex-wrap gap-2">
+            {METALS.filter((m) => favorites.includes(m.symbol)).map((metal) => (
+              <span
+                key={metal.symbol}
+                className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-surface-2 rounded-sm text-xs font-medium text-content-0"
+              >
+                <span
+                  className="w-2 h-2 rounded-full"
+                  style={{ backgroundColor: metal.color }}
+                />
+                {tm(metal.nameKey)} ({metal.symbol})
+              </span>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Alerts list */}

@@ -89,7 +89,11 @@
     "emailPlaceholder": "your@email.com",
     "emailBtn": "सदस्यता लें",
     "emailSuccess": "सदस्यता पूर्ण! अपना ईमेल जांचें।",
-    "emailError": "कनेक्शन त्रुटि। पुनः प्रयास करें।"
+    "emailError": "कनेक्शन त्रुटि। पुनः प्रयास करें।",
+    "anchorPrices": "कीमतें",
+    "anchorNews": "समाचार",
+    "anchorTools": "उपकरण",
+    "anchorDealers": "डीलर"
   },
   "metals": {
     "gold": "सोना",
@@ -877,7 +881,13 @@
     "coins": "सिक्के",
     "bars": "बार",
     "filterProducts": "उत्पाद फ़िल्टर करें",
-    "noProducts": "इस फ़िल्टर से मेल खाता कोई उत्पाद नहीं।"
+    "noProducts": "इस फ़िल्टर से मेल खाता कोई उत्पाद नहीं।",
+    "sortBy": "इसके अनुसार क्रमबद्ध करें",
+    "sortDefault": "डिफ़ॉल्ट",
+    "sortPurity": "शुद्धता (उच्च → निम्न)",
+    "sortWeightDesc": "वज़न (उच्च → निम्न)",
+    "sortWeightAsc": "वज़न (निम्न → उच्च)",
+    "sortLiquidity": "तरलता (उच्च → निम्न)"
   },
   "investmentTable": {
     "method": "विधि",
@@ -1367,5 +1377,14 @@
     "citiesSection": "शहर के अनुसार ब्राउज़ करें",
     "cityBreadcrumb": "शहर",
     "citySeoKeywords": "{city} में सोना खरीदें,{city} बहुमूल्य धातु डीलर,{city} सोना स्टोर"
+  },
+  "search": {
+    "placeholder": "लेख, उपकरण, उत्पाद खोजें...",
+    "noResults": "कोई परिणाम नहीं मिला",
+    "articles": "समाचार",
+    "learn": "सीखें",
+    "products": "उत्पाद",
+    "tools": "उपकरण",
+    "hint": "खोजने के लिए Ctrl+K दबाएं"
   }
 }

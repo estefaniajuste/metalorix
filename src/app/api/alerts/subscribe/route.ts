@@ -5,6 +5,7 @@ import { eq, and } from "drizzle-orm";
 import { sendEmail } from "@/lib/email/resend";
 import { welcomeEmail } from "@/lib/email/templates";
 import { rateLimit, getClientIp } from "@/lib/rate-limit";
+import { randomBytes } from "crypto";
 
 export async function POST(request: NextRequest) {
   const ip = getClientIp(request.headers);
@@ -95,12 +96,23 @@ export async function POST(request: NextRequest) {
 
     const messageKey = isNew ? "apiNew" : alertsCreated > 0 ? "apiAlertsCreated" : "apiExisting";
 
-    return NextResponse.json({
+    const sessionToken = randomBytes(32).toString("hex");
+    const response = NextResponse.json({
       ok: true,
       isNew,
       alertsCreated,
       messageKey,
     });
+
+    response.cookies.set("metalorix_session", `${userId}:${sessionToken}`, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      path: "/",
+      maxAge: 7 * 24 * 60 * 60,
+    });
+
+    return response;
   } catch (err) {
     console.error("Subscribe error:", err);
     return NextResponse.json(

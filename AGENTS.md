@@ -153,32 +153,43 @@ El directorio de dealers (`/donde-comprar`) fue implementado en marzo 2026 con ~
 
 1. ~~**Página "Mejores dealers"** — INDEXADA (marzo 2026)~~ ✓
 
-2. **Países nuevos** añadidos en marzo 2026 (Japón, Holanda, Brasil, Bélgica, Corea del Sur, Polonia):
-   - `https://metalorix.com/en/where-to-buy/japan`
-   - `https://metalorix.com/en/where-to-buy/netherlands`
-   - `https://metalorix.com/en/where-to-buy/brazil`
-   - `https://metalorix.com/en/where-to-buy/belgium`
-   - `https://metalorix.com/en/where-to-buy/south-korea`
-   - `https://metalorix.com/en/where-to-buy/poland`
+2. ~~**Páginas de país** — TODAS INDEXADAS (marzo 2026)~~ ✓
 
-3. **Páginas de ciudad en inglés** (alta intención local, poca competencia):
-   - `/en/where-to-buy/united-kingdom/london`
-   - `/en/where-to-buy/germany/frankfurt`
-   - `/en/where-to-buy/germany/munich`
-   - `/en/where-to-buy/spain/madrid`
-   - `/en/where-to-buy/france/paris`
-   - `/en/where-to-buy/japan/tokyo`
-   - `/en/where-to-buy/australia/perth`
-   - `/en/where-to-buy/australia/sydney`
-   - `/en/where-to-buy/canada/ottawa`
-   - `/en/where-to-buy/turkey/istanbul`
-   - `/en/where-to-buy/india/new-delhi`
-   - `/en/where-to-buy/uae/dubai`
-   - `/en/where-to-buy/poland/warsaw`
-   - `/en/where-to-buy/south-korea/seoul`
-   - `/en/where-to-buy/brazil/sao-paulo`
-   - `/en/where-to-buy/italy/arezzo`
-   - `/en/where-to-buy/italy/rome`
-   - `/en/where-to-buy/portugal/lisbon`
-   - `/en/where-to-buy/austria/vienna`
-   - `/en/where-to-buy/netherlands/amsterdam`
+3. **Páginas de ciudad en inglés** (hacer después de los países):
+   - `https://metalorix.com/en/where-to-buy/argentina/buenos-aires`
+   - `https://metalorix.com/en/where-to-buy/australia/melbourne`
+   - `https://metalorix.com/en/where-to-buy/australia/perth`
+   - `https://metalorix.com/en/where-to-buy/australia/sidney`
+   - `https://metalorix.com/en/where-to-buy/austria/viena`
+   - `https://metalorix.com/en/where-to-buy/belgium/amberes`
+   - `https://metalorix.com/en/where-to-buy/brazil/brasilia`
+   - `https://metalorix.com/en/where-to-buy/brazil/sao-paulo`
+   - `https://metalorix.com/en/where-to-buy/canada/montreal`
+   - `https://metalorix.com/en/where-to-buy/canada/ottawa`
+   - `https://metalorix.com/en/where-to-buy/china/pekin`
+   - `https://metalorix.com/en/where-to-buy/colombia/bogota`
+   - `https://metalorix.com/en/where-to-buy/colombia/medellin`
+   - `https://metalorix.com/en/where-to-buy/france/lyon`
+   - `https://metalorix.com/en/where-to-buy/france/paris`
+   - `https://metalorix.com/en/where-to-buy/germany/frankfurt`
+   - `https://metalorix.com/en/where-to-buy/germany/munchen`
+   - `https://metalorix.com/en/where-to-buy/india/kozhikode`
+   - `https://metalorix.com/en/where-to-buy/india/nueva-delhi`
+   - `https://metalorix.com/en/where-to-buy/italy/arezzo`
+   - `https://metalorix.com/en/where-to-buy/italy/milan`
+   - `https://metalorix.com/en/where-to-buy/italy/roma`
+   - `https://metalorix.com/en/where-to-buy/italy/turin`
+   - `https://metalorix.com/en/where-to-buy/japan/tokio`
+   - `https://metalorix.com/en/where-to-buy/mexico/ciudad-de-mexico`
+   - `https://metalorix.com/en/where-to-buy/netherlands/amsterdam`
+   - `https://metalorix.com/en/where-to-buy/poland/varsovia`
+   - `https://metalorix.com/en/where-to-buy/portugal/lisboa`
+   - `https://metalorix.com/en/where-to-buy/saudi-arabia/riad`
+   - `https://metalorix.com/en/where-to-buy/south-korea/seul`
+   - `https://metalorix.com/en/where-to-buy/spain/madrid`
+   - `https://metalorix.com/en/where-to-buy/spain/valencia`
+   - `https://metalorix.com/en/where-to-buy/switzerland/mendrisio`
+   - `https://metalorix.com/en/where-to-buy/turkey/istanbul`
+   - `https://metalorix.com/en/where-to-buy/uae/dubai`
+   - `https://metalorix.com/en/where-to-buy/united-kingdom/blackpool`
+   - `https://metalorix.com/en/where-to-buy/united-kingdom/llantrisant`

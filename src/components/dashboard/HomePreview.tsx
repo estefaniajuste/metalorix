@@ -116,7 +116,7 @@ export async function HomePreview() {
     <section className="pb-[var(--section-py)]">
       <div className="mx-auto max-w-[1200px] px-6">
         {hasNews && (
-          <div className="mb-14">
+          <div id="news" className="mb-14">
             <div className="flex items-center justify-between mb-7">
               <div>
                 <h2 className="text-2xl font-bold text-content-0 flex items-center gap-2">
@@ -326,7 +326,7 @@ export async function HomePreview() {
           </div>
         )}
 
-        <div className={hasNews || hasGlossary ? "mt-14" : "mt-10"}>
+        <div id="tools" className={hasNews || hasGlossary ? "mt-14" : "mt-10"}>
           <div className="flex items-center justify-between mb-6">
             <div>
               <h2 className="text-xl font-bold text-content-0 flex items-center gap-2">
@@ -373,7 +373,7 @@ export async function HomePreview() {
           </div>
         </div>
 
-        <div className="mt-10">
+        <div id="dealers" className="mt-10">
           <DealersBanner locale={locale} t={t} />
         </div>
 

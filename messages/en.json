@@ -89,7 +89,11 @@
     "emailPlaceholder": "you@email.com",
     "emailBtn": "Subscribe",
     "emailSuccess": "Subscription complete! Check your email.",
-    "emailError": "Connection error. Try again."
+    "emailError": "Connection error. Try again.",
+    "anchorPrices": "Prices",
+    "anchorNews": "News",
+    "anchorTools": "Tools",
+    "anchorDealers": "Dealers"
   },
   "metals": {
     "gold": "Gold",
@@ -332,7 +336,13 @@
     "creating": "Creating...",
     "createAlertBtn": "Create alert",
     "googleLogin": "Continue with Google",
-    "or": "or"
+    "or": "or",
+    "preferences": "Preferences",
+    "defaultCurrency": "Default currency",
+    "defaultUnit": "Default unit",
+    "favorites": "Favorite metals",
+    "favoritesEmpty": "Tap a star to add favorite metals",
+    "prefsSaved": "Saved"
   },
   "metadata": {
     "title": "Metalorix — Gold, Silver and Platinum Prices",
@@ -391,7 +401,16 @@
     "sources": "Information sources",
     "checkPrices": "Check real-time prices:",
     "viewDashboard": "View Dashboard",
-    "goldPrice": "Gold Price"
+    "goldPrice": "Gold Price",
+    "filterAll": "All",
+    "filterByType": "By type",
+    "filterByMetal": "By metal",
+    "allMetals": "All metals",
+    "prev": "Previous",
+    "next": "Next",
+    "page": "Page {current} of {total}",
+    "articlesCount": "{count} articles",
+    "noResults": "No articles match the selected filters."
   },
   "prices": {
     "priceOf": "Price of {metal} today",
@@ -930,7 +949,21 @@
     "coins": "Coins",
     "bars": "Bars",
     "filterProducts": "Filter products",
-    "noProducts": "No products match this filter."
+    "noProducts": "No products match this filter.",
+    "sortBy": "Sort by",
+    "sortDefault": "Default",
+    "sortPurity": "Purity (high → low)",
+    "sortWeightDesc": "Weight (high → low)",
+    "sortWeightAsc": "Weight (low → high)",
+    "sortLiquidity": "Liquidity (high → low)",
+    "compare": "Compare",
+    "compareHint": "Select 2-3 products to compare",
+    "compareMax": "Maximum 3 products",
+    "exitCompare": "Exit comparison",
+    "selected": "selected",
+    "compareTitle": "Product comparison",
+    "compareNow": "View comparison",
+    "clearCompare": "Clear"
   },
   "investmentTable": {
     "method": "Method",
@@ -1370,5 +1403,14 @@
     "citiesSection": "Browse by city",
     "cityBreadcrumb": "Cities",
     "citySeoKeywords": "buy gold {city}, precious metals dealers {city}, gold stores {city}"
+  },
+  "search": {
+    "placeholder": "Search articles, tools, products...",
+    "noResults": "No results found",
+    "articles": "News",
+    "learn": "Learn",
+    "products": "Products",
+    "tools": "Tools",
+    "hint": "Press Ctrl+K to search"
   }
 }

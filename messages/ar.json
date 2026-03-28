@@ -89,7 +89,11 @@
     "emailPlaceholder": "your@email.com",
     "emailBtn": "اشترك",
     "emailSuccess": "تم الاشتراك بنجاح! تحقق من بريدك.",
-    "emailError": "خطأ في الاتصال. حاول مرة أخرى."
+    "emailError": "خطأ في الاتصال. حاول مرة أخرى.",
+    "anchorPrices": "الأسعار",
+    "anchorNews": "الأخبار",
+    "anchorTools": "الأدوات",
+    "anchorDealers": "التجار"
   },
   "metals": {
     "gold": "الذهب",
@@ -339,7 +343,16 @@
     "sources": "مصادر المعلومات",
     "checkPrices": "تحقق من الأسعار في الوقت الفعلي:",
     "viewDashboard": "عرض لوحة المعلومات",
-    "goldPrice": "سعر الذهب"
+    "goldPrice": "سعر الذهب",
+    "filterAll": "الكل",
+    "filterByType": "حسب النوع",
+    "filterByMetal": "حسب المعدن",
+    "allMetals": "جميع المعادن",
+    "prev": "السابق",
+    "next": "التالي",
+    "page": "صفحة {current} من {total}",
+    "articlesCount": "{count} مقالات",
+    "noResults": "لا توجد مقالات تطابق الفلاتر المحددة."
   },
   "prices": {
     "priceOf": "سعر {metal} اليوم",
@@ -878,7 +891,13 @@
     "coins": "العملات",
     "bars": "السبائك",
     "filterProducts": "تصفية المنتجات",
-    "noProducts": "لا توجد منتجات لهذا الفلتر."
+    "noProducts": "لا توجد منتجات لهذا الفلتر.",
+    "sortBy": "ترتيب حسب",
+    "sortDefault": "افتراضي",
+    "sortPurity": "النقاء (الأعلى → الأقل)",
+    "sortWeightDesc": "الوزن (الأعلى → الأقل)",
+    "sortWeightAsc": "الوزن (الأقل → الأعلى)",
+    "sortLiquidity": "السيولة (الأعلى → الأقل)"
   },
   "investmentTable": {
     "method": "الطريقة",
@@ -1370,5 +1389,14 @@
     "citiesSection": "تصفح حسب المدينة",
     "cityBreadcrumb": "المدن",
     "citySeoKeywords": "شراء الذهب في {city},تجار المعادن الثمينة {city},محلات الذهب {city}"
+  },
+  "search": {
+    "placeholder": "ابحث في المقالات والأدوات والمنتجات...",
+    "noResults": "لم يتم العثور على نتائج",
+    "articles": "أخبار",
+    "learn": "تعلّم",
+    "products": "منتجات",
+    "tools": "أدوات",
+    "hint": "اضغط Ctrl+K للبحث"
   }
 }

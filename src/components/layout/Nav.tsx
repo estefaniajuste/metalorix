@@ -6,6 +6,7 @@ import { useTranslations, useLocale } from "next-intl";
 import { Logo } from "./Logo";
 import { useTheme } from "./ThemeProvider";
 import { LanguageSwitcher } from "./LanguageSwitcher";
+import { SearchModal } from "./SearchModal";
 import { getLocalizedMetalSlug } from "@/lib/utils/metal-slugs";
 
 function SunIcon() {
@@ -98,7 +99,6 @@ export function Nav() {
   const learnLinks = [
     { href: "/guia-inversion" as const, label: t("guide") },
     { href: "/learn" as const, label: t("learn") },
-    { href: "/noticias" as const, label: t("news") },
   ];
 
   const toggleDropdown = (id: DropdownId) => {
@@ -108,10 +108,10 @@ export function Nav() {
   const isPricesActive = pathname.startsWith("/precio/") || pathname === "/ratio-oro-plata";
   const isBuyActive = pathname.startsWith("/productos") || pathname.startsWith("/donde-comprar");
   const isToolsActive = pathname.startsWith("/herramientas");
+  const isNewsActive = pathname.startsWith("/noticias");
   const isLearnActive =
     pathname.startsWith("/guia-inversion") ||
-    pathname.startsWith("/learn") ||
-    pathname.startsWith("/noticias");
+    pathname.startsWith("/learn");
   const isAlertsActive = pathname.startsWith("/alertas");
 
   function navLinkClass(active: boolean) {
@@ -235,6 +235,14 @@ export function Nav() {
               {t("tools")}
             </Link>
 
+            {/* News link */}
+            <Link
+              href={"/noticias" as any}
+              className={navLinkClass(isNewsActive)}
+            >
+              {t("news")}
+            </Link>
+
             {/* Learn dropdown */}
             <div className="relative">
               <button
@@ -265,6 +273,7 @@ export function Nav() {
           </div>
 
           <div className="flex items-center gap-2">
+            <SearchModal />
             <LanguageSwitcher />
 
             <button
@@ -364,6 +373,15 @@ export function Nav() {
               onClick={() => setMobileOpen(false)}
             >
               {t("tools")}
+            </Link>
+
+            {/* News */}
+            <Link
+              href={"/noticias" as any}
+              className="block px-4 py-3 rounded-sm text-base font-medium text-content-2 hover:text-content-0 hover:bg-surface-2 transition-colors"
+              onClick={() => setMobileOpen(false)}
+            >
+              {t("news")}
             </Link>
 
             <div className="h-px bg-border my-3" />

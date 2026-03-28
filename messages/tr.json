@@ -89,7 +89,11 @@
     "emailPlaceholder": "siz@email.com",
     "emailBtn": "Abone ol",
     "emailSuccess": "Abonelik tamamlandı! E-postanızı kontrol edin.",
-    "emailError": "Bağlantı hatası. Tekrar deneyin."
+    "emailError": "Bağlantı hatası. Tekrar deneyin.",
+    "anchorPrices": "Fiyatlar",
+    "anchorNews": "Haberler",
+    "anchorTools": "Araçlar",
+    "anchorDealers": "Bayiler"
   },
   "metals": {
     "gold": "Altın",
@@ -339,7 +343,16 @@
     "sources": "Bilgi kaynakları",
     "checkPrices": "Gerçek zamanlı fiyatlara bakın:",
     "viewDashboard": "Paneli Görüntüle",
-    "goldPrice": "Altın Fiyatı"
+    "goldPrice": "Altın Fiyatı",
+    "filterAll": "Tümü",
+    "filterByType": "Türe göre",
+    "filterByMetal": "Metale göre",
+    "allMetals": "Tüm metaller",
+    "prev": "Önceki",
+    "next": "Sonraki",
+    "page": "Sayfa {current} / {total}",
+    "articlesCount": "{count} makale",
+    "noResults": "Seçilen filtrelere uygun makale bulunamadı."
   },
   "prices": {
     "priceOf": "Bugün {metal} fiyatı",
@@ -892,7 +905,13 @@
     "coins": "Sikkeler",
     "bars": "Külçeler",
     "filterProducts": "Ürünleri filtrele",
-    "noProducts": "Bu filtre için ürün bulunamadı."
+    "noProducts": "Bu filtre için ürün bulunamadı.",
+    "sortBy": "Sırala",
+    "sortDefault": "Varsayılan",
+    "sortPurity": "Saflık (yüksek → düşük)",
+    "sortWeightDesc": "Ağırlık (yüksek → düşük)",
+    "sortWeightAsc": "Ağırlık (düşük → yüksek)",
+    "sortLiquidity": "Likidite (yüksek → düşük)"
   },
   "investmentTable": {
     "method": "Yöntem",
@@ -1384,5 +1403,14 @@
     "citiesSection": "Şehre göre gözat",
     "cityBreadcrumb": "Şehirler",
     "citySeoKeywords": "{city}'de altın satın al,{city} kıymetli maden satıcıları,{city} altın mağazaları"
+  },
+  "search": {
+    "placeholder": "Makale, araç, ürün ara...",
+    "noResults": "Sonuç bulunamadı",
+    "articles": "Haberler",
+    "learn": "Öğren",
+    "products": "Ürünler",
+    "tools": "Araçlar",
+    "hint": "Aramak için Ctrl+K basın"
   }
 }
