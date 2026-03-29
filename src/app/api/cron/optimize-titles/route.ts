@@ -1,11 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getDb } from "@/lib/db";
-import { articles, articleTranslations } from "@/lib/db/schema";
-import { eq, and, or, lt, like, isNull, desc } from "drizzle-orm";
+import { articles, articleTranslations, learnArticles, learnArticleLocalizations } from "@/lib/db/schema";
+import { eq, and, or, desc, isNotNull } from "drizzle-orm";
 import { generateText } from "@/lib/ai/gemini";
 import { pingIndexNow } from "@/lib/seo/ping";
 import { routing, type Locale } from "@/i18n/routing";
 import { getPathname } from "@/i18n/navigation";
+import { getLocalizedClusterSlug } from "@/lib/learn/slug-i18n";
 
 export const maxDuration = 300;
 
@@ -43,8 +44,21 @@ function needsOptimization(title: string): boolean {
   if (!title) return true;
   const lower = title.toLowerCase();
   if (GENERIC_TITLE_PATTERNS.some((p) => lower.includes(p))) return true;
-  // Too short (< 35 chars) or too long (> 70 chars)
   if (title.length < 35 || title.length > 70) return true;
+  return false;
+}
+
+// For learn articles: detect weak seoTitles that are just the plain title
+function needsLearnOptimization(title: string, seoTitle: string | null): boolean {
+  if (!seoTitle) return true;
+  // Same as plain title (not specifically crafted for CTR)
+  if (seoTitle.trim() === title.trim()) return true;
+  // Too short to be CTR-optimized
+  if (seoTitle.length < 30) return true;
+  // Starts with weak patterns
+  const lower = seoTitle.toLowerCase();
+  const weakStarters = ["introduction to", "overview of", "understanding", "guide to", "what is"];
+  if (weakStarters.some((p) => lower.startsWith(p))) return true;
   return false;
 }
 
@@ -82,13 +96,77 @@ JSON:`;
       };
     }
   } catch {
-    // parse failed — try to extract from text
     const titleMatch = raw.match(/"titulo_seo"\s*:\s*"([^"]+)"/);
     const descMatch = raw.match(/"meta_descripcion"\s*:\s*"([^"]+)"/);
     if (titleMatch && descMatch) {
       return {
         titulo_seo: titleMatch[1].slice(0, 70),
         meta_descripcion: descMatch[1].slice(0, 160),
+      };
+    }
+  }
+  return null;
+}
+
+async function optimizeLearnTitleWithGemini(
+  title: string,
+  seoTitle: string | null,
+  metaDescription: string | null,
+  content: string,
+  slug: string
+): Promise<{ seo_title: string; meta_description: string } | null> {
+  const contentSnippet = content.slice(0, 1200);
+
+  const prompt = `You are an expert SEO editor specializing in educational content about precious metals. Rewrite the SEO title and meta description for this EDUCATIONAL article to maximize click-through rate on Google search results.
+
+Article slug: "${slug}"
+Current title: "${title}"
+Current SEO title: "${seoTitle || title}"
+Current meta description: "${metaDescription || ""}"
+
+Content excerpt:
+${contentSnippet}
+
+RULES for the SEO title (50-60 characters):
+- Use one of these CTR-proven patterns (pick the best fit):
+  1. Question: "Why Does Gold Rise When Inflation Spikes?"
+  2. Comparison: "NGC vs PCGS: Which Grading Service Is Better?"
+  3. Number/fact: "All Gold Ever Mined: 197,576 Tonnes Explained"
+  4. How-to: "How to Read a COT Report to Predict Gold Prices"
+  5. Benefit/outcome: "Gold ETFs in Europe: Lowest-Fee Options Compared"
+- Include the main search keyword naturally
+- NEVER start with "Introduction to", "Overview of", "Understanding", or "Guide to"
+- Do NOT repeat the current generic title word-for-word
+
+RULES for the meta description (140-155 characters):
+- Start with what the reader will specifically learn or be able to do
+- Include 1-2 concrete facts, numbers, or named examples from the article
+- End with a hook that creates curiosity or signals clear value
+- Do NOT write "In this article..." or "This page explains..."
+
+Output ONLY valid JSON with keys "seo_title" and "meta_description". No extra text.
+
+JSON:`;
+
+  const raw = await generateText(prompt, { retryOnEmpty: false });
+  if (!raw) return null;
+
+  try {
+    const cleaned = raw.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();
+    const parsed = JSON.parse(cleaned);
+    if (typeof parsed.seo_title === "string" && typeof parsed.meta_description === "string") {
+      return {
+        seo_title: parsed.seo_title.slice(0, 65),
+        meta_description: parsed.meta_description.slice(0, 160),
+      };
+    }
+  } catch {
+    const titleMatch = raw.match(/"seo_title"\s*:\s*"([^"]+)"/);
+    const descMatch = raw.match(/"meta_description"\s*:\s*"([^"]+)"/);
+    if (titleMatch && descMatch) {
+      return {
+        seo_title: titleMatch[1].slice(0, 65),
+        meta_description: descMatch[1].slice(0, 160),
       };
     }
   }
@@ -104,10 +182,10 @@ export async function POST(request: NextRequest) {
   }
 
   const url = new URL(request.url);
-  // How many articles to process per run (default 5 to stay within Cloud Run timeout)
   const limit = Math.min(parseInt(url.searchParams.get("limit") || "5"), 20);
-  // If true, only process Spanish originals (skip translations)
   const esOnly = url.searchParams.get("es_only") === "true";
+  // target=learn → only learn articles; target=news → only news; default → both
+  const target = url.searchParams.get("target") || "all";
 
   const db = getDb();
   if (!db) return NextResponse.json({ error: "DB unavailable" }, { status: 503 });
@@ -116,102 +194,172 @@ export async function POST(request: NextRequest) {
   const failed: { id: number; locale: string; reason: string }[] = [];
   const pingUrls: string[] = [];
 
-  // --- Spanish originals ---
-  const candidates = await db
-    .select({
-      id: articles.id,
-      slug: articles.slug,
-      title: articles.title,
-      excerpt: articles.excerpt,
-      content: articles.content,
-    })
-    .from(articles)
-    .where(eq(articles.published, true))
-    .orderBy(desc(articles.publishedAt))
-    .limit(100);
-
-  const toOptimizeEs = candidates.filter((a) => needsOptimization(a.title)).slice(0, limit);
-
-  for (const art of toOptimizeEs) {
-    const improved = await optimizeTitleWithGemini(art.title, art.excerpt ?? "", art.content ?? "", "es");
-    if (!improved) {
-      failed.push({ id: art.id, locale: "es", reason: "Gemini returned null" });
-      continue;
-    }
-
-    if (improved.titulo_seo === art.title) {
-      // No change needed
-      continue;
-    }
-
-    await db
-      .update(articles)
-      .set({ title: improved.titulo_seo, excerpt: improved.meta_descripcion })
-      .where(eq(articles.id, art.id));
-
-    optimized.push({ id: art.id, locale: "es", old: art.title, new: improved.titulo_seo });
-    pingUrls.push(`${BASE}/es/noticias/${art.slug}`);
-    await new Promise((r) => setTimeout(r, 1500));
-  }
-
-  // --- Translations (en, de, tr, zh, ar, hi) ---
-  if (!esOnly) {
-    const LOCALES_TO_OPTIMIZE: (typeof routing.locales[number])[] = ["en", "de", "tr"];
-
-    const transRows = await db
+  // ─── News articles (Spanish originals) ────────────────────────────────────
+  if (target === "all" || target === "news") {
+    const candidates = await db
       .select({
-        id: articleTranslations.id,
-        articleId: articleTranslations.articleId,
-        locale: articleTranslations.locale,
-        slug: articleTranslations.slug,
-        title: articleTranslations.title,
-        excerpt: articleTranslations.excerpt,
-        content: articleTranslations.content,
+        id: articles.id,
+        slug: articles.slug,
+        title: articles.title,
+        excerpt: articles.excerpt,
+        content: articles.content,
       })
-      .from(articleTranslations)
-      .where(
-        and(
-          or(
-            ...LOCALES_TO_OPTIMIZE.map((loc) => eq(articleTranslations.locale, loc))
+      .from(articles)
+      .where(eq(articles.published, true))
+      .orderBy(desc(articles.publishedAt))
+      .limit(100);
+
+    const toOptimizeEs = candidates.filter((a) => needsOptimization(a.title)).slice(0, limit);
+
+    for (const art of toOptimizeEs) {
+      const improved = await optimizeTitleWithGemini(art.title, art.excerpt ?? "", art.content ?? "", "es");
+      if (!improved) {
+        failed.push({ id: art.id, locale: "es", reason: "Gemini returned null" });
+        continue;
+      }
+      if (improved.titulo_seo === art.title) continue;
+
+      await db
+        .update(articles)
+        .set({ title: improved.titulo_seo, excerpt: improved.meta_descripcion })
+        .where(eq(articles.id, art.id));
+
+      optimized.push({ id: art.id, locale: "es", old: art.title, new: improved.titulo_seo });
+      pingUrls.push(`${BASE}/es/noticias/${art.slug}`);
+      await new Promise((r) => setTimeout(r, 1500));
+    }
+
+    // News translations (en, de, tr)
+    if (!esOnly) {
+      const LOCALES_TO_OPTIMIZE: (typeof routing.locales[number])[] = ["en", "de", "tr"];
+
+      const transRows = await db
+        .select({
+          id: articleTranslations.id,
+          articleId: articleTranslations.articleId,
+          locale: articleTranslations.locale,
+          slug: articleTranslations.slug,
+          title: articleTranslations.title,
+          excerpt: articleTranslations.excerpt,
+          content: articleTranslations.content,
+        })
+        .from(articleTranslations)
+        .where(
+          and(
+            or(...LOCALES_TO_OPTIMIZE.map((loc) => eq(articleTranslations.locale, loc)))
           )
         )
-      )
-      .orderBy(desc(articleTranslations.id))
-      .limit(200);
+        .orderBy(desc(articleTranslations.id))
+        .limit(200);
 
-    const toOptimizeTrans = transRows
-      .filter((r) => r.title && needsOptimization(r.title))
+      const toOptimizeTrans = transRows
+        .filter((r) => r.title && needsOptimization(r.title))
+        .slice(0, limit);
+
+      for (const tr of toOptimizeTrans) {
+        if (!tr.title) continue;
+        const improved = await optimizeTitleWithGemini(
+          tr.title,
+          tr.excerpt ?? "",
+          tr.content ?? "",
+          tr.locale
+        );
+        if (!improved) {
+          failed.push({ id: tr.id, locale: tr.locale, reason: "Gemini returned null" });
+          continue;
+        }
+        if (improved.titulo_seo === tr.title) continue;
+
+        await db
+          .update(articleTranslations)
+          .set({ title: improved.titulo_seo, excerpt: improved.meta_descripcion })
+          .where(eq(articleTranslations.id, tr.id));
+
+        optimized.push({ id: tr.id, locale: tr.locale, old: tr.title, new: improved.titulo_seo });
+
+        if (tr.slug) {
+          const path = getPathname({
+            locale: tr.locale as Locale,
+            href: { pathname: "/noticias/[slug]", params: { slug: tr.slug } } as any,
+          });
+          pingUrls.push(`${BASE}${path}`);
+        }
+        await new Promise((r) => setTimeout(r, 1500));
+      }
+    }
+  }
+
+  // ─── Learn articles (English seoTitle optimization) ────────────────────────
+  if (target === "all" || target === "learn") {
+    const learnRows = await db
+      .select({
+        locId: learnArticleLocalizations.id,
+        articleId: learnArticleLocalizations.articleId,
+        slug: learnArticles.slug,
+        clusterSlug: learnArticles.clusterId, // we'll resolve via join below
+        locSlug: learnArticleLocalizations.slug,
+        title: learnArticleLocalizations.title,
+        seoTitle: learnArticleLocalizations.seoTitle,
+        metaDescription: learnArticleLocalizations.metaDescription,
+        content: learnArticleLocalizations.content,
+      })
+      .from(learnArticleLocalizations)
+      .innerJoin(learnArticles, eq(learnArticles.id, learnArticleLocalizations.articleId))
+      .where(
+        and(
+          eq(learnArticleLocalizations.locale, "en"),
+          isNotNull(learnArticleLocalizations.content)
+        )
+      )
+      .orderBy(desc(learnArticleLocalizations.updatedAt))
+      .limit(100);
+
+    // Priority: articles that need optimization first, then by recency
+    const toOptimizeLearn = learnRows
+      .filter((r) => r.title && needsLearnOptimization(r.title, r.seoTitle))
       .slice(0, limit);
 
-    for (const tr of toOptimizeTrans) {
-      if (!tr.title) continue;
-      const improved = await optimizeTitleWithGemini(
-        tr.title,
-        tr.excerpt ?? "",
-        tr.content ?? "",
-        tr.locale
+    for (const row of toOptimizeLearn) {
+      if (!row.title || !row.content) continue;
+
+      const improved = await optimizeLearnTitleWithGemini(
+        row.title,
+        row.seoTitle,
+        row.metaDescription,
+        row.content,
+        row.slug
       );
+
       if (!improved) {
-        failed.push({ id: tr.id, locale: tr.locale, reason: "Gemini returned null" });
+        failed.push({ id: row.locId, locale: "en-learn", reason: "Gemini returned null" });
         continue;
       }
 
-      if (improved.titulo_seo === tr.title) continue;
+      if (improved.seo_title === (row.seoTitle || row.title)) continue;
 
       await db
-        .update(articleTranslations)
-        .set({ title: improved.titulo_seo, excerpt: improved.meta_descripcion })
-        .where(eq(articleTranslations.id, tr.id));
+        .update(learnArticleLocalizations)
+        .set({
+          seoTitle: improved.seo_title,
+          metaDescription: improved.meta_description,
+          updatedAt: new Date(),
+        })
+        .where(eq(learnArticleLocalizations.id, row.locId));
 
-      optimized.push({ id: tr.id, locale: tr.locale, old: tr.title, new: improved.titulo_seo });
+      optimized.push({
+        id: row.locId,
+        locale: "en-learn",
+        old: row.seoTitle || row.title,
+        new: improved.seo_title,
+      });
 
-      if (tr.slug) {
-        const path = getPathname({
-          locale: tr.locale as Locale,
-          href: { pathname: "/noticias/[slug]", params: { slug: tr.slug } } as any,
-        });
-        pingUrls.push(`${BASE}${path}`);
+      // Ping IndexNow for all locales of this article
+      for (const loc of routing.locales) {
+        const clusterSlug = getLocalizedClusterSlug("price-factors", loc); // fallback; actual cluster resolved at runtime
+        const articleLocSlug = row.locSlug || row.slug;
+        pingUrls.push(`${BASE}/${loc}/learn/${clusterSlug}/${articleLocSlug}`);
       }
+
       await new Promise((r) => setTimeout(r, 1500));
     }
   }

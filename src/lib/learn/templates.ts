@@ -31,8 +31,8 @@ STRUCTURE:
 Return a valid JSON object with this exact schema:
 {
   "title": "Clear, informative title (50-70 chars)",
-  "seoTitle": "SEO title for CTR (50-60 chars). Include concrete benefit or key concept. Example: 'FIFO vs LIFO for Gold: Which Cost Basis Method Saves You Tax?'",
-  "metaDescription": "Meta for CTR (140-155 chars). What they'll learn + why it matters. Example: 'Learn FIFO, LIFO, and Specific ID for precious metals. Choose the right cost basis method to minimize taxes when selling.'",
+  "seoTitle": "SEO-optimized title (50-60 chars) designed to maximize click-through rate on Google. Use one of these proven CTR patterns — pick the best fit for the topic: (1) Question: 'Why Does Gold Rise When Inflation Spikes?', (2) Comparison/vs: 'NGC vs PCGS: Which Grading Service Is Better for Gold?', (3) Number/data: 'All the Gold Ever Mined: 197,576 Tonnes and Where It Is Now', (4) How-to: 'How to Read a COT Report to Predict Gold Price Moves', (5) Benefit/outcome: 'Gold ETFs in Europe: Lowest-Fee Options Compared'. MUST include the exact keyword people search for. NEVER use 'Introduction to', 'Overview of', or 'Understanding' as openers.",
+  "metaDescription": "Meta description (140-155 chars) designed for clicks. Start with what the reader will specifically discover or be able to do. Include 1-2 concrete facts, numbers, or named examples. End with a hook that creates curiosity or urgency. BAD example: 'Learn about moving averages in precious metals markets.' GOOD example: 'Discover how the 50-day and 200-day moving averages signal gold trend reversals. See real examples of golden crosses that predicted major gold rallies.'",
   "summary": "2-3 sentence summary of what the reader will learn",
   "keyIdea": "One sentence capturing the core concept or takeaway",
   "sections": [

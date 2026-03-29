@@ -318,9 +318,10 @@ jobs:
     if: github.event.inputs.job == 'learn-priority'
     runs-on: ubuntu-latest
     steps:
-      - name: Force-generate high-priority learn articles (by slug)
+      - name: Force-regenerate near-miss and high-priority learn articles
         run: |
-          SLUGS="volatility-comparison-across-metals,comparing-gold-etfs-in-europe,liquidity-comparison-across-metals"
+          # Near-miss articles from GSC: high impressions, position 6-9, low CTR → regenerate with improved prompt
+          SLUGS="comparing-gold-etfs-in-europe,above-ground-gold-stock,coin-grading-ngc-and-pcgs,moving-averages-for-metals,cost-basis-tracking-for-metals,volatility-comparison-across-metals,liquidity-comparison-across-metals"
           response=$(curl -s -w "\n%{http_code}" -X POST \
             -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
             "${{ env.SERVICE_URL }}/api/cron/generate-content?type=learn&slugs=${SLUGS}")
@@ -333,18 +334,15 @@ jobs:
             exit 1
           fi
 
-      - name: Translate new Learn articles to Hindi
-        if: steps.check.outputs.should_run == 'true'
+      - name: Optimize SEO titles for regenerated near-miss articles
         run: |
-          echo "Translating Learn articles to Hindi..."
-          response=$(curl -s -X POST \
+          response=$(curl -s -w "\n%{http_code}" -X POST \
             -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
-            -H "Content-Type: application/json" \
-            -d '{"action":"translate","locale":"hi","batchSize":25}' \
-            "${{ env.SERVICE_URL }}/api/learn/generate")
-          translated=$(echo "$response" | jq -r '.translated // 0')
-          remaining=$(echo "$response" | jq -r '.remaining // 0')
-          echo "Translated: $translated, Remaining: $remaining"
+            "${{ env.SERVICE_URL }}/api/cron/optimize-titles?target=learn&limit=10")
+          http_code=$(echo "$response" | tail -1)
+          body=$(echo "$response" | head -n -1)
+          echo "Optimize Status: $http_code"
+          echo "Optimize Response: $body"
 
   learn-translate:
     if: github.event.inputs.job == 'learn-translate'
@@ -407,17 +405,16 @@ jobs:
     if: github.event.inputs.job == 'optimize-learn'
     runs-on: ubuntu-latest
     steps:
-      - name: Apply optimized SEO titles to learn articles
+      - name: Optimize SEO titles for Learn articles (English)
         run: |
           response=$(curl -s -w "\n%{http_code}" -X POST \
             -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
-            -H "Content-Type: application/json" \
-            "${{ env.SERVICE_URL }}/api/seo/optimize-learn")
+            "${{ env.SERVICE_URL }}/api/cron/optimize-titles?target=learn&limit=10")
           http_code=$(echo "$response" | tail -1)
           body=$(echo "$response" | head -n -1)
           echo "Status: $http_code"
           echo "Response: $body"
-          if [ "$http_code" -ge 400 ]; then
+          if [ "$http_code" -ge 500 ]; then
             echo "::error::optimize-learn failed with status $http_code"
             exit 1
           fi
@@ -441,18 +438,33 @@ jobs:
             echo "should_run=false" >> $GITHUB_OUTPUT
           fi
 
-      - name: Optimize generic article titles with Gemini
+      - name: Optimize generic news article titles with Gemini
         if: steps.check.outputs.should_run == 'true'
         run: |
           response=$(curl -s -w "\n%{http_code}" -X POST \
             -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
-            "${{ env.SERVICE_URL }}/api/cron/optimize-titles?limit=5")
+            "${{ env.SERVICE_URL }}/api/cron/optimize-titles?target=news&limit=5")
           http_code=$(echo "$response" | tail -1)
           body=$(echo "$response" | head -n -1)
-          echo "Status: $http_code"
+          echo "News titles status: $http_code"
           echo "Response: $body"
           if [ "$http_code" -ge 500 ]; then
-            echo "::error::optimize-titles failed with status $http_code"
+            echo "::error::optimize-titles (news) failed with status $http_code"
+            exit 1
+          fi
+
+      - name: Optimize Learn article SEO titles with Gemini
+        if: steps.check.outputs.should_run == 'true'
+        run: |
+          response=$(curl -s -w "\n%{http_code}" -X POST \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+            "${{ env.SERVICE_URL }}/api/cron/optimize-titles?target=learn&limit=5")
+          http_code=$(echo "$response" | tail -1)
+          body=$(echo "$response" | head -n -1)
+          echo "Learn titles status: $http_code"
+          echo "Response: $body"
+          if [ "$http_code" -ge 500 ]; then
+            echo "::error::optimize-titles (learn) failed with status $http_code"
             exit 1
           fi
 
