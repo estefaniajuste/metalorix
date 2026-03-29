@@ -108,9 +108,13 @@ jobs:
           elif [ "$day_of_week" = "6" ]; then
             echo "should_run=false" >> $GITHUB_OUTPUT
             echo "run_event=false" >> $GITHUB_OUTPUT
-          # Sunday (7): skip morning daily. Only evening at 19:00 — "perspectivas fin de semana"
+          # Sunday (7): weekly at 18:00, evening at 19:00, skip rest
           elif [ "$day_of_week" = "7" ]; then
-            if [ "$hour" = "19" ] || ([ "$hour" = "20" ] && [ "$minute" -lt "30" ]); then
+            if [ "$hour" = "18" ]; then
+              echo "type=weekly" >> $GITHUB_OUTPUT
+              echo "should_run=true" >> $GITHUB_OUTPUT
+              echo "run_event=false" >> $GITHUB_OUTPUT
+            elif [ "$hour" = "19" ] || ([ "$hour" = "20" ] && [ "$minute" -lt "30" ]); then
               echo "type=evening" >> $GITHUB_OUTPUT
               echo "should_run=true" >> $GITHUB_OUTPUT
               echo "run_event=true" >> $GITHUB_OUTPUT
@@ -126,11 +130,6 @@ jobs:
           # Evening summary at 19:00 UTC (Mon–Fri). Friday = cierre de semana; Mon–Thu = cierre sesión.
           elif [ "$hour" = "19" ] || ([ "$hour" = "20" ] && [ "$minute" -lt "30" ]); then
             echo "type=evening" >> $GITHUB_OUTPUT
-            echo "should_run=true" >> $GITHUB_OUTPUT
-            echo "run_event=true" >> $GITHUB_OUTPUT
-          # Weekly summary on Sunday at 18:00 UTC. Full hour to tolerate delays.
-          elif [ "$day_of_week" = "7" ] && [ "$hour" = "18" ]; then
-            echo "type=weekly" >> $GITHUB_OUTPUT
             echo "should_run=true" >> $GITHUB_OUTPUT
             echo "run_event=true" >> $GITHUB_OUTPUT
           else
