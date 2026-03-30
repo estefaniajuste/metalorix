@@ -1,13 +1,15 @@
 import type { Metadata } from "next";
 import { Link } from "@/i18n/navigation";
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import { getTranslations, getLocale } from "next-intl/server";
 import { getAlternates } from "@/lib/seo/alternates";
 import { howToSchema, organizationSchema } from "@/lib/seo/schemas";
+import { getPathname } from "@/i18n/navigation";
 import { getDb } from "@/lib/db";
 import {
   learnArticles,
   learnArticleLocalizations,
+  learnClusters,
   learnInternalLinks,
   glossaryTerms,
 } from "@/lib/db/schema";
@@ -33,6 +35,34 @@ import { routing } from "@/i18n/routing";
 import { SetLocalePathOverrides } from "@/components/layout/SetLocalePathOverrides";
 import { ContextualToolCards, InlineToolCallout, getToolsForArticle } from "@/components/tools/ContextualToolCards";
 import type { Locale } from "@/i18n/config";
+
+async function findArticleInDb(slug: string): Promise<{ slug: string; clusterSlug: string } | null> {
+  const db = getDb();
+  if (!db) return null;
+  try {
+    const [row] = await db
+      .select({ slug: learnArticles.slug, clusterSlug: learnClusters.slug })
+      .from(learnArticles)
+      .innerJoin(learnClusters, eq(learnClusters.id, learnArticles.clusterId))
+      .where(eq(learnArticles.slug, slug))
+      .limit(1);
+    if (row) return row;
+
+    const [locRow] = await db
+      .select({
+        slug: learnArticles.slug,
+        clusterSlug: learnClusters.slug,
+      })
+      .from(learnArticleLocalizations)
+      .innerJoin(learnArticles, eq(learnArticles.id, learnArticleLocalizations.articleId))
+      .innerJoin(learnClusters, eq(learnClusters.id, learnArticles.clusterId))
+      .where(eq(learnArticleLocalizations.slug, slug))
+      .limit(1);
+    return locRow ?? null;
+  } catch {
+    return null;
+  }
+}
 
 function truncateDescription(text: string, maxLen = 155): string {
   if (text.length <= maxLen) return text;
@@ -211,7 +241,17 @@ export async function generateMetadata({
     }
   }
 
-  if (!topic) return { title: tl("notFound"), robots: { index: false, follow: false } };
+  if (!topic) {
+    const dbMatch = await findArticleInDb(params.slug);
+    if (dbMatch) {
+      return { title: "Redirecting...", robots: { index: false, follow: false } };
+    }
+    return { title: tl("notFound"), robots: { index: false, follow: false } };
+  }
+
+  if (topic.clusterSlug !== baseClusterSlug) {
+    return { title: "Redirecting...", robots: { index: false, follow: false } };
+  }
 
   const data = await getArticleData(topic.slug, locale);
   const rawTitle = data?.localization.seoTitle || topic.titleEn;
@@ -396,7 +436,29 @@ export default async function LearnArticlePage({
     }
   }
 
-  if (!topic || topic.clusterSlug !== baseClusterSlug) notFound();
+  if (topic && topic.clusterSlug !== baseClusterSlug) {
+    const correctCluster = getLocalizedClusterSlug(topic.clusterSlug, locale);
+    const correctSlug = (await getLocalizedArticleSlug(topic.slug, locale)) || topic.slug;
+    const path = getPathname({
+      locale: locale as Locale,
+      href: { pathname: "/learn/[cluster]/[slug]", params: { cluster: correctCluster, slug: correctSlug } } as any,
+    });
+    permanentRedirect(path);
+  }
+
+  if (!topic) {
+    const dbMatch = await findArticleInDb(params.slug);
+    if (dbMatch) {
+      const correctCluster = getLocalizedClusterSlug(dbMatch.clusterSlug, locale);
+      const correctSlug = (await getLocalizedArticleSlug(dbMatch.slug, locale)) || dbMatch.slug;
+      const path = getPathname({
+        locale: locale as Locale,
+        href: { pathname: "/learn/[cluster]/[slug]", params: { cluster: correctCluster, slug: correctSlug } } as any,
+      });
+      permanentRedirect(path);
+    }
+    notFound();
+  }
 
   const cluster = TAXONOMY.find((c) => c.slug === baseClusterSlug);
   const subcluster = cluster?.subclusters.find(
