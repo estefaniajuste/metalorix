@@ -420,6 +420,7 @@ jobs:
 
   optimize-titles:
     if: >
+      github.event_name == 'schedule' ||
       github.event.inputs.job == 'optimize-titles' ||
       github.event.inputs.job == 'all'
     runs-on: ubuntu-latest
@@ -428,8 +429,9 @@ jobs:
         id: check
         run: |
           hour=$(date -u +%H)
+          minute=$(date -u +%M)
           # Run title optimization once daily at 10:00 UTC
-          if [ "$hour" = "10" ]; then
+          if [ "$hour" = "10" ] && [ "$minute" -lt "15" ]; then
             echo "should_run=true" >> $GITHUB_OUTPUT
           elif [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
             echo "should_run=true" >> $GITHUB_OUTPUT
@@ -457,7 +459,7 @@ jobs:
         run: |
           response=$(curl -s -w "\n%{http_code}" -X POST \
             -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
-            "${{ env.SERVICE_URL }}/api/cron/optimize-titles?target=learn&limit=5")
+            "${{ env.SERVICE_URL }}/api/cron/optimize-titles?target=learn&limit=15")
           http_code=$(echo "$response" | tail -1)
           body=$(echo "$response" | head -n -1)
           echo "Learn titles status: $http_code"
@@ -466,6 +468,17 @@ jobs:
             echo "::error::optimize-titles (learn) failed with status $http_code"
             exit 1
           fi
+
+      - name: Generate FAQ schema for learn articles without FAQ
+        if: steps.check.outputs.should_run == 'true'
+        run: |
+          response=$(curl -s -w "\n%{http_code}" -X POST \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+            "${{ env.SERVICE_URL }}/api/cron/generate-faq?limit=15")
+          http_code=$(echo "$response" | tail -1)
+          body=$(echo "$response" | head -n -1)
+          echo "FAQ generation status: $http_code"
+          echo "Response: $body"
 
   ping-sitemap:
     if: >

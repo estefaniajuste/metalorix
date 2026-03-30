@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getDb } from "@/lib/db";
-import { articles, articleTranslations, learnArticles, learnArticleLocalizations } from "@/lib/db/schema";
+import { articles, articleTranslations, learnArticles, learnArticleLocalizations, learnClusters } from "@/lib/db/schema";
 import { eq, and, or, desc, isNotNull } from "drizzle-orm";
 import { generateText } from "@/lib/ai/gemini";
 import { pingIndexNow } from "@/lib/seo/ping";
@@ -48,17 +48,24 @@ function needsOptimization(title: string): boolean {
   return false;
 }
 
-// For learn articles: detect weak seoTitles that are just the plain title
 function needsLearnOptimization(title: string, seoTitle: string | null): boolean {
   if (!seoTitle) return true;
-  // Same as plain title (not specifically crafted for CTR)
   if (seoTitle.trim() === title.trim()) return true;
-  // Too short to be CTR-optimized
   if (seoTitle.length < 30) return true;
-  // Starts with weak patterns
+  if (seoTitle.length > 65) return true;
   const lower = seoTitle.toLowerCase();
-  const weakStarters = ["introduction to", "overview of", "understanding", "guide to", "what is"];
+  const weakStarters = [
+    "introduction to", "overview of", "understanding", "guide to", "what is",
+    "a guide to", "a complete guide", "a beginner", "an introduction",
+    "learn about", "discover the", "explore the", "the basics of",
+  ];
   if (weakStarters.some((p) => lower.startsWith(p))) return true;
+  const weakEndings = [
+    "a beginner's guide", "a complete guide", "an overview",
+    "a comprehensive guide", "what you need to know", "everything you need",
+    "a complete introduction", "a detailed overview",
+  ];
+  if (weakEndings.some((p) => lower.endsWith(p))) return true;
   return false;
 }
 
@@ -118,16 +125,35 @@ function smartTruncate(text: string, maxLen: number): string {
   return truncated;
 }
 
+interface LearnOptResult {
+  seo_title: string;
+  meta_description: string;
+  faq?: { question: string; answer: string }[];
+}
+
 async function optimizeLearnTitleWithGemini(
   title: string,
   seoTitle: string | null,
   metaDescription: string | null,
   content: string,
-  slug: string
-): Promise<{ seo_title: string; meta_description: string } | null> {
+  slug: string,
+  existingFaq: boolean
+): Promise<LearnOptResult | null> {
   const contentSnippet = content.slice(0, 1200);
 
-  const prompt = `You are an expert SEO editor specializing in educational content about precious metals. Rewrite the SEO title and meta description for this EDUCATIONAL article to maximize click-through rate on Google search results.
+  const faqInstruction = existingFaq
+    ? ""
+    : `
+RULES for FAQ (3-5 questions):
+- Generate 3-5 frequently asked questions that people searching for this topic would ask Google
+- Each question should be a natural search query (e.g., "Is gold a good hedge against inflation?")
+- Each answer should be 1-3 sentences, factual, and based on the article content
+- Questions should cover different angles of the topic
+- Include the "faq" key in the JSON as an array of {"question": "...", "answer": "..."} objects`;
+
+  const faqJsonHint = existingFaq ? "" : ', "faq": [{"question": "...", "answer": "..."}]';
+
+  const prompt = `You are an expert SEO editor specializing in educational content about precious metals. Optimize this article's search appearance to maximize click-through rate on Google.
 
 Article slug: "${slug}"
 Current title: "${title}"
@@ -153,8 +179,9 @@ RULES for the meta description (140-155 characters):
 - Include 1-2 concrete facts, numbers, or named examples from the article
 - End with a hook that creates curiosity or signals clear value
 - Do NOT write "In this article..." or "This page explains..."
+${faqInstruction}
 
-Output ONLY valid JSON with keys "seo_title" and "meta_description". No extra text.
+Output ONLY valid JSON: {"seo_title": "...", "meta_description": "..."${faqJsonHint}}
 
 JSON:`;
 
@@ -165,10 +192,16 @@ JSON:`;
     const cleaned = raw.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();
     const parsed = JSON.parse(cleaned);
     if (typeof parsed.seo_title === "string" && typeof parsed.meta_description === "string") {
-      return {
+      const result: LearnOptResult = {
         seo_title: parsed.seo_title.slice(0, 65),
         meta_description: smartTruncate(parsed.meta_description, 155),
       };
+      if (Array.isArray(parsed.faq) && parsed.faq.length > 0) {
+        result.faq = parsed.faq
+          .filter((f: any) => f?.question && f?.answer)
+          .slice(0, 5);
+      }
+      return result;
     }
   } catch {
     const titleMatch = raw.match(/"seo_title"\s*:\s*"([^"]+)"/);
@@ -299,22 +332,24 @@ export async function POST(request: NextRequest) {
     }
   }
 
-  // ─── Learn articles (English seoTitle optimization) ────────────────────────
+  // ─── Learn articles (English seoTitle + FAQ optimization) ────────────────────
   if (target === "all" || target === "learn") {
     const learnRows = await db
       .select({
         locId: learnArticleLocalizations.id,
         articleId: learnArticleLocalizations.articleId,
         slug: learnArticles.slug,
-        clusterSlug: learnArticles.clusterId, // we'll resolve via join below
+        clusterSlug: learnClusters.slug,
         locSlug: learnArticleLocalizations.slug,
         title: learnArticleLocalizations.title,
         seoTitle: learnArticleLocalizations.seoTitle,
         metaDescription: learnArticleLocalizations.metaDescription,
         content: learnArticleLocalizations.content,
+        faq: learnArticleLocalizations.faq,
       })
       .from(learnArticleLocalizations)
       .innerJoin(learnArticles, eq(learnArticles.id, learnArticleLocalizations.articleId))
+      .innerJoin(learnClusters, eq(learnClusters.id, learnArticles.clusterId))
       .where(
         and(
           eq(learnArticleLocalizations.locale, "en"),
@@ -324,20 +359,21 @@ export async function POST(request: NextRequest) {
       .orderBy(desc(learnArticleLocalizations.updatedAt))
       .limit(100);
 
-    // Priority: articles that need optimization first, then by recency
     const toOptimizeLearn = learnRows
-      .filter((r) => r.title && needsLearnOptimization(r.title, r.seoTitle))
+      .filter((r) => r.title && (needsLearnOptimization(r.title, r.seoTitle) || !r.faq))
       .slice(0, limit);
 
     for (const row of toOptimizeLearn) {
       if (!row.title || !row.content) continue;
 
+      const existingFaq = !!row.faq;
       const improved = await optimizeLearnTitleWithGemini(
         row.title,
         row.seoTitle,
         row.metaDescription,
         row.content,
-        row.slug
+        row.slug,
+        existingFaq
       );
 
       if (!improved) {
@@ -345,15 +381,18 @@ export async function POST(request: NextRequest) {
         continue;
       }
 
-      if (improved.seo_title === (row.seoTitle || row.title)) continue;
+      const updateData: Record<string, unknown> = {
+        seoTitle: improved.seo_title,
+        metaDescription: improved.meta_description,
+        updatedAt: new Date(),
+      };
+      if (improved.faq && improved.faq.length > 0 && !existingFaq) {
+        updateData.faq = JSON.stringify(improved.faq);
+      }
 
       await db
         .update(learnArticleLocalizations)
-        .set({
-          seoTitle: improved.seo_title,
-          metaDescription: improved.meta_description,
-          updatedAt: new Date(),
-        })
+        .set(updateData)
         .where(eq(learnArticleLocalizations.id, row.locId));
 
       optimized.push({
@@ -363,11 +402,11 @@ export async function POST(request: NextRequest) {
         new: improved.seo_title,
       });
 
-      // Ping IndexNow for all locales of this article
       for (const loc of routing.locales) {
-        const clusterSlug = getLocalizedClusterSlug("price-factors", loc); // fallback; actual cluster resolved at runtime
+        const clusterSlug = getLocalizedClusterSlug(row.clusterSlug, loc);
+        const learnBase = loc === "es" ? "aprende-inversion" : loc === "de" ? "lernen-investition" : loc === "zh" ? "xuexi" : loc === "ar" ? "taallam" : loc === "tr" ? "ogren-yatirim" : loc === "hi" ? "gyaan-nivesh" : "learn";
         const articleLocSlug = row.locSlug || row.slug;
-        pingUrls.push(`${BASE}/${loc}/learn/${clusterSlug}/${articleLocSlug}`);
+        pingUrls.push(`${BASE}/${loc}/${learnBase}/${clusterSlug}/${articleLocSlug}`);
       }
 
       await new Promise((r) => setTimeout(r, 1500));
