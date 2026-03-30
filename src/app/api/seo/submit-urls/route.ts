@@ -3,13 +3,36 @@ import { getPathname } from "@/i18n/navigation";
 import { routing, type Locale } from "@/i18n/routing";
 import { INTERNAL_METAL_SLUGS, getLocalizedMetalSlug } from "@/lib/utils/metal-slugs";
 import { getDb } from "@/lib/db";
-import { articles, articleTranslations } from "@/lib/db/schema";
-import { eq, desc, inArray } from "drizzle-orm";
+import {
+  articles, articleTranslations,
+  glossaryTerms,
+  learnClusters, learnArticles, learnArticleLocalizations,
+} from "@/lib/db/schema";
+import { eq, desc, inArray, isNotNull } from "drizzle-orm";
 import { pingSearchEngines, pingIndexNow } from "@/lib/seo/ping";
 import { DEALER_COUNTRIES, DEALER_BASE_PATHS, getCitiesByCountry } from "@/lib/data/dealers";
 
 const BASE = "https://metalorix.com";
 const CRON_SECRET = process.env.CRON_SECRET;
+
+const LEARN_BASE: Record<string, string> = {
+  es: "aprende-inversion", en: "learn", de: "lernen-investition",
+  zh: "xuexi", ar: "taallam", tr: "ogren-yatirim", hi: "gyaan-nivesh",
+};
+
+const GLOSSARY_CLUSTER: Record<string, string> = {
+  es: "glosario", en: "glossary", de: "glossar", zh: "shuyu",
+  ar: "mustalahat", tr: "sozluk", hi: "shabdavali",
+};
+
+const CLUSTER_SLUG_I18N: Record<string, Record<string, string>> = {
+  es: { fundamentals: "fundamentos", history: "historia", "markets-trading": "mercados-trading", investment: "inversion", "physical-metals": "metales-fisicos", "price-factors": "factores-precio", "production-industry": "produccion-industria", "geology-science": "geologia-ciencia", "regulation-tax": "regulacion-impuestos", "security-authenticity": "seguridad-autenticidad", "ratios-analytics": "ratios-analitica", macroeconomics: "macroeconomia", guides: "guias", "faq-mistakes": "preguntas-errores", comparisons: "comparativas", glossary: "glosario" },
+  de: { fundamentals: "grundlagen", history: "geschichte", "markets-trading": "maerkte-handel", investment: "investition", "physical-metals": "physische-metalle", "price-factors": "preisfaktoren", "production-industry": "produktion-industrie", "geology-science": "geologie-wissenschaft", "regulation-tax": "regulierung-steuern", "security-authenticity": "sicherheit-echtheit", "ratios-analytics": "kennzahlen-analyse", macroeconomics: "makrooekonomie", guides: "leitfaeden", "faq-mistakes": "faq-fehler", comparisons: "vergleiche", glossary: "glossar" },
+  zh: { fundamentals: "jichu", history: "lishi", "markets-trading": "shichang-jiaoyi", investment: "touzi", "physical-metals": "shiwu-jinshu", "price-factors": "jiage-yinsu", "production-industry": "shengchan-gongye", "geology-science": "dizhi-kexue", "regulation-tax": "fagui-shuiwu", "security-authenticity": "anquan-zhenwei", "ratios-analytics": "bilv-fenxi", macroeconomics: "hongguan-jingji", guides: "zhinan", "faq-mistakes": "changjian-wenti", comparisons: "bijiao", glossary: "shuyu" },
+  ar: { fundamentals: "asasiyat", history: "tarikh", "markets-trading": "aswaq-tadawul", investment: "istithmar", "physical-metals": "maadin-madiyah", "price-factors": "awamil-asiar", "production-industry": "intaj-sinai", "geology-science": "jiyulujiya-ulum", "regulation-tax": "tanzim-daraib", "security-authenticity": "aman-asalah", "ratios-analytics": "nisab-tahlilat", macroeconomics: "iqtisad-kulli", guides: "adillah", "faq-mistakes": "asilah-akhta", comparisons: "muqaranat", glossary: "mustalahat" },
+  tr: { fundamentals: "temeller", history: "tarih", "markets-trading": "piyasalar-ticaret", investment: "yatirim", "physical-metals": "fiziksel-metaller", "price-factors": "fiyat-faktorleri", "production-industry": "uretim-endustri", "geology-science": "jeoloji-bilim", "regulation-tax": "duzenleme-vergi", "security-authenticity": "guvenlik-orijinallik", "ratios-analytics": "oranlar-analitik", macroeconomics: "makroekonomi", guides: "rehberler", "faq-mistakes": "sss-hatalar", comparisons: "karsilastirmalar", glossary: "sozluk" },
+  hi: { fundamentals: "mool-tattva", history: "itihas", "markets-trading": "bazaar-vyapar", investment: "nivesh", "physical-metals": "bhaute-dhatu", "price-factors": "mulya-karak", "production-industry": "uttpadan-udyog", "geology-science": "bhugol-vigyan", "regulation-tax": "niyaman-kar", "security-authenticity": "suraksha-pramaan", "ratios-analytics": "anupat-vishleshan", macroeconomics: "makro-arthvyavastha", guides: "margdarshika", "faq-mistakes": "puchhe-jane-wale-sawal", comparisons: "tulna", glossary: "shabdavali" },
+};
 
 function allLocaleUrls(href: Parameters<typeof getPathname>[0]["href"]): string[] {
   return routing.locales.map(
@@ -111,6 +134,74 @@ export async function POST(request: NextRequest) {
           urls.push(
             `${BASE}${getPathname({ locale: loc as Locale, href: { pathname: "/noticias/[slug]", params: { slug } } as any })}`
           );
+        }
+      }
+
+      // --- Learn clusters ---
+      const clusters = await db
+        .select({ slug: learnClusters.slug })
+        .from(learnClusters)
+        .limit(100)
+        .catch(() => [] as { slug: string }[]);
+
+      for (const c of clusters) {
+        for (const loc of routing.locales) {
+          urls.push(
+            `${BASE}${getPathname({ locale: loc as Locale, href: { pathname: "/learn/[cluster]" as any, params: { cluster: c.slug } } as any })}`
+          );
+        }
+      }
+
+      // --- Learn articles with localized slugs ---
+      const learnRows = await db
+        .select({
+          id: learnArticles.id,
+          slug: learnArticles.slug,
+          clusterSlug: learnClusters.slug,
+        })
+        .from(learnArticles)
+        .innerJoin(learnClusters, eq(learnArticles.clusterId, learnClusters.id))
+        .where(isNotNull(learnArticles.publishedAt))
+        .limit(2000)
+        .catch(() => [] as { id: number; slug: string; clusterSlug: string }[]);
+
+      const learnLocRows = learnRows.length > 0
+        ? await db
+            .select({
+              articleId: learnArticleLocalizations.articleId,
+              locale: learnArticleLocalizations.locale,
+              slug: learnArticleLocalizations.slug,
+            })
+            .from(learnArticleLocalizations)
+            .catch(() => [] as { articleId: number; locale: string; slug: string | null }[])
+        : [];
+
+      const learnSlugsByArticle = new Map<number, Record<string, string>>();
+      for (const lr of learnLocRows) {
+        if (!lr.slug) continue;
+        if (!learnSlugsByArticle.has(lr.articleId)) learnSlugsByArticle.set(lr.articleId, {});
+        learnSlugsByArticle.get(lr.articleId)![lr.locale] = lr.slug;
+      }
+
+      for (const la of learnRows) {
+        const locSlugs = learnSlugsByArticle.get(la.id);
+        for (const loc of routing.locales) {
+          const aSlug = locSlugs?.[loc] ?? la.slug;
+          urls.push(`${BASE}/${loc}/${LEARN_BASE[loc] ?? "learn"}/${CLUSTER_SLUG_I18N[loc]?.[la.clusterSlug] ?? la.clusterSlug}/${aSlug}`);
+        }
+      }
+
+      // --- Glossary terms ---
+      const glossaryRows = await db
+        .select({ slug: glossaryTerms.slug })
+        .from(glossaryTerms)
+        .where(eq(glossaryTerms.locale, "en"))
+        .limit(1000)
+        .catch(() => [] as { slug: string }[]);
+
+      for (const g of glossaryRows) {
+        for (const loc of routing.locales) {
+          urls.push(`${BASE}/${loc}/${LEARN_BASE[loc] ?? "learn"}/${GLOSSARY_CLUSTER[loc] ?? "glossary"}/${g.slug}`);
         }
       }
     }

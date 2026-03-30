@@ -48,11 +48,20 @@ const LEARN_BASE: Record<string, string> = {
   es: "aprende-inversion", en: "learn",
 };
 
+const CLUSTER_SLUG_I18N: Record<string, Record<string, string>> = {
+  es: { fundamentals: "fundamentos", history: "historia", "markets-trading": "mercados-trading", investment: "inversion", "physical-metals": "metales-fisicos", "price-factors": "factores-precio", "production-industry": "produccion-industria", "geology-science": "geologia-ciencia", "regulation-tax": "regulacion-impuestos", "security-authenticity": "seguridad-autenticidad", "ratios-analytics": "ratios-analitica", macroeconomics: "macroeconomia", guides: "guias", "faq-mistakes": "preguntas-errores", comparisons: "comparativas", glossary: "glosario" },
+};
+
+const GLOSSARY_CLUSTER: Record<string, string> = {
+  es: "glosario", en: "glossary",
+};
+
 interface DynamicUrl {
   slug: string;
   type: string;
   cluster?: string;
   lastmod?: string;
+  localizedSlugs?: Record<string, string>;
 }
 
 async function fetchDynamicUrls(): Promise<DynamicUrl[]> {
@@ -73,12 +82,13 @@ function buildDynamicUrls(items: DynamicUrl[], maxPerType: number): string[] {
   const urls: string[] = [];
   const locales = ["en", "es"];
 
-  const articles = items
+  const articleItems = items
     .filter((i) => i.type === "article")
     .slice(0, maxPerType);
-  for (const a of articles) {
+  for (const a of articleItems) {
     for (const loc of locales) {
-      urls.push(`${BASE}/${loc}/${NEWS_BASE[loc]}/${a.slug}`);
+      const slug = a.localizedSlugs?.[loc] ?? a.slug;
+      urls.push(`${BASE}/${loc}/${NEWS_BASE[loc]}/${slug}`);
     }
   }
 
@@ -87,16 +97,28 @@ function buildDynamicUrls(items: DynamicUrl[], maxPerType: number): string[] {
     .slice(0, maxPerType);
   for (const c of clusters) {
     for (const loc of locales) {
-      urls.push(`${BASE}/${loc}/${LEARN_BASE[loc]}/${c.slug}`);
+      const cSlug = CLUSTER_SLUG_I18N[loc]?.[c.slug] ?? c.slug;
+      urls.push(`${BASE}/${loc}/${LEARN_BASE[loc]}/${cSlug}`);
     }
   }
 
-  const learnArticles = items
+  const learnArticleItems = items
     .filter((i) => i.type === "learn-article" && i.cluster)
     .slice(0, maxPerType);
-  for (const la of learnArticles) {
+  for (const la of learnArticleItems) {
     for (const loc of locales) {
-      urls.push(`${BASE}/${loc}/${LEARN_BASE[loc]}/${la.cluster}/${la.slug}`);
+      const aSlug = la.localizedSlugs?.[loc] ?? la.slug;
+      const cSlug = CLUSTER_SLUG_I18N[loc]?.[la.cluster!] ?? la.cluster;
+      urls.push(`${BASE}/${loc}/${LEARN_BASE[loc]}/${cSlug}/${aSlug}`);
+    }
+  }
+
+  const glossaryItems = items
+    .filter((i) => i.type === "glossary")
+    .slice(0, maxPerType);
+  for (const g of glossaryItems) {
+    for (const loc of locales) {
+      urls.push(`${BASE}/${loc}/${LEARN_BASE[loc]}/${GLOSSARY_CLUSTER[loc] ?? "glossary"}/${g.slug}`);
     }
   }
 
@@ -121,7 +143,7 @@ export async function POST(request: NextRequest) {
   const staticUrls = PRIORITY_STATIC_URLS.map((p) => `${BASE}${p}`);
 
   const dynamicItems = await fetchDynamicUrls();
-  const dynamicUrlList = buildDynamicUrls(dynamicItems, 50);
+  const dynamicUrlList = buildDynamicUrls(dynamicItems, 2000);
 
   const allUrls = [...staticUrls, ...dynamicUrlList];
 

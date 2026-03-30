@@ -140,27 +140,26 @@ function esc(s: string): string {
   return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 }
 
-function urlEntry(
+function urlEntries(
   paths: Record<string, string>,
   changefreq: string,
   priority: number,
   lastmod: string,
-): string {
-  const defaultUrl = `${BASE}${paths[DEFAULT_LOCALE]}`;
-
+): string[] {
   const xhtmlLinks = LOCALES.map(
     (loc) =>
       `    <xhtml:link rel="alternate" hreflang="${loc}" href="${esc(`${BASE}${paths[loc]}`)}" />`
   ).join("\n");
+  const xDefault = `    <xhtml:link rel="alternate" hreflang="x-default" href="${esc(`${BASE}${paths[DEFAULT_LOCALE]}`)}" />`;
 
-  return `  <url>
-    <loc>${esc(defaultUrl)}</loc>
+  return LOCALES.map((loc) => `  <url>
+    <loc>${esc(`${BASE}${paths[loc]}`)}</loc>
     <lastmod>${lastmod}</lastmod>
     <changefreq>${changefreq}</changefreq>
     <priority>${priority.toFixed(1)}</priority>
 ${xhtmlLinks}
-    <xhtml:link rel="alternate" hreflang="x-default" href="${esc(defaultUrl)}" />
-  </url>`;
+${xDefault}
+  </url>`);
 }
 
 interface DynamicUrl {
@@ -191,16 +190,16 @@ export async function GET() {
   const today = new Date().toISOString().split("T")[0];
   const urls: string[] = [];
 
-  urls.push(urlEntry(PATHNAMES["/"], "daily", 1.0, today));
+  urls.push(...urlEntries(PATHNAMES["/"], "daily", 1.0, today));
 
   for (const [key, [freq, prio]] of Object.entries(FREQ_PRIO)) {
-    if (PATHNAMES[key]) urls.push(urlEntry(PATHNAMES[key], freq, prio, today));
+    if (PATHNAMES[key]) urls.push(...urlEntries(PATHNAMES[key], freq, prio, today));
   }
 
   for (const [, slugsByLocale] of Object.entries(METAL_SLUGS)) {
     const paths: Record<string, string> = {};
     for (const loc of LOCALES) paths[loc] = `/${loc}/${PRICE_PATHS[loc]}/${slugsByLocale[loc]}`;
-    urls.push(urlEntry(paths, "daily", 0.9, today));
+    urls.push(...urlEntries(paths, "daily", 0.9, today));
   }
 
   for (const [, slugsByLocale] of Object.entries(METAL_SLUGS)) {
@@ -208,14 +207,14 @@ export async function GET() {
     for (const loc of LOCALES) {
       paths[loc] = `/${loc}/${PRICE_PATHS[loc]}/${slugsByLocale[loc]}/${HISTORICAL_SEGMENT[loc]}`;
     }
-    urls.push(urlEntry(paths, "weekly", 0.85, today));
+    urls.push(...urlEntries(paths, "weekly", 0.85, today));
   }
 
   for (const [, slugsByLocale] of Object.entries(METAL_SLUGS)) {
     for (const curr of CURRENCY_PAGES) {
       const paths: Record<string, string> = {};
       for (const loc of LOCALES) paths[loc] = `/${loc}/${PRICE_PATHS[loc]}/${slugsByLocale[loc]}/${curr.slug}`;
-      urls.push(urlEntry(paths, "daily", 0.7, today));
+      urls.push(...urlEntries(paths, "daily", 0.7, today));
     }
   }
 
@@ -223,7 +222,7 @@ export async function GET() {
     const paths: Record<string, string> = {};
     const locSlugs = getProductSlugsByLocale(slug);
     for (const loc of LOCALES) paths[loc] = `/${loc}/${PRODUCT_BASE[loc]}/${locSlugs[loc] ?? slug}`;
-    urls.push(urlEntry(paths, "monthly", 0.6, today));
+    urls.push(...urlEntries(paths, "monthly", 0.6, today));
   }
 
   for (const country of DEALER_COUNTRIES) {
@@ -233,7 +232,7 @@ export async function GET() {
       const countrySlug = country.slug[loc] ?? country.slug.en;
       paths[loc] = `/${loc}${base}/${countrySlug}`;
     }
-    urls.push(urlEntry(paths, "monthly", 0.6, today));
+    urls.push(...urlEntries(paths, "monthly", 0.6, today));
 
     const cities = getCitiesByCountry(country.code);
     for (const cityEntry of cities) {
@@ -243,7 +242,7 @@ export async function GET() {
         const countrySlug = country.slug[loc] ?? country.slug.en;
         cityPaths[loc] = `/${loc}${base}/${countrySlug}/${cityEntry.slug}`;
       }
-      urls.push(urlEntry(cityPaths, "monthly", 0.5, today));
+      urls.push(...urlEntries(cityPaths, "monthly", 0.5, today));
     }
   }
 
@@ -257,23 +256,23 @@ export async function GET() {
         const locSlug = item.localizedSlugs?.[loc] ?? item.slug;
         paths[loc] = `/${loc}/${NEWS_BASE[loc]}/${locSlug}`;
       }
-      urls.push(urlEntry(paths, "weekly", 0.7, item.lastmod || today));
+      urls.push(...urlEntries(paths, "weekly", 0.7, item.lastmod || today));
     } else if (item.type === "cluster") {
       for (const loc of LOCALES) paths[loc] = `/${loc}/${LEARN_BASE[loc]}/${localizedCluster(item.slug, loc)}`;
-      urls.push(urlEntry(paths, "weekly", 0.6, today));
+      urls.push(...urlEntries(paths, "weekly", 0.6, today));
     } else if (item.type === "glossary") {
       for (const loc of LOCALES) {
         const gSlug = item.localizedSlugs?.[loc] ?? item.slug;
         paths[loc] = `/${loc}/${LEARN_BASE[loc]}/${GLOSSARY_CLUSTER[loc] ?? "glossary"}/${gSlug}`;
       }
-      urls.push(urlEntry(paths, "monthly", 0.5, today));
+      urls.push(...urlEntries(paths, "monthly", 0.5, today));
     } else if (item.type === "learn-article" && item.cluster) {
       for (const loc of LOCALES) {
         const aSlug = item.localizedSlugs?.[loc] ?? item.slug;
         const cSlug = localizedCluster(item.cluster, loc);
         paths[loc] = `/${loc}/${LEARN_BASE[loc]}/${cSlug}/${aSlug}`;
       }
-      urls.push(urlEntry(paths, "monthly", 0.5, item.lastmod || today));
+      urls.push(...urlEntries(paths, "monthly", 0.5, item.lastmod || today));
     }
   }
 

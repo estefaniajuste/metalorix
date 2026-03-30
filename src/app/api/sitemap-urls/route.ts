@@ -92,7 +92,7 @@ export async function GET() {
       .from(learnArticles)
       .innerJoin(learnClusters, eq(learnArticles.clusterId, learnClusters.id))
       .where(isNotNull(learnArticles.publishedAt))
-      .limit(1000)
+      .limit(2000)
       .catch(() => []);
 
     const learnLocRows = learnRows.length > 0

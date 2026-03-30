@@ -99,6 +99,10 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL("/api/feed", request.url), 302);
   }
 
+  if (pathname === "/sitemap.xml" || pathname === "/sitemap_index.xml") {
+    return NextResponse.redirect(new URL("/api/sitemap", request.url), 301);
+  }
+
   if (pathname.startsWith("/api/")) {
     const response = NextResponse.next();
     response.headers.set("X-Robots-Tag", "noindex");
