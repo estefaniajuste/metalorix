@@ -41,6 +41,28 @@ for (const mapping of Object.values(CLUSTER_SLUG_BY_LOCALE)) {
 }
 Object.keys(CLUSTER_SLUG_BY_LOCALE.es).forEach((base) => { CLUSTER_REVERSE[base] = base; });
 
+// Old cluster names that were renamed — map to closest current cluster
+CLUSTER_REVERSE["collecting-numismatics"] = "physical-metals";
+CLUSTER_REVERSE["coleccion-numismatica"] = "physical-metals";
+
+// Old learn slugs that were completely regenerated — map to current cluster/slug
+const LEARN_SLUG_REDIRECTS: Record<string, { cluster: string; slug: string }> = {
+  "coin-grading-scale-explained-ms70-to-good": { cluster: "security-authenticity", slug: "coin-grading-scale-ms-pf" },
+  "pcgs-vs-ngc-coin-grading-services-comparison": { cluster: "physical-metals", slug: "coin-grading-ngc-and-pcgs" },
+  "pcgs-vs-ngc-coin-grading-services-comparison-chart": { cluster: "physical-metals", slug: "coin-grading-ngc-and-pcgs" },
+  "what-is-a-carat-and-how-does-it-apply-to-gold": { cluster: "fundamentals", slug: "gold-purity-karat-system" },
+  "what-is-sterling-silver": { cluster: "fundamentals", slug: "sterling-silver-explained" },
+  "silver-chemical-symbol-and-abbreviation": { cluster: "fundamentals", slug: "why-silvers-chemical-symbol-is-ag" },
+  "what-is-a-troy-ounce": { cluster: "fundamentals", slug: "the-troy-ounce-explained" },
+  "what-is-fiat-money": { cluster: "macroeconomics", slug: "fiat-money-explained" },
+  "what-are-base-metals": { cluster: "fundamentals", slug: "precious-metals-vs-base-metals" },
+  "gold-silver-platinum-volatility-comparison": { cluster: "comparisons", slug: "volatility-comparison-across-precious-metals" },
+  "gold-silver-platinum-liquidity-comparison": { cluster: "comparisons", slug: "liquidity-comparison-across-precious-metals" },
+  "how-to-sell-scrap-gold": { cluster: "production-industry", slug: "how-to-sell-scrap-gold" },
+  "how-does-ppi-affect-gold-prices": { cluster: "price-factors", slug: "ppi-and-gold" },
+  "gold-performance-during-hyperinflation": { cluster: "history", slug: "hyperinflation-and-precious-metals" },
+};
+
 const METAL_SLUGS: Record<string, Record<string, string>> = {
   oro:     { es:"oro", en:"gold", de:"gold", zh:"huangjin", ar:"dhahab", tr:"altin", hi:"sona" },
   plata:   { es:"plata", en:"silver", de:"silber", zh:"baiyin", ar:"fiddah", tr:"gumus", hi:"chandi" },
@@ -144,6 +166,23 @@ export function middleware(request: NextRequest) {
     lower === "/glosario" || lower.startsWith("/glosario/")
   ) {
     return NextResponse.redirect(new URL("/learn", request.url), 301);
+  }
+
+  // Redirect old learn slugs that were completely renamed
+  if (segments.length >= 4 && LOCALES.has(segments[0])) {
+    const locale = segments[0];
+    const learnSegment = LEARN_PATHS[locale]?.replace("/", "") || "learn";
+    if (segments[1] === learnSegment) {
+      const slugInUrl = segments[3];
+      const redir = LEARN_SLUG_REDIRECTS[slugInUrl];
+      if (redir) {
+        const locCluster = locale === "en" ? redir.cluster : (CLUSTER_SLUG_BY_LOCALE[locale]?.[redir.cluster] ?? redir.cluster);
+        return NextResponse.redirect(
+          new URL(`/${locale}/${learnSegment}/${locCluster}/${redir.slug}`, request.url),
+          301
+        );
+      }
+    }
   }
 
   // Redirect learn pages under wrong cluster slug to the correct localized cluster.
