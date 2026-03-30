@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Link } from "@/i18n/navigation";
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import { getTranslations, getLocale } from "next-intl/server";
 import { getAlternates } from "@/lib/seo/alternates";
 import { howToSchema, organizationSchema } from "@/lib/seo/schemas";
@@ -33,6 +33,16 @@ import { routing } from "@/i18n/routing";
 import { SetLocalePathOverrides } from "@/components/layout/SetLocalePathOverrides";
 import { ContextualToolCards, InlineToolCallout, getToolsForArticle } from "@/components/tools/ContextualToolCards";
 import type { Locale } from "@/i18n/config";
+
+function truncateDescription(text: string, maxLen = 155): string {
+  if (text.length <= maxLen) return text;
+  const truncated = text.slice(0, maxLen);
+  const lastPeriod = truncated.lastIndexOf(".");
+  if (lastPeriod > maxLen * 0.6) return truncated.slice(0, lastPeriod + 1);
+  const lastSpace = truncated.lastIndexOf(" ");
+  if (lastSpace > maxLen * 0.6) return truncated.slice(0, lastSpace);
+  return truncated;
+}
 
 export const revalidate = 3600;
 
@@ -172,7 +182,7 @@ export async function generateMetadata({
       const { term: gTerm, isLocaleMatch } = glossaryData;
       const title = isLocaleMatch ? gTerm.term : tl("typeGlossary");
       const description = isLocaleMatch
-        ? gTerm.definition.slice(0, 155)
+        ? truncateDescription(gTerm.definition, 155)
         : tl("title");
       const alternates = getAlternates(locale, (loc) => ({
         pathname: "/learn/[cluster]/[slug]",
@@ -201,11 +211,12 @@ export async function generateMetadata({
     }
   }
 
-  if (!topic) return { title: tl("notFound") };
+  if (!topic) return { title: tl("notFound"), robots: { index: false, follow: false } };
 
   const data = await getArticleData(topic.slug, locale);
   const title = data?.localization.seoTitle || topic.titleEn;
-  const description = data?.localization.metaDescription || topic.summaryEn;
+  const rawDesc = data?.localization.metaDescription || topic.summaryEn;
+  const description = truncateDescription(rawDesc, 155);
 
   const metaSlugsByLocale = await getArticleSlugsForAllLocales(topic.slug);
 
@@ -251,6 +262,14 @@ export default async function LearnArticlePage({
   const locale = (await getLocale()) as Locale;
 
   const { baseClusterSlug, topic } = await resolveParams(params, locale);
+
+  const expectedClusterSlug = getLocalizedClusterSlug(baseClusterSlug, locale);
+  if (params.cluster !== expectedClusterSlug && topic) {
+    const correctArticleSlug = await getLocalizedArticleSlug(topic.slug, locale) || topic.slug;
+    const learnPathMap = routing.pathnames["/learn"];
+    const learnSeg = (typeof learnPathMap === "string" ? learnPathMap : learnPathMap[locale]).replace(/^\//, "");
+    permanentRedirect(`/${locale}/${learnSeg}/${expectedClusterSlug}/${correctArticleSlug}`);
+  }
 
   if ((!topic || topic.clusterSlug !== baseClusterSlug) && baseClusterSlug === "glossary") {
     const glossaryData = await getGlossaryTermData(params.slug, locale);

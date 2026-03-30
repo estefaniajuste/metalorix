@@ -28,7 +28,7 @@ export async function generateMetadata({
   const { locale, slug } = params;
   const t = await getTranslations({ locale, namespace: "products" });
   const product = getProduct(slug, locale);
-  if (!product) return { title: t("notFound") };
+  if (!product) return { title: t("notFound"), robots: { index: false, follow: false } };
 
   const alternates = getAlternates(locale, {
     pathname: "/productos/[slug]",

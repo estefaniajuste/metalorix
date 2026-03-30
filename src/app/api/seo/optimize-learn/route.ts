@@ -526,6 +526,106 @@ const OPTIMIZED_METADATA: {
     metaDescription:
       "France's assignats (1789-1796) collapsed to near zero after massive money printing. What the world's first paper hyperinflation teaches gold investors.",
   },
+  {
+    slug: "sterling-silver-definition",
+    locale: "en",
+    seoTitle: "Sterling Silver (925): Composition & How to Identify It",
+    metaDescription:
+      "Sterling silver is 92.5% pure silver alloyed with 7.5% copper. How to spot the 925 hallmark, why pure silver is too soft, and care tips.",
+    faq: [
+      { question: "What does 925 mean on silver?", answer: "The 925 stamp means the item is sterling silver — 92.5% pure silver and 7.5% copper or other metals. This is the international standard for sterling silver." },
+      { question: "Is sterling silver real silver?", answer: "Yes. Sterling silver is real silver (92.5% pure). Pure silver (99.9%) is too soft for jewelry, so copper is added for durability while maintaining silver's beauty." },
+    ],
+  },
+  {
+    slug: "karat-definition",
+    locale: "en",
+    seoTitle: "Karat in Gold: 24K, 18K, 14K Purity Explained",
+    metaDescription:
+      "Karat measures gold purity: 24K is 99.99% pure, 18K is 75%, 14K is 58.3%. How the karat system works and which karat is best for your needs.",
+    faq: [
+      { question: "What karat is pure gold?", answer: "24 karat (24K) gold is the purest form at 99.99% gold content. It is too soft for most jewelry but preferred for investment bars and coins." },
+      { question: "What is the difference between karat and carat?", answer: "Karat (K) measures gold purity on a 24-point scale. Carat (ct) measures gemstone weight (1 carat = 0.2 grams). Different systems, different materials." },
+    ],
+  },
+  {
+    slug: "troy-ounce-definition",
+    locale: "en",
+    seoTitle: "Troy Ounce: Why Precious Metals Use a Different Ounce",
+    metaDescription:
+      "A troy ounce (31.1g) is 10% heavier than a regular ounce (28.35g). Why gold and silver use the troy system from medieval France.",
+  },
+  {
+    slug: "fiat-money-definition",
+    locale: "en",
+    seoTitle: "Fiat Money: Why It Has Value Without Gold Backing",
+    metaDescription:
+      "Fiat money derives value from government decree, not gold or silver. How fiat currencies work, their history, and why gold investors watch them closely.",
+  },
+  {
+    slug: "paper-gold-definition",
+    locale: "en",
+    seoTitle: "Paper Gold: ETFs, Futures & Certificates Explained",
+    metaDescription:
+      "Paper gold includes ETFs, futures, and certificates that track gold prices without physical ownership. Pros, cons, and counterparty risk explained.",
+  },
+  {
+    slug: "mintage-definition",
+    locale: "en",
+    seoTitle: "Mintage: How Production Numbers Affect Coin Value",
+    metaDescription:
+      "Mintage is the total number of coins struck by a mint. Lower mintage often means higher premiums. How to check mintage figures before buying.",
+  },
+  {
+    slug: "base-metal-definition",
+    locale: "en",
+    seoTitle: "Base Metals vs Precious Metals: Key Differences",
+    metaDescription:
+      "Base metals (copper, zinc, nickel, aluminum) oxidize and corrode, unlike precious metals. Properties, uses, and why the distinction matters for investors.",
+  },
+  {
+    slug: "ignoring-storage-and-insurance-costs",
+    locale: "en",
+    seoTitle: "Hidden Costs of Owning Physical Gold & Silver",
+    metaDescription:
+      "Storage costs 0.12-0.50% per year and insurance adds 0.5-1%. These hidden expenses can eat 5-10% of returns over a decade. Full cost breakdown inside.",
+    faq: [
+      { question: "How much does it cost to store gold?", answer: "Professional vault storage costs 0.12% to 0.50% per year of metal value. Bank safe deposit boxes range from $50 to $400+ per year depending on size and location." },
+      { question: "Do I need insurance for gold stored at home?", answer: "Yes. Standard homeowner's insurance typically covers only $200-1,000 of precious metals. A separate rider or floater policy costs roughly 0.5-1% of the metal's value annually." },
+    ],
+  },
+  {
+    slug: "bullionvault-storage-model",
+    locale: "en",
+    seoTitle: "BullionVault: How Allocated Storage Works [2026]",
+    metaDescription:
+      "BullionVault stores allocated gold in London, Zurich, New York, Toronto, and Singapore from 0.12%/year. How the platform, fees, and daily audits work.",
+  },
+  {
+    slug: "hyperinflation-and-precious-metals",
+    locale: "en",
+    seoTitle: "Gold & Silver in Hyperinflation: Historical Evidence",
+    metaDescription:
+      "During Zimbabwe's hyperinflation, a gold coin could buy months of food. Historical evidence from Weimar, Zimbabwe, and Venezuela on precious metals as hedges.",
+  },
+  {
+    slug: "rose-gold-composition",
+    locale: "en",
+    seoTitle: "Rose Gold Alloy: Copper Ratio & Why It Turns Pink",
+    metaDescription:
+      "Rose gold is 75% gold + 22.25% copper + 2.75% silver (18K). The copper creates the pink hue. How different gold-copper ratios change the color.",
+  },
+  {
+    slug: "silver-conductivity-record",
+    locale: "en",
+    seoTitle: "Silver: The Best Electrical Conductor of All Metals",
+    metaDescription:
+      "Silver has the highest electrical and thermal conductivity of any element. Why it outperforms copper, its role in solar panels and electronics.",
+    faq: [
+      { question: "Is silver a better conductor than copper?", answer: "Yes. Silver's electrical conductivity is 6.3 × 10⁷ S/m vs copper's 5.96 × 10⁷ S/m. Silver is ~6% more conductive but much more expensive, so copper is used in most wiring." },
+      { question: "Why is silver used in solar panels?", answer: "Silver paste forms the conductive pathways in photovoltaic cells due to its superior conductivity. Each solar panel uses about 20g of silver. Solar demand consumes ~15% of annual silver supply." },
+    ],
+  },
 
   // ───────── SPANISH (es) ─────────
   {

@@ -211,7 +211,7 @@ export async function generateMetadata({
 
   if (!article) {
     const t = await getTranslations("article");
-    return { title: t("notFound") };
+    return { title: t("notFound"), robots: { index: false, follow: false } };
   }
 
   const locale = params.locale;

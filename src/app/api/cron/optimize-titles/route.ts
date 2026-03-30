@@ -92,7 +92,7 @@ JSON:`;
     if (typeof parsed.titulo_seo === "string" && typeof parsed.meta_descripcion === "string") {
       return {
         titulo_seo: parsed.titulo_seo.slice(0, 70),
-        meta_descripcion: parsed.meta_descripcion.slice(0, 160),
+        meta_descripcion: smartTruncate(parsed.meta_descripcion, 155),
       };
     }
   } catch {
@@ -101,11 +101,21 @@ JSON:`;
     if (titleMatch && descMatch) {
       return {
         titulo_seo: titleMatch[1].slice(0, 70),
-        meta_descripcion: descMatch[1].slice(0, 160),
+        meta_descripcion: smartTruncate(descMatch[1], 155),
       };
     }
   }
   return null;
+}
+
+function smartTruncate(text: string, maxLen: number): string {
+  if (text.length <= maxLen) return text;
+  const truncated = text.slice(0, maxLen);
+  const lastPeriod = truncated.lastIndexOf(".");
+  if (lastPeriod > maxLen * 0.6) return truncated.slice(0, lastPeriod + 1);
+  const lastSpace = truncated.lastIndexOf(" ");
+  if (lastSpace > maxLen * 0.6) return truncated.slice(0, lastSpace);
+  return truncated;
 }
 
 async function optimizeLearnTitleWithGemini(
@@ -157,7 +167,7 @@ JSON:`;
     if (typeof parsed.seo_title === "string" && typeof parsed.meta_description === "string") {
       return {
         seo_title: parsed.seo_title.slice(0, 65),
-        meta_description: parsed.meta_description.slice(0, 160),
+        meta_description: smartTruncate(parsed.meta_description, 155),
       };
     }
   } catch {
@@ -166,7 +176,7 @@ JSON:`;
     if (titleMatch && descMatch) {
       return {
         seo_title: titleMatch[1].slice(0, 65),
-        meta_description: descMatch[1].slice(0, 160),
+        meta_description: smartTruncate(descMatch[1], 155),
       };
     }
   }
