@@ -160,12 +160,18 @@ export function middleware(request: NextRequest) {
     }
   }
 
-  // Handle bare /aprende, /glosario etc. (no locale prefix)
-  if (
-    lower === "/aprende" || lower.startsWith("/aprende/") ||
-    lower === "/glosario" || lower.startsWith("/glosario/")
-  ) {
-    return NextResponse.redirect(new URL("/learn", request.url), 301);
+  // Handle bare paths without locale prefix (next-intl would 307, we want 301)
+  if (!LOCALES.has(segments[0])) {
+    const learnPrefixes = ["learn", "aprende-inversion", "aprende", "glosario", "glossary",
+      "lernen-investition", "xuexi", "taallam", "ogren-yatirim", "gyaan-nivesh",
+      "educacion", "education"];
+    if (learnPrefixes.some((p) => lower === `/${p}` || lower.startsWith(`/${p}/`))) {
+      const rest = segments.slice(1).join("/");
+      return NextResponse.redirect(
+        new URL(`/en/learn${rest ? `/${rest}` : ""}`, request.url),
+        301
+      );
+    }
   }
 
   // Redirect old learn slugs that were completely renamed
