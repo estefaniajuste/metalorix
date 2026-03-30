@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { notFound, permanentRedirect } from "next/navigation";
+import { notFound } from "next/navigation";
 import { getTranslations, getLocale } from "next-intl/server";
 import { getAlternates } from "@/lib/seo/alternates";
 import { getMetalSEO, METAL_SEO, type MetalFAQ } from "@/lib/seo/metal-content";
@@ -166,12 +166,6 @@ export default async function PrecioMetalPage({
   const tn = await getTranslations("nav");
   const localizedSlug = getLocalizedMetalSlug(seo.slug, locale);
 
-  if (params.metal !== localizedSlug) {
-    const { routing } = await import("@/i18n/routing");
-    const pricePathMap = routing.pathnames["/precio/[metal]"];
-    const priceSeg = (typeof pricePathMap === "string" ? pricePathMap : pricePathMap[locale as keyof typeof pricePathMap]).replace("[metal]", localizedSlug);
-    permanentRedirect(`/${locale}${priceSeg}`);
-  }
   const alternates = getAlternates(locale, {
     pathname: "/precio/[metal]",
     params: { metal: localizedSlug },

@@ -22,6 +22,38 @@ const LEARN_LEGACY_SEGMENTS = new Set([
   "aprender", "lernen", "learn", "xuexi", "taallam", "ogren",
 ]);
 
+const PRICE_PATHS: Record<string, string> = {
+  es: "precio", en: "price", de: "preis", zh: "jiage", ar: "sier", tr: "fiyat", hi: "mulya",
+};
+
+const CLUSTER_SLUG_BY_LOCALE: Record<string, Record<string, string>> = {
+  es: { fundamentals:"fundamentos", history:"historia", "markets-trading":"mercados-trading", investment:"inversion", "physical-metals":"metales-fisicos", "price-factors":"factores-precio", "production-industry":"produccion-industria", "geology-science":"geologia-ciencia", "regulation-tax":"regulacion-impuestos", "security-authenticity":"seguridad-autenticidad", "ratios-analytics":"ratios-analitica", macroeconomics:"macroeconomia", guides:"guias", "faq-mistakes":"preguntas-errores", comparisons:"comparativas", glossary:"glosario" },
+  de: { fundamentals:"grundlagen", history:"geschichte", "markets-trading":"maerkte-handel", investment:"investition", "physical-metals":"physische-metalle", "price-factors":"preisfaktoren", "production-industry":"produktion-industrie", "geology-science":"geologie-wissenschaft", "regulation-tax":"regulierung-steuern", "security-authenticity":"sicherheit-echtheit", "ratios-analytics":"kennzahlen-analyse", macroeconomics:"makrooekonomie", guides:"leitfaeden", "faq-mistakes":"faq-fehler", comparisons:"vergleiche", glossary:"glossar" },
+  zh: { fundamentals:"jichu", history:"lishi", "markets-trading":"shichang-jiaoyi", investment:"touzi", "physical-metals":"shiwu-jinshu", "price-factors":"jiage-yinsu", "production-industry":"shengchan-gongye", "geology-science":"dizhi-kexue", "regulation-tax":"fagui-shuiwu", "security-authenticity":"anquan-zhenwei", "ratios-analytics":"bilv-fenxi", macroeconomics:"hongguan-jingji", guides:"zhinan", "faq-mistakes":"changjian-wenti", comparisons:"bijiao", glossary:"shuyu" },
+  ar: { fundamentals:"asasiyat", history:"tarikh", "markets-trading":"aswaq-tadawul", investment:"istithmar", "physical-metals":"maadin-madiyah", "price-factors":"awamil-asiar", "production-industry":"intaj-sinai", "geology-science":"jiyulujiya-ulum", "regulation-tax":"tanzim-daraib", "security-authenticity":"aman-asalah", "ratios-analytics":"nisab-tahlilat", macroeconomics:"iqtisad-kulli", guides:"adillah", "faq-mistakes":"asilah-akhta", comparisons:"muqaranat", glossary:"mustalahat" },
+  tr: { fundamentals:"temeller", history:"tarih", "markets-trading":"piyasalar-ticaret", investment:"yatirim", "physical-metals":"fiziksel-metaller", "price-factors":"fiyat-faktorleri", "production-industry":"uretim-endustri", "geology-science":"jeoloji-bilim", "regulation-tax":"duzenleme-vergi", "security-authenticity":"guvenlik-orijinallik", "ratios-analytics":"oranlar-analitik", macroeconomics:"makroekonomi", guides:"rehberler", "faq-mistakes":"sss-hatalar", comparisons:"karsilastirmalar", glossary:"sozluk" },
+  hi: { fundamentals:"mool-tattva", history:"itihas", "markets-trading":"bazaar-vyapar", investment:"nivesh", "physical-metals":"bhaute-dhatu", "price-factors":"mulya-karak", "production-industry":"uttpadan-udyog", "geology-science":"bhugol-vigyan", "regulation-tax":"niyaman-kar", "security-authenticity":"suraksha-pramaan", "ratios-analytics":"anupat-vishleshan", macroeconomics:"makro-arthvyavastha", guides:"margdarshika", "faq-mistakes":"puchhe-jane-wale-sawal", comparisons:"tulna", glossary:"shabdavali" },
+};
+
+const CLUSTER_REVERSE: Record<string, string> = {};
+for (const mapping of Object.values(CLUSTER_SLUG_BY_LOCALE)) {
+  for (const [base, loc] of Object.entries(mapping)) CLUSTER_REVERSE[loc] = base;
+}
+Object.keys(CLUSTER_SLUG_BY_LOCALE.es).forEach((base) => { CLUSTER_REVERSE[base] = base; });
+
+const METAL_SLUGS: Record<string, Record<string, string>> = {
+  oro:     { es:"oro", en:"gold", de:"gold", zh:"huangjin", ar:"dhahab", tr:"altin", hi:"sona" },
+  plata:   { es:"plata", en:"silver", de:"silber", zh:"baiyin", ar:"fiddah", tr:"gumus", hi:"chandi" },
+  platino: { es:"platino", en:"platinum", de:"platin", zh:"bojin", ar:"blatiin", tr:"platin", hi:"platinam" },
+  paladio: { es:"paladio", en:"palladium", de:"palladium", zh:"bajin", ar:"baladiyum", tr:"paladyum", hi:"palladium" },
+  cobre:   { es:"cobre", en:"copper", de:"kupfer", zh:"tong", ar:"nuhas", tr:"bakir", hi:"tamba" },
+};
+
+const METAL_REVERSE: Record<string, string> = {};
+for (const [internal, locales] of Object.entries(METAL_SLUGS)) {
+  for (const slug of Object.values(locales)) METAL_REVERSE[slug] = internal;
+}
+
 const PATH_ALIASES: Record<string, string> = {
   "/oro": "/precio/oro",
   "/plata": "/precio/plata",
@@ -110,24 +142,42 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL("/learn", request.url), 301);
   }
 
-  // Redirect learn articles accessed under the wrong cluster slug.
-  // Google indexed some articles under a cluster they no longer belong to.
-  // Map: wrong-cluster/slug → correct-cluster/slug (locale-agnostic, slug stays the same).
-  const LEARN_WRONG_CLUSTER_REDIRECTS: Record<string, string> = {
-    "ratios-analytics/volatility-comparison-across-metals": "comparisons/volatility-comparison-across-metals",
-    "ratios-analytics/liquidity-comparison-across-metals": "comparisons/liquidity-comparison-across-metals",
-  };
-  if (segments.length >= 3 && LOCALES.has(segments[0])) {
+  // Redirect learn articles under wrong cluster slug to the correct localized cluster.
+  if (segments.length >= 4 && LOCALES.has(segments[0])) {
     const locale = segments[0];
     const learnSegment = LEARN_PATHS[locale]?.replace("/", "") || "learn";
-    if (segments[1] === learnSegment && segments.length >= 4) {
-      const wrongKey = `${segments[2]}/${segments[3]}`;
-      const correctPath = LEARN_WRONG_CLUSTER_REDIRECTS[wrongKey];
-      if (correctPath) {
-        return NextResponse.redirect(
-          new URL(`/${locale}/${learnSegment}/${correctPath}`, request.url),
-          301
-        );
+    if (segments[1] === learnSegment) {
+      const clusterInUrl = segments[2];
+      const baseCluster = CLUSTER_REVERSE[clusterInUrl];
+      if (baseCluster) {
+        const expected = locale === "en" ? baseCluster : (CLUSTER_SLUG_BY_LOCALE[locale]?.[baseCluster] ?? baseCluster);
+        if (clusterInUrl !== expected) {
+          const articleSlug = segments.slice(3).join("/");
+          return NextResponse.redirect(
+            new URL(`/${locale}/${learnSegment}/${expected}/${articleSlug}`, request.url),
+            301
+          );
+        }
+      }
+    }
+  }
+
+  // Redirect product pages with wrong locale metal slug.
+  if (segments.length >= 3 && LOCALES.has(segments[0])) {
+    const locale = segments[0];
+    const priceSeg = PRICE_PATHS[locale];
+    if (priceSeg && segments[1] === priceSeg) {
+      const metalInUrl = segments[2];
+      const internal = METAL_REVERSE[metalInUrl];
+      if (internal) {
+        const expected = METAL_SLUGS[internal]?.[locale] ?? metalInUrl;
+        if (metalInUrl !== expected) {
+          const rest = segments.slice(3).join("/");
+          return NextResponse.redirect(
+            new URL(`/${locale}/${priceSeg}/${expected}${rest ? `/${rest}` : ""}`, request.url),
+            301
+          );
+        }
       }
     }
   }

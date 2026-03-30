@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Link } from "@/i18n/navigation";
-import { notFound, permanentRedirect } from "next/navigation";
+import { notFound } from "next/navigation";
 import { getTranslations, getLocale } from "next-intl/server";
 import { getAlternates } from "@/lib/seo/alternates";
 import { howToSchema, organizationSchema } from "@/lib/seo/schemas";
@@ -262,14 +262,6 @@ export default async function LearnArticlePage({
   const locale = (await getLocale()) as Locale;
 
   const { baseClusterSlug, topic } = await resolveParams(params, locale);
-
-  const expectedClusterSlug = getLocalizedClusterSlug(baseClusterSlug, locale);
-  if (params.cluster !== expectedClusterSlug && topic) {
-    const correctArticleSlug = await getLocalizedArticleSlug(topic.slug, locale) || topic.slug;
-    const learnPathMap = routing.pathnames["/learn"];
-    const learnSeg = (typeof learnPathMap === "string" ? learnPathMap : learnPathMap[locale]).replace(/^\//, "");
-    permanentRedirect(`/${locale}/${learnSeg}/${expectedClusterSlug}/${correctArticleSlug}`);
-  }
 
   if ((!topic || topic.clusterSlug !== baseClusterSlug) && baseClusterSlug === "glossary") {
     const glossaryData = await getGlossaryTermData(params.slug, locale);
