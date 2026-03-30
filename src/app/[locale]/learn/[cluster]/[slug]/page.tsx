@@ -214,7 +214,10 @@ export async function generateMetadata({
   if (!topic) return { title: tl("notFound"), robots: { index: false, follow: false } };
 
   const data = await getArticleData(topic.slug, locale);
-  const title = data?.localization.seoTitle || topic.titleEn;
+  const rawTitle = data?.localization.seoTitle || topic.titleEn;
+  const title = rawTitle
+    .replace(/\s*\|\s*Metalorix\s*(Learn)?\s*/gi, "")
+    .trim();
   const rawDesc = data?.localization.metaDescription || topic.summaryEn;
   const description = truncateDescription(rawDesc, 155);
 
