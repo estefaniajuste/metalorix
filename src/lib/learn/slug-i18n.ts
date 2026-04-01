@@ -189,8 +189,6 @@ export async function getLocalizedArticleSlug(
   baseSlug: string,
   locale: Locale
 ): Promise<string> {
-  if (locale === "en") return baseSlug;
-
   const db = getDb();
   if (!db) return baseSlug;
 
