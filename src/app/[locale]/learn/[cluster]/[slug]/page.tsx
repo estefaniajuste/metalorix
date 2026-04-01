@@ -447,7 +447,8 @@ export default async function LearnArticlePage({
   }
 
   if (topic) {
-    const canonicalSlug = (await getLocalizedArticleSlug(topic.slug, locale)) || topic.slug;
+    const slugsByLocale = await getArticleSlugsForAllLocales(topic.slug);
+    const canonicalSlug = slugsByLocale.get(locale) || topic.slug;
     const canonicalCluster = getLocalizedClusterSlug(baseClusterSlug, locale);
     if (params.slug !== canonicalSlug || params.cluster !== canonicalCluster) {
       const path = getPathname({
