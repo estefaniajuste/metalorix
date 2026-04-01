@@ -446,6 +446,18 @@ export default async function LearnArticlePage({
     permanentRedirect(path);
   }
 
+  if (topic) {
+    const canonicalSlug = (await getLocalizedArticleSlug(topic.slug, locale)) || topic.slug;
+    const canonicalCluster = getLocalizedClusterSlug(baseClusterSlug, locale);
+    if (params.slug !== canonicalSlug || params.cluster !== canonicalCluster) {
+      const path = getPathname({
+        locale: locale as Locale,
+        href: { pathname: "/learn/[cluster]/[slug]", params: { cluster: canonicalCluster, slug: canonicalSlug } } as any,
+      });
+      permanentRedirect(path);
+    }
+  }
+
   if (!topic) {
     const dbMatch = await findArticleInDb(params.slug);
     if (dbMatch) {

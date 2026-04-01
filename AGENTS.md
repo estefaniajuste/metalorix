@@ -174,28 +174,148 @@ No asumir que los cambios están en producción solo porque el código está lis
 
 ### Pendiente — Acciones manuales del usuario (no puede hacer el agente)
 
-1. **Solicitar re-indexación en GSC de URLs con redirects corregidos**
-   - Las URLs con bare paths (`/learn/...`, `/news/...`) ahora tienen 301 correctos
-   - Ir a GSC → Inspección de URLs → solicitar indexación para que Google actualice los redirects
-   - Prioridad: las URLs que aparecían en GSC con más impresiones
+1. **URGENTE: Re-indexar URLs con 301 en GSC**
+   - GSC muestra ~50+ URLs con cluster slugs antiguos que ahora dan 301 (ej: `/tr/ogren-yatirim/guides/...`, `/es/aprende-inversion/geology-science/...`)
+   - Estas URLs tienen miles de impresiones pero 0 clicks porque Google aún muestra la URL antigua
+   - Ir a GSC → Inspección de URLs → solicitar indexación de la URL DESTINO (la correcta) para cada una
+   - Prioridad máxima: las URLs con más impresiones del CSV de GSC
 
-2. **Revisar títulos SERP reales en GSC**
-   - Ir a GSC → Rendimiento → Páginas → ver si el título mostrado coincide con el `<title>` tag
-   - Si Google sigue reescribiendo títulos en learn articles, puede ser por el `title` field antiguo en DB
-   - El fix de H1=seoTitle debería resolver esto tras el próximo crawl
-
-3. **Monitorizar CTR por página tras los cambios**
-   - Esperar 2-4 semanas para que Google procese los cambios
-   - Comparar CTR antes/después en las top-20 páginas por impresiones
-   - Si CTR no mejora en learn articles, considerar reescribir seoTitles en DB
-
-4. **Enviar sitemap actualizado a GSC**
+2. **Re-enviar sitemap en GSC**
    - Ir a GSC → Sitemaps → solicitar re-envío de `https://metalorix.com/api/sitemap`
-   - Esto acelera el re-crawl de las páginas con cambios
+   - Acelera el re-crawl y actualización de URLs corregidas
 
-5. **Considerar títulos más "clickbait" (sin perder precisión)**
-   - Páginas como "What Is Gold?" podrían beneficiarse de títulos tipo "What Is Gold? Uses, Value & Why Investors Buy It"
+3. **Monitorizar CTR por página (esperar 2-4 semanas)**
+   - Comparar CTR antes/después en las top-20 páginas por impresiones
+   - Si no mejora en learn articles, considerar reescribir seoTitles en DB
+
+4. **Reescribir títulos de artículos learn de alto tráfico**
+   - Páginas como "What Is Gold?" → "What Is Gold? Value, Uses & Why Investors Buy It in 2026"
    - Esto requiere editar `seoTitle` en las localizaciones de la DB
+
+---
+
+## Estrategia de producto y crecimiento (abril 2026)
+
+> Diagnóstico profundo basado en datos GSC + análisis competitivo.
+
+### Diagnóstico: Por qué el CTR es tan bajo
+
+| Problema | Evidencia | Impacto |
+|----------|-----------|---------|
+| **Marca desconocida** | 0 búsquedas de "metalorix", solo 5 de "metalorex" (typo) | Usuarios eligen Kitco/PCGS/NGC sobre marca desconocida |
+| **Sin producto "sticky"** | goldprice.org tiene portfolio tracker → 4.1M visitas/mes | Sin razón para volver cada día |
+| **Contenido sin diferenciación** | Learn articles compiten con Wikipedia, PCGS, Investopedia | Mismo contenido, menos autoridad |
+| **~50 URLs con 301 en Google** | Google muestra URLs antiguas → redirect → URL correcta | Experiencia degradada, posible penalización |
+| **Sin presencia crypto** | "bitcoin price" = 3.6M búsquedas/mes; oro vs bitcoin no rankea | Mercado enorme ignorado |
+| **Herramientas invisibles** | 0 impresiones en GSC para /tools, /roi-calculator, etc. | Las herramientas existen pero Google no las muestra |
+| **Noticias genéricas** | Solo 22 impresiones en la mejor noticia de noticias | AI summaries no compiten con Reuters/Kitco |
+
+### TOP 3 features a construir (por impacto)
+
+#### 1. Portfolio Tracker (PRIORIDAD MÁXIMA — crea hábito diario)
+
+**Qué es:** Los usuarios registran sus tenencias de oro/plata/platino (gramos, monedas, lingotes) con precio de compra. La app calcula en tiempo real el valor total, P&L, y rendimiento.
+
+**Por qué funciona:**
+- goldprice.org tiene esto y recibe 4.1M visitas/mes — es EL feature que genera retención
+- GoldFolio (app) cobra $1.99/año solo por esto
+- Crea el hábito diario: "¿cuánto vale mi oro hoy?"
+- Los datos persisten → el usuario VUELVE
+
+**Implementación:**
+- Fase 1: localStorage (sin cuenta) → input de holdings → valor en tiempo real + gráfico P&L
+- Fase 2: sincronización con cuenta de usuario (ya tenemos auth)
+- Fase 3: portfolio compartible (imagen/link) → viral loop
+- Archivos a crear: `src/app/[locale]/portfolio/page.tsx`, `src/components/portfolio/`
+
+**Monetización:** Premium features (exportar PDF fiscal, alertas de portfolio, análisis avanzado)
+
+#### 2. Bitcoin + Crypto vs Gold Dashboard (captura mercado crypto)
+
+**Qué es:** Dashboard en tiempo real comparando oro vs Bitcoin vs S&P 500. Correlación rolling, performance comparativa, indicador de divergencia.
+
+**Por qué funciona:**
+- "bitcoin price" = 3.6M búsquedas/mes
+- "gold vs bitcoin" es una query creciente en 2026
+- La página actual `/compare/gold-vs-bitcoin` es estática y no rankea
+- AhaSignals tiene un "Gold-Bitcoin Divergence Index" que atrae tráfico
+- El público crypto es ENORME y comparte mucho en redes
+
+**Implementación:**
+- Añadir precio de BTC a los proveedores de datos (Yahoo Finance: BTC-USD)
+- Dashboard interactivo: correlación, ratio BTC/Gold, performance YTD
+- Crear "Gold-Crypto Divergence Index" propio (branded, compartible)
+- Alertas cuando correlación cambia de signo
+
+**Monetización:** Afiliados a exchanges crypto (Binance, Coinbase), ads
+
+#### 3. Embeddable Gold Price Widget (motor viral + backlinks)
+
+**Qué es:** Widget HTML/iframe gratuito que cualquier web puede pegar para mostrar precio del oro en tiempo real. Logo "Powered by Metalorix" con link.
+
+**Por qué funciona:**
+- Cada embed = backlink gratuito (SEO boost enorme)
+- goldprice.org creció así: miles de sites enlazan su widget
+- Es marketing viral pasivo — una vez que el widget se pega, genera tráfico indefinidamente
+- Los blogs de inversión, dealers y foros NECESITAN esto
+
+**Implementación:**
+- Crear `src/app/api/widget/route.ts` → HTML/JS embebible
+- Landing page `src/app/[locale]/widget/page.tsx` con código de embed y personalización
+- Variantes: mini (solo precio), medio (precio + cambio), completo (precio + gráfico)
+
+**Monetización:** Widget premium (sin logo, personalizable) = $5/mes
+
+### Monetización — Plan completo
+
+| Método | Timing | Revenue estimado |
+|--------|--------|-----------------|
+| **Afiliados dealers** | Ahora (ya tenemos /donde-comprar) | $30-100/lead vía Regal Assets, Silver Gold Bull |
+| **Display ads (AdSense)** | Cuando >5K visitas/día | $5-15 CPM en nicho finance |
+| **Widget premium** | Tras lanzar widget | $5/mes × N sites |
+| **Portfolio premium** | Tras lanzar portfolio | $2.99/mes (export fiscal, alertas portfolio) |
+| **Afiliados crypto** | Tras dashboard crypto | $10-50/signup en exchanges |
+| **Sponsored content** | Con tráfico establecido | $500-2000/artículo patrocinado |
+
+**Prioridad de monetización:** Afiliados dealers (ya implementable) → Ads → Widget premium → Portfolio premium
+
+### Viralidad — Cómo hacer que la gente comparta
+
+1. **Portfolio snapshot compartible**: "Mi portfolio de metales +15% este año" → imagen para Twitter/WhatsApp
+2. **"Gold Alert" social**: cuando el oro sube/baja >2%, notificación + imagen generada automáticamente
+3. **Embeddable widget**: cada sitio que lo pega = publicidad permanente
+4. **Fear & Greed Index embebible**: este tipo de indicadores se comparten mucho en Twitter/fintwit
+5. **Comparativa viral**: "¿Cuánto oro podrías comprar con tu sueldo?" → herramienta interactiva por país
+6. **Referral**: usuarios invitan amigos → desbloquean features premium
+
+### Hábito diario — Crear necesidad de volver
+
+| Feature | Frecuencia de check | Hook psicológico |
+|---------|---------------------|-------------------|
+| Portfolio tracker | Diaria | "¿Cuánto vale mi oro hoy?" |
+| Fear & Greed Index | Diaria | "¿Es buen momento para comprar?" |
+| Daily price alert (email) | Diaria | El usuario abre email → click a la web |
+| Bitcoin vs Gold ratio | Diaria (crypto users) | "¿Debería rotar de BTC a oro?" |
+| Price milestone alerts | Event-driven | "¡El oro superó $3000!" |
+
+### Contenido: Qué escribir (lo que la masa busca)
+
+Las queries con más volumen global (datos de Ahrefs/SimilarWeb):
+- "gold price" → 725K/mes (EN)
+- "gold price today" → 508K/mes
+- "bitcoin price" → 3.6M/mes
+- "precio del oro" → ~100K/mes (ES)
+- "buy gold" → ~50K/mes
+- "gold vs bitcoin" → creciente
+- "how to invest in gold" → ~30K/mes
+
+**El contenido learn actual rankea para queries long-tail** (coin grading, liquidity comparison) pero NO para las queries de alto volumen. Para rankear en "gold price" se necesita autoridad de dominio (backlinks) que el widget puede generar.
+
+### Errores técnicos encontrados (abril 2026)
+
+1. **~50 URLs en GSC con 301 redirect** — Google indexó URLs con cluster slugs antiguos/extranjeros. Los 301 están correctos pero Google aún muestra las URLs viejas en SERPs.
+2. **Posible canibalización**: `/en/learn/comparisons/liquidity-comparison-across-precious-metals` y `/en/learn/comparisons/liquidity-comparison-across-metals` sirven el mismo contenido con URLs diferentes. Consolidar con redirect.
+3. **Herramientas sin visibilidad SEO**: ninguna herramienta aparece en GSC. Necesitan más internal links, FAQ schema, y contenido landing optimizado.
 
 ---
 
