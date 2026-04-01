@@ -20,6 +20,7 @@ const LEARN_PATHS: Record<string, string> = {
 const LEARN_LEGACY_SEGMENTS = new Set([
   "aprende", "glosario", "glossary", "education", "educacion",
   "aprender", "lernen", "learn", "xuexi", "taallam", "ogren",
+  "aprende-inversion", "lernen-investition", "ogren-yatirim", "gyaan-nivesh",
 ]);
 
 const PRICE_PATHS: Record<string, string> = {
@@ -166,9 +167,46 @@ export function middleware(request: NextRequest) {
       "lernen-investition", "xuexi", "taallam", "ogren-yatirim", "gyaan-nivesh",
       "educacion", "education"];
     if (learnPrefixes.some((p) => lower === `/${p}` || lower.startsWith(`/${p}/`))) {
+      const rest = segments.slice(1);
+      // Resolve foreign cluster slug to English base in the same redirect
+      if (rest.length >= 1 && CLUSTER_REVERSE[rest[0]]) {
+        rest[0] = CLUSTER_REVERSE[rest[0]];
+      }
+      // Handle old slugs that were completely renamed
+      if (rest.length >= 2) {
+        const redir = LEARN_SLUG_REDIRECTS[rest[1]];
+        if (redir) {
+          return NextResponse.redirect(
+            new URL(`/en/learn/${redir.cluster}/${redir.slug}`, request.url),
+            301
+          );
+        }
+      }
+      const restStr = rest.join("/");
+      return NextResponse.redirect(
+        new URL(`/en/learn${restStr ? `/${restStr}` : ""}`, request.url),
+        301
+      );
+    }
+
+    // Bare news/content paths without locale prefix → 301 to correct locale
+    const CONTENT_PATH_TO_LOCALE: Record<string, { locale: string; path: string }> = {
+      noticias: { locale: "es", path: "noticias" },
+      news: { locale: "en", path: "news" },
+      nachrichten: { locale: "de", path: "nachrichten" },
+      xinwen: { locale: "zh", path: "xinwen" },
+      akhbar: { locale: "ar", path: "akhbar" },
+      haberler: { locale: "tr", path: "haberler" },
+      samachar: { locale: "hi", path: "samachar" },
+      productos: { locale: "es", path: "productos" },
+      products: { locale: "en", path: "products" },
+      produkte: { locale: "de", path: "produkte" },
+    };
+    const contentMatch = CONTENT_PATH_TO_LOCALE[segments[0]];
+    if (contentMatch) {
       const rest = segments.slice(1).join("/");
       return NextResponse.redirect(
-        new URL(`/en/learn${rest ? `/${rest}` : ""}`, request.url),
+        new URL(`/${contentMatch.locale}/${contentMatch.path}${rest ? `/${rest}` : ""}`, request.url),
         301
       );
     }
