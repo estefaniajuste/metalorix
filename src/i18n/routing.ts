@@ -238,6 +238,16 @@ export const routing = defineRouting({
       hi: "/gyaan-nivesh/[cluster]/[slug]",
     },
 
+    "/portfolio": {
+      es: "/portfolio",
+      en: "/portfolio",
+      de: "/portfolio",
+      zh: "/zichan",
+      ar: "/mihfaza",
+      tr: "/portfoy",
+      hi: "/portfolio",
+    },
+
     "/alertas": {
       es: "/alertas",
       en: "/alerts",

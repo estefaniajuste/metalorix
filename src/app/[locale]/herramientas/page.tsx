@@ -110,6 +110,18 @@ const TOOL_CARDS = [
       </svg>
     ),
   },
+  {
+    href: "/portfolio" as const,
+    titleKey: "portfolioTracker" as const,
+    descKey: "portfolioTrackerDesc" as const,
+    icon: (
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+        <rect x="2" y="6" width="20" height="12" rx="2" />
+        <circle cx="12" cy="12" r="3" />
+        <path d="M2 10h2M20 10h2M2 14h2M20 14h2" />
+      </svg>
+    ),
+  },
 ];
 
 export default async function HerramientasPage() {
