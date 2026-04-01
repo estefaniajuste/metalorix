@@ -38,7 +38,8 @@
     "disclaimer": "Yönlendirici bilgiler; hata, eksiklik veya gecikme içerebilir. Finansal tavsiye niteliği taşımaz ve doğruluk garantisi vermez.",
     "glossary": "Sözlük",
     "learn": "Öğren",
-    "investmentGuide": "Yatırım rehberi"
+    "investmentGuide": "Yatırım rehberi",
+    "press": "Basın"
   },
   "home": {
     "title": "Altın, gümüş ve daha —",
@@ -1412,5 +1413,37 @@
     "products": "Ürünler",
     "tools": "Araçlar",
     "hint": "Aramak için Ctrl+K basın"
+  },
+  "press": {
+    "title": "Basın ve Medya",
+    "metaDescription": "Metalorix basın kiti: logolar, marka kaynakları, gömülebilir rozetler ve gazeteciler, blog yazarları ve ortaklar için bilgiler.",
+    "subtitle": "Metalorix hakkında yazmak veya web sitenizden bize bağlantı vermek için ihtiyacınız olan her şey.",
+    "aboutHeading": "Metalorix Hakkında",
+    "aboutP1": "Metalorix, altın, gümüş, platin, paladyum ve bakırı kapsayan ücretsiz bir kıymetli maden fiyat takip platformudur. Dünya genelindeki yatırımcılar için gerçek zamanlı fiyatlar, tarihsel grafikler, eğitim içeriği ve analitik araçlar sunuyoruz.",
+    "aboutP2": "Yapay zeka destekli haber odamız, Reuters, Kitco, CNBC ve diğer önde gelen finans medyasından derlenen günlük piyasa analizleri yayımlar ve 7 dilde sunulur.",
+    "founded": "Kuruluş",
+    "coverage": "Kapsam",
+    "coverageValue": "Altın, Gümüş, Platin, Paladyum, Bakır",
+    "languages": "Diller",
+    "contact": "İletişim",
+    "logoHeading": "Logolar ve Marka Kaynakları",
+    "logoDark": "Simge (koyu arka plan)",
+    "logoFull": "Tam logo",
+    "linkHeading": "Bize Bağlantı Verin",
+    "linkDescription": "Web sitenizden Metalorix'e bağlantı vermek için bu rozetlerden veya kod parçalarından birini kullanın. Geri bağlantılar platformu herkes için ücretsiz tutmamıza yardımcı olur.",
+    "badgeIcon": "Simge rozeti",
+    "badgeBanner": "Banner rozeti",
+    "citationSnippet": "Satır içi alıntı",
+    "citationDescription": "İçeriğinizde Metalorix verilerine veya makalelerine atıfta bulunurken bunu kullanın.",
+    "copyHtml": "HTML kopyala",
+    "dataHeading": "Verilerimizi Kullanma",
+    "dataP1": "Yayınlarınızda Metalorix verilerini ve makalelerini alıntılayabilirsiniz. Sadece metalorix.com'daki kaynak sayfaya bir bağlantı eklemenizi rica ederiz.",
+    "dataP2": "RSS beslememiz dağıtım için mevcuttur. İçeriğimizi yeniden yayımlamak veya çevirmek istiyorsanız, lütfen önce bizimle iletişime geçin.",
+    "newsLink": "Haberlere göz atın →",
+    "dealerHeading": "Kıymetli Maden Satıcıları İçin",
+    "dealerP1": "Metalorix, dünya genelinde güvenilir kıymetli maden satıcılarının özenle hazırlanmış bir dizinini tutar. Mağazanız zaten listeleniyorsa, web sitenize Metalorix bağlantısı eklemenizi çok isteriz.",
+    "dealerP2": "Henüz listelenmemişseniz veya kaydınızı güncellemek istiyorsanız, bize ulaşın — ücretsiz olarak ekleyelim.",
+    "dealerCta": "Kaydınız hakkında bize ulaşın",
+    "footer": "Basın soruları veya ortaklık teklifleri için hola@metalorix.com adresine yazın"
   }
 }

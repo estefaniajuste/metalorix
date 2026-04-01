@@ -288,6 +288,16 @@ export const routing = defineRouting({
       hi: "/gagta",
     },
 
+    "/prensa": {
+      es: "/prensa",
+      en: "/press",
+      de: "/presse",
+      zh: "/xinwen-ziyuan",
+      ar: "/sahafa",
+      tr: "/basin",
+      hi: "/press",
+    },
+
     "/donde-comprar": {
       es: "/donde-comprar",
       en: "/where-to-buy",

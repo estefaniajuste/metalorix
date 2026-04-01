@@ -415,7 +415,24 @@ export default async function ArticlePage({
     }
   }
 
-  const jsonLd = {
+  const citations = (() => {
+    const lines = displayContent.split("\n");
+    const sourcesRe = /^##\s*(Fuentes|Sources|Quellen|Kaynaklar|المصادر|来源)\s*$/i;
+    const linkRe = /\[[^\]]+\]\((https?:\/\/[^)]+)\)/g;
+    let inSrc = false;
+    const urls: string[] = [];
+    for (const line of lines) {
+      if (sourcesRe.test(line)) { inSrc = true; continue; }
+      if (inSrc && line.startsWith("## ")) break;
+      if (inSrc) {
+        let m;
+        while ((m = linkRe.exec(line)) !== null) urls.push(m[1]);
+      }
+    }
+    return urls;
+  })();
+
+  const jsonLd: Record<string, unknown> = {
     "@context": "https://schema.org",
     "@type": "NewsArticle",
     headline: displayTitle,
@@ -423,6 +440,8 @@ export default async function ArticlePage({
     url: `https://metalorix.com${getPathname({ locale: locale as Locale, href: { pathname: "/noticias/[slug]", params: { slug: displaySlug } } as any })}`,
     datePublished: article.publishedAt?.toISOString(),
     dateModified: article.updatedAt.toISOString(),
+    wordCount,
+    inLanguage: locale,
     author: {
       "@type": "Organization",
       name: "Metalorix",
@@ -438,6 +457,9 @@ export default async function ArticlePage({
       },
     },
   };
+  if (citations.length > 0) {
+    jsonLd.citation = citations.map((u) => ({ "@type": "WebPage", url: u }));
+  }
 
   return (
     <>

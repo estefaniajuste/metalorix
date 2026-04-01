@@ -38,7 +38,8 @@
     "disclaimer": "Información orientativa, puede contener errores, omisiones o retrasos. No constituye asesoramiento financiero ni garantía de exactitud.",
     "glossary": "Glosario",
     "learn": "Aprende",
-    "investmentGuide": "Guía de inversión"
+    "investmentGuide": "Guía de inversión",
+    "press": "Prensa"
   },
   "home": {
     "title": "Oro, plata y más —",
@@ -1412,5 +1413,37 @@
     "products": "Productos",
     "tools": "Herramientas",
     "hint": "Pulsa Ctrl+K para buscar"
+  },
+  "press": {
+    "title": "Prensa y Medios",
+    "metaDescription": "Kit de prensa de Metalorix: logotipos, recursos de marca, badges embebibles e información para periodistas, bloggers y partners.",
+    "subtitle": "Todo lo que necesitas para escribir sobre Metalorix o enlazarnos desde tu web.",
+    "aboutHeading": "Sobre Metalorix",
+    "aboutP1": "Metalorix es una plataforma gratuita de seguimiento de precios de metales preciosos que cubre oro, plata, platino, paladio y cobre. Ofrecemos precios en tiempo real, gráficos históricos, contenido educativo y herramientas analíticas para inversores de todo el mundo.",
+    "aboutP2": "Nuestra redacción impulsada por IA publica análisis de mercado diarios basados en fuentes como Reuters, Kitco, CNBC y otros medios financieros líderes, disponibles en 7 idiomas.",
+    "founded": "Fundada",
+    "coverage": "Cobertura",
+    "coverageValue": "Oro, Plata, Platino, Paladio, Cobre",
+    "languages": "Idiomas",
+    "contact": "Contacto",
+    "logoHeading": "Logotipos y Recursos de Marca",
+    "logoDark": "Icono (fondo oscuro)",
+    "logoFull": "Logotipo completo",
+    "linkHeading": "Enlázanos",
+    "linkDescription": "Usa uno de estos badges o snippets para enlazar a Metalorix desde tu web. Los backlinks nos ayudan a mantener la plataforma gratuita para todos.",
+    "badgeIcon": "Badge con icono",
+    "badgeBanner": "Badge tipo banner",
+    "citationSnippet": "Cita en línea",
+    "citationDescription": "Usa esto al citar datos o artículos de Metalorix en tu contenido.",
+    "copyHtml": "Copiar HTML",
+    "dataHeading": "Uso de Nuestros Datos",
+    "dataP1": "Puedes citar datos y artículos de Metalorix en tus publicaciones. Solo pedimos que incluyas un enlace a la página fuente en metalorix.com.",
+    "dataP2": "Nuestro feed RSS está disponible para sindicación. Si quieres republicar o traducir nuestro contenido, contáctanos primero.",
+    "newsLink": "Ver noticias →",
+    "dealerHeading": "Para Dealers de Metales Preciosos",
+    "dealerP1": "Metalorix mantiene un directorio curado de dealers de confianza de metales preciosos en todo el mundo. Si tu tienda ya aparece, nos encantaría que añadieras un enlace a Metalorix en tu web.",
+    "dealerP2": "Si aún no estás listado, o quieres actualizar tu ficha, escríbenos y te añadimos gratis.",
+    "dealerCta": "Contáctanos sobre tu ficha",
+    "footer": "Para consultas de prensa o propuestas de colaboración, escribe a hola@metalorix.com"
   }
 }

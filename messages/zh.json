@@ -38,7 +38,8 @@
     "disclaimer": "参考性信息，可能包含错误、遗漏或延迟。不构成财务建议，亦不保证准确性。",
     "glossary": "术语表",
     "learn": "学习",
-    "investmentGuide": "投资指南"
+    "investmentGuide": "投资指南",
+    "press": "新闻与媒体"
   },
   "home": {
     "title": "黄金、白银等 —",
@@ -1398,5 +1399,37 @@
     "products": "产品",
     "tools": "工具",
     "hint": "按 Ctrl+K 搜索"
+  },
+  "press": {
+    "title": "新闻与媒体",
+    "metaDescription": "Metalorix新闻资料包：标志、品牌资源、可嵌入徽章以及面向记者、博主和合作伙伴的信息。",
+    "subtitle": "撰写关于Metalorix的文章或从您的网站链接到我们所需的一切。",
+    "aboutHeading": "关于Metalorix",
+    "aboutP1": "Metalorix是一个免费的贵金属价格追踪平台，涵盖黄金、白银、铂金、钯金和铜。我们为全球投资者提供实时价格、历史图表、教育内容和分析工具。",
+    "aboutP2": "我们的AI驱动新闻室每日发布基于路透社、Kitco、CNBC等领先金融媒体的市场分析，提供7种语言版本。",
+    "founded": "创立",
+    "coverage": "覆盖范围",
+    "coverageValue": "黄金、白银、铂金、钯金、铜",
+    "languages": "语言",
+    "contact": "联系",
+    "logoHeading": "标志与品牌资源",
+    "logoDark": "图标（深色背景）",
+    "logoFull": "完整标志",
+    "linkHeading": "链接到我们",
+    "linkDescription": "使用这些徽章或代码片段从您的网站链接到Metalorix。外部链接帮助我们保持平台免费。",
+    "badgeIcon": "图标徽章",
+    "badgeBanner": "横幅徽章",
+    "citationSnippet": "内联引用",
+    "citationDescription": "在您的内容中引用Metalorix数据或文章时使用此代码。",
+    "copyHtml": "复制HTML",
+    "dataHeading": "使用我们的数据",
+    "dataP1": "欢迎在您的出版物中引用Metalorix的数据和文章。我们只需要您附上metalorix.com来源页面的链接。",
+    "dataP2": "我们的RSS订阅源可用于内容联合。如果您想转载或翻译我们的内容，请先联系我们。",
+    "newsLink": "浏览新闻 →",
+    "dealerHeading": "贵金属经销商专区",
+    "dealerP1": "Metalorix维护着全球值得信赖的贵金属经销商精选目录。如果您的店铺已被收录，我们希望您在网站上添加Metalorix的链接。",
+    "dealerP2": "如果您尚未被收录，或想更新您的信息，请联系我们，我们将免费为您添加。",
+    "dealerCta": "联系我们了解您的列表",
+    "footer": "如有新闻咨询或合作建议，请发邮件至 hola@metalorix.com"
   }
 }

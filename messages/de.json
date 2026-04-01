@@ -38,7 +38,8 @@
     "disclaimer": "Orientierungsinformation, kann Fehler, Auslassungen oder Verzögerungen enthalten. Stellt keine Finanzberatung oder Genauigkeitsgarantie dar.",
     "glossary": "Glossar",
     "learn": "Lernen",
-    "investmentGuide": "Investitionsleitfaden"
+    "investmentGuide": "Investitionsleitfaden",
+    "press": "Presse"
   },
   "home": {
     "title": "Gold, Silber & mehr —",
@@ -1398,5 +1399,37 @@
     "products": "Produkte",
     "tools": "Werkzeuge",
     "hint": "Strg+K zum Suchen drücken"
+  },
+  "press": {
+    "title": "Presse & Medien",
+    "metaDescription": "Metalorix Pressekit: Logos, Markenressourcen, einbettbare Badges und Informationen für Journalisten, Blogger und Partner.",
+    "subtitle": "Alles, was Sie brauchen, um über Metalorix zu schreiben oder uns von Ihrer Website zu verlinken.",
+    "aboutHeading": "Über Metalorix",
+    "aboutP1": "Metalorix ist eine kostenlose Plattform zur Verfolgung von Edelmetallpreisen für Gold, Silber, Platin, Palladium und Kupfer. Wir bieten Echtzeitpreise, historische Charts, Bildungsinhalte und Analysetools für Investoren weltweit.",
+    "aboutP2": "Unsere KI-gestützte Redaktion veröffentlicht tägliche Marktanalysen basierend auf Reuters, Kitco, CNBC und anderen führenden Finanzmedien in 7 Sprachen.",
+    "founded": "Gegründet",
+    "coverage": "Abdeckung",
+    "coverageValue": "Gold, Silber, Platin, Palladium, Kupfer",
+    "languages": "Sprachen",
+    "contact": "Kontakt",
+    "logoHeading": "Logos & Markenressourcen",
+    "logoDark": "Icon (dunkler Hintergrund)",
+    "logoFull": "Vollständiges Logo",
+    "linkHeading": "Verlinken Sie uns",
+    "linkDescription": "Verwenden Sie eines dieser Badges oder Snippets, um Metalorix von Ihrer Website zu verlinken. Backlinks helfen uns, die Plattform für alle kostenlos zu halten.",
+    "badgeIcon": "Icon-Badge",
+    "badgeBanner": "Banner-Badge",
+    "citationSnippet": "Inline-Zitat",
+    "citationDescription": "Verwenden Sie dies, wenn Sie Metalorix-Daten oder -Artikel in Ihren Inhalten zitieren.",
+    "copyHtml": "HTML kopieren",
+    "dataHeading": "Nutzung unserer Daten",
+    "dataP1": "Sie können Metalorix-Daten und -Artikel in Ihren Publikationen zitieren. Wir bitten Sie lediglich, einen Link zur Quellseite auf metalorix.com anzugeben.",
+    "dataP2": "Unser RSS-Feed steht zur Syndizierung bereit. Wenn Sie unsere Inhalte erneut veröffentlichen oder übersetzen möchten, kontaktieren Sie uns bitte zuerst.",
+    "newsLink": "Nachrichten ansehen →",
+    "dealerHeading": "Für Edelmetallhändler",
+    "dealerP1": "Metalorix pflegt ein kuratiertes Verzeichnis vertrauenswürdiger Edelmetallhändler weltweit. Wenn Ihr Geschäft bereits gelistet ist, freuen wir uns, wenn Sie einen Link zu Metalorix auf Ihrer Website einfügen.",
+    "dealerP2": "Wenn Sie noch nicht gelistet sind oder Ihren Eintrag aktualisieren möchten, kontaktieren Sie uns — die Aufnahme ist kostenlos.",
+    "dealerCta": "Kontaktieren Sie uns zu Ihrem Eintrag",
+    "footer": "Für Presseanfragen oder Partnerschaftsvorschläge schreiben Sie an hola@metalorix.com"
   }
 }

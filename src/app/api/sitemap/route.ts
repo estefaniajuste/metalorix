@@ -31,6 +31,7 @@ const PATHNAMES: Record<string, Record<string, string>> = {
   "/privacidad": { es: "/es/privacidad", en: "/en/privacy", de: "/de/datenschutz", zh: "/zh/yinsi", ar: "/ar/khususiyah", tr: "/tr/gizlilik", hi: "/hi/gagta" },
   "/donde-comprar": { es: "/es/donde-comprar", en: "/en/where-to-buy", de: "/de/wo-kaufen", zh: "/zh/goumai-didian", ar: "/ar/amakin-alshira", tr: "/tr/nereden-alinir", hi: "/hi/kahan-kharidem" },
   "/donde-comprar/mejores": { es: "/es/donde-comprar/mejores", en: "/en/where-to-buy/best", de: "/de/wo-kaufen/beste", zh: "/zh/goumai-didian/zuijia", ar: "/ar/amakin-alshira/afdal", tr: "/tr/nereden-alinir/en-iyi", hi: "/hi/kahan-kharidem/sabse-achhe" },
+  "/prensa": { es: "/es/prensa", en: "/en/press", de: "/de/presse", zh: "/zh/xinwen-ziyuan", ar: "/ar/sahafa", tr: "/tr/basin", hi: "/hi/press" },
   "/comparar/oro-vs-bitcoin": {
     es: "/es/comparar/oro-vs-bitcoin",
     en: "/en/compare/gold-vs-bitcoin",

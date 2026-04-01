@@ -40,6 +40,7 @@ export function Footer() {
         { href: "/privacidad", label: t("privacy") },
         { href: "/privacidad#gestionar-cookies", label: t("manageCookies") },
         { href: "mailto:info@metalorix.com", label: t("contact") },
+        { href: "/prensa", label: t("press") },
       ],
     },
   ];
