@@ -563,7 +563,8 @@ export default async function LearnArticlePage({
     })
   );
 
-  const title = data?.localization.title || topic.titleEn;
+  const rawH1 = data?.localization.seoTitle || data?.localization.title || topic.titleEn;
+  const title = rawH1.replace(/\s*\|\s*Metalorix\s*(Learn)?\s*/gi, "").trim();
   const summary = data?.localization.summary || topic.summaryEn;
   const keyIdea = data?.localization.keyIdea || "";
   const content = data?.localization.content || "";
@@ -621,13 +622,13 @@ export default async function LearnArticlePage({
         "@type": "ListItem",
         position: 2,
         name: t("breadcrumb"),
-        item: `https://metalorix.com/${locale}/learn`,
+        item: `https://metalorix.com${getPathname({ locale: locale as Locale, href: "/learn" })}`,
       },
       {
         "@type": "ListItem",
         position: 3,
         name: clusterName,
-        item: `https://metalorix.com/${locale}/learn/${locClusterSlug}`,
+        item: `https://metalorix.com${getPathname({ locale: locale as Locale, href: { pathname: "/learn/[cluster]", params: { cluster: locClusterSlug } } })}`,
       },
       {
         "@type": "ListItem",

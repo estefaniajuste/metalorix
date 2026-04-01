@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getTranslations, getLocale } from "next-intl/server";
 import { getAlternates } from "@/lib/seo/alternates";
+import { getPathname } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
 import { TAXONOMY } from "@/lib/learn/taxonomy";
 import { ALL_TOPICS } from "@/lib/learn/topics";
@@ -146,7 +147,7 @@ export default async function ClusterPage({
       "@type": "BreadcrumbList",
       itemListElement: [
         { "@type": "ListItem", position: 1, name: tc("breadcrumbHome"), item: "https://metalorix.com" },
-        { "@type": "ListItem", position: 2, name: t("breadcrumb"), item: `https://metalorix.com/${locale}/learn` },
+        { "@type": "ListItem", position: 2, name: t("breadcrumb"), item: `https://metalorix.com${getPathname({ locale: locale as Locale, href: "/learn" })}` },
         { "@type": "ListItem", position: 3, name: clusterName },
       ],
     },

@@ -141,6 +141,64 @@ No asumir que los cambios están en producción solo porque el código está lis
 
 ---
 
+## CTR Optimization — Tareas pendientes (abril 2026)
+
+> Acciones para mejorar el Click-Through Rate (CTR) en Google. CTR actual: ~0.19% con 131K+ impresiones.
+
+### Implementado (abril 2026)
+- **H1 = seoTitle en learn articles**: El `<h1>` ahora usa `seoTitle` (optimizado para SEO) en vez de `title` (genérico). Evita que Google reescriba el título SERP.
+- **Breadcrumb JSON-LD corregido**: Las URLs en el schema BreadcrumbList ahora usan rutas localizadas (`/de/lernen-investition/` en vez de `/de/learn/`).
+- **FAQ schema en fear-greed**: Añadido `FAQPage` JSON-LD (la UI de FAQ ya existía pero faltaba el structured data).
+- **Meta descriptions truncadas a 155 chars**: Añadido truncado en `guia-inversion` y `fear-greed` para evitar que Google corte la descripción.
+- **Redirects 301 para bare paths**: `middleware.ts` ahora convierte paths sin prefijo locale en 301 (antes eran 307 de next-intl).
+- **Redirect single-hop para learn paths**: Eliminada cadena de redirects en rutas `/learn/` con cluster slugs extranjeros.
+
+### Pendiente — Acciones de código (agente puede hacer)
+
+1. **Añadir FAQ schema a más páginas de alto tráfico**
+   - `precio-oro-hoy/page.tsx` — sin FAQ JSON-LD (necesita crear FAQs relevantes en messages/*.json)
+   - `precio-gramo-oro/page.tsx` — sin FAQ JSON-LD
+   - `ratio-oro-plata/page.tsx` — sin FAQ JSON-LD
+   - `herramientas/page.tsx` — sin FAQ JSON-LD
+   - `donde-comprar/page.tsx` — sin FAQ JSON-LD
+   - **Referencia**: ver cómo `fear-greed/page.tsx` implementa FAQ schema con `faqSchema()` de `@/lib/seo/schemas`
+
+2. **Revisar y acortar title tags en messages/*.json**
+   - Muchos titles exceden 60 chars con el sufijo "— Metalorix" o "| Metalorix"
+   - Priorizar: `precioOroHoy.title`, `fearGreedPage.metaTitle`, `guide.title` en ES y DE (son los más largos)
+   - Los titles de noticias y learn vienen de DB (seoTitle) — revisar el prompt de Gemini para pedir ≤47 chars
+
+3. **Añadir meta description truncada a las demás páginas estáticas**
+   - `precio-oro-hoy`, `precio-gramo-oro`, `ratio-oro-plata`, `herramientas`, `donde-comprar`
+   - Mismo patrón que `guia-inversion` y `fear-greed` (truncar a 155 chars en `generateMetadata`)
+
+### Pendiente — Acciones manuales del usuario (no puede hacer el agente)
+
+1. **Solicitar re-indexación en GSC de URLs con redirects corregidos**
+   - Las URLs con bare paths (`/learn/...`, `/news/...`) ahora tienen 301 correctos
+   - Ir a GSC → Inspección de URLs → solicitar indexación para que Google actualice los redirects
+   - Prioridad: las URLs que aparecían en GSC con más impresiones
+
+2. **Revisar títulos SERP reales en GSC**
+   - Ir a GSC → Rendimiento → Páginas → ver si el título mostrado coincide con el `<title>` tag
+   - Si Google sigue reescribiendo títulos en learn articles, puede ser por el `title` field antiguo en DB
+   - El fix de H1=seoTitle debería resolver esto tras el próximo crawl
+
+3. **Monitorizar CTR por página tras los cambios**
+   - Esperar 2-4 semanas para que Google procese los cambios
+   - Comparar CTR antes/después en las top-20 páginas por impresiones
+   - Si CTR no mejora en learn articles, considerar reescribir seoTitles en DB
+
+4. **Enviar sitemap actualizado a GSC**
+   - Ir a GSC → Sitemaps → solicitar re-envío de `https://metalorix.com/api/sitemap`
+   - Esto acelera el re-crawl de las páginas con cambios
+
+5. **Considerar títulos más "clickbait" (sin perder precisión)**
+   - Páginas como "What Is Gold?" podrían beneficiarse de títulos tipo "What Is Gold? Uses, Value & Why Investors Buy It"
+   - Esto requiere editar `seoTitle` en las localizaciones de la DB
+
+---
+
 ## Tareas manuales pendientes del usuario
 
 > Estas tareas NO puede hacerlas el agente. Son acciones que requiere acceso humano a Google Search Console. Cuando el usuario las complete, eliminar el bloque correspondiente de este archivo.

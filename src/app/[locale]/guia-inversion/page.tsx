@@ -33,14 +33,20 @@ export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("guide");
   const locale = await getLocale();
   const alternates = getAlternates(locale, "/guia-inversion");
+  const desc = t("subtitle");
+  const metaDesc = desc.length > 155
+    ? (desc.slice(0, 155).lastIndexOf(".") > 90
+      ? desc.slice(0, desc.slice(0, 155).lastIndexOf(".") + 1)
+      : desc.slice(0, desc.slice(0, 155).lastIndexOf(" ")))
+    : desc;
   return {
     title: t("title") + " — Metalorix",
-    description: t("subtitle"),
+    description: metaDesc,
     keywords: SEO_KEYWORDS[locale] || SEO_KEYWORDS.es,
     alternates,
     openGraph: {
       title: t("title") + " — Metalorix",
-      description: t("subtitle"),
+      description: metaDesc,
       type: "website",
       url: alternates.canonical,
     },
