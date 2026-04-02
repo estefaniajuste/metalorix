@@ -483,7 +483,7 @@ const OPTIMIZED_METADATA: {
     locale: "en",
     seoTitle: "COT Report for Gold: How to Read Futures Positioning",
     metaDescription:
-      "The CFTC Commitment of Traders report shows who holds gold futures — commercials, speculators, and small traders. How to read COT data and spot contrarian signals.",
+      "The CFTC COT report shows who holds gold futures: commercials, speculators, and small traders. How to read COT data and spot contrarian signals.",
     faq: [
       { question: "What is the COT report for gold?", answer: "The COT (Commitment of Traders) report, published weekly by the CFTC, shows the net long/short positions of commercial hedgers, large speculators, and small traders in gold futures markets." },
       { question: "How do you use the COT report to trade gold?", answer: "Extreme speculator long positions are contrarian bearish, while extreme short positions are contrarian bullish. Most traders look for COT extremes combined with price action confirmation." },
