@@ -75,7 +75,7 @@ const OPTIMIZED_METADATA: {
       "Silver's chemical symbol Ag comes from the Latin 'argentum'. Learn why the periodic table uses Ag, silver's atomic number 47, and what makes it unique.",
   },
   {
-    slug: "gold-price-by-decade-1970s-through-2020s",
+    slug: "gold-price-in-different-decades",
     locale: "en",
     seoTitle: "Gold Price History by Decade: 1970s to 2020s",
     metaDescription:
@@ -99,18 +99,6 @@ const OPTIMIZED_METADATA: {
     seoTitle: "How PPI Affects Gold Prices: Data & Correlation",
     metaDescription:
       "Higher-than-expected PPI signals rising inflation and can push gold prices up. Learn the PPI-gold correlation, historical data, and trading strategies.",
-  },
-  {
-    slug: "volatility-comparison-across-precious-metals",
-    locale: "en",
-    seoTitle: "Gold vs Silver vs Platinum: Volatility Compared",
-    metaDescription:
-      "Silver is ~1.5x more volatile than gold, while platinum leads all precious metals. 10-year annualized volatility data and what it means for your portfolio.",
-    faq: [
-      { question: "Which precious metal is the most volatile?", answer: "Platinum is typically the most volatile precious metal, followed closely by silver. Both show 50-80% higher annualized volatility than gold over 10-year periods." },
-      { question: "Is silver more volatile than gold?", answer: "Yes. Silver's annualized volatility is roughly 1.5x that of gold. This means silver tends to rise more in bull markets but fall harder in downturns." },
-      { question: "Why is gold less volatile than silver?", answer: "Gold's deep market liquidity ($150B+ daily volume), central bank holdings, and status as a global reserve asset all reduce its price volatility compared to silver's smaller, more industrial market." },
-    ],
   },
   {
     slug: "volatility-comparison-across-metals",
@@ -158,7 +146,7 @@ const OPTIMIZED_METADATA: {
     ],
   },
   {
-    slug: "the-bretton-woods-system-explained-gold-at-35-per-ounce",
+    slug: "bretton-woods-system-explained",
     locale: "en",
     seoTitle: "Bretton Woods System: Gold at $35 per Ounce",
     metaDescription:
@@ -177,13 +165,6 @@ const OPTIMIZED_METADATA: {
     seoTitle: "Gold vs Silver vs Platinum: Liquidity Compared",
     metaDescription:
       "Gold trades $150B+ daily, making it the most liquid precious metal. Compare market depth, bid-ask spreads, and trading costs across precious metals.",
-  },
-  {
-    slug: "liquidity-comparison-across-precious-metals",
-    locale: "en",
-    seoTitle: "Precious Metals Liquidity Ranking: Full Guide",
-    metaDescription:
-      "Ranked by daily volume: gold > silver > platinum > palladium. How market depth and liquidity affect spreads, slippage, and investment decisions.",
   },
   {
     slug: "gold-isotopes",
@@ -498,7 +479,7 @@ const OPTIMIZED_METADATA: {
     ],
   },
   {
-    slug: "the-cot-report-for-gold-reading-commitment-of-traders-data",
+    slug: "cot-report-for-gold",
     locale: "en",
     seoTitle: "COT Report for Gold: How to Read Futures Positioning",
     metaDescription:
@@ -807,7 +788,7 @@ const OPTIMIZED_METADATA: {
       "El símbolo químico Ag de la plata proviene del latín 'argentum'. Número atómico 47, propiedades únicas y por qué la tabla periódica usa Ag.",
   },
   {
-    slug: "gold-price-by-decade-1970s-through-2020s",
+    slug: "gold-price-in-different-decades",
     locale: "es",
     seoTitle: "Precio del Oro por Década: de 1970 a 2020",
     metaDescription:
@@ -826,13 +807,6 @@ const OPTIMIZED_METADATA: {
     seoTitle: "Cómo Afecta el PPI al Precio del Oro: Correlación",
     metaDescription:
       "Un PPI mayor al esperado señala inflación creciente y puede impulsar el oro. Correlación PPI-oro, datos históricos y estrategias de inversión.",
-  },
-  {
-    slug: "volatility-comparison-across-precious-metals",
-    locale: "es",
-    seoTitle: "Oro vs Plata vs Platino: Volatilidad Comparada",
-    metaDescription:
-      "La plata es ~1,5x más volátil que el oro, mientras el platino lidera. Datos de volatilidad anualizada a 10 años y su impacto en tu cartera.",
   },
   {
     slug: "volatility-comparison-across-metals",
@@ -870,7 +844,7 @@ const OPTIMIZED_METADATA: {
       "Una onza troy equivale a 31,1035 g, un 10% más pesada que la onza común (28,35 g). Por qué los metales preciosos usan este sistema y cómo convertir.",
   },
   {
-    slug: "the-bretton-woods-system-explained-gold-at-35-per-ounce",
+    slug: "bretton-woods-system-explained",
     locale: "es",
     seoTitle: "Sistema Bretton Woods: El Oro a $35 por Onza",
     metaDescription:
@@ -891,7 +865,7 @@ const OPTIMIZED_METADATA: {
       "El oro se negocia más de $150.000M/día, siendo el metal más líquido. Compara profundidad de mercado, spreads y costes de trading.",
   },
   {
-    slug: "liquidity-comparison-across-precious-metals",
+    slug: "liquidity-comparison-across-metals",
     locale: "es",
     seoTitle: "Ranking de Liquidez de Metales Preciosos: Guía",
     metaDescription:
@@ -1115,7 +1089,7 @@ const OPTIMIZED_METADATA: {
       "¿Ha protegido el oro contra la inflación? Comparamos el precio del oro con el Índice de Precios al Consumo desde 1970. Datos históricos y análisis.",
   },
   {
-    slug: "the-cot-report-for-gold-reading-commitment-of-traders-data",
+    slug: "cot-report-for-gold",
     locale: "es",
     seoTitle: "Informe COT del Oro: Cómo Leer el Posicionamiento en Futuros",
     metaDescription:
@@ -1145,7 +1119,7 @@ const OPTIMIZED_METADATA: {
       "Komplette Münzbewertungsskala von MS70 (perfekt) bis Good (G-4). Wie PCGS und NGC Münzen bewerten, was jeder Grad bedeutet und den Wert beeinflusst.",
   },
   {
-    slug: "volatility-comparison-across-precious-metals",
+    slug: "volatility-comparison-across-metals",
     locale: "de",
     seoTitle: "Gold vs Silber vs Platin: Volatilität im Vergleich",
     metaDescription:
