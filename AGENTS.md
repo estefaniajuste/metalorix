@@ -154,14 +154,21 @@ No asumir que los cambios están en producción solo porque el código está lis
 - **Redirects 301 para bare paths**: `middleware.ts` ahora convierte paths sin prefijo locale en 301 (antes eran 307 de next-intl).
 - **Redirect single-hop para learn paths**: Eliminada cadena de redirects en rutas `/learn/` con cluster slugs extranjeros.
 
+### Implementado — Indexación (abril 2026)
+- **Sitemap deduplicado**: URLs duplicadas de learn articles eliminadas (Set de URLs emitidas en `sitemap/route.ts`)
+- **Slugs cortos → fallback inglés**: slugs < 5 chars en sitemap/traducciones usan slug base inglés
+- **Soft redirects → 308 real**: `generateMetadata()` en learn article page ahora llama a `permanentRedirect()` directamente (antes devolvía HTML 200 con "Redirecting...")
+- **277 slugs regenerados en DB**: 272 learn (zh/ar/hi) + 5 glossary (es) vía Gemini con `POST /api/cron/fix-slugs`
+- **Workflow `run-fix-slugs.yml`**: ejecutable desde GitHub Actions para regenerar slugs cortos futuros
+
 ### Pendiente — Acciones de código (agente puede hacer)
 
 1. **Añadir FAQ schema a más páginas de alto tráfico**
-   - `precio-oro-hoy/page.tsx` — sin FAQ JSON-LD (necesita crear FAQs relevantes en messages/*.json)
-   - `precio-gramo-oro/page.tsx` — sin FAQ JSON-LD
-   - `ratio-oro-plata/page.tsx` — sin FAQ JSON-LD
-   - `herramientas/page.tsx` — sin FAQ JSON-LD
-   - `donde-comprar/page.tsx` — sin FAQ JSON-LD
+   - `precio-oro-hoy/page.tsx` — sin FAQ JSON-LD (necesita crear FAQs en messages/*.json namespace `goldToday`)
+   - `precio-gramo-oro/page.tsx` — sin FAQ JSON-LD (namespace `gramPrice`)
+   - `ratio-oro-plata/page.tsx` — sin FAQ JSON-LD (namespace `ratioPage`)
+   - `herramientas/page.tsx` — sin FAQ JSON-LD (namespace `tools`)
+   - `donde-comprar/page.tsx` — sin FAQ JSON-LD (namespace `dealers`)
    - **Referencia**: ver cómo `fear-greed/page.tsx` implementa FAQ schema con `faqSchema()` de `@/lib/seo/schemas`
 
 2. **Revisar y acortar title tags en messages/*.json**
@@ -172,6 +179,10 @@ No asumir que los cambios están en producción solo porque el código está lis
 3. **Añadir meta description truncada a las demás páginas estáticas**
    - `precio-oro-hoy`, `precio-gramo-oro`, `ratio-oro-plata`, `herramientas`, `donde-comprar`
    - Mismo patrón que `guia-inversion` y `fear-greed` (truncar a 155 chars en `generateMetadata`)
+
+4. **Consolidar URL duplicada (canibalización)**
+   - `/en/learn/comparisons/liquidity-comparison-across-precious-metals` y `/en/learn/comparisons/liquidity-comparison-across-metals` sirven el mismo contenido
+   - Añadir redirect 301 del slug corto al largo (o viceversa)
 
 ### Pendiente — Acciones manuales del usuario (no puede hacer el agente)
 
@@ -347,15 +358,35 @@ Las queries con más volumen global (datos de Ahrefs/SimilarWeb):
 
 ### Errores técnicos encontrados (abril 2026)
 
-1. **~50 URLs en GSC con 301 redirect** — Google indexó URLs con cluster slugs antiguos/extranjeros. Los 301 están correctos pero Google aún muestra las URLs viejas en SERPs.
-2. **Posible canibalización**: `/en/learn/comparisons/liquidity-comparison-across-precious-metals` y `/en/learn/comparisons/liquidity-comparison-across-metals` sirven el mismo contenido con URLs diferentes. Consolidar con redirect.
+1. **~50 URLs en GSC con 301 redirect** — Google indexó URLs con cluster slugs antiguos/extranjeros. Los 301 están correctos pero Google aún muestra las URLs viejas en SERPs. **Requiere acción manual del usuario en GSC.**
+2. **Posible canibalización**: `/en/learn/comparisons/liquidity-comparison-across-precious-metals` y `/en/learn/comparisons/liquidity-comparison-across-metals` sirven el mismo contenido con URLs diferentes. **Pendiente: consolidar con redirect 301.**
 3. **Herramientas sin visibilidad SEO**: ninguna herramienta aparece en GSC. Necesitan más internal links, FAQ schema, y contenido landing optimizado.
+4. ~~**272 learn articles + 5 glossary con slugs < 5 chars** en zh/ar/hi/es — causaban duplicados en sitemap~~ → **RESUELTO** (abril 2026): slugs regenerados con Gemini vía `/api/cron/fix-slugs`, sitemap deduplicado, soft redirects convertidos a 308.
+5. ~~**542 páginas "Crawled: currently not indexed"** — causado por slugs duplicados, OpenGraph URLs crawleadas, y soft redirects~~ → **MITIGADO** (abril 2026): robots.txt bloquea opengraph-image, sitemap limpio de duplicados, redirects reales. Monitorizar en GSC en 2-4 semanas.
 
 ---
 
 ## Tareas manuales pendientes del usuario
 
 > Estas tareas NO puede hacerlas el agente. Son acciones que requieren acceso humano. Cuando el usuario las complete, eliminar el bloque correspondiente de este archivo.
+
+### URGENTE: Re-enviar sitemap en GSC (abril 2026)
+
+Tras la corrección de 277 slugs duplicados y la deduplicación del sitemap, es importante que Google re-crawlee el sitemap limpio.
+
+1. Ir a GSC → Sitemaps → solicitar re-envío de `https://metalorix.com/api/sitemap`
+2. Ir a GSC → Inspección de URLs → solicitar indexación de las URLs con más impresiones que tenían 301 (ver CSV de GSC)
+
+### Re-indexar URLs con 301 en GSC
+
+~50+ URLs con cluster slugs antiguos que ahora dan 301. Google aún muestra las URLs viejas en SERPs con miles de impresiones pero 0 clicks.
+
+- Ir a GSC → Inspección de URLs → solicitar indexación de la URL DESTINO (la correcta) para cada una
+- Priorizar las URLs con más impresiones del CSV de GSC
+
+### Monitorizar CTR (esperar 2-4 semanas)
+
+Comparar CTR antes/después en las top-20 páginas por impresiones. Si no mejora en learn articles, considerar reescribir seoTitles en DB.
 
 ### Outreach a dealers para backlinks
 
