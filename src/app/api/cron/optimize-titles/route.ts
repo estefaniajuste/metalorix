@@ -229,6 +229,8 @@ export async function POST(request: NextRequest) {
   const esOnly = url.searchParams.get("es_only") === "true";
   // target=learn → only learn articles; target=news → only news; default → both
   const target = url.searchParams.get("target") || "all";
+  // slugs=a,b,c → force-process specific learn article slugs regardless of needsOptimization
+  const forceSlugs = url.searchParams.get("slugs")?.split(",").map((s) => s.trim()).filter(Boolean) ?? [];
 
   const db = getDb();
   if (!db) return NextResponse.json({ error: "DB unavailable" }, { status: 503 });
@@ -360,8 +362,12 @@ export async function POST(request: NextRequest) {
       .limit(100);
 
     const toOptimizeLearn = learnRows
-      .filter((r) => r.title && (needsLearnOptimization(r.title, r.seoTitle) || !r.faq))
-      .slice(0, limit);
+      .filter((r) => {
+        if (!r.title) return false;
+        if (forceSlugs.length > 0) return forceSlugs.includes(r.slug);
+        return needsLearnOptimization(r.title, r.seoTitle) || !r.faq;
+      })
+      .slice(0, forceSlugs.length > 0 ? forceSlugs.length : limit);
 
     for (const row of toOptimizeLearn) {
       if (!row.title || !row.content) continue;
