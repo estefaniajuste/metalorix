@@ -1,0 +1,33 @@
+name: Fix Short Slugs
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Dry run (preview only, no DB changes)'
+        required: true
+        default: '1'
+        type: choice
+        options:
+          - '1'
+          - '0'
+
+env:
+  SERVICE_URL: https://metalorix.com
+
+jobs:
+  fix-slugs:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Fix short slugs in learn articles & glossary
+        run: |
+          echo "Running fix-slugs (dry=${{ inputs.dry_run }})..."
+          response=$(curl -s -w "\n%{http_code}" -X POST \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+            "${{ env.SERVICE_URL }}/api/cron/fix-slugs?dry=${{ inputs.dry_run }}")
+          http_code=$(echo "$response" | tail -1)
+          body=$(echo "$response" | head -n -1)
+          echo "Status: $http_code"
+          echo "$body" | python3 -m json.tool 2>/dev/null || echo "$body"
+          if [ "$http_code" != "200" ]; then echo "::error::fix-slugs failed"; exit 1; fi
