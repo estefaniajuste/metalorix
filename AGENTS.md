@@ -55,6 +55,39 @@ Si cualquiera falla, **alertar al usuario inmediatamente**.
 
 **NUNCA crear `src/app/sitemap.ts`** (convención Next.js). No funciona con `output: "standalone"` + `next-intl` en Cloud Run. El sitemap se sirve desde `src/app/api/sitemap/route.ts`. Ver `.cursor/rules/seo-disabled.mdc` para detalles completos.
 
+### Historial sitemap / SEO técnico (marzo 2026)
+
+**Problema original:** `/sitemap.xml` (convención Next.js) devolvía HTTP 500 en producción durante semanas. Varios agentes afirmaron que el SEO estaba bien sin hacer `curl` a producción.
+
+**Implementación actual (desplegada en commit `68902e8` y posteriores):**
+
+| Pieza | Archivo / ruta |
+|-------|----------------|
+| XML del sitemap | `GET /api/sitemap` → `src/app/api/sitemap/route.ts` |
+| Datos dinámicos (DB) | `GET /api/sitemap-urls` → JSON consumido por el sitemap vía `fetch(NEXT_PUBLIC_URL)` |
+| robots | `src/app/robots.ts` — `Sitemap: https://metalorix.com/api/sitemap`, `Allow` explícitos para `/api/sitemap` y `/api/feed` |
+| Compatibilidad | `src/middleware.ts` — `302` de `/sitemap.xml` y `/feed.xml` hacia las rutas API |
+| Pings buscadores | `src/lib/seo/ping.ts` — URL del sitemap `https://metalorix.com/api/sitemap` |
+| Glosario en sitemap | `item.type === "glossary"` en `sitemap/route.ts` (paths `/{locale}/.../glossary/{slug}`) |
+| CI post-deploy | `.github/workflows/deploy-cloud-run.yml` — smoke: `/api/sitemap` 200 + XML, robots con `Sitemap`, **fetch a la URL exacta declarada en robots.txt**, home |
+
+**Reglas Cursor relacionadas:** `.cursor/rules/seo-disabled.mdc`, `.cursor/rules/production-verification.mdc`
+
+**Verificación rápida en producción:**
+
+```bash
+curl -s https://metalorix.com/robots.txt | grep Sitemap   # debe ser .../api/sitemap
+curl -s -o /dev/null -w "%{http_code}\n" https://metalorix.com/api/sitemap  # 200
+curl -sI https://metalorix.com/sitemap.xml | grep -E "HTTP|location"  # 302 → /api/sitemap
+```
+
+**Pendiente / seguimiento (no bloquea el sitemap):**
+
+- **Manual GSC:** re-enviar sitemap `https://metalorix.com/api/sitemap` y solicitar indexación de URLs destino donde había 301 antiguos (ver secciones GSC más abajo en este archivo).
+- **Opcional técnico:** valorar `301` permanente en `/sitemap.xml` en lugar de `302`; alinear `atom:link rel="self"` del RSS (`src/app/api/feed/route.ts`) con `/api/feed` si se quiere coherencia total con el redirect de `/feed.xml`.
+- **Rutas nuevas:** al añadir páginas de marketing, incluirlas en `PATHNAMES`/`FREQ_PRIO` de `src/app/api/sitemap/route.ts` (y datos en DB vía `sitemap-urls` si aplica).
+- **Límite:** sitemap ~1063 URLs — por debajo del límite de 50k de Google; si crece mucho, valorar sitemap index.
+
 ---
 
 ## URLs/slugs SIEMPRE en el idioma del contenido
