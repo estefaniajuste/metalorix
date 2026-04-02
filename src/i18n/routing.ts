@@ -248,6 +248,16 @@ export const routing = defineRouting({
       hi: "/portfolio",
     },
 
+    "/widget": {
+      es: "/widget-precio-oro",
+      en: "/gold-price-widget",
+      de: "/goldpreis-widget",
+      zh: "/jiage-widget",
+      ar: "/widget-dhahab",
+      tr: "/altin-fiyat-widget",
+      hi: "/sona-mulya-widget",
+    },
+
     "/alertas": {
       es: "/alertas",
       en: "/alerts",

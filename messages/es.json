@@ -39,6 +39,7 @@
     "glossary": "Glosario",
     "learn": "Aprende",
     "portfolio": "Portfolio de Metales",
+    "widget": "Widget Precio Oro",
     "investmentGuide": "Guía de inversión",
     "press": "Prensa"
   },
@@ -168,7 +169,9 @@
     "fearGreed": "Índice Miedo & Codicia — Metales",
     "fearGreedDesc": "Indicador diario del sentimiento del mercado de metales preciosos: ¿es momento de comprar o vender?",
     "portfolioTracker": "Portfolio de Metales",
-    "portfolioTrackerDesc": "Registra tus tenencias de oro, plata y platino y sigue su valor en tiempo real. Ve el valor total, beneficios/pérdidas y distribución."
+    "portfolioTrackerDesc": "Registra tus tenencias de oro, plata y platino y sigue su valor en tiempo real. Ve el valor total, beneficios/pérdidas y distribución.",
+    "goldWidget": "Widget Precio del Oro",
+    "goldWidgetDesc": "Embebe precios de metales preciosos en tiempo real en tu web. Gratis, personalizable y siempre actualizado."
   },
   "jewelryCalc": {
     "selectMetal": "Selecciona el metal",
@@ -187,7 +190,7 @@
     "disclaimer": "Valor calculado al precio spot de mercado. El precio real de compra en joyerías o casas de empeño puede ser un 20-40% inferior por márgenes comerciales."
   },
   "jewelryPage": {
-    "metaTitle": "Calculadora de valor de joyas de oro, plata y platino — Precio actual por quilates",
+    "metaTitle": "Calculadora de valor de joyas — Oro y Plata | Metalorix",
     "metaDesc": "Calcula cuánto valen tus joyas de oro, plata o platino al precio de mercado actual. Introduce los gramos y los quilates (9k, 14k, 18k, 22k, 24k) y obtén el valor al instante.",
     "h1": "¿Cuánto valen tus joyas? Calculadora por quilates",
     "subtitle": "Introduce el peso y los quilates de tus joyas de oro, plata o platino y calcula su valor al precio de mercado en tiempo real.",
@@ -266,13 +269,13 @@
   },
   "pages": {
     "productos": {
-      "title": "Monedas y lingotes de inversión — Guía de productos | Metalorix",
+      "title": "Monedas y lingotes de inversión — Guía | Metalorix",
       "description": "Fichas completas de las monedas y lingotes de oro y plata más populares: Krugerrand, Maple Leaf, Filarmónica, Britannia, Eagle y lingotes LBMA.",
       "ogTitle": "Monedas y lingotes de inversión — Metalorix",
       "ogDescription": "Fichas de las principales monedas y lingotes de oro y plata: pureza, prima sobre spot, liquidez y fiscalidad."
     },
     "precioOroHoy": {
-      "title": "Precio del oro hoy en tiempo real — Cotización XAU/USD | Metalorix",
+      "title": "Precio del oro hoy — Cotización XAU/USD | Metalorix",
       "description": "Precio del oro hoy actualizado en tiempo real. Cotización XAU/USD, gráfico interactivo, variación diaria, precio por gramo y kilogramo.",
       "ogTitle": "Precio del oro hoy — Metalorix",
       "ogDescription": "Cotización del oro en tiempo real. Gráfico, precio por gramo y variación diaria."
@@ -284,31 +287,31 @@
       "ogDescription": "¿Cuánto vale un gramo de oro? Precio actualizado en EUR y USD."
     },
     "calculadora": {
-      "title": "Calculadora de rentabilidad del oro, plata y platino — Metalorix",
+      "title": "Calculadora rentabilidad oro y plata — Metalorix",
       "description": "Calcula cuánto habrías ganado invirtiendo en oro, plata o platino. Simulador con datos reales desde el año 2000.",
       "ogTitle": "Calculadora de rentabilidad — Metalorix",
       "ogDescription": "¿Cuánto habrías ganado invirtiendo en oro? Calcula la rentabilidad con datos reales."
     },
     "ratio": {
-      "title": "Ratio Oro/Plata hoy — Gráfico histórico y análisis | Metalorix",
+      "title": "Ratio Oro/Plata hoy — Gráfico y análisis | Metalorix",
       "description": "Ratio oro/plata en tiempo real con gráfico histórico. Descubre si el oro está sobrevalorado respecto a la plata.",
       "ogTitle": "Ratio Oro/Plata hoy — Metalorix",
       "ogDescription": "Ratio oro/plata en tiempo real con gráfico histórico y zonas de sobrevaloración."
     },
     "conversor": {
-      "title": "Precio del oro en euros, libras, francos y más divisas — Metalorix",
+      "title": "Precio del oro en EUR, GBP, CHF y más | Metalorix",
       "description": "Precio del oro, plata y platino en 11 divisas: EUR, GBP, CHF, JPY, AUD, CAD, CNY, INR, MXN, BRL.",
       "ogTitle": "Precio del oro en diferentes divisas — Metalorix",
       "ogDescription": "Consulta el precio del oro, plata y platino en EUR, GBP, CHF, JPY y más divisas."
     },
     "comparador": {
-      "title": "Comparador Oro vs Plata vs Platino — Rendimiento histórico | Metalorix",
+      "title": "Oro vs Plata vs Platino — Comparador | Metalorix",
       "description": "Compara el rendimiento histórico del oro, plata y platino. Gráfico interactivo con periodos de 1 mes a 10+ años.",
       "ogTitle": "Comparador Oro vs Plata vs Platino — Metalorix",
       "ogDescription": "¿Qué metal ha rendido más? Compara oro, plata y platino en un gráfico interactivo."
     },
     "calendario": {
-      "title": "Calendario económico para metales preciosos — FOMC, BCE, IPC, NFP | Metalorix",
+      "title": "Calendario económico para oro y metales | Metalorix",
       "description": "Calendario de eventos económicos clave que mueven el precio del oro, plata y platino. Reuniones Fed, BCE, datos de inflación y empleo.",
       "ogTitle": "Calendario económico para metales preciosos — Metalorix",
       "ogDescription": "Eventos clave que mueven los precios del oro: FOMC, BCE, IPC, NFP y más."
@@ -1324,7 +1327,7 @@
     "label_extreme_greed": "Codicia Extrema"
   },
   "fearGreedPage": {
-    "metaTitle": "Índice Miedo & Codicia para Metales Preciosos — Oro y Plata hoy",
+    "metaTitle": "Índice Miedo y Codicia para Oro y Plata | Metalorix",
     "metaDesc": "El primer índice de miedo y codicia específico para metales preciosos. Mide el sentimiento del mercado de oro y plata en tiempo real con 5 indicadores: momentum, volatilidad y más.",
     "h1": "Índice Miedo & Codicia — Metales Preciosos",
     "subtitle": "¿El mercado del oro está dominado por el miedo o por la codicia hoy? Este índice exclusivo mide el sentimiento inversor en metales preciosos con 5 indicadores técnicos en tiempo real.",
@@ -1497,5 +1500,52 @@
     "faq2a": "Los precios spot se actualizan cada 60 segundos con datos de mercado en directo (Yahoo Finance, Gold API). El valor de tu cartera se actualiza automáticamente.",
     "faq3q": "¿Puedo usarlo en el móvil?",
     "faq3a": "Sí, el seguimiento de cartera es totalmente adaptable y funciona en cualquier dispositivo. Tus datos persisten mientras uses el mismo navegador."
+  },
+  "widget": {
+    "h1": "Widget Gratis de Precio del Oro",
+    "metaTitle": "Widget Embebible Gratis de Precio del Oro",
+    "metaDesc": "Añade precios de oro y metales preciosos en tiempo real a tu web. Widget gratis, personalizable con temas oscuro y claro.",
+    "keywords": "widget precio oro, widget gratis oro, precio oro embebible, widget metales preciosos, precio oro web, widget precio oro tiempo real",
+    "subtitle": "Añade precios de metales preciosos en tiempo real a tu web en segundos. Gratis, elegante y siempre actualizado.",
+    "preview": "Vista previa",
+    "configure": "Personalizar",
+    "selectMetals": "Seleccionar metales",
+    "gold": "Oro",
+    "silver": "Plata",
+    "platinum": "Platino",
+    "palladium": "Paladio",
+    "copper": "Cobre",
+    "theme": "Tema",
+    "dark": "Oscuro",
+    "light": "Claro",
+    "embedCode": "Código para embeber",
+    "copyCode": "Copiar código",
+    "copied": "¡Copiado!",
+    "howTitle": "Cómo embeber el widget",
+    "step1": "Personaliza",
+    "step1Desc": "Elige los metales y el tema que combinen con tu web.",
+    "step2": "Copia el código",
+    "step2Desc": "Copia el código iframe de arriba.",
+    "step3": "Pega en tu web",
+    "step3Desc": "Pega el código en cualquier parte del HTML de tu sitio.",
+    "whyTitle": "¿Por qué embeber nuestro widget?",
+    "benefit1Title": "Precios en tiempo real",
+    "benefit1Desc": "Los precios se actualizan cada 60 segundos desde múltiples fuentes.",
+    "benefit2Title": "Diseño profesional",
+    "benefit2Desc": "Combina con cualquier web con opciones de tema oscuro y claro.",
+    "benefit3Title": "Sin API key",
+    "benefit3Desc": "Solo pega el código. Sin registro, sin claves API, sin límites.",
+    "benefit4Title": "Ultra ligero",
+    "benefit4Desc": "Menos de 5 KB. Sin dependencias externas. Carga instantánea.",
+    "faq1Q": "¿El widget es realmente gratis?",
+    "faq1A": "Sí, el widget es 100% gratuito sin límites de uso. Solo pedimos que mantengas el enlace 'Powered by Metalorix'.",
+    "faq2Q": "¿De dónde provienen los datos de precios?",
+    "faq2A": "Los precios provienen de Yahoo Finance, Gold API y Twelve Data, actualizados cada 60 segundos.",
+    "faq3Q": "¿Puedo personalizar el widget?",
+    "faq3A": "Sí. Elige qué metales mostrar (oro, plata, platino, paladio, cobre) y selecciona tema oscuro o claro.",
+    "faq4Q": "¿El widget ralentizará mi web?",
+    "faq4A": "No. El widget se carga en un iframe, pesa menos de 5 KB y no afecta al rendimiento de tu sitio.",
+    "faq5Q": "¿Necesito actualizar el código del widget?",
+    "faq5A": "No. El widget obtiene los precios más recientes automáticamente. Una vez embebido, no requiere mantenimiento."
   }
 }

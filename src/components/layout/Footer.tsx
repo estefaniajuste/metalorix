@@ -27,6 +27,7 @@ export function Footer() {
         { href: "/donde-comprar", label: tn("whereToBuy") },
         { href: "/herramientas", label: tn("tools") },
         { href: "/portfolio", label: t("portfolio") },
+        { href: "/widget", label: t("widget") },
         { href: "/guia-inversion", label: t("investmentGuide") },
         { href: "/noticias", label: tn("news") },
         { href: "/alertas", label: tn("alerts") },

@@ -39,6 +39,7 @@
     "glossary": "Glossary",
     "learn": "Learn",
     "portfolio": "Portfolio Tracker",
+    "widget": "Gold Price Widget",
     "investmentGuide": "Investment guide",
     "press": "Press & Media"
   },
@@ -168,7 +169,9 @@
     "fearGreed": "Fear & Greed Index — Metals",
     "fearGreedDesc": "Daily precious metals market sentiment indicator: is it time to buy or sell?",
     "portfolioTracker": "Portfolio Tracker",
-    "portfolioTrackerDesc": "Track your gold, silver and platinum holdings in real time. See total value, profit/loss and allocation."
+    "portfolioTrackerDesc": "Track your gold, silver and platinum holdings in real time. See total value, profit/loss and allocation.",
+    "goldWidget": "Gold Price Widget",
+    "goldWidgetDesc": "Embed live precious metals prices on your website. Free, customizable and always up to date."
   },
   "jewelryCalc": {
     "selectMetal": "Select metal",
@@ -187,7 +190,7 @@
     "disclaimer": "Value calculated at market spot price. Actual buyback price at jewelry stores or pawnshops may be 20-40% lower due to commercial margins."
   },
   "jewelryPage": {
-    "metaTitle": "Gold, Silver & Platinum Jewelry Value Calculator — Current Price by Karat",
+    "metaTitle": "Jewelry Value Calculator — Price by Karat | Metalorix",
     "metaDesc": "Calculate how much your gold, silver or platinum jewelry is worth at today's market price. Enter the grams and karat (9k, 14k, 18k, 22k, 24k) and get the value instantly.",
     "h1": "How Much Is Your Jewelry Worth? Karat Value Calculator",
     "subtitle": "Enter the weight and karat of your gold, silver or platinum jewelry and calculate its value at real-time market price.",
@@ -290,7 +293,7 @@
       "ogDescription": "How much would you have earned investing in gold? Calculate returns with real data."
     },
     "ratio": {
-      "title": "Gold/Silver Ratio Today — Historical Chart & Analysis | Metalorix",
+      "title": "Gold/Silver Ratio Today — Chart & Analysis | Metalorix",
       "description": "Gold/silver ratio in real time with historical chart. Discover whether gold is overvalued relative to silver.",
       "ogTitle": "Gold/Silver Ratio Today — Metalorix",
       "ogDescription": "Real-time gold/silver ratio with historical chart and overvaluation zones."
@@ -302,13 +305,13 @@
       "ogDescription": "Check gold, silver and platinum prices in EUR, GBP, CHF, JPY and more currencies."
     },
     "comparador": {
-      "title": "Gold vs Silver vs Platinum Comparison — Historical Returns | Metalorix",
+      "title": "Gold vs Silver vs Platinum — Returns Compared | Metalorix",
       "description": "Compare the historical performance of gold, silver and platinum. Interactive chart with periods from 1 month to 10+ years.",
       "ogTitle": "Gold vs Silver vs Platinum Comparison — Metalorix",
       "ogDescription": "Which metal has performed best? Compare gold, silver and platinum on an interactive chart."
     },
     "calendario": {
-      "title": "Economic Calendar for Precious Metals — FOMC, ECB, CPI, NFP | Metalorix",
+      "title": "Economic Calendar for Gold & Metals | Metalorix",
       "description": "Calendar of key economic events that move gold, silver and platinum prices. Fed and ECB meetings, inflation and employment data.",
       "ogTitle": "Economic Calendar for Precious Metals — Metalorix",
       "ogDescription": "Key events that move gold prices: FOMC, ECB, CPI, NFP and more."
@@ -1324,7 +1327,7 @@
     "label_extreme_greed": "Extreme Greed"
   },
   "fearGreedPage": {
-    "metaTitle": "Fear & Greed Index for Precious Metals — Gold & Silver Sentiment Today",
+    "metaTitle": "Fear & Greed Index for Gold & Silver | Metalorix",
     "metaDesc": "The first fear and greed index specifically for precious metals. Measures gold and silver market sentiment in real time with 5 indicators: momentum, volatility, ratio and more.",
     "h1": "Fear & Greed Index — Precious Metals",
     "subtitle": "Is the gold market driven by fear or greed today? This exclusive index measures investor sentiment in precious metals with 5 real-time technical indicators.",
@@ -1450,7 +1453,7 @@
     "footer": "For press inquiries or partnership proposals, email hola@metalorix.com"
   },
   "portfolio": {
-    "metaTitle": "Precious Metals Portfolio Tracker — Track Your Gold & Silver Holdings",
+    "metaTitle": "Precious Metals Portfolio Tracker | Metalorix",
     "metaDesc": "Track the real-time value of your gold, silver and platinum holdings. Calculate profit & loss, see allocation breakdown and monitor performance.",
     "h1": "Portfolio Tracker",
     "subtitle": "Track the real-time value of your precious metals holdings. Add your gold, silver, platinum and palladium to see total value, profit/loss and allocation.",
@@ -1497,5 +1500,52 @@
     "faq2a": "Spot prices are refreshed every 60 seconds from live market data (Yahoo Finance, Gold API). Your portfolio value updates automatically.",
     "faq3q": "Can I use this on my phone?",
     "faq3a": "Yes, the portfolio tracker is fully responsive and works on any device. Your data persists as long as you use the same browser."
+  },
+  "widget": {
+    "h1": "Free Gold Price Widget",
+    "metaTitle": "Free Embeddable Gold Price Widget",
+    "metaDesc": "Add live gold and precious metals prices to your website. Free, customizable, real-time widget with dark and light themes.",
+    "keywords": "gold price widget, free gold widget, embeddable gold price, precious metals widget, live gold price, gold price for website",
+    "subtitle": "Add live precious metals prices to your website in seconds. Free, beautiful, always up to date.",
+    "preview": "Live Preview",
+    "configure": "Customize",
+    "selectMetals": "Select metals",
+    "gold": "Gold",
+    "silver": "Silver",
+    "platinum": "Platinum",
+    "palladium": "Palladium",
+    "copper": "Copper",
+    "theme": "Theme",
+    "dark": "Dark",
+    "light": "Light",
+    "embedCode": "Embed Code",
+    "copyCode": "Copy code",
+    "copied": "Copied!",
+    "howTitle": "How to embed the widget",
+    "step1": "Customize",
+    "step1Desc": "Choose which metals and the theme that matches your site.",
+    "step2": "Copy the code",
+    "step2Desc": "Copy the iframe embed code above.",
+    "step3": "Paste on your site",
+    "step3Desc": "Paste the code anywhere in your website's HTML.",
+    "whyTitle": "Why embed our widget?",
+    "benefit1Title": "Real-time prices",
+    "benefit1Desc": "Prices update every 60 seconds from multiple data sources.",
+    "benefit2Title": "Professional design",
+    "benefit2Desc": "Matches any website with dark and light theme options.",
+    "benefit3Title": "No API key needed",
+    "benefit3Desc": "Just paste the code. No registration, no API keys, no limits.",
+    "benefit4Title": "Lightweight",
+    "benefit4Desc": "Under 5 KB. No external dependencies. Loads instantly.",
+    "faq1Q": "Is the widget really free?",
+    "faq1A": "Yes, the widget is 100% free with no usage limits. We only ask that you keep the 'Powered by Metalorix' link.",
+    "faq2Q": "Where does the price data come from?",
+    "faq2A": "Prices are sourced from Yahoo Finance, Gold API, and Twelve Data, updated every 60 seconds.",
+    "faq3Q": "Can I customize the widget?",
+    "faq3A": "Yes. Choose which metals to display (gold, silver, platinum, palladium, copper) and select dark or light theme.",
+    "faq4Q": "Will the widget slow down my website?",
+    "faq4A": "No. The widget loads in an iframe, is under 5 KB, and has zero impact on your site's performance.",
+    "faq5Q": "Do I need to update the widget code?",
+    "faq5A": "No. The widget automatically fetches the latest prices. Once embedded, it requires zero maintenance."
   }
 }

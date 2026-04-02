@@ -13,7 +13,11 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: "*",
         allow: ["/", "/api/sitemap", "/api/feed"],
-        disallow: ["/api/", ...uniquePanelPaths.map((p) => `${p}/`)],
+        disallow: [
+          "/api/",
+          ...uniquePanelPaths.map((p) => `${p}/`),
+          "*/opengraph-image",
+        ],
       },
     ],
     sitemap: "https://metalorix.com/api/sitemap",

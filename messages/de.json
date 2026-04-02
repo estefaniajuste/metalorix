@@ -39,6 +39,7 @@
     "glossary": "Glossar",
     "learn": "Lernen",
     "portfolio": "Portfolio Tracker",
+    "widget": "Goldpreis-Widget",
     "investmentGuide": "Investitionsleitfaden",
     "press": "Presse"
   },
@@ -168,7 +169,9 @@
     "fearGreed": "Angst & Gier Index — Metalle",
     "fearGreedDesc": "Täglicher Sentimentindikator für Edelmetallmärkte: Ist es Zeit zu kaufen oder zu verkaufen?",
     "portfolioTracker": "Portfolio Tracker",
-    "portfolioTrackerDesc": "Verfolge deine Gold-, Silber- und Platinbestände in Echtzeit. Gesamtwert, Gewinn/Verlust und Aufteilung auf einen Blick."
+    "portfolioTrackerDesc": "Verfolge deine Gold-, Silber- und Platinbestände in Echtzeit. Gesamtwert, Gewinn/Verlust und Aufteilung auf einen Blick.",
+    "goldWidget": "Goldpreis-Widget",
+    "goldWidgetDesc": "Einbettbare Edelmetallpreise in Echtzeit für deine Website. Kostenlos, anpassbar und immer aktuell."
   },
   "alerts": {
     "title": "Intelligente Preisalarme",
@@ -238,25 +241,25 @@
       "ogDescription": "Wie viel hätten Sie mit Gold verdient? Rendite mit echten Daten berechnen."
     },
     "ratio": {
-      "title": "Gold/Silber-Verhältnis heute — Historisches Chart & Analyse | Metalorix",
+      "title": "Gold/Silber-Verhältnis heute — Chart & Analyse | Metalorix",
       "description": "Gold/Silber-Verhältnis in Echtzeit mit historischem Chart. Erfahren Sie, ob Gold gegenüber Silber überbewertet ist.",
       "ogTitle": "Gold/Silber-Verhältnis heute — Metalorix",
       "ogDescription": "Echtzeit-Gold/Silber-Verhältnis mit historischem Chart und Überbewertungszonen."
     },
     "conversor": {
-      "title": "Goldpreis in Euro, Pfund, Franken und weiteren Währungen — Metalorix",
+      "title": "Goldpreis in EUR, GBP, CHF und mehr | Metalorix",
       "description": "Gold-, Silber- und Platinpreise in 11 Währungen: EUR, GBP, CHF, JPY, AUD, CAD, CNY, INR, MXN, BRL.",
       "ogTitle": "Goldpreis in verschiedenen Währungen — Metalorix",
       "ogDescription": "Gold-, Silber- und Platinpreise in EUR, GBP, CHF, JPY und weiteren Währungen."
     },
     "comparador": {
-      "title": "Gold vs Silber vs Platin Vergleich — Historische Rendite | Metalorix",
+      "title": "Gold vs Silber vs Platin — Renditevergleich | Metalorix",
       "description": "Vergleichen Sie die historische Wertentwicklung von Gold, Silber und Platin. Interaktives Chart mit Zeiträumen von 1 Monat bis 10+ Jahre.",
       "ogTitle": "Gold vs Silber vs Platin Vergleich — Metalorix",
       "ogDescription": "Welches Metall hat am besten performt? Vergleichen Sie Gold, Silber und Platin im interaktiven Chart."
     },
     "calendario": {
-      "title": "Wirtschaftskalender für Edelmetalle — FOMC, EZB, VPI, NFP | Metalorix",
+      "title": "Wirtschaftskalender für Gold & Edelmetalle | Metalorix",
       "description": "Kalender wirtschaftlicher Schlüsselereignisse, die Gold-, Silber- und Platinpreise bewegen. Fed- und EZB-Sitzungen, Inflations- und Arbeitsmarktdaten.",
       "ogTitle": "Wirtschaftskalender für Edelmetalle — Metalorix",
       "ogDescription": "Schlüsselereignisse, die den Goldpreis bewegen: FOMC, EZB, VPI, NFP und mehr."
@@ -1260,7 +1263,7 @@
     "disclaimer": "Wert berechnet zum Markt-Spotpreis. Der tatsächliche Rückkaufpreis bei Juwelieren oder Pfandhäusern kann 20-40% niedriger liegen."
   },
   "jewelryPage": {
-    "metaTitle": "Gold-, Silber- und Platin-Schmuck Wertrechner — Aktueller Preis nach Karat",
+    "metaTitle": "Schmuck-Wertrechner — Gold & Silber Preis | Metalorix",
     "metaDesc": "Berechnen Sie den aktuellen Marktwert Ihres Gold-, Silber- oder Platinschmucks. Gramm und Karat eingeben und sofort den Wert erhalten.",
     "h1": "Wie viel ist Ihr Schmuck wert? Karat-Wertrechner",
     "subtitle": "Geben Sie Gewicht und Karat Ihres Schmucks ein und berechnen Sie den Wert zum aktuellen Marktpreis.",
@@ -1310,7 +1313,7 @@
     "label_extreme_greed": "Extreme Gier"
   },
   "fearGreedPage": {
-    "metaTitle": "Angst & Gier Index für Edelmetalle — Gold und Silber Stimmung heute",
+    "metaTitle": "Angst & Gier Index für Gold & Silber | Metalorix",
     "metaDesc": "Der erste Angst-und-Gier-Index speziell für Edelmetalle. Misst die Stimmung in Echtzeit.",
     "h1": "Angst & Gier Index — Edelmetalle",
     "subtitle": "Wird der Goldmarkt heute von Angst oder Gier angetrieben?",
@@ -1483,5 +1486,52 @@
     "faq2a": "Spotpreise werden alle 60 Sekunden aus Live-Marktdaten aktualisiert (Yahoo Finance, Gold API). Ihr Portfoliowert aktualisiert sich automatisch.",
     "faq3q": "Kann ich das auf dem Smartphone nutzen?",
     "faq3a": "Ja, der Portfolio-Tracker ist vollständig responsiv und funktioniert auf jedem Gerät. Ihre Daten bleiben erhalten, solange Sie denselben Browser verwenden."
+  },
+  "widget": {
+    "h1": "Kostenloses Goldpreis-Widget",
+    "metaTitle": "Kostenloses einbettbares Goldpreis-Widget",
+    "metaDesc": "Füge Live-Gold- und Edelmetallpreise zu deiner Website hinzu. Kostenloses, anpassbares Echtzeit-Widget mit dunklem und hellem Design.",
+    "keywords": "goldpreis widget, kostenloses gold widget, einbettbarer goldpreis, edelmetall widget, live goldpreis, goldpreis für website",
+    "subtitle": "Füge Edelmetallpreise in Echtzeit zu deiner Website hinzu – in Sekunden. Kostenlos, elegant und immer aktuell.",
+    "preview": "Live-Vorschau",
+    "configure": "Anpassen",
+    "selectMetals": "Metalle auswählen",
+    "gold": "Gold",
+    "silver": "Silber",
+    "platinum": "Platin",
+    "palladium": "Palladium",
+    "copper": "Kupfer",
+    "theme": "Design",
+    "dark": "Dunkel",
+    "light": "Hell",
+    "embedCode": "Einbettungscode",
+    "copyCode": "Code kopieren",
+    "copied": "Kopiert!",
+    "howTitle": "So bettest du das Widget ein",
+    "step1": "Anpassen",
+    "step1Desc": "Wähle die Metalle und das Design, das zu deiner Website passt.",
+    "step2": "Code kopieren",
+    "step2Desc": "Kopiere den iframe-Einbettungscode oben.",
+    "step3": "In deine Website einfügen",
+    "step3Desc": "Füge den Code an beliebiger Stelle im HTML deiner Website ein.",
+    "whyTitle": "Warum unser Widget einbetten?",
+    "benefit1Title": "Echtzeitpreise",
+    "benefit1Desc": "Die Preise werden alle 60 Sekunden aus mehreren Datenquellen aktualisiert.",
+    "benefit2Title": "Professionelles Design",
+    "benefit2Desc": "Passt zu jeder Website mit dunklem und hellem Design.",
+    "benefit3Title": "Kein API-Schlüssel nötig",
+    "benefit3Desc": "Einfach den Code einfügen. Keine Registrierung, keine API-Schlüssel, keine Limits.",
+    "benefit4Title": "Ultraleicht",
+    "benefit4Desc": "Unter 5 KB. Keine externen Abhängigkeiten. Lädt sofort.",
+    "faq1Q": "Ist das Widget wirklich kostenlos?",
+    "faq1A": "Ja, das Widget ist 100 % kostenlos ohne Nutzungslimits. Wir bitten nur darum, den Link 'Powered by Metalorix' beizubehalten.",
+    "faq2Q": "Woher stammen die Preisdaten?",
+    "faq2A": "Die Preise stammen von Yahoo Finance, Gold API und Twelve Data und werden alle 60 Sekunden aktualisiert.",
+    "faq3Q": "Kann ich das Widget anpassen?",
+    "faq3A": "Ja. Wähle, welche Metalle angezeigt werden (Gold, Silber, Platin, Palladium, Kupfer) und wähle dunkles oder helles Design.",
+    "faq4Q": "Wird das Widget meine Website verlangsamen?",
+    "faq4A": "Nein. Das Widget wird in einem iframe geladen, ist unter 5 KB groß und hat keinen Einfluss auf die Leistung deiner Website.",
+    "faq5Q": "Muss ich den Widget-Code aktualisieren?",
+    "faq5A": "Nein. Das Widget ruft automatisch die neuesten Preise ab. Einmal eingebettet, ist es wartungsfrei."
   }
 }

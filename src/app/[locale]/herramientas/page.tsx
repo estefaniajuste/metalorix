@@ -122,6 +122,19 @@ const TOOL_CARDS = [
       </svg>
     ),
   },
+  {
+    href: "/widget" as const,
+    titleKey: "goldWidget" as const,
+    descKey: "goldWidgetDesc" as const,
+    icon: (
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <polyline points="16 18 22 18 22 12" />
+        <polyline points="8 6 2 6 2 12" />
+        <line x1="2" y1="12" x2="22" y2="12" />
+        <rect x="6" y="2" width="12" height="20" rx="2" />
+      </svg>
+    ),
+  },
 ];
 
 export default async function HerramientasPage() {
