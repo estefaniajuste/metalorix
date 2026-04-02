@@ -389,6 +389,61 @@ Las queries con más volumen global (datos de Ahrefs/SimilarWeb):
 13. **Display ads (AdSense)** — Esperar >5K visitas/día.
 14. **Afiliados crypto** — Links a Binance/Coinbase desde dashboard BTC.
 
+### ✅ Nav reorganizada — IMPLEMENTADO (28 marzo 2026)
+
+**Estado:** En producción. Commit `bf22bb2`.
+
+**Cambios:**
+- Nav pasó de 9 ítems planos a 4 grupos + 1 CTA: **Precios ▾** | **Comprar ▾** (Productos + Dónde Comprar) | **Herramientas** | **Aprender ▾** (Guía + Learn + Noticias) + **[🔔 Alertas]** botón dorado
+- Añadido estado activo (ítem en dorado cuando estás en esa sección)
+- Chevron animado en dropdowns
+- Mobile: secciones con etiquetas + Alertas CTA arriba del todo
+- Clave `buy` añadida a los 7 locales (es/en/de/tr/ar/zh/hi)
+
+**Archivos modificados:**
+- `src/components/layout/Nav.tsx`
+- `messages/*.json` (7 archivos) — nueva clave `nav.buy`
+
+---
+
+### ✅ SEO CTR — Optimización near-miss GSC — IMPLEMENTADO (28-29 marzo / 2 abril 2026)
+
+**Contexto:** Análisis de GSC (14-27 marzo 2026) mostró ~78.500 impresiones en 2 semanas con CTR ~0.2%. Artículos near-miss con posición 6-9 y miles de impresiones pero CTR casi 0.
+
+**Cambios implementados:**
+
+1. **`src/lib/learn/templates.ts`** — Prompt `seoTitle` reescrito con 5 patrones CTR probados: pregunta, comparación, número/dato, how-to, beneficio/outcome. Prohíbe expresamente openers genéricos ("Introduction to", "Overview of", etc.)
+
+2. **`src/app/api/cron/optimize-titles/route.ts`** — Extendido con:
+   - Parámetro `?target=learn` para optimizar `learnArticleLocalizations` en inglés
+   - Parámetro `?slugs=a,b,c` para forzar artículos específicos ignorando el filtro automático
+   - Nueva función `optimizeLearnTitleWithGemini()` con prompt dedicado a contenido educacional
+   - Función `needsLearnOptimization()` para detectar seoTitles débiles
+
+3. **`.github/workflows/scheduled-crons.yml`** — Actualizado:
+   - Job `learn-priority`: regenera 7 near-miss + optimiza seoTitles
+   - Job `optimize-titles`: ahora corre `target=news` Y `target=learn` cada día (10:00 UTC)
+   - Job `optimize-learn-titles`: corregido para usar endpoint correcto
+
+**4 artículos near-miss optimizados directamente en DB (2 abril 2026):**
+
+| Slug | seoTitle anterior | seoTitle nuevo |
+|---|---|---|
+| `above-ground-gold-stock` | "Total Above-Ground Gold Stock [2026]..." | "All Gold Ever Mined: 212,000 Tonnes Explained" |
+| `moving-averages-for-metals` | "Gold Moving Averages: 50-Day & 200-Day Explained" | "50 & 200-Day Gold Moving Averages Explained" |
+| `comparing-gold-etfs-in-europe` | "Best Gold ETFs in Europe [2026]: Xetra vs iShares" | "Gold ETFs Europe: Xetra vs iShares Fees Compared" |
+| `coin-grading-ngc-and-pcgs` | "NGC vs PCGS Coin Grading: A Complete Comparison" | "NGC vs PCGS: Which Coin Grading Service Reigns Supreme?" |
+
+IndexNow pinguéado para 28 URLs (4 artículos × 7 idiomas). Esperar impacto en CTR en 2-4 semanas.
+
+**Datos GSC (14-27 marzo 2026) — referencia:**
+- Total: ~164 clics, ~78.500 impresiones, CTR ~0.2%, posición media ~15
+- Crecimiento: de 3 impresiones/día (14 mar) a 14.830/día (27 mar) → exponencial
+- Top mercados: EEUU (36.793 imp, 0.05% CTR), Alemania (3.834 imp, 0.63%), España (2.419 imp, 1.24%)
+- Dispositivos: móvil 53% clics (CTR 0.81%), escritorio 44% (CTR 0.11%)
+
+---
+
 ### ✅ UX Overhaul — IMPLEMENTADO (marzo 2026)
 
 **Estado:** En producción. Commit `195002a`, deploy verificado.
