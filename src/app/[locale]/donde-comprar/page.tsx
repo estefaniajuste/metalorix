@@ -6,7 +6,7 @@ import {
   getDealersByCountry,
   getCountryName,
 } from "@/lib/data/dealers";
-import { breadcrumbSchema } from "@/lib/seo/schemas";
+import { breadcrumbSchema, faqSchema } from "@/lib/seo/schemas";
 import { getAlternates } from "@/lib/seo/alternates";
 
 export const revalidate = 86400;
@@ -16,9 +16,11 @@ export async function generateMetadata(): Promise<Metadata> {
   const locale = await getLocale();
   const alternates = getAlternates(locale, "/donde-comprar");
 
+  const rawDesc = t("pageDesc");
+  const description = rawDesc.length > 155 ? rawDesc.slice(0, rawDesc.slice(0, 155).lastIndexOf(" ")) : rawDesc;
   return {
     title: t("pageTitle") + " — Metalorix",
-    description: t("pageDesc"),
+    description,
     keywords: t("seoKeywords"),
     alternates,
     openGraph: {
@@ -48,6 +50,12 @@ export default async function DondeComprarPage() {
     locale
   );
 
+  const faq = faqSchema([
+    { question: t("faq1Q"), answer: t("faq1A") },
+    { question: t("faq2Q"), answer: t("faq2A") },
+    { question: t("faq3Q"), answer: t("faq3A") },
+  ]);
+
   const itemListSchema = {
     "@context": "https://schema.org",
     "@type": "ItemList",
@@ -70,6 +78,10 @@ export default async function DondeComprarPage() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faq) }}
       />
 
       <section className="py-[var(--section-py)]">

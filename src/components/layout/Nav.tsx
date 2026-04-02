@@ -109,6 +109,7 @@ export function Nav() {
   const isBuyActive = pathname.startsWith("/productos") || pathname.startsWith("/donde-comprar");
   const isToolsActive = pathname.startsWith("/herramientas");
   const isNewsActive = pathname.startsWith("/noticias");
+  const isPortfolioActive = pathname.startsWith("/portfolio");
   const isLearnActive =
     pathname.startsWith("/guia-inversion") ||
     pathname.startsWith("/learn");
@@ -241,6 +242,14 @@ export function Nav() {
               className={navLinkClass(isNewsActive)}
             >
               {t("news")}
+            </Link>
+
+            {/* Portfolio link */}
+            <Link
+              href={"/portfolio" as any}
+              className={navLinkClass(isPortfolioActive)}
+            >
+              {t("portfolio")}
             </Link>
 
             {/* Learn dropdown */}
@@ -382,6 +391,15 @@ export function Nav() {
               onClick={() => setMobileOpen(false)}
             >
               {t("news")}
+            </Link>
+
+            {/* Portfolio */}
+            <Link
+              href={"/portfolio" as any}
+              className="block px-4 py-3 rounded-sm text-base font-medium text-content-2 hover:text-content-0 hover:bg-surface-2 transition-colors"
+              onClick={() => setMobileOpen(false)}
+            >
+              {t("portfolio")}
             </Link>
 
             <div className="h-px bg-border my-3" />

@@ -22,7 +22,8 @@
     "learn": "Aprender",
     "changeLanguage": "Cambiar idioma",
     "whereToBuy": "Dónde Comprar",
-    "buy": "Comprar"
+    "buy": "Comprar",
+    "portfolio": "Portfolio"
   },
   "footer": {
     "prices": "Precios",
@@ -76,6 +77,8 @@
     "heroLink": "Alertas de precio por email",
     "quickMore": "Más",
     "viewAllTools": "Todas las herramientas",
+    "quickPortfolio": "Portfolio",
+    "quickPortfolioDesc": "Sigue tus tenencias en tiempo real",
     "quickRatio": "Ratio Oro/Plata",
     "quickRatioDesc": "Ratio en vivo y análisis",
     "quickRoi": "Calculadora ROI",
@@ -84,6 +87,9 @@
     "quickConverterDesc": "Precios en 11 monedas",
     "quickComparator": "Comparador de Metales",
     "quickComparatorDesc": "Compara rendimiento",
+    "portfolioBannerTitle": "Sigue tu cartera de metales en tiempo real",
+    "portfolioBannerDesc": "Registra tus tenencias de oro, plata y platino. Calcula beneficios, pérdidas y distribución al instante.",
+    "portfolioBannerCta": "Abrir Portfolio Tracker",
     "dealersBannerTitle": "Dónde Comprar Metales Físicos",
     "dealersBannerDesc": "Encuentra dealers y tiendas verificadas para comprar oro, plata y otros metales preciosos en tu país.",
     "dealersBannerCta": "Ver todos los países",
@@ -96,6 +102,7 @@
     "anchorPrices": "Precios",
     "anchorNews": "Noticias",
     "anchorTools": "Herramientas",
+    "anchorPortfolio": "Portfolio",
     "anchorDealers": "Dealers"
   },
   "metals": {
@@ -171,7 +178,13 @@
     "portfolioTracker": "Portfolio de Metales",
     "portfolioTrackerDesc": "Registra tus tenencias de oro, plata y platino y sigue su valor en tiempo real. Ve el valor total, beneficios/pérdidas y distribución.",
     "goldWidget": "Widget Precio del Oro",
-    "goldWidgetDesc": "Embebe precios de metales preciosos en tiempo real en tu web. Gratis, personalizable y siempre actualizado."
+    "goldWidgetDesc": "Embebe precios de metales preciosos en tiempo real en tu web. Gratis, personalizable y siempre actualizado.",
+    "faq1Q": "¿Qué herramientas ofrece Metalorix gratis?",
+    "faq1A": "Metalorix ofrece calculadora DCA, simulador de rentabilidad, ratio oro/plata, conversor multi-divisa, calendario económico, calculadora de valor de joyas, índice miedo y codicia, tracker de portfolio y un widget embebible — todo gratis.",
+    "faq2Q": "¿Qué tan precisos son los datos de precios?",
+    "faq2A": "Los precios provienen de Yahoo Finance, Gold API y Twelve Data con respaldo automático. Los datos se actualizan cada 60 segundos y suelen estar a pocos segundos del mercado spot en vivo.",
+    "faq3Q": "¿Puedo seguir mi cartera de metales preciosos?",
+    "faq3A": "Sí. El Portfolio Tracker permite añadir tus tenencias de oro, plata y platino con precio de compra. Calcula el valor en tiempo real, beneficios/pérdidas y distribución por activo."
   },
   "jewelryCalc": {
     "selectMetal": "Selecciona el metal",
@@ -716,7 +729,15 @@
     "roiCalc": "Calculadora de rentabilidad",
     "roiCalcDesc": "Simula inversiones pasadas",
     "alertsLink": "Alertas de precio",
-    "alertsLinkDesc": "Recibe avisos por email"
+    "alertsLinkDesc": "Recibe avisos por email",
+    "faq1Q": "¿Qué es el precio spot del oro?",
+    "faq1A": "El precio spot es el precio de mercado actual al que se puede comprar o vender oro para entrega inmediata. Se establece mediante la negociación en mercados globales como COMEX y LBMA y se actualiza cada pocos segundos durante el horario de mercado.",
+    "faq2Q": "¿Qué factores mueven el precio del oro hoy?",
+    "faq2A": "Los principales factores son las decisiones de tipos de interés de la Reserva Federal, la fortaleza del dólar, los datos de inflación (IPC), las tensiones geopolíticas, las compras de oro de bancos centrales y los flujos de ETFs.",
+    "faq3Q": "¿Cada cuánto se actualiza el precio del oro en esta página?",
+    "faq3A": "El precio del oro en esta página se actualiza automáticamente cada 60 segundos durante el horario de mercado, usando datos de múltiples proveedores como Yahoo Finance y Gold API.",
+    "faq4Q": "¿Cuál es la diferencia entre precio spot y precio de compra?",
+    "faq4A": "El precio spot es el precio mayorista de mercado. Al comprar oro físico a un dealer, se paga una prima sobre spot que cubre acuñación, envío y margen del vendedor. Las primas suelen oscilar entre el 3% y el 10% según el producto."
   },
   "gramPrice": {
     "title": "Precio del gramo de oro hoy",
@@ -727,7 +748,13 @@
     "howCalculatedP2": "Para convertir a euros, se aplica el tipo de cambio EUR/USD vigente. El precio en euros fluctúa tanto por el precio del oro como por el tipo de cambio.",
     "karats": "Quilates y pureza",
     "karatsDesc": "El precio mostrado corresponde a oro puro de 24 quilates (999 milésimas). El oro de joyería suele tener menor pureza:",
-    "purity": "pureza"
+    "purity": "Pureza",
+    "faq1Q": "¿Cuánto cuesta un gramo de oro?",
+    "faq1A": "El precio de un gramo de oro se calcula dividiendo el precio spot de la onza troy entre 31,1035 (gramos por onza troy) y convirtiendo a tu moneda local. Esta página muestra el cálculo en tiempo real.",
+    "faq2Q": "¿Por qué el precio por gramo no coincide con dividir la onza entre 28,35?",
+    "faq2A": "El oro utiliza onzas troy (31,1035 g), no onzas estándar (28,35 g). La onza troy es aproximadamente un 10% más pesada, lo que explica la diferencia.",
+    "faq3Q": "¿Cuál es la diferencia entre el precio del oro de 24k, 18k y 14k por gramo?",
+    "faq3A": "El oro de 24k es 99,9% puro. El de 18k contiene un 75% de oro y cuesta aproximadamente el 75% del precio de 24k por gramo. El de 14k contiene un 58,3% de oro. Los quilates indican la proporción de oro puro en la aleación."
   },
   "ratioPage": {
     "title": "Ratio Oro/Plata hoy",
@@ -746,7 +773,13 @@
     "historicalMax": "Máximo histórico",
     "historicalMaxDesc": "Marzo 2020 (crisis COVID)",
     "historicalMin": "Mínimo reciente",
-    "historicalMinDesc": "Abril 2011 (rally de plata)"
+    "historicalMinDesc": "Abril 2011 (rally de plata)",
+    "faq1Q": "¿Qué es el ratio oro/plata?",
+    "faq1A": "El ratio oro/plata mide cuántas onzas de plata se necesitan para comprar una onza de oro. Se calcula dividiendo el precio spot del oro entre el de la plata.",
+    "faq2Q": "¿Qué significa un ratio oro/plata alto?",
+    "faq2A": "Un ratio superior a 80 sugiere que la plata puede estar infravalorada respecto al oro. Históricamente, ratios tan altos han precedido periodos de mejor rendimiento de la plata. La media histórica se sitúa en torno a 60-65.",
+    "faq3Q": "¿Cómo pueden los inversores usar el ratio oro/plata?",
+    "faq3A": "Algunos inversores intercambian entre oro y plata según el ratio: compran plata cuando el ratio es alto (por encima de 80) y rotan a oro cuando baja de 60. Esta estrategia busca acumular más onzas con el tiempo."
   },
   "roiCalc": {
     "simulateTitle": "Simula tu inversión",
@@ -1310,7 +1343,26 @@
       "verdict": "La asignación clásica es 60% acciones / 40% bonos, pero muchos asesores recomiendan sustituir parte de los bonos por 5-15% en oro para mejorar la diversificación y reducir la volatilidad total del portafolio.",
       "performanceTitle": "Rendimiento histórico (orientativo)",
       "performanceText": "A largo plazo el S&P 500 ha superado con frecuencia al oro en rentabilidad nominal, pero el oro ha actuado mejor en crisis sistémicas y picos de inflación. Los números son aproximados y dependen del periodo medido; no constituyen asesoramiento financiero."
-    }
+    },
+    "dashboard": {
+      "liveTitle": "Dashboard en Vivo",
+      "loading": "Cargando precios en vivo…",
+      "marketCap": "Capitalización",
+      "volume": "Volumen 24h",
+      "ratioTitle": "Ratio Oro / BTC",
+      "ozGold": "oz Oro",
+      "dominance": "Cuota de mercado"
+    },
+    "faq1Q": "¿Es mejor invertir en oro o Bitcoin?",
+    "faq1A": "Depende de tus objetivos. El oro ofrece estabilidad y 5.000 años de valor probado. Bitcoin ofrece mayor potencial de crecimiento pero con mucha más volatilidad. Muchos asesores recomiendan tener ambos.",
+    "faq2Q": "¿Qué es el ratio oro/Bitcoin?",
+    "faq2A": "El ratio oro/Bitcoin muestra cuántas onzas de oro puede comprar un Bitcoin. Fluctúa según el precio de ambos activos y se usa para medir la valoración relativa entre ellos.",
+    "faq3Q": "¿Es Bitcoin oro digital?",
+    "faq3A": "Bitcoin comparte propiedades con el oro — oferta limitada, descentralización y uso como cobertura. Sin embargo, carece del historial milenario del oro y tiene mucha más volatilidad.",
+    "faq4Q": "¿Debería diversificar entre oro y Bitcoin?",
+    "faq4A": "Muchos asesores financieros sugieren asignar un 5–15% a oro y un 1–5% a Bitcoin para diversificar. La proporción exacta depende de tu tolerancia al riesgo y horizonte de inversión.",
+    "faq5Q": "¿Cuánto más volátil es Bitcoin que el oro?",
+    "faq5A": "La volatilidad anual de Bitcoin ronda el 60–80%, mientras que la del oro es alrededor del 15%. Esto significa que Bitcoin puede tener oscilaciones de precio mucho mayores en ambas direcciones."
   },
   "fearGreed": {
     "errorFetch": "No se pudo cargar el índice. Inténtalo de nuevo.",
@@ -1409,7 +1461,13 @@
     "cityDesc": "Dealers de metales preciosos en {city}, {country}: tiendas y plataformas de confianza para comprar oro, plata y otros metales.",
     "citiesSection": "Explorar por ciudad",
     "cityBreadcrumb": "Ciudades",
-    "citySeoKeywords": "comprar oro {city}, dealers metales preciosos {city}, tiendas oro {city}"
+    "citySeoKeywords": "comprar oro {city}, dealers metales preciosos {city}, tiendas oro {city}",
+    "faq1Q": "¿Cómo elegir un dealer de metales preciosos fiable?",
+    "faq1A": "Busca dealers con acreditación del sector (LBMA, PCGS autorizado), precios transparentes con primas claras sobre spot, envío seguro y buenas reseñas de clientes.",
+    "faq2Q": "¿Es seguro comprar oro online?",
+    "faq2A": "Sí, comprar a dealers online establecidos es generalmente seguro y a menudo más barato que tiendas locales por menor coste operativo. Asegúrate de que ofrezcan envío asegurado, pago seguro y política de devolución clara.",
+    "faq3Q": "¿Qué debo comprobar antes de comprar oro físico?",
+    "faq3A": "Verifica la reputación del dealer, compara primas sobre spot entre varios vendedores, revisa costes de envío y seguro, entiende la política de recompra y confirma la certificación de autenticidad del producto."
   },
   "search": {
     "placeholder": "Buscar artículos, herramientas, productos...",

@@ -22,7 +22,8 @@
     "learn": "Learn",
     "changeLanguage": "Change language",
     "whereToBuy": "Where to Buy",
-    "buy": "Buy"
+    "buy": "Buy",
+    "portfolio": "Portfolio"
   },
   "footer": {
     "prices": "Prices",
@@ -76,6 +77,8 @@
     "heroLink": "Price alerts by email",
     "quickMore": "More",
     "viewAllTools": "All tools",
+    "quickPortfolio": "Portfolio",
+    "quickPortfolioDesc": "Track your holdings in real time",
     "quickRatio": "Gold/Silver Ratio",
     "quickRatioDesc": "Live ratio & analysis",
     "quickRoi": "ROI Calculator",
@@ -84,6 +87,9 @@
     "quickConverterDesc": "Prices in 11 currencies",
     "quickComparator": "Metal Comparator",
     "quickComparatorDesc": "Compare performance",
+    "portfolioBannerTitle": "Track your metals portfolio in real time",
+    "portfolioBannerDesc": "Log your gold, silver and platinum holdings. See total value, profit & loss and allocation instantly.",
+    "portfolioBannerCta": "Open Portfolio Tracker",
     "dealersBannerTitle": "Where to Buy Physical Metals",
     "dealersBannerDesc": "Find verified dealers and stores to buy gold, silver and other precious metals in your country.",
     "dealersBannerCta": "View all countries",
@@ -96,6 +102,7 @@
     "anchorPrices": "Prices",
     "anchorNews": "News",
     "anchorTools": "Tools",
+    "anchorPortfolio": "Portfolio",
     "anchorDealers": "Dealers"
   },
   "metals": {
@@ -171,7 +178,13 @@
     "portfolioTracker": "Portfolio Tracker",
     "portfolioTrackerDesc": "Track your gold, silver and platinum holdings in real time. See total value, profit/loss and allocation.",
     "goldWidget": "Gold Price Widget",
-    "goldWidgetDesc": "Embed live precious metals prices on your website. Free, customizable and always up to date."
+    "goldWidgetDesc": "Embed live precious metals prices on your website. Free, customizable and always up to date.",
+    "faq1Q": "What tools does Metalorix offer for free?",
+    "faq1A": "Metalorix provides a DCA calculator, ROI simulator, gold/silver ratio tracker, multi-currency converter, economic calendar, jewelry value calculator, fear & greed index, portfolio tracker, and an embeddable price widget — all free.",
+    "faq2Q": "How accurate is the price data in these tools?",
+    "faq2A": "Prices are sourced from Yahoo Finance, Gold API, and Twelve Data with automatic fallback. Data refreshes every 60 seconds and is typically within seconds of the live spot market.",
+    "faq3Q": "Can I track my precious metals portfolio?",
+    "faq3A": "Yes. The Portfolio Tracker lets you add your gold, silver, and platinum holdings with purchase price. It calculates real-time value, profit/loss, and allocation breakdown."
   },
   "jewelryCalc": {
     "selectMetal": "Select metal",
@@ -716,7 +729,15 @@
     "roiCalc": "ROI Calculator",
     "roiCalcDesc": "Simulate past investments",
     "alertsLink": "Price alerts",
-    "alertsLinkDesc": "Get email notifications"
+    "alertsLinkDesc": "Get email notifications",
+    "faq1Q": "What is the gold spot price?",
+    "faq1A": "The spot price is the current market price at which gold can be bought or sold for immediate delivery. It is set by trading on global exchanges like COMEX and LBMA and updates every few seconds during market hours.",
+    "faq2Q": "What factors move the gold price today?",
+    "faq2A": "Key drivers include Federal Reserve interest rate decisions, US dollar strength, inflation data (CPI/PPI), geopolitical tensions, central bank gold purchases, and ETF fund flows.",
+    "faq3Q": "How often is the gold price updated on this page?",
+    "faq3A": "The gold price on this page refreshes automatically every 60 seconds during market hours using data from multiple providers including Yahoo Finance and Gold API.",
+    "faq4Q": "What is the difference between spot price and retail price?",
+    "faq4A": "The spot price is the wholesale market rate. When you buy physical gold from a dealer, you pay a premium above spot that covers minting, shipping, and the dealer's margin. Premiums typically range from 3% to 10% depending on the product."
   },
   "gramPrice": {
     "title": "Gold price per gram today",
@@ -727,7 +748,13 @@
     "howCalculatedP2": "To convert to euros, the prevailing EUR/USD exchange rate is applied. The euro price fluctuates based on both the gold price and the exchange rate.",
     "karats": "Karats and purity",
     "karatsDesc": "The displayed price corresponds to pure 24-karat gold (999 fineness). Jewellery gold typically has lower purity:",
-    "purity": "purity"
+    "purity": "purity",
+    "faq1Q": "How much does one gram of gold cost?",
+    "faq1A": "The price of one gram of gold is calculated by dividing the troy ounce spot price by 31.1035 (grams per troy ounce) and converting to your local currency. This page shows the live calculation.",
+    "faq2Q": "Why is the gold price per gram different from the ounce price divided by 28.35?",
+    "faq2A": "Gold uses troy ounces (31.1035 g), not standard ounces (28.35 g). The troy ounce is approximately 10% heavier, which explains the price difference.",
+    "faq3Q": "What is the difference between 24k, 18k, and 14k gold price per gram?",
+    "faq3A": "24k gold is 99.9% pure. 18k contains 75% gold and costs about 75% of the 24k price per gram. 14k contains 58.3% gold. The karat indicates the proportion of pure gold in the alloy."
   },
   "ratioPage": {
     "title": "Gold/Silver Ratio today",
@@ -746,7 +773,13 @@
     "historicalMax": "All-time high",
     "historicalMaxDesc": "March 2020 (COVID crisis)",
     "historicalMin": "Recent low",
-    "historicalMinDesc": "April 2011 (silver rally)"
+    "historicalMinDesc": "April 2011 (silver rally)",
+    "faq1Q": "What is the gold/silver ratio?",
+    "faq1A": "The gold/silver ratio measures how many ounces of silver are needed to buy one ounce of gold. It is calculated by dividing the gold spot price by the silver spot price.",
+    "faq2Q": "What does a high gold/silver ratio mean?",
+    "faq2A": "A ratio above 80 suggests silver may be undervalued relative to gold. Historically, ratios this high have preceded periods of silver outperformance. The long-term average is around 60-65.",
+    "faq3Q": "How can investors use the gold/silver ratio?",
+    "faq3A": "Some investors swap between gold and silver based on the ratio: buying silver when the ratio is high (above 80) and swapping to gold when it drops below 60. This strategy aims to accumulate more ounces over time."
   },
   "roiCalc": {
     "simulateTitle": "Simulate your investment",
@@ -1310,7 +1343,26 @@
       "verdict": "The classic allocation is 60% stocks / 40% bonds, but many advisors recommend replacing part of the bonds with 5-15% gold to improve diversification and reduce overall portfolio volatility.",
       "performanceTitle": "Historical performance (illustrative)",
       "performanceText": "Over long horizons the S&P 500 has often outpaced gold in nominal returns, but gold has tended to perform better during systemic crises and inflation spikes. Figures are approximate and period-dependent; this is not financial advice."
-    }
+    },
+    "dashboard": {
+      "liveTitle": "Live Dashboard",
+      "loading": "Loading live prices…",
+      "marketCap": "Market cap",
+      "volume": "24h volume",
+      "ratioTitle": "Gold / BTC Ratio",
+      "ozGold": "oz Gold",
+      "dominance": "Market cap share"
+    },
+    "faq1Q": "Is gold or Bitcoin a better investment?",
+    "faq1A": "It depends on your goals. Gold offers stability and 5,000 years of proven value. Bitcoin offers higher growth potential but with significantly more volatility. Many advisors recommend holding both.",
+    "faq2Q": "What is the gold to Bitcoin ratio?",
+    "faq2A": "The gold-to-Bitcoin ratio shows how many ounces of gold one Bitcoin can buy. It fluctuates based on both assets' prices and is used to gauge relative valuation between the two.",
+    "faq3Q": "Is Bitcoin digital gold?",
+    "faq3A": "Bitcoin shares some properties with gold — limited supply, decentralization, and use as a hedge. However, it lacks gold's millennia-long track record and has much higher volatility.",
+    "faq4Q": "Should I diversify between gold and Bitcoin?",
+    "faq4A": "Many financial advisors suggest allocating 5–15% to gold and 1–5% to Bitcoin for diversification. The exact split depends on your risk tolerance and investment horizon.",
+    "faq5Q": "How volatile is Bitcoin compared to gold?",
+    "faq5A": "Bitcoin's annual volatility is roughly 60–80%, while gold's is around 15%. This means Bitcoin can have much larger price swings in both directions over short periods."
   },
   "fearGreed": {
     "errorFetch": "Could not load the index. Please try again.",
@@ -1409,7 +1461,13 @@
     "cityDesc": "Find precious metals dealers in {city}, {country}: trusted stores and platforms to buy gold, silver and other metals.",
     "citiesSection": "Browse by city",
     "cityBreadcrumb": "Cities",
-    "citySeoKeywords": "buy gold {city}, precious metals dealers {city}, gold stores {city}"
+    "citySeoKeywords": "buy gold {city}, precious metals dealers {city}, gold stores {city}",
+    "faq1Q": "How do I choose a trustworthy precious metals dealer?",
+    "faq1A": "Look for dealers with industry accreditation (LBMA, PCGS authorized), transparent pricing with clear premiums over spot, secure shipping, and a strong track record of customer reviews.",
+    "faq2Q": "Is it safe to buy gold online?",
+    "faq2A": "Yes, buying from established online dealers is generally safe and often cheaper than local shops due to lower overhead. Ensure the dealer offers insured shipping, secure payment, and a clear return policy.",
+    "faq3Q": "What should I check before buying physical gold?",
+    "faq3A": "Verify the dealer's reputation, compare premiums over spot price across multiple dealers, check shipping costs and insurance, understand the buyback policy, and confirm the product's authenticity certification."
   },
   "search": {
     "placeholder": "Search articles, tools, products...",

@@ -351,12 +351,12 @@ export async function HomePreview() {
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
             {([
+              { href: "/portfolio", icon: "💰", title: "quickPortfolio", desc: "quickPortfolioDesc" },
               { href: "/ratio-oro-plata", icon: "⚖️", title: "quickRatio", desc: "quickRatioDesc" },
               { href: "/calculadora-rentabilidad", icon: "📈", title: "quickRoi", desc: "quickRoiDesc" },
               { href: "/conversor-divisas", icon: "💱", title: "quickConverter", desc: "quickConverterDesc" },
               { href: "/comparador", icon: "📊", title: "quickComparator", desc: "quickComparatorDesc" },
               { href: "/calendario-economico", icon: "📅", title: "quickCalendar", desc: "quickCalendarDesc" },
-              { href: "/guia-inversion", icon: "📖", title: "quickGuide", desc: "quickGuideDesc" },
             ] as const).map(({ href, icon, title, desc }) => (
               <Link
                 key={title}
@@ -371,6 +371,10 @@ export async function HomePreview() {
               </Link>
             ))}
           </div>
+        </div>
+
+        <div id="portfolio" className="mt-10">
+          <PortfolioBanner t={t} />
         </div>
 
         <div id="dealers" className="mt-10">
@@ -388,6 +392,41 @@ export async function HomePreview() {
 interface DealersBannerProps {
   locale: string;
   t: Awaited<ReturnType<typeof getTranslations<"home">>>;
+}
+
+function PortfolioBanner({ t }: { t: Awaited<ReturnType<typeof getTranslations<"home">>> }) {
+  return (
+    <Link
+      href="/portfolio"
+      className="block rounded-DEFAULT border border-brand-gold/20 bg-gradient-to-r from-surface-1 to-[rgba(214,179,90,0.06)] p-6 hover:border-brand-gold/40 hover:shadow-card transition-all group"
+    >
+      <div className="flex items-center justify-between gap-4">
+        <div className="flex items-center gap-4">
+          <div className="w-12 h-12 rounded-DEFAULT bg-[rgba(214,179,90,0.12)] flex items-center justify-center flex-shrink-0">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#D6B35A" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
+              <rect x="2" y="6" width="20" height="12" rx="2" />
+              <circle cx="12" cy="12" r="3" />
+              <path d="M2 10h2M20 10h2M2 14h2M20 14h2" />
+            </svg>
+          </div>
+          <div>
+            <h3 className="text-base font-bold text-content-0 group-hover:text-brand-gold transition-colors">
+              {t("portfolioBannerTitle")}
+            </h3>
+            <p className="text-sm text-content-2 mt-0.5 max-w-lg">
+              {t("portfolioBannerDesc")}
+            </p>
+          </div>
+        </div>
+        <span className="hidden sm:flex items-center gap-1.5 text-sm font-semibold text-brand-gold flex-shrink-0">
+          {t("portfolioBannerCta")}
+          <svg className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
+            <polyline points="9 18 15 12 9 6" />
+          </svg>
+        </span>
+      </div>
+    </Link>
+  );
 }
 
 function DealersBanner({ locale, t }: DealersBannerProps) {

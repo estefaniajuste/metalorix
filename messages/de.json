@@ -22,7 +22,8 @@
     "learn": "Lernen",
     "changeLanguage": "Sprache ändern",
     "whereToBuy": "Wo Kaufen",
-    "buy": "Kaufen"
+    "buy": "Kaufen",
+    "portfolio": "Portfolio"
   },
   "footer": {
     "prices": "Preise",
@@ -76,6 +77,8 @@
     "heroLink": "Preisalarme per E-Mail",
     "quickMore": "Mehr",
     "viewAllTools": "Alle Tools",
+    "quickPortfolio": "Portfolio",
+    "quickPortfolioDesc": "Bestände in Echtzeit verfolgen",
     "quickRatio": "Gold/Silber-Ratio",
     "quickRatioDesc": "Live-Ratio & Analyse",
     "quickRoi": "ROI-Rechner",
@@ -84,6 +87,9 @@
     "quickConverterDesc": "Preise in 11 Währungen",
     "quickComparator": "Metallvergleich",
     "quickComparatorDesc": "Leistung vergleichen",
+    "portfolioBannerTitle": "Verfolgen Sie Ihr Edelmetall-Portfolio in Echtzeit",
+    "portfolioBannerDesc": "Erfassen Sie Ihre Gold-, Silber- und Platinbestände. Sehen Sie Gesamtwert, Gewinn & Verlust und Aufteilung sofort.",
+    "portfolioBannerCta": "Portfolio Tracker öffnen",
     "dealersBannerTitle": "Wo man Edelmetalle kauft",
     "dealersBannerDesc": "Finden Sie verifizierte Händler und Geschäfte für Gold, Silber und andere Edelmetalle in Ihrem Land.",
     "dealersBannerCta": "Alle Länder anzeigen",
@@ -96,6 +102,7 @@
     "anchorPrices": "Preise",
     "anchorNews": "Nachrichten",
     "anchorTools": "Tools",
+    "anchorPortfolio": "Portfolio",
     "anchorDealers": "Händler"
   },
   "metals": {
@@ -171,7 +178,13 @@
     "portfolioTracker": "Portfolio Tracker",
     "portfolioTrackerDesc": "Verfolge deine Gold-, Silber- und Platinbestände in Echtzeit. Gesamtwert, Gewinn/Verlust und Aufteilung auf einen Blick.",
     "goldWidget": "Goldpreis-Widget",
-    "goldWidgetDesc": "Einbettbare Edelmetallpreise in Echtzeit für deine Website. Kostenlos, anpassbar und immer aktuell."
+    "goldWidgetDesc": "Einbettbare Edelmetallpreise in Echtzeit für deine Website. Kostenlos, anpassbar und immer aktuell.",
+    "faq1Q": "Welche kostenlosen Werkzeuge bietet Metalorix?",
+    "faq1A": "Metalorix bietet DCA-Rechner, Renditesimulator, Gold/Silber-Verhältnis-Tracker, Mehrwährungsrechner, Wirtschaftskalender, Schmuck-Wertrechner, Angst-und-Gier-Index, Portfolio-Tracker und ein einbettbares Preis-Widget — alles kostenlos.",
+    "faq2Q": "Wie genau sind die Preisdaten in diesen Werkzeugen?",
+    "faq2A": "Die Preise stammen von Yahoo Finance, Gold API und Twelve Data mit automatischem Fallback. Die Daten werden alle 60 Sekunden aktualisiert und sind in der Regel nur Sekunden vom Live-Spotmarkt entfernt.",
+    "faq3Q": "Kann ich mein Edelmetall-Portfolio verfolgen?",
+    "faq3A": "Ja. Der Portfolio-Tracker ermöglicht es, Ihre Gold-, Silber- und Platinbestände mit Kaufpreis einzugeben. Er berechnet den Echtzeitwert, Gewinn/Verlust und die Allokationsübersicht."
   },
   "alerts": {
     "title": "Intelligente Preisalarme",
@@ -658,7 +671,15 @@
     "roiCalc": "Renditerechner",
     "roiCalcDesc": "Vergangene Investitionen simulieren",
     "alertsLink": "Preisalarme",
-    "alertsLinkDesc": "E-Mail-Benachrichtigungen erhalten"
+    "alertsLinkDesc": "E-Mail-Benachrichtigungen erhalten",
+    "faq1Q": "Was ist der Gold-Spotpreis?",
+    "faq1A": "Der Spotpreis ist der aktuelle Marktpreis, zu dem Gold sofort gekauft oder verkauft werden kann. Er wird durch den Handel an globalen Börsen wie COMEX und LBMA bestimmt und aktualisiert sich während der Handelszeiten alle paar Sekunden.",
+    "faq2Q": "Welche Faktoren beeinflussen den Goldpreis heute?",
+    "faq2A": "Wichtige Einflussfaktoren sind Zinsentscheidungen der Federal Reserve, die Stärke des US-Dollars, Inflationsdaten (VPI), geopolitische Spannungen, Goldkäufe der Zentralbanken und ETF-Kapitalflüsse.",
+    "faq3Q": "Wie oft wird der Goldpreis auf dieser Seite aktualisiert?",
+    "faq3A": "Der Goldpreis auf dieser Seite wird während der Handelszeiten automatisch alle 60 Sekunden aktualisiert, mit Daten von mehreren Anbietern wie Yahoo Finance und Gold API.",
+    "faq4Q": "Was ist der Unterschied zwischen Spotpreis und Kaufpreis?",
+    "faq4A": "Der Spotpreis ist der Großhandels-Marktpreis. Beim Kauf von physischem Gold bei einem Händler zahlen Sie einen Aufschlag über Spot, der Prägung, Versand und die Händlermarge abdeckt. Aufschläge liegen typischerweise zwischen 3% und 10%."
   },
   "gramPrice": {
     "title": "Goldpreis pro Gramm heute",
@@ -669,7 +690,13 @@
     "howCalculatedP2": "Für die Umrechnung in Euro wird der aktuelle EUR/USD-Wechselkurs angewendet. Der Euro-Preis schwankt sowohl durch den Goldpreis als auch durch den Wechselkurs.",
     "karats": "Karat und Feingehalt",
     "karatsDesc": "Der angezeigte Preis gilt für reines 24-Karat-Gold (999er Feingehalt). Schmuckgold hat in der Regel einen niedrigeren Feingehalt:",
-    "purity": "Feingehalt"
+    "purity": "Feingehalt",
+    "faq1Q": "Wie viel kostet ein Gramm Gold?",
+    "faq1A": "Der Preis pro Gramm Gold ergibt sich aus dem Spotpreis der Feinunze geteilt durch 31,1035 (Gramm pro Feinunze) und der Umrechnung in Ihre Lokalwährung. Diese Seite zeigt die Live-Berechnung.",
+    "faq2Q": "Warum stimmt der Grammpreis nicht mit dem Unzenpreis geteilt durch 28,35 überein?",
+    "faq2A": "Gold verwendet Feinunzen (31,1035 g), keine Standardunzen (28,35 g). Die Feinunze ist etwa 10% schwerer, was den Preisunterschied erklärt.",
+    "faq3Q": "Was ist der Unterschied zwischen 24k, 18k und 14k Goldpreis pro Gramm?",
+    "faq3A": "24k Gold ist 99,9% rein. 18k enthält 75% Gold und kostet etwa 75% des 24k-Preises pro Gramm. 14k enthält 58,3% Gold. Die Karat-Zahl gibt den Anteil reinen Goldes in der Legierung an."
   },
   "ratioPage": {
     "title": "Gold/Silber-Verhältnis heute",
@@ -688,7 +715,13 @@
     "historicalMax": "Allzeithoch",
     "historicalMaxDesc": "März 2020 (COVID-Krise)",
     "historicalMin": "Jüngstes Tief",
-    "historicalMinDesc": "April 2011 (Silber-Rally)"
+    "historicalMinDesc": "April 2011 (Silber-Rally)",
+    "faq1Q": "Was ist das Gold/Silber-Verhältnis?",
+    "faq1A": "Das Gold/Silber-Verhältnis misst, wie viele Unzen Silber nötig sind, um eine Unze Gold zu kaufen. Es wird berechnet, indem der Gold-Spotpreis durch den Silber-Spotpreis geteilt wird.",
+    "faq2Q": "Was bedeutet ein hohes Gold/Silber-Verhältnis?",
+    "faq2A": "Ein Verhältnis über 80 deutet darauf hin, dass Silber im Vergleich zu Gold unterbewertet sein könnte. Historisch gingen solche hohen Werte Perioden voraus, in denen Silber besser abschnitt. Der langfristige Durchschnitt liegt bei etwa 60-65.",
+    "faq3Q": "Wie können Anleger das Gold/Silber-Verhältnis nutzen?",
+    "faq3A": "Manche Anleger wechseln je nach Verhältnis zwischen Gold und Silber: Sie kaufen Silber bei hohem Verhältnis (über 80) und wechseln zu Gold, wenn es unter 60 fällt. Diese Strategie zielt darauf ab, im Laufe der Zeit mehr Unzen anzusammeln."
   },
   "roiCalc": {
     "simulateTitle": "Simulieren Sie Ihre Anlage",
@@ -1244,7 +1277,26 @@
       "verdict": "Klassisch 60 % Aktien / 40 % Anleihen; viele empfehlen, einen Teil der Anleihen durch 5–15 % Gold zu ersetzen, um Diversifikation und Portfoliovolatilität zu verbessern.",
       "performanceTitle": "Historische Performance (orientierend)",
       "performanceText": "Langfristig lag der S&P 500 nominal oft vor Gold; in systemischen Krisen und Inflationsspitzen schnitt Gold oft besser ab. Zahlen sind näherungsweise und periodenabhängig; keine Anlageberatung."
-    }
+    },
+    "dashboard": {
+      "liveTitle": "Live-Dashboard",
+      "loading": "Lade Live-Preise…",
+      "marketCap": "Marktkapitalisierung",
+      "volume": "24h-Volumen",
+      "ratioTitle": "Gold / BTC Verhältnis",
+      "ozGold": "oz Gold",
+      "dominance": "Marktanteil"
+    },
+    "faq1Q": "Ist Gold oder Bitcoin die bessere Anlage?",
+    "faq1A": "Das hängt von Ihren Zielen ab. Gold bietet Stabilität und 5.000 Jahre bewährten Wert. Bitcoin bietet höheres Wachstumspotenzial, aber deutlich mehr Volatilität. Viele Berater empfehlen, beides zu halten.",
+    "faq2Q": "Was ist das Gold-zu-Bitcoin-Verhältnis?",
+    "faq2A": "Das Gold-zu-Bitcoin-Verhältnis zeigt, wie viele Unzen Gold ein Bitcoin kaufen kann. Es schwankt je nach Preisen beider Vermögenswerte und dient zur Bewertung der relativen Bewertung.",
+    "faq3Q": "Ist Bitcoin digitales Gold?",
+    "faq3A": "Bitcoin teilt einige Eigenschaften mit Gold — begrenztes Angebot, Dezentralisierung und Nutzung als Absicherung. Allerdings fehlt ihm Golds jahrtausendealte Erfolgsbilanz und es hat viel höhere Volatilität.",
+    "faq4Q": "Sollte ich zwischen Gold und Bitcoin diversifizieren?",
+    "faq4A": "Viele Finanzberater empfehlen 5–15 % in Gold und 1–5 % in Bitcoin zur Diversifikation. Die genaue Aufteilung hängt von Ihrer Risikotoleranz und Ihrem Anlagehorizont ab.",
+    "faq5Q": "Wie volatil ist Bitcoin im Vergleich zu Gold?",
+    "faq5A": "Bitcoins jährliche Volatilität liegt bei etwa 60–80 %, die von Gold bei etwa 15 %. Das bedeutet, dass Bitcoin in kurzen Zeiträumen viel größere Preisschwankungen in beide Richtungen haben kann."
   },
   "jewelryCalc": {
     "selectMetal": "Metall auswählen",
@@ -1395,7 +1447,13 @@
     "cityDesc": "Edelmetallhändler in {city}, {country}: vertrauenswürdige Geschäfte und Plattformen für Gold, Silber und andere Metalle.",
     "citiesSection": "Nach Stadt durchsuchen",
     "cityBreadcrumb": "Städte",
-    "citySeoKeywords": "Gold kaufen {city}, Edelmetallhändler {city}, Goldgeschäfte {city}"
+    "citySeoKeywords": "Gold kaufen {city}, Edelmetallhändler {city}, Goldgeschäfte {city}",
+    "faq1Q": "Wie wähle ich einen vertrauenswürdigen Edelmetallhändler?",
+    "faq1A": "Achten Sie auf Händler mit Branchenakkreditierung (LBMA, PCGS-autorisiert), transparenter Preisgestaltung mit klaren Aufschlägen über Spot, sicherem Versand und guten Kundenbewertungen.",
+    "faq2Q": "Ist es sicher, Gold online zu kaufen?",
+    "faq2A": "Ja, der Kauf bei etablierten Online-Händlern ist in der Regel sicher und oft günstiger als lokale Geschäfte. Stellen Sie sicher, dass der Händler versicherten Versand, sichere Zahlung und klare Rückgaberichtlinien bietet.",
+    "faq3Q": "Was sollte ich vor dem Kauf von physischem Gold prüfen?",
+    "faq3A": "Prüfen Sie den Ruf des Händlers, vergleichen Sie Aufschläge über Spot bei mehreren Anbietern, prüfen Sie Versandkosten und Versicherung, verstehen Sie die Rückkaufpolitik und bestätigen Sie die Echtheitszertifizierung des Produkts."
   },
   "search": {
     "placeholder": "Artikel, Tools, Produkte suchen...",

@@ -10,9 +10,11 @@ export async function generateMetadata({
 }) {
   const { locale } = params;
   const t = await getTranslations({ locale, namespace: "press" });
+  const rawDesc = t("metaDescription");
+  const metaDescription = rawDesc.length > 155 ? rawDesc.slice(0, rawDesc.slice(0, 155).lastIndexOf(" ")) : rawDesc;
   return {
     title: `${t("title")} — Metalorix`,
-    description: t("metaDescription"),
+    description: metaDescription,
     robots: { index: true, follow: true },
     alternates: getAlternates(locale, "/prensa"),
   };

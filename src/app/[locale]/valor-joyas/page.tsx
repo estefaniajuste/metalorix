@@ -17,9 +17,11 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = params;
   const t = await getTranslations({ locale, namespace: "jewelryPage" });
+  const rawDesc = t("metaDesc");
+  const metaDesc = rawDesc.length > 155 ? rawDesc.slice(0, rawDesc.slice(0, 155).lastIndexOf(" ")) : rawDesc;
   return {
     title: t("metaTitle"),
-    description: t("metaDesc"),
+    description: metaDesc,
     keywords: locale === "es"
       ? ["cuanto vale mi oro", "valor joyas oro", "calculadora oro quilates", "precio oro 18 quilates gramo", "valor anillo oro", "calcular valor oro", "precio gramo oro 9k 14k 18k 22k 24k", "cuanto vale una joya de plata", "valor joyas plata 925"]
       : locale === "de"

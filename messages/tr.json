@@ -76,6 +76,8 @@
     "heroLink": "E-posta ile fiyat uyarıları",
     "quickMore": "Daha fazla",
     "viewAllTools": "Tüm araçlar",
+    "quickPortfolio": "Portföy",
+    "quickPortfolioDesc": "Varlıklarınızı gerçek zamanlı takip edin",
     "quickRatio": "Altın/Gümüş Oranı",
     "quickRatioDesc": "Canlı oran ve analiz",
     "quickRoi": "ROI Hesaplayıcı",
@@ -84,6 +86,9 @@
     "quickConverterDesc": "11 para biriminde fiyatlar",
     "quickComparator": "Metal Karşılaştırıcı",
     "quickComparatorDesc": "Performansı karşılaştır",
+    "portfolioBannerTitle": "Metal portföyünüzü gerçek zamanlı takip edin",
+    "portfolioBannerDesc": "Altın, gümüş ve platin varlıklarınızı kaydedin. Toplam değer, kar & zarar ve dağılımı anında görün.",
+    "portfolioBannerCta": "Portföy Takipçisini Aç",
     "dealersBannerTitle": "Fiziksel Kıymetli Maden Nerede Alınır",
     "dealersBannerDesc": "Ülkenizdeki altın, gümüş ve diğer kıymetli metalleri satın almak için doğrulanmış bayiler ve mağazalar bulun.",
     "dealersBannerCta": "Tüm ülkeleri görüntüle",
@@ -96,6 +101,7 @@
     "anchorPrices": "Fiyatlar",
     "anchorNews": "Haberler",
     "anchorTools": "Araçlar",
+    "anchorPortfolio": "Portföy",
     "anchorDealers": "Bayiler"
   },
   "metals": {
@@ -171,7 +177,13 @@
     "portfolioTracker": "Portföy Takibi",
     "portfolioTrackerDesc": "Altın, gümüş ve platin varlıklarınızı gerçek zamanlı olarak takip edin. Toplam değer, kâr/zarar ve dağılımı görün.",
     "goldWidget": "Altın Fiyat Widget'ı",
-    "goldWidgetDesc": "Web sitenize canlı kıymetli maden fiyatları ekleyin. Ücretsiz, özelleştirilebilir ve her zaman güncel."
+    "goldWidgetDesc": "Web sitenize canlı kıymetli maden fiyatları ekleyin. Ücretsiz, özelleştirilebilir ve her zaman güncel.",
+    "faq1Q": "Metalorix hangi ücretsiz araçları sunuyor?",
+    "faq1A": "Metalorix; DCA hesaplayıcı, getiri simülatörü, altın/gümüş oranı takipçisi, çoklu döviz çevirici, ekonomik takvim, mücevher değer hesaplayıcı, korku ve açgözlülük endeksi, portföy takipçisi ve gömülebilir fiyat widget'ı sunar — hepsi ücretsiz.",
+    "faq2Q": "Bu araçlardaki fiyat verileri ne kadar doğru?",
+    "faq2A": "Fiyatlar Yahoo Finance, Gold API ve Twelve Data'dan otomatik yedeklemeyle sağlanır. Veriler her 60 saniyede güncellenir ve genellikle canlı spot piyasadan saniyeler uzaktadır.",
+    "faq3Q": "Kıymetli maden portföyümü takip edebilir miyim?",
+    "faq3A": "Evet. Portföy Takipçisi, altın, gümüş ve platin varlıklarınızı alış fiyatıyla eklemenize olanak tanır. Gerçek zamanlı değer, kâr/zarar ve dağılım hesaplar."
   },
   "alerts": {
     "title": "Akıllı fiyat uyarıları",
@@ -672,7 +684,15 @@
     "roiCalc": "Getiri hesaplayıcı",
     "roiCalcDesc": "Geçmiş yatırımları simüle edin",
     "alertsLink": "Fiyat uyarıları",
-    "alertsLinkDesc": "E-posta bildirimleri alın"
+    "alertsLinkDesc": "E-posta bildirimleri alın",
+    "faq1Q": "Altın spot fiyatı nedir?",
+    "faq1A": "Spot fiyat, altının anında teslim için alınıp satılabileceği güncel piyasa fiyatıdır. COMEX ve LBMA gibi küresel borsalardaki işlemlerle belirlenir ve piyasa saatlerinde birkaç saniyede bir güncellenir.",
+    "faq2Q": "Bugün altın fiyatını hangi faktörler etkiliyor?",
+    "faq2A": "Temel etkenler arasında Federal Rezerv faiz kararları, ABD doları gücü, enflasyon verileri (TÜFE), jeopolitik gerilimler, merkez bankası altın alımları ve ETF fon akışları yer alır.",
+    "faq3Q": "Bu sayfadaki altın fiyatı ne sıklıkla güncellenir?",
+    "faq3A": "Bu sayfadaki altın fiyatı, piyasa saatlerinde Yahoo Finance ve Gold API dahil birden fazla sağlayıcıdan alınan verilerle her 60 saniyede otomatik olarak güncellenir.",
+    "faq4Q": "Spot fiyat ile satış fiyatı arasındaki fark nedir?",
+    "faq4A": "Spot fiyat toptan piyasa fiyatıdır. Fiziksel altın satın aldığınızda, basım, kargo ve bayi marjını kapsayan spot üzeri bir prim ödersiniz. Primler ürüne göre genellikle %3 ile %10 arasında değişir."
   },
   "gramPrice": {
     "title": "Bugün gram altın fiyatı",
@@ -683,7 +703,13 @@
     "howCalculatedP2": "Euro'ya çevirmek için güncel EUR/USD kuru uygulanır. Euro cinsinden fiyat hem altın fiyatından hem de döviz kurundan etkilenir.",
     "karats": "Karat ve saflık",
     "karatsDesc": "Gösterilen fiyat saf 24 ayar altın (999 milyem) içindir. Kuyumculuk altını genellikle daha düşük saflıktadır:",
-    "purity": "saflık"
+    "purity": "saflık",
+    "faq1Q": "Bir gram altın ne kadar?",
+    "faq1A": "Bir gram altının fiyatı, troy ons spot fiyatının 31,1035'e (troy ons başına gram) bölünmesi ve yerel para biriminize çevrilmesiyle hesaplanır.",
+    "faq2Q": "Gram fiyatı neden ons fiyatının 28,35'e bölümüyle uyuşmuyor?",
+    "faq2A": "Altın, standart ons (28,35 g) yerine troy ons (31,1035 g) kullanır. Troy ons yaklaşık %10 daha ağırdır, bu da fiyat farkını açıklar.",
+    "faq3Q": "24 ayar, 18 ayar ve 14 ayar altın gram fiyatı arasındaki fark nedir?",
+    "faq3A": "24 ayar altın %99,9 saftır. 18 ayar %75 altın içerir ve gram başına 24 ayar fiyatının yaklaşık %75'ine mal olur. 14 ayar %58,3 altın içerir."
   },
   "ratioPage": {
     "title": "Altın/Gümüş Oranı bugün",
@@ -702,7 +728,13 @@
     "historicalMax": "Tüm zamanların en yükseği",
     "historicalMaxDesc": "Mart 2020 (COVID krizi)",
     "historicalMin": "Son dönem en düşüğü",
-    "historicalMinDesc": "Nisan 2011 (gümüş rallisi)"
+    "historicalMinDesc": "Nisan 2011 (gümüş rallisi)",
+    "faq1Q": "Altın/gümüş oranı nedir?",
+    "faq1A": "Altın/gümüş oranı, bir ons altın almak için kaç ons gümüş gerektiğini ölçer. Altın spot fiyatının gümüş spot fiyatına bölünmesiyle hesaplanır.",
+    "faq2Q": "Yüksek altın/gümüş oranı ne anlama gelir?",
+    "faq2A": "80'in üzerindeki bir oran, gümüşün altına göre değerinin düşük olabileceğini gösterir. Tarihsel olarak bu kadar yüksek oranlar, gümüşün daha iyi performans gösterdiği dönemlerin habercisi olmuştur.",
+    "faq3Q": "Yatırımcılar altın/gümüş oranını nasıl kullanabilir?",
+    "faq3A": "Bazı yatırımcılar orana göre altın ve gümüş arasında geçiş yapar: oran yüksekken (80'in üzerinde) gümüş alır, 60'ın altına düştüğünde altına geçer."
   },
   "roiCalc": {
     "simulateTitle": "Yatırımınızı simüle edin",
@@ -1258,7 +1290,26 @@
       "verdict": "Klasik dağılım %60 hisse / %40 tahvil; birçok danışman tahvilin bir kısmını %5-15 altınla değiştirmeyi önerir—çeşitlendirme ve volatilite için.",
       "performanceTitle": "Tarihsel performans (özet)",
       "performanceText": "Uzun vadede S&P 500 çoğu zaman nominal olarak altını geçer; sistemik krizlerde ve enflasyon sıçramalarında altın daha iyi olabilir. Rakamlar yaklaşık ve döneme bağlıdır; yatırım tavsiyesi değildir."
-    }
+    },
+    "dashboard": {
+      "liveTitle": "Canlı Gösterge Paneli",
+      "loading": "Canlı fiyatlar yükleniyor…",
+      "marketCap": "Piyasa değeri",
+      "volume": "24s hacim",
+      "ratioTitle": "Altın / BTC Oranı",
+      "ozGold": "ons Altın",
+      "dominance": "Piyasa payı"
+    },
+    "faq1Q": "Altın mı yoksa Bitcoin mi daha iyi bir yatırım?",
+    "faq1A": "Hedeflerinize bağlı. Altın istikrar ve 5.000 yıllık kanıtlanmış değer sunar. Bitcoin daha yüksek büyüme potansiyeli sunar ancak çok daha fazla oynaklığa sahiptir. Birçok danışman ikisini de tutmayı önerir.",
+    "faq2Q": "Altın/Bitcoin oranı nedir?",
+    "faq2A": "Altın/Bitcoin oranı bir Bitcoin'in kaç ons altın alabileceğini gösterir. Her iki varlığın fiyatlarına göre dalgalanır ve aralarındaki göreceli değerlendirmeyi ölçmek için kullanılır.",
+    "faq3Q": "Bitcoin dijital altın mı?",
+    "faq3A": "Bitcoin, altınla bazı özellikleri paylaşır — sınırlı arz, merkeziyetsizlik ve koruma aracı olarak kullanım. Ancak altının binlerce yıllık geçmişi yoktur ve çok daha yüksek oynaklığa sahiptir.",
+    "faq4Q": "Altın ve Bitcoin arasında çeşitlendirmeli miyim?",
+    "faq4A": "Birçok finans danışmanı çeşitlendirme için %5–15 altın ve %1–5 Bitcoin tahsis etmeyi önerir. Tam oran risk toleransınıza ve yatırım ufkunuza bağlıdır.",
+    "faq5Q": "Bitcoin altına kıyasla ne kadar oynak?",
+    "faq5A": "Bitcoin'in yıllık oynaklığı yaklaşık %60–80 iken altının yaklaşık %15'tir. Bu, Bitcoin'in kısa dönemlerde her iki yönde çok daha büyük fiyat dalgalanmaları yaşayabileceği anlamına gelir."
   },
   "jewelryCalc": {
     "selectMetal": "Metal seçin",
@@ -1409,7 +1460,13 @@
     "cityDesc": "{city}, {country}'deki kıymetli maden satıcıları: altın, gümüş ve diğer metalleri satın almak için güvenilir mağazalar ve platformlar.",
     "citiesSection": "Şehre göre gözat",
     "cityBreadcrumb": "Şehirler",
-    "citySeoKeywords": "{city}'de altın satın al,{city} kıymetli maden satıcıları,{city} altın mağazaları"
+    "citySeoKeywords": "{city}'de altın satın al,{city} kıymetli maden satıcıları,{city} altın mağazaları",
+    "faq1Q": "Güvenilir bir kıymetli maden satıcısını nasıl seçerim?",
+    "faq1A": "Sektör akreditasyonu (LBMA, PCGS yetkili), spot üzeri şeffaf fiyatlandırma, güvenli kargo ve güçlü müşteri değerlendirmelerine sahip satıcıları arayın.",
+    "faq2Q": "Online altın satın almak güvenli mi?",
+    "faq2A": "Evet, köklü online satıcılardan satın almak genellikle güvenlidir ve düşük işletme maliyetleri nedeniyle yerel mağazalardan daha ucuz olabilir. Sigortalı kargo, güvenli ödeme ve net iade politikası sunduklarından emin olun.",
+    "faq3Q": "Fiziksel altın satın almadan önce neleri kontrol etmeliyim?",
+    "faq3A": "Satıcının itibarını doğrulayın, birden fazla satıcıda spot üzeri primleri karşılaştırın, kargo ve sigorta maliyetlerini kontrol edin, geri alım politikasını anlayın ve ürünün orijinallik sertifikasını onaylayın."
   },
   "search": {
     "placeholder": "Makale, araç, ürün ara...",

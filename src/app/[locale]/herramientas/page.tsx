@@ -2,7 +2,7 @@ import dynamic from "next/dynamic";
 import { Link } from "@/i18n/navigation";
 import { getTranslations, getLocale } from "next-intl/server";
 import { getAlternates } from "@/lib/seo/alternates";
-import { breadcrumbSchema, softwareAppSchema } from "@/lib/seo/schemas";
+import { breadcrumbSchema, softwareAppSchema, faqSchema } from "@/lib/seo/schemas";
 
 const toolSkeleton = (h = "h-[300px]") => (
   <div className={`w-full ${h} bg-surface-1 border border-border rounded-DEFAULT animate-shimmer`} />
@@ -148,11 +148,17 @@ export default async function HerramientasPage() {
     path: "/herramientas",
     locale,
   });
+  const faq = faqSchema([
+    { question: t("faq1Q"), answer: t("faq1A") },
+    { question: t("faq2Q"), answer: t("faq2A") },
+    { question: t("faq3Q"), answer: t("faq3A") },
+  ]);
 
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumb) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(appSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faq) }} />
       <section className="py-[var(--section-py)]">
         <div className="mx-auto max-w-[1200px] px-6">
           <h1 className="text-3xl sm:text-4xl font-extrabold text-content-0 tracking-tight mb-3">

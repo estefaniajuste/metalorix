@@ -20,12 +20,14 @@ export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations({ locale, namespace: "learnSection" });
   const alternates = getAlternates(locale, "/learn");
 
+  const rawDesc = t("description");
+  const description = rawDesc.length > 155 ? rawDesc.slice(0, rawDesc.slice(0, 155).lastIndexOf(" ")) : rawDesc;
   return {
     title: `${t("title")} — Metalorix`,
-    description: t("description"),
+    description,
     openGraph: {
       title: `${t("title")} — Metalorix`,
-      description: t("description"),
+      description,
       url: alternates.canonical,
     },
     alternates,

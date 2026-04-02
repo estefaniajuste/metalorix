@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { Link } from "@/i18n/navigation";
-import { getTranslations } from "next-intl/server";
+import { getTranslations, getLocale } from "next-intl/server";
 import { getAlternates } from "@/lib/seo/alternates";
+import { breadcrumbSchema, faqSchema } from "@/lib/seo/schemas";
 import { GramPriceContent } from "@/components/seo/GramPriceContent";
 
 export async function generateMetadata({
@@ -11,9 +12,11 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = params;
   const t = await getTranslations({ locale, namespace: "pages" });
+  const rawDesc = t("precioGramoOro.description");
+  const description = rawDesc.length > 155 ? rawDesc.slice(0, rawDesc.slice(0, 155).lastIndexOf(" ")) : rawDesc;
   return {
     title: t("precioGramoOro.title"),
-    description: t("precioGramoOro.description"),
+    description,
     keywords: locale === "es"
       ? ["precio gramo oro", "precio gramo oro hoy", "precio gramo oro euros", "cuanto vale un gramo de oro", "precio gramo oro 18 kilates", "precio gramo oro 24 kilates", "valor gramo oro", "cotización gramo oro"]
       : ["gold price per gram", "gold price per gram today", "gold gram price euros", "how much is a gram of gold", "18 karat gold gram price", "24 karat gold gram price", "gold gram value"],
@@ -30,8 +33,23 @@ export async function generateMetadata({
 export default async function PrecioGramoOroPage() {
   const t = await getTranslations("gramPrice");
   const tc = await getTranslations("common");
+  const locale = await getLocale();
+
+  const bc = breadcrumbSchema(
+    [{ name: t("breadcrumb"), path: "/precio-gramo-oro" }],
+    tc("breadcrumbHome"),
+    locale,
+  );
+  const faq = faqSchema([
+    { question: t("faq1Q"), answer: t("faq1A") },
+    { question: t("faq2Q"), answer: t("faq2A") },
+    { question: t("faq3Q"), answer: t("faq3A") },
+  ]);
 
   return (
+    <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(bc) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faq) }} />
     <section className="py-[var(--section-py)]">
       <div className="mx-auto max-w-[1200px] px-6">
         <nav className="text-sm text-content-3 mb-6" aria-label={tc("breadcrumbNav")}>
@@ -91,5 +109,6 @@ export default async function PrecioGramoOroPage() {
         </div>
       </div>
     </section>
+    </>
   );
 }

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Link } from "@/i18n/navigation";
 import { getTranslations, getLocale } from "next-intl/server";
 import { GoldSilverRatioContent } from "@/components/ratio/GoldSilverRatioContent";
-import { breadcrumbSchema, webPageSchema } from "@/lib/seo/schemas";
+import { breadcrumbSchema, webPageSchema, faqSchema } from "@/lib/seo/schemas";
 import { getAlternates } from "@/lib/seo/alternates";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -42,6 +42,11 @@ export default async function RatioOroPlataPage() {
     path: "/ratio-oro-plata",
     locale,
   });
+  const faq = faqSchema([
+    { question: t("faq1Q"), answer: t("faq1A") },
+    { question: t("faq2Q"), answer: t("faq2A") },
+    { question: t("faq3Q"), answer: t("faq3A") },
+  ]);
 
   const zones = [
     {
@@ -83,6 +88,7 @@ export default async function RatioOroPlataPage() {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(bc) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(page) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faq) }} />
 
       <section className="py-[var(--section-py)]">
         <div className="mx-auto max-w-[1200px] px-6">

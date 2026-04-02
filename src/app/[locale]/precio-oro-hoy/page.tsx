@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { Link } from "@/i18n/navigation";
-import { getTranslations } from "next-intl/server";
+import { getTranslations, getLocale } from "next-intl/server";
 import { getAlternates } from "@/lib/seo/alternates";
+import { breadcrumbSchema, faqSchema } from "@/lib/seo/schemas";
 import { MetalPageContent } from "@/components/dashboard/MetalPageContent";
 
 export async function generateMetadata({
@@ -11,9 +12,11 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = params;
   const t = await getTranslations({ locale, namespace: "pages" });
+  const rawDesc = t("precioOroHoy.description");
+  const description = rawDesc.length > 155 ? rawDesc.slice(0, rawDesc.slice(0, 155).lastIndexOf(" ")) : rawDesc;
   return {
     title: t("precioOroHoy.title"),
-    description: t("precioOroHoy.description"),
+    description,
     keywords: locale === "es"
       ? ["precio oro hoy", "cotización oro hoy", "precio oro tiempo real", "gold price today", "xau usd hoy", "precio onza oro hoy", "valor del oro hoy"]
       : ["gold price today", "gold quote today", "gold price real time", "xau usd today", "gold ounce price today", "gold value today"],
@@ -30,6 +33,19 @@ export async function generateMetadata({
 export default async function PrecioOroHoyPage() {
   const t = await getTranslations("goldToday");
   const tc = await getTranslations("common");
+  const locale = await getLocale();
+
+  const bc = breadcrumbSchema(
+    [{ name: t("breadcrumb"), path: "/precio-oro-hoy" }],
+    tc("breadcrumbHome"),
+    locale,
+  );
+  const faq = faqSchema([
+    { question: t("faq1Q"), answer: t("faq1A") },
+    { question: t("faq2Q"), answer: t("faq2A") },
+    { question: t("faq3Q"), answer: t("faq3A") },
+    { question: t("faq4Q"), answer: t("faq4A") },
+  ]);
 
   const bulletItems = [
     t("fedDecisions"),
@@ -49,6 +65,9 @@ export default async function PrecioOroHoyPage() {
   ];
 
   return (
+    <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(bc) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faq) }} />
     <section className="py-[var(--section-py)]">
       <div className="mx-auto max-w-[1200px] px-6">
         <nav className="text-sm text-content-3 mb-6" aria-label={tc("breadcrumbNav")}>
@@ -110,5 +129,6 @@ export default async function PrecioOroHoyPage() {
         </div>
       </div>
     </section>
+    </>
   );
 }
