@@ -66,7 +66,7 @@ Si cualquiera falla, **alertar al usuario inmediatamente**.
 | XML del sitemap | `GET /api/sitemap` → `src/app/api/sitemap/route.ts` |
 | Datos dinámicos (DB) | `GET /api/sitemap-urls` → JSON consumido por el sitemap vía `fetch(NEXT_PUBLIC_URL)` |
 | robots | `src/app/robots.ts` — `Sitemap: https://metalorix.com/api/sitemap`, `Allow` explícitos para `/api/sitemap` y `/api/feed` |
-| Compatibilidad | `src/middleware.ts` — `302` de `/sitemap.xml` y `/feed.xml` hacia las rutas API |
+| Compatibilidad | `src/middleware.ts` — `301` de `/sitemap.xml` (y `/sitemap_index.xml`) hacia `/api/sitemap`; `302` de `/feed.xml` hacia `/api/feed` |
 | Pings buscadores | `src/lib/seo/ping.ts` — URL del sitemap `https://metalorix.com/api/sitemap` |
 | Glosario en sitemap | `item.type === "glossary"` en `sitemap/route.ts` (paths `/{locale}/.../glossary/{slug}`) |
 | CI post-deploy | `.github/workflows/deploy-cloud-run.yml` — smoke: `/api/sitemap` 200 + XML, robots con `Sitemap`, **fetch a la URL exacta declarada en robots.txt**, home |
@@ -78,13 +78,13 @@ Si cualquiera falla, **alertar al usuario inmediatamente**.
 ```bash
 curl -s https://metalorix.com/robots.txt | grep Sitemap   # debe ser .../api/sitemap
 curl -s -o /dev/null -w "%{http_code}\n" https://metalorix.com/api/sitemap  # 200
-curl -sI https://metalorix.com/sitemap.xml | grep -E "HTTP|location"  # 302 → /api/sitemap
+curl -sI https://metalorix.com/sitemap.xml | grep -E "HTTP|location"  # 301 → /api/sitemap
 ```
 
 **Pendiente / seguimiento (no bloquea el sitemap):**
 
 - **Manual GSC:** re-enviar sitemap `https://metalorix.com/api/sitemap` y solicitar indexación de URLs destino donde había 301 antiguos (ver secciones GSC más abajo en este archivo).
-- **Opcional técnico:** valorar `301` permanente en `/sitemap.xml` en lugar de `302`; alinear `atom:link rel="self"` del RSS (`src/app/api/feed/route.ts`) con `/api/feed` si se quiere coherencia total con el redirect de `/feed.xml`.
+- **Opcional técnico:** alinear `atom:link rel="self"` del RSS (`src/app/api/feed/route.ts`) con `/api/feed` si se quiere coherencia total con el redirect de `/feed.xml`; valorar `301` en `/feed.xml` para igualar el patrón del sitemap.
 - **Rutas nuevas:** al añadir páginas de marketing, incluirlas en `PATHNAMES`/`FREQ_PRIO` de `src/app/api/sitemap/route.ts` (y datos en DB vía `sitemap-urls` si aplica).
 - **Límite:** sitemap ~1063 URLs — por debajo del límite de 50k de Google; si crece mucho, valorar sitemap index.
 
