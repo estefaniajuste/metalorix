@@ -88,6 +88,33 @@ curl -sI https://metalorix.com/sitemap.xml | grep -E "HTTP|location"  # 301 → 
 - **Rutas nuevas:** al añadir páginas de marketing, incluirlas en `PATHNAMES`/`FREQ_PRIO` de `src/app/api/sitemap/route.ts` (y datos en DB vía `sitemap-urls` si aplica).
 - **Límite:** sitemap ~1063 URLs — por debajo del límite de 50k de Google; si crece mucho, valorar sitemap index.
 
+### Memoria al cerrar conversación (abril 2026)
+
+**Ya hecho (no reabrir como bug):**
+
+- Sitemap estable en **`/api/sitemap`**; **`robots.txt`** declara `Sitemap: https://metalorix.com/api/sitemap`.
+- **`/sitemap.xml`** → redirección **301** a `/api/sitemap` (ver `middleware.ts`); feed: **`/feed.xml` → `/api/feed`** (302 en middleware).
+- Contenido dinámico vía **`/api/sitemap-urls`** + `fetch(NEXT_PUBLIC_URL)`; soporte **`glossary`** en el XML.
+- **CI:** `deploy-cloud-run.yml` valida sitemap 200 + XML y la URL exacta del `Sitemap:` en robots tras cada deploy.
+- **Docs:** `AGENTS.md` alineado con redirect 301 del sitemap (commit docs p. ej. `e3b1f94`); **no hubo instrumentación de debug** en código en esa línea de trabajo.
+- Reglas Cursor: `seo-disabled.mdc`, `production-verification.mdc` (verificar producción con curl antes de afirmar que “funciona”).
+
+**Pendiente / siguiente paso (recordatorio):**
+
+| Área | Qué hacer |
+|------|-----------|
+| **GSC (manual)** | Re-enviar sitemap `https://metalorix.com/api/sitemap`; inspeccionar y pedir indexación de URLs **destino** donde antes había 301 (cluster/learn antiguos). |
+| **Opcional código** | RSS: `atom:link rel="self"` en `api/feed/route.ts` aún puede decir `feed.xml`; alinear con realidad (`/api/feed`) si se desea; valorar **301** para `/feed.xml` como el sitemap. |
+| **Nuevas rutas** | Añadir a `PATHNAMES`/`FREQ_PRIO` en `api/sitemap/route.ts` y a `sitemap-urls` si es contenido de DB. |
+| **Backlog producto** | Ver más abajo en este mismo archivo: alertas técnicas, marketplace pospuesto, dealers/outreach, CTR/learn titles, etc. |
+
+**Verificación de un minuto:**
+
+```bash
+curl -s https://metalorix.com/robots.txt | grep -i '^Sitemap:'
+curl -s -o /dev/null -w "%{http_code}\n" https://metalorix.com/api/sitemap
+```
+
 ---
 
 ## URLs/slugs SIEMPRE en el idioma del contenido
