@@ -356,6 +356,48 @@ Las queries con más volumen global (datos de Ahrefs/SimilarWeb):
 13. **Display ads (AdSense)** — Esperar >5K visitas/día.
 14. **Afiliados crypto** — Links a Binance/Coinbase desde dashboard BTC.
 
+### ✅ UX Overhaul — IMPLEMENTADO (marzo 2026)
+
+**Estado:** En producción. Commit `195002a`, deploy verificado.
+
+**Lo que se construyó (9 mejoras):**
+
+1. **Búsqueda global (Ctrl+K)**
+   - `src/app/api/search/route.ts` — API que busca en artículos, learn, productos y herramientas (DB + estáticos)
+   - `src/components/layout/SearchModal.tsx` — Modal command-palette con debounce, resultados agrupados por tipo
+   - Integrado en `Nav.tsx`
+
+2. **Nav reorganizada**
+   - Noticias movido fuera del dropdown "Aprender" a item top-level independiente
+   - `src/components/layout/Nav.tsx` — desktop y mobile actualizados
+
+3. **Filtros y paginación en Noticias**
+   - `src/components/news/NewsFilters.tsx` — Filtros por categoría (diario/semanal/evento) y por metal + paginación 12/página
+   - `src/app/[locale]/noticias/page.tsx` — Server fetch 100 artículos, client filtering
+
+4. **Ordenación de productos**
+   - `src/components/products/ProductFilter.tsx` — Sort por pureza, peso, liquidez
+   - Dropdown integrado en la barra de filtros existente
+
+5. **Comparación de productos (2-3 lado a lado)**
+   - `src/components/products/ProductCompare.tsx` — Tabla comparativa que resalta diferencias
+   - `src/components/products/ProductFilter.tsx` — Modo "Compare" con selección visual y barra flotante
+
+6. **Hub de herramientas como index de cards**
+   - `src/app/[locale]/herramientas/page.tsx` — Grid de cards con links a páginas individuales; DCA e Indicadores Técnicos embebidos abajo
+
+7. **Auto-login tras suscripción**
+   - `src/app/api/alerts/subscribe/route.ts` — Seta cookie `metalorix_session` automáticamente al suscribirse
+
+8. **Preferencias de usuario y favoritos**
+   - `src/components/panel/UserPanel.tsx` — Divisa y unidad por defecto (localStorage) + metales favoritos con estrellas
+
+9. **Navegación anchor en homepage mobile**
+   - `src/components/dashboard/MobileSectionNav.tsx` — Barra flotante fija abajo para saltar entre secciones
+   - `src/components/dashboard/HomePreview.tsx` + `src/app/[locale]/page.tsx` — IDs de sección añadidos
+
+**Traducciones:** Actualizadas en los 7 locales (es, en, de, tr, ar, zh, hi) — namespaces `search`, `news`, `productFilter`, `userPanel`, `home`.
+
 ### Errores técnicos encontrados (abril 2026)
 
 1. **~50 URLs en GSC con 301 redirect** — Google indexó URLs con cluster slugs antiguos/extranjeros. Los 301 están correctos pero Google aún muestra las URLs viejas en SERPs. **Requiere acción manual del usuario en GSC.**
