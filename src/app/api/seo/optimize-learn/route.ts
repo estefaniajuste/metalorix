@@ -656,7 +656,7 @@ const OPTIMIZED_METADATA: {
     locale: "en",
     seoTitle: "Silver Volatility: Why Silver Swings More Than Gold",
     metaDescription:
-      "Silver is 1.5x more volatile than gold, with 25-35% annualized moves vs gold's 15-20%. The market structure, industrial demand, and thin liquidity that drive it.",
+      "Silver is 1.5x more volatile than gold with 25-35% annualized moves. Market structure, industrial demand, and thin liquidity that drive it.",
   },
   {
     slug: "silver-photography-demand-decline",
@@ -688,7 +688,7 @@ const OPTIMIZED_METADATA: {
     ],
   },
   {
-    slug: "gold-price-in-japanese-yen-all-time-highs-and-the-weak-yen-story",
+    slug: "gold-price-in-yen",
     locale: "en",
     seoTitle: "Gold Price in Japanese Yen: Record Highs & Weak Yen",
     metaDescription:
@@ -702,7 +702,7 @@ const OPTIMIZED_METADATA: {
       "China's central bank added 300+ tonnes of gold in 2023-2024, the biggest buying spree in decades. Dedollarization, reserves strategy, and impact on prices.",
   },
   {
-    slug: "segregated-vs-commingled-storage-whats-the-difference",
+    slug: "segregated-vs-commingled-storage",
     locale: "en",
     seoTitle: "Segregated vs Commingled Gold Storage Explained",
     metaDescription:
