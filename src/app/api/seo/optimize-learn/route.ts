@@ -627,6 +627,163 @@ const OPTIMIZED_METADATA: {
     ],
   },
 
+  // ───────── NEW BATCH: High-impression pages from GSC March 2026 ─────────
+  {
+    slug: "above-ground-gold-stock",
+    locale: "en",
+    seoTitle: "Total Above-Ground Gold Stock [2026]: Tonnes & Value",
+    metaDescription:
+      "The world holds ~212,000 tonnes of above-ground gold worth over $16 trillion in 2026. Breakdown by jewelry, central banks, ETFs, and industrial use.",
+    faq: [
+      { question: "How much gold has been mined in total?", answer: "As of 2026, approximately 212,000 tonnes of gold have been mined throughout history. This would form a cube roughly 22 meters on each side." },
+      { question: "What is the total value of all above-ground gold?", answer: "At current 2026 prices, the total above-ground gold stock is worth over $16 trillion — roughly the GDP of the European Union." },
+      { question: "How much new gold is mined each year?", answer: "Annual gold mine production is approximately 3,500-3,700 tonnes, adding about 1.5-2% to the existing above-ground stock each year." },
+    ],
+  },
+  {
+    slug: "platinum-supply-constraints",
+    locale: "en",
+    seoTitle: "Platinum Supply Risk: South Africa's 70% Dominance",
+    metaDescription:
+      "South Africa produces ~70% of global platinum, creating massive supply concentration risk. Geopolitical factors, mine disruptions, and what it means for prices.",
+    faq: [
+      { question: "Why is platinum supply so concentrated?", answer: "The Bushveld Complex in South Africa contains roughly 70% of known platinum reserves. Russia's Norilsk region holds another ~12%. This concentration creates significant geopolitical supply risk." },
+      { question: "What disrupts platinum supply?", answer: "South African mine strikes, power outages (Eskom), regulatory changes, and declining ore grades all affect supply. The 2014 five-month strike cut production by over 1 million ounces." },
+    ],
+  },
+  {
+    slug: "silver-volatility",
+    locale: "en",
+    seoTitle: "Silver Volatility: Why Silver Swings More Than Gold",
+    metaDescription:
+      "Silver is 1.5x more volatile than gold, with 25-35% annualized moves vs gold's 15-20%. The market structure, industrial demand, and thin liquidity that drive it.",
+  },
+  {
+    slug: "silver-photography-demand-decline",
+    locale: "en",
+    seoTitle: "Silver in Photography: Rise, Peak & Digital Decline",
+    metaDescription:
+      "Photography once consumed 25% of silver supply. Digital cameras killed that demand from ~6,000 tonnes/year in 1999 to under 1,000 today. The full timeline.",
+  },
+  {
+    slug: "vat-on-silver-in-europe",
+    locale: "en",
+    seoTitle: "VAT on Silver in Europe: Country-by-Country [2026]",
+    metaDescription:
+      "Unlike gold, silver is NOT VAT-exempt in the EU. Rates range from 0% (Estonia, Poland margin scheme) to 27% (Hungary). Full country-by-country silver VAT guide.",
+    faq: [
+      { question: "Is silver VAT-free in Europe?", answer: "No. Unlike investment gold, silver bullion is subject to VAT in most EU countries. Standard VAT rates apply (19-27%), though some countries offer margin schemes or exemptions for investment-grade coins." },
+      { question: "Which European country has the lowest VAT on silver?", answer: "Estonia (0% on investment silver coins) and Poland (margin scheme available) offer the lowest effective rates. Germany applies 19% but some dealers use the differential taxation scheme." },
+    ],
+  },
+  {
+    slug: "gold-during-2020-pandemic",
+    locale: "en",
+    seoTitle: "Gold During COVID-19: 2020 Performance & Lessons",
+    metaDescription:
+      "Gold hit $2,075/oz in August 2020 — a 25% gain during the pandemic. The March crash, recovery rally, and why gold outperformed most assets in COVID.",
+    faq: [
+      { question: "Did gold go up during COVID-19?", answer: "Yes. Gold rose ~25% in 2020, hitting an all-time high of $2,075/oz in August. After a brief dip in March 2020 (liquidity crisis), gold rallied sharply on massive monetary stimulus." },
+      { question: "Why did gold drop in March 2020?", answer: "Gold fell ~12% in early March 2020 as investors sold everything for cash during the liquidity panic. Once the Fed announced unlimited QE, gold reversed and surged to new highs." },
+    ],
+  },
+  {
+    slug: "gold-price-in-japanese-yen-all-time-highs-and-the-weak-yen-story",
+    locale: "en",
+    seoTitle: "Gold Price in Japanese Yen: Record Highs & Weak Yen",
+    metaDescription:
+      "Gold in yen hit record highs above ¥14,000/gram in 2024-2026 as the yen weakened past 150/USD. Why Japanese investors flock to gold and what it signals.",
+  },
+  {
+    slug: "china-pboc-gold-buying",
+    locale: "en",
+    seoTitle: "China PBOC Gold Buying: Why China Stockpiles Gold",
+    metaDescription:
+      "China's central bank added 300+ tonnes of gold in 2023-2024, the biggest buying spree in decades. Dedollarization, reserves strategy, and impact on prices.",
+  },
+  {
+    slug: "segregated-vs-commingled-storage-whats-the-difference",
+    locale: "en",
+    seoTitle: "Segregated vs Commingled Gold Storage Explained",
+    metaDescription:
+      "Segregated storage keeps your exact bars separate; commingled pools them. Cost, risk, insurance, and which is safer for your precious metals investment.",
+    faq: [
+      { question: "What is segregated gold storage?", answer: "In segregated storage, your specific gold bars are stored separately and individually identified. You can request delivery of those exact bars. It costs more but eliminates pool risk." },
+      { question: "Is commingled storage safe?", answer: "Commingled storage pools your gold with other investors' holdings. You own a share, not specific bars. It's cheaper (0.12-0.20%/year) but carries slightly more counterparty risk than segregated." },
+    ],
+  },
+  {
+    slug: "inflation-expectations-vs-actual-inflation",
+    locale: "en",
+    seoTitle: "Inflation Expectations vs Actual CPI: Gold Reacts to Both",
+    metaDescription:
+      "Gold responds more to inflation expectations (TIPS breakeven) than actual CPI releases. The spread between expected and real inflation drives gold moves.",
+  },
+  {
+    slug: "lbma-gold-price-process",
+    locale: "en",
+    seoTitle: "LBMA Gold Price: How the Benchmark Is Set Daily",
+    metaDescription:
+      "The LBMA Gold Price is set twice daily via electronic auction by ICE Benchmark Administration. How the process works, who participates, and why it matters.",
+  },
+  {
+    slug: "silver-as-leveraged-gold",
+    locale: "en",
+    seoTitle: "Silver as Leveraged Gold: Why Silver Moves 1.5-2x",
+    metaDescription:
+      "Silver amplifies gold's moves by 1.5-2x in both directions. The beta relationship, market mechanics, and how traders use silver as leveraged gold exposure.",
+    faq: [
+      { question: "Is silver a leveraged play on gold?", answer: "Yes. Silver historically moves 1.5-2x as much as gold in both directions. When gold rises 10%, silver often gains 15-20%. This leverage works in reverse during sell-offs." },
+      { question: "Why does silver move more than gold?", answer: "Silver's smaller market ($1.4T vs gold's $13T+), dual industrial-monetary demand, and thinner liquidity create higher volatility. Speculative flows amplify moves in this smaller market." },
+    ],
+  },
+  {
+    slug: "silver-industrial-demand-growth",
+    locale: "en",
+    seoTitle: "Silver Industrial Demand: Solar, 5G & EV Growth",
+    metaDescription:
+      "Over 50% of silver demand is industrial. Solar panels, 5G technology, and EVs are driving record consumption. How growing industrial use affects silver prices.",
+    faq: [
+      { question: "How much silver is used in solar panels?", answer: "Each solar panel uses about 20g of silver paste for conductive pathways. The solar industry consumed ~170 million ounces in 2024, roughly 15% of total silver demand — and growing fast." },
+      { question: "Will 5G increase silver demand?", answer: "Yes. 5G infrastructure requires silver in antennas, circuits, and connectors. The rollout of millions of 5G base stations globally is expected to add meaningful new silver demand through 2030." },
+    ],
+  },
+  {
+    slug: "comparing-vault-storage-services",
+    locale: "en",
+    seoTitle: "Best Gold Vault Storage Services Compared [2026]",
+    metaDescription:
+      "Compare BullionVault, GoldMoney, Brinks, and Loomis. Fees (0.12-0.50%/year), jurisdictions, insurance, allocated vs unallocated, and how to choose.",
+  },
+  {
+    slug: "etf-creation-and-redemption",
+    locale: "en",
+    seoTitle: "How Gold ETF Creation & Redemption Works",
+    metaDescription:
+      "Authorized participants create ETF shares by depositing gold bars and redeem shares for physical metal. The mechanism that keeps gold ETFs tracking spot price.",
+  },
+  {
+    slug: "understanding-gold-forward-curves",
+    locale: "en",
+    seoTitle: "Gold Forward Curves: Contango, Backwardation & GOFO",
+    metaDescription:
+      "Gold forwards trade in contango when rates are positive, flipping to backwardation during stress. How to read forward curves and what they signal.",
+  },
+  {
+    slug: "gold-2024-record-highs",
+    locale: "en",
+    seoTitle: "Gold 2024 Record Highs: What Drove $2,400+ Prices",
+    metaDescription:
+      "Gold broke through $2,400/oz in 2024, setting multiple all-time records. Central bank buying, rate cut expectations, and geopolitics drove the historic rally.",
+  },
+  {
+    slug: "tael-and-tola-explained",
+    locale: "en",
+    seoTitle: "Tael & Tola: Asian Gold Weight Units Explained",
+    metaDescription:
+      "A tael equals ~37.5g (Hong Kong) and a tola equals ~11.66g (India). How gold is weighed in Asia, regional variations, and conversion tables.",
+  },
+
   // ───────── SPANISH (es) ─────────
   {
     slug: "coin-grading-scale-ms-pf",
