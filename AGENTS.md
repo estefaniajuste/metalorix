@@ -29,7 +29,8 @@
 
 | Tipo | Fuentes | Uso |
 |------|---------|-----|
-| Precios spot | Yahoo Finance, Gold API, Twelve Data | Precios en tiempo real y gráficos |
+| Precios spot metales | Yahoo Finance, Gold API, Twelve Data | Precios en tiempo real y gráficos |
+| Precio BTC | CoinGecko (primary), Binance (fallback) | Dashboard Gold vs Bitcoin, `/api/btc-price` |
 | Noticias RSS | Reuters, Kitco, CNBC, Investing.com, FT, Mining.com, BullionVault, World Gold Council | Contexto para artículos IA |
 | Tipo de cambio | Twelve Data (EURUSD) | Conversión USD/EUR |
 | Contenido educativo | Generado por IA (Gemini) | Glosario y artículos learn |
@@ -210,61 +211,62 @@ No asumir que los cambios están en producción solo porque el código está lis
 | **Herramientas invisibles** | 0 impresiones en GSC para /tools, /roi-calculator, etc. | Las herramientas existen pero Google no las muestra |
 | **Noticias genéricas** | Solo 22 impresiones en la mejor noticia de noticias | AI summaries no compiten con Reuters/Kitco |
 
-### TOP 3 features a construir (por impacto)
+### TOP 3 features (por impacto) — ESTADO
 
-#### 1. Portfolio Tracker (PRIORIDAD MÁXIMA — crea hábito diario)
+#### 1. ✅ Portfolio Tracker — IMPLEMENTADO (abril 2026)
 
-**Qué es:** Los usuarios registran sus tenencias de oro/plata/platino (gramos, monedas, lingotes) con precio de compra. La app calcula en tiempo real el valor total, P&L, y rendimiento.
+**Estado:** En producción. Fase 1 completada.
 
-**Por qué funciona:**
-- goldprice.org tiene esto y recibe 4.1M visitas/mes — es EL feature que genera retención
-- GoldFolio (app) cobra $1.99/año solo por esto
-- Crea el hábito diario: "¿cuánto vale mi oro hoy?"
-- Los datos persisten → el usuario VUELVE
+**Lo que se construyó:**
+- `src/app/[locale]/portfolio/page.tsx` — Landing page con metadata, BreadcrumbList + SoftwareApp + FAQPage JSON-LD
+- `src/components/portfolio/PortfolioTracker.tsx` — Componente cliente: add/edit/delete holdings, valuación real-time, P&L, allocation visual
+- Persistencia en `localStorage` (Fase 1), precios via `usePrices()` hook existente
+- URLs localizadas: `/en/portfolio`, `/es/portfolio`, `/de/portfolio`, `/zh/zichan`, `/ar/mihfaza`, `/tr/portfoy`, `/hi/portfolio`
+- Visible en: nav, footer, tools page, homepage CTA, mobile section nav
+- i18n completo en 7 locales
 
-**Implementación:**
-- Fase 1: localStorage (sin cuenta) → input de holdings → valor en tiempo real + gráfico P&L
-- Fase 2: sincronización con cuenta de usuario (ya tenemos auth)
-- Fase 3: portfolio compartible (imagen/link) → viral loop
-- Archivos a crear: `src/app/[locale]/portfolio/page.tsx`, `src/components/portfolio/`
+**Fases pendientes:**
+- **Fase 2**: sincronización con cuenta de usuario (ya tenemos auth) — guardar holdings en DB
+- **Fase 3**: portfolio compartible (imagen/link para redes sociales) → viral loop
+- **Fase premium**: exportar PDF fiscal, alertas de portfolio, análisis avanzado
 
-**Monetización:** Premium features (exportar PDF fiscal, alertas de portfolio, análisis avanzado)
+#### 2. ✅ Bitcoin + Gold Dashboard — IMPLEMENTADO (abril 2026)
 
-#### 2. Bitcoin + Crypto vs Gold Dashboard (captura mercado crypto)
+**Estado:** En producción. Dashboard interactivo en `/compare/gold-vs-bitcoin`.
 
-**Qué es:** Dashboard en tiempo real comparando oro vs Bitcoin vs S&P 500. Correlación rolling, performance comparativa, indicador de divergencia.
+**Lo que se construyó:**
+- `src/app/api/btc-price/route.ts` — API con CoinGecko primary + Binance fallback, cache 60s in-memory
+- `src/components/comparisons/GoldBtcDashboard.tsx` — Dashboard cliente: precios live Gold + BTC, market cap, ratio Gold/BTC, barra de dominancia animada, auto-refresh 60s
+- FAQ schema (5 items) targeting "gold vs bitcoin" queries → rich results en SERPs
+- Contenido editorial existente preservado debajo del dashboard
+- i18n completo: dashboard + FAQ en 7 locales
+- Fuentes de datos: `/api/prices` (oro, existente) + `/api/btc-price` (BTC, nuevo)
 
-**Por qué funciona:**
-- "bitcoin price" = 3.6M búsquedas/mes
-- "gold vs bitcoin" es una query creciente en 2026
-- La página actual `/compare/gold-vs-bitcoin` es estática y no rankea
-- AhaSignals tiene un "Gold-Bitcoin Divergence Index" que atrae tráfico
-- El público crypto es ENORME y comparte mucho en redes
+**Pendiente para v2:**
+- Gráfico histórico Gold vs BTC (normalizado a 100) con periodos 1M/3M/1Y/5Y — requiere historical BTC data (CoinGecko market_chart endpoint)
+- Crear landing page dedicada `/bitcoin-price` para capturar tráfico directo ("bitcoin price" = 3.6M búsquedas/mes)
+- "Gold-Crypto Divergence Index" propio (branded, compartible)
+- Alertas cuando correlación Gold-BTC cambia de signo
+- Afiliados a exchanges crypto (Binance, Coinbase)
 
-**Implementación:**
-- Añadir precio de BTC a los proveedores de datos (Yahoo Finance: BTC-USD)
-- Dashboard interactivo: correlación, ratio BTC/Gold, performance YTD
-- Crear "Gold-Crypto Divergence Index" propio (branded, compartible)
-- Alertas cuando correlación cambia de signo
+#### 3. ✅ Embeddable Gold Price Widget — IMPLEMENTADO (abril 2026)
 
-**Monetización:** Afiliados a exchanges crypto (Binance, Coinbase), ads
+**Estado:** En producción.
 
-#### 3. Embeddable Gold Price Widget (motor viral + backlinks)
+**Lo que se construyó:**
+- `src/app/api/widget/route.ts` — HTML autocontenido (~3 KB, inline CSS+JS) para iframe. Params: `?metals=gold,silver&theme=dark`
+- `src/components/widget/WidgetConfigurator.tsx` — Configurador interactivo: seleccionar metales, tema, preview en vivo, copiar embed code
+- `src/app/[locale]/widget/page.tsx` — Landing page con 4 schemas: BreadcrumbList + SoftwareApp + FAQPage + HowTo
+- URLs SEO: `/en/gold-price-widget`, `/es/widget-precio-oro`, `/de/goldpreis-widget`, etc.
+- Cada embed incluye "Powered by Metalorix" con backlink a metalorix.com
+- Auto-refresh de precios cada 60s, fetch desde `/api/prices` (same-origin en iframe)
+- i18n completo en 7 locales
 
-**Qué es:** Widget HTML/iframe gratuito que cualquier web puede pegar para mostrar precio del oro en tiempo real. Logo "Powered by Metalorix" con link.
-
-**Por qué funciona:**
-- Cada embed = backlink gratuito (SEO boost enorme)
-- goldprice.org creció así: miles de sites enlazan su widget
-- Es marketing viral pasivo — una vez que el widget se pega, genera tráfico indefinidamente
-- Los blogs de inversión, dealers y foros NECESITAN esto
-
-**Implementación:**
-- Crear `src/app/api/widget/route.ts` → HTML/JS embebible
-- Landing page `src/app/[locale]/widget/page.tsx` con código de embed y personalización
-- Variantes: mini (solo precio), medio (precio + cambio), completo (precio + gráfico)
-
-**Monetización:** Widget premium (sin logo, personalizable) = $5/mes
+**Pendiente para v2:**
+- Variantes: mini (solo precio, 1 línea), ticker (horizontal scrolling)
+- Script loader (`embed.js`) que auto-dimensiona el iframe via `postMessage`
+- Widget premium (sin logo, personalizable, colores custom) = $5/mes
+- Tracking de embeds (cuántos sites usan el widget, cuáles generan más tráfico)
 
 ### Monetización — Plan completo
 
@@ -310,6 +312,38 @@ Las queries con más volumen global (datos de Ahrefs/SimilarWeb):
 - "how to invest in gold" → ~30K/mes
 
 **El contenido learn actual rankea para queries long-tail** (coin grading, liquidity comparison) pero NO para las queries de alto volumen. Para rankear en "gold price" se necesita autoridad de dominio (backlinks) que el widget puede generar.
+
+### Pendiente — Próximos pasos de desarrollo (abril 2026)
+
+#### Alta prioridad (código — agente puede hacer)
+
+1. **Landing page `/bitcoin-price`** — Página dedicada al precio de BTC en tiempo real. Captura "bitcoin price" (3.6M búsquedas/mes). Reutilizar `/api/btc-price` ya creado.
+
+2. **Gráfico histórico Gold vs BTC** — Añadir chart normalizado a 100 en `/compare/gold-vs-bitcoin` con periodos 1M/3M/1Y/5Y. Fuente: CoinGecko `/coins/bitcoin/market_chart` endpoint (free, no key).
+
+3. **Portfolio Fase 2: sync con DB** — Guardar holdings en tabla `user_portfolios` (userId, symbol, quantity, unit, purchasePrice, purchaseDate). Migración Drizzle. Requiere usuario logueado.
+
+4. **Widget v2: variantes mini + ticker** — Mini (solo gold price, 1 línea, ~200x40px). Ticker (horizontal scroll de todos los metales, ~100%x40px). Script loader `embed.js` con auto-sizing.
+
+5. **Portfolio compartible (Fase 3)** — Generar imagen OG con el resumen del portfolio ("Mi oro +15% este año") para compartir en redes. Endpoint `/api/portfolio-card` que genera imagen.
+
+#### Media prioridad (SEO técnico — agente puede hacer)
+
+6. **FAQ schema en páginas de alto tráfico** — Falta en: `precio-oro-hoy`, `precio-gramo-oro`, `ratio-oro-plata`, `herramientas`, `donde-comprar`. Referencia: `fear-greed/page.tsx`.
+
+7. **Meta description truncada** en páginas estáticas restantes — `precio-oro-hoy`, `precio-gramo-oro`, `ratio-oro-plata`, `herramientas`, `donde-comprar`. Mismo patrón que `guia-inversion`.
+
+8. **Revisar y acortar title tags** en `messages/*.json` — Muchos > 60 chars con sufijo "— Metalorix". Priorizar: `precioOroHoy.title`, `fearGreedPage.metaTitle`, `guide.title`.
+
+9. **"Gold-Crypto Divergence Index"** — Indicador branded propio. Cálculo basado en correlación rolling 30d entre Gold y BTC. Compartible en redes (genera tráfico viral crypto).
+
+#### Baja prioridad / requiere decisión de negocio
+
+10. **Widget premium** (sin logo, colores custom) — $5/mes. Requiere sistema de pago.
+11. **Portfolio premium** (export PDF fiscal, alertas portfolio) — $2.99/mes.
+12. **Afiliados dealers** — Integrar links de afiliado en `/donde-comprar`. Ya tenemos la infraestructura.
+13. **Display ads (AdSense)** — Esperar >5K visitas/día.
+14. **Afiliados crypto** — Links a Binance/Coinbase desde dashboard BTC.
 
 ### Errores técnicos encontrados (abril 2026)
 
