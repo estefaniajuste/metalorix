@@ -637,8 +637,11 @@ Return ONLY the JSON. No markdown blocks.`;
       translatedFaq = JSON.stringify(translated.faq);
     }
 
+    const candidateSlug = slugifyTitle(translated.title);
+    const locSlug = candidateSlug.length >= 5 ? candidateSlug : slug;
+
     const locData = {
-      slug: slugifyTitle(translated.title),
+      slug: locSlug,
       title: translated.title,
       seoTitle: translated.seoTitle || translated.title,
       metaDescription:

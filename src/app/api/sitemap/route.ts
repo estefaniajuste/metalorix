@@ -253,6 +253,9 @@ export async function GET() {
 
   const dynamicUrls = await fetchDynamicUrls();
 
+  const MIN_SLUG_LENGTH = 5;
+  const emittedLocs = new Set<string>();
+
   for (const item of dynamicUrls) {
     const paths: Record<string, string> = {};
 
@@ -267,16 +270,26 @@ export async function GET() {
       urls.push(...urlEntries(paths, "weekly", 0.6, today));
     } else if (item.type === "glossary") {
       for (const loc of LOCALES) {
-        const gSlug = item.localizedSlugs?.[loc] ?? item.slug;
+        let gSlug = item.localizedSlugs?.[loc] ?? item.slug;
+        if (gSlug.length < MIN_SLUG_LENGTH) gSlug = item.slug;
         paths[loc] = `/${loc}/${LEARN_BASE[loc]}/${GLOSSARY_CLUSTER[loc] ?? "glossary"}/${gSlug}`;
       }
       urls.push(...urlEntries(paths, "monthly", 0.5, today));
     } else if (item.type === "learn-article" && item.cluster) {
+      let hasDuplicate = false;
       for (const loc of LOCALES) {
-        const aSlug = item.localizedSlugs?.[loc] ?? item.slug;
+        let aSlug = item.localizedSlugs?.[loc] ?? item.slug;
+        if (aSlug.length < MIN_SLUG_LENGTH) aSlug = item.slug;
         const cSlug = localizedCluster(item.cluster, loc);
-        paths[loc] = `/${loc}/${LEARN_BASE[loc]}/${cSlug}/${aSlug}`;
+        const fullPath = `/${loc}/${LEARN_BASE[loc]}/${cSlug}/${aSlug}`;
+        if (emittedLocs.has(fullPath)) {
+          hasDuplicate = true;
+          break;
+        }
+        paths[loc] = fullPath;
       }
+      if (hasDuplicate) continue;
+      for (const loc of LOCALES) emittedLocs.add(paths[loc]);
       urls.push(...urlEntries(paths, "monthly", 0.5, item.lastmod || today));
     }
   }

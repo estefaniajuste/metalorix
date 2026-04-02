@@ -244,13 +244,25 @@ export async function generateMetadata({
   if (!topic) {
     const dbMatch = await findArticleInDb(params.slug);
     if (dbMatch) {
-      return { title: "Redirecting...", robots: { index: false, follow: false } };
+      const correctCluster = getLocalizedClusterSlug(dbMatch.clusterSlug, locale);
+      const correctSlug = (await getLocalizedArticleSlug(dbMatch.slug, locale)) || dbMatch.slug;
+      const path = getPathname({
+        locale: locale as Locale,
+        href: { pathname: "/learn/[cluster]/[slug]", params: { cluster: correctCluster, slug: correctSlug } } as any,
+      });
+      permanentRedirect(path);
     }
     return { title: tl("notFound"), robots: { index: false, follow: false } };
   }
 
   if (topic.clusterSlug !== baseClusterSlug) {
-    return { title: "Redirecting...", robots: { index: false, follow: false } };
+    const correctCluster = getLocalizedClusterSlug(topic.clusterSlug, locale);
+    const correctSlug = (await getLocalizedArticleSlug(topic.slug, locale)) || topic.slug;
+    const path = getPathname({
+      locale: locale as Locale,
+      href: { pathname: "/learn/[cluster]/[slug]", params: { cluster: correctCluster, slug: correctSlug } } as any,
+    });
+    permanentRedirect(path);
   }
 
   const data = await getArticleData(topic.slug, locale);

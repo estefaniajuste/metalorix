@@ -355,7 +355,22 @@ Las queries con más volumen global (datos de Ahrefs/SimilarWeb):
 
 ## Tareas manuales pendientes del usuario
 
-> Estas tareas NO puede hacerlas el agente. Son acciones que requiere acceso humano a Google Search Console. Cuando el usuario las complete, eliminar el bloque correspondiente de este archivo.
+> Estas tareas NO puede hacerlas el agente. Son acciones que requieren acceso humano. Cuando el usuario las complete, eliminar el bloque correspondiente de este archivo.
+
+### Outreach a dealers para backlinks
+
+Contactar a los ~80 dealers del directorio `/donde-comprar` pidiéndoles que enlacen a Metalorix desde su web. Esto genera backlinks que mejoran la autoridad de dominio y el ranking en Google.
+
+**Herramientas disponibles:**
+- Script: `node scripts/dealer-outreach.mjs > outreach-list.tsv` — genera lista TSV con nombre, web, país, ciudad, URL de ficha
+- Templates de email en EN y ES: el mismo script los imprime por stderr
+- Página de press kit: `/en/press` (y `/es/prensa`) tiene badges HTML copiables para que los dealers pongan en su web
+
+**Prioridad:** empezar por dealers `Featured` (los más grandes, su backlink vale más).
+
+**Nota sobre Reddit:** el usuario fue bloqueado en subreddits de metales (r/Silverbugs, r/Gold) por autopromoción. No insistir ahí.
+
+**Metalorix no tiene redes sociales** — `sameAs` en Organization schema está vacío deliberadamente.
 
 ### Google Search Console — Indexación directorio de dealers
 
