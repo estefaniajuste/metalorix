@@ -25,9 +25,11 @@ export async function generateMetadata({
 }) {
   const { locale } = params;
   const t = await getTranslations({ locale, namespace: "metadata" });
+  const rawDesc = t("toolsDesc");
+  const description = rawDesc.length > 155 ? rawDesc.slice(0, rawDesc.slice(0, 155).lastIndexOf(" ")) : rawDesc;
   return {
     title: t("toolsTitle"),
-    description: t("toolsDesc"),
+    description,
     alternates: getAlternates(locale, "/herramientas"),
   };
 }

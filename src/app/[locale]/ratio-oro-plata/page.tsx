@@ -9,9 +9,11 @@ export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("pages");
   const locale = await getLocale();
   const alternates = getAlternates(locale, "/ratio-oro-plata");
+  const rawDesc = t("ratio.description");
+  const description = rawDesc.length > 155 ? rawDesc.slice(0, rawDesc.slice(0, 155).lastIndexOf(" ")) : rawDesc;
   return {
     title: t("ratio.title"),
-    description: t("ratio.description"),
+    description,
     keywords: locale === "es"
       ? ["ratio oro plata", "gold silver ratio", "ratio oro plata histórico", "oro vs plata", "proporción oro plata", "invertir oro o plata"]
       : ["gold silver ratio", "gold silver ratio history", "gold vs silver", "gold silver proportion", "invest gold or silver"],
