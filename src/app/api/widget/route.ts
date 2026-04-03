@@ -14,6 +14,7 @@ export async function GET(req: NextRequest) {
   const { searchParams } = req.nextUrl;
   const metalsParam = searchParams.get("metals") || "gold";
   const theme = searchParams.get("theme") === "light" ? "light" : "dark";
+  const variant = searchParams.get("variant") || "standard";
 
   const symbols = metalsParam
     .split(",")
@@ -21,7 +22,14 @@ export async function GET(req: NextRequest) {
     .filter(Boolean);
   if (symbols.length === 0) symbols.push("XAU");
 
-  const html = buildHTML(symbols, theme);
+  let html: string;
+  if (variant === "mini") {
+    html = buildMiniHTML(symbols[0], theme);
+  } else if (variant === "ticker") {
+    html = buildTickerHTML(symbols, theme);
+  } else {
+    html = buildHTML(symbols, theme);
+  }
 
   return new NextResponse(html, {
     headers: {
@@ -120,4 +128,106 @@ setInterval(load,60000);
 </script>
 </body>
 </html>`;
+}
+
+function buildMiniHTML(symbol: string, theme: "dark" | "light"): string {
+  const dk = theme === "dark";
+  const bg = dk ? "#0d1117" : "#ffffff";
+  const txt0 = dk ? "#f1f3f7" : "#111827";
+  const txt2 = dk ? "#8891a5" : "#6b7280";
+  const txt3 = dk ? "#5a6478" : "#9ca3af";
+
+  const N: Record<string, string> = { XAU: "Gold", XAG: "Silver", XPT: "Platinum", XPD: "Palladium", HG: "Copper" };
+  const C: Record<string, string> = { XAU: "#D6B35A", XAG: "#A8B2C1", XPT: "#E5E7EB", XPD: "#9CA3AF", HG: "#B87333" };
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:${bg};color:${txt0};display:flex;align-items:center;gap:8px;padding:6px 12px;overflow:hidden;height:40px}
+.ic{width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;flex-shrink:0}
+.nm{font-size:11px;font-weight:500;color:${txt2};white-space:nowrap}
+.prc{font-size:14px;font-weight:700;color:${txt0};font-variant-numeric:tabular-nums;white-space:nowrap}
+.chg{font-size:10px;font-weight:600;padding:1px 5px;border-radius:3px;white-space:nowrap}
+.up{color:#34D399;background:rgba(52,211,153,.1)}.dn{color:#F87171;background:rgba(248,113,113,.1)}
+.ft a{font-size:8px;color:${txt3};text-decoration:none;white-space:nowrap}.ft .br{color:#D6B35A;font-weight:700}
+.ld{font-size:11px;color:${txt2}}
+</style></head>
+<body>
+<div id="w"><span class="ld">…</span></div>
+<script>
+(function(){
+var S="${symbol}";
+var N=${JSON.stringify(N)};
+var C=${JSON.stringify(C)};
+var el=document.getElementById("w");
+function fmt(n){return n>=100?"$"+n.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2}):"$"+n.toFixed(2);}
+function render(prices){
+  var p;for(var i=0;i<prices.length;i++){if(prices[i].symbol===S){p=prices[i];break;}}
+  if(!p){el.innerHTML='<span class="ld">–</span>';return;}
+  var up=p.changePct>=0;
+  el.innerHTML='<div class="ic" style="background:'+C[S]+'20;color:'+C[S]+'">'+N[S][0]+'</div><span class="nm">'+N[S]+'</span><span class="prc">'+fmt(p.price)+'</span><span class="chg '+(up?"up":"dn")+'">'+(up?"+":"")+p.changePct.toFixed(2)+'%</span><span class="ft"><a href="https://metalorix.com?ref=widget" target="_blank" rel="noopener"><span class="br">M</span></a></span>';
+  try{window.parent.postMessage({type:"mtx-resize",h:document.body.scrollHeight},"*");}catch(e){}
+}
+function load(){fetch("/api/prices").then(function(r){return r.json()}).then(function(d){if(d&&d.prices)render(d.prices)}).catch(function(){});}
+load();setInterval(load,60000);
+})();
+</script>
+</body></html>`;
+}
+
+function buildTickerHTML(symbols: string[], theme: "dark" | "light"): string {
+  const dk = theme === "dark";
+  const bg = dk ? "#0d1117" : "#ffffff";
+  const txt0 = dk ? "#f1f3f7" : "#111827";
+  const txt2 = dk ? "#8891a5" : "#6b7280";
+  const txt3 = dk ? "#5a6478" : "#9ca3af";
+  const border = dk ? "rgba(255,255,255,.06)" : "rgba(0,0,0,.07)";
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:${bg};color:${txt0};overflow:hidden;height:44px}
+.wrap{display:flex;align-items:center;height:44px;white-space:nowrap;animation:scroll 20s linear infinite;padding:0 16px}
+.wrap:hover{animation-play-state:paused}
+@keyframes scroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.item{display:inline-flex;align-items:center;gap:6px;padding:0 16px;border-right:1px solid ${border}}
+.item:last-child{border-right:none}
+.nm{font-size:11px;font-weight:600;color:${txt2}}
+.prc{font-size:13px;font-weight:700;font-variant-numeric:tabular-nums}
+.chg{font-size:10px;font-weight:600}
+.up{color:#34D399}.dn{color:#F87171}
+.ft{display:inline-flex;align-items:center;padding:0 12px}
+.ft a{font-size:9px;color:${txt3};text-decoration:none}.ft .br{color:#D6B35A;font-weight:700}
+.ld{display:flex;align-items:center;justify-content:center;height:44px;font-size:11px;color:${txt2}}
+</style></head>
+<body>
+<div id="w"><div class="ld">Loading\u2026</div></div>
+<script>
+(function(){
+var S=${JSON.stringify(symbols)};
+var N={XAU:"Gold",XAG:"Silver",XPT:"Platinum",XPD:"Palladium",HG:"Copper"};
+var el=document.getElementById("w");
+function fmt(n){return n>=100?"$"+n.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2}):"$"+n.toFixed(2);}
+function render(prices){
+  var items="";
+  S.forEach(function(sym){
+    var p;for(var i=0;i<prices.length;i++){if(prices[i].symbol===sym){p=prices[i];break;}}
+    if(!p)return;
+    var up=p.changePct>=0;
+    items+='<span class="item"><span class="nm">'+N[sym]+'</span><span class="prc">'+fmt(p.price)+'</span><span class="chg '+(up?"up":"dn")+'">'+(up?"+":"")+p.changePct.toFixed(2)+'%</span></span>';
+  });
+  if(!items){el.innerHTML='<div class="ld">No data</div>';return;}
+  items+='<span class="ft"><a href="https://metalorix.com?ref=widget" target="_blank" rel="noopener">Powered by <span class="br">Metalorix</span></a></span>';
+  el.innerHTML='<div class="wrap">'+items+items+'</div>';
+  try{window.parent.postMessage({type:"mtx-resize",h:44},"*");}catch(e){}
+}
+function load(){fetch("/api/prices").then(function(r){return r.json()}).then(function(d){if(d&&d.prices)render(d.prices)}).catch(function(){});}
+load();setInterval(load,60000);
+})();
+</script>
+</body></html>`;
 }

@@ -190,6 +190,42 @@ export const users = pgTable("users", {
 });
 
 /* ==========================================================
+   User Portfolios — Persistent metal holdings
+   ========================================================== */
+
+export const userPortfolios = pgTable(
+  "user_portfolios",
+  {
+    id: serial("id").primaryKey(),
+    userId: integer("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    symbol: varchar("symbol", { length: 10 }).notNull(),
+    quantity: decimal("quantity", { precision: 14, scale: 6 }).notNull(),
+    unit: varchar("unit", { length: 5 }).notNull().default("oz"),
+    purchasePrice: decimal("purchase_price", { precision: 12, scale: 4 }).notNull(),
+    purchaseDate: varchar("purchase_date", { length: 10 }).notNull(),
+    notes: varchar("notes", { length: 500 }).default(""),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  (table) => ({
+    userIdx: index("user_portfolios_user_idx").on(table.userId),
+    userSymbolIdx: index("user_portfolios_user_symbol_idx").on(
+      table.userId,
+      table.symbol,
+    ),
+  }),
+);
+
+export type UserPortfolio = typeof userPortfolios.$inferSelect;
+export type NewUserPortfolio = typeof userPortfolios.$inferInsert;
+
+/* ==========================================================
    Alerts — User-configured price alerts
    ========================================================== */
 

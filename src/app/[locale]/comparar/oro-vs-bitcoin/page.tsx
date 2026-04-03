@@ -19,6 +19,19 @@ const GoldBtcDashboard = dynamic(
   },
 );
 
+const GoldBtcChart = dynamic(
+  () =>
+    import("@/components/comparisons/GoldBtcChart").then(
+      (m) => m.GoldBtcChart,
+    ),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="bg-surface-1 border border-border rounded-DEFAULT p-8 mb-10 animate-shimmer h-[440px]" />
+    ),
+  },
+);
+
 export const revalidate = 86400;
 
 export async function generateMetadata({
@@ -117,6 +130,9 @@ export default async function GoldVsBitcoinPage() {
           {/* Live dashboard */}
           <GoldBtcDashboard />
 
+          {/* Historical chart */}
+          <GoldBtcChart />
+
           {/* Performance */}
           <div className="bg-surface-1 border border-border rounded-DEFAULT p-6 mb-10">
             <h2 className="text-lg font-bold text-content-0 mb-3">{t("btc.performanceTitle")}</h2>
@@ -195,7 +211,10 @@ export default async function GoldVsBitcoinPage() {
               {t("roiCalculatorLink")}
             </Link>
             <Link href="/portfolio" className="text-sm font-medium text-brand-gold hover:underline">
-              Portfolio Tracker
+              {t("portfolioLink")}
+            </Link>
+            <Link href="/precio-bitcoin" className="text-sm font-medium text-brand-gold hover:underline">
+              {t("btcPriceLink")}
             </Link>
           </div>
         </div>

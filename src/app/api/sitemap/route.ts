@@ -34,6 +34,15 @@ const PATHNAMES: Record<string, Record<string, string>> = {
   "/donde-comprar": { es: "/es/donde-comprar", en: "/en/where-to-buy", de: "/de/wo-kaufen", zh: "/zh/goumai-didian", ar: "/ar/amakin-alshira", tr: "/tr/nereden-alinir", hi: "/hi/kahan-kharidem" },
   "/donde-comprar/mejores": { es: "/es/donde-comprar/mejores", en: "/en/where-to-buy/best", de: "/de/wo-kaufen/beste", zh: "/zh/goumai-didian/zuijia", ar: "/ar/amakin-alshira/afdal", tr: "/tr/nereden-alinir/en-iyi", hi: "/hi/kahan-kharidem/sabse-achhe" },
   "/prensa": { es: "/es/prensa", en: "/en/press", de: "/de/presse", zh: "/zh/xinwen-ziyuan", ar: "/ar/sahafa", tr: "/tr/basin", hi: "/hi/press" },
+  "/precio-bitcoin": {
+    es: "/es/precio-bitcoin",
+    en: "/en/bitcoin-price",
+    de: "/de/bitcoin-preis",
+    zh: "/zh/bitcoin-jiage",
+    ar: "/ar/sier-bitcoin",
+    tr: "/tr/bitcoin-fiyati",
+    hi: "/hi/bitcoin-mulya",
+  },
   "/comparar/oro-vs-bitcoin": {
     es: "/es/comparar/oro-vs-bitcoin",
     en: "/en/compare/gold-vs-bitcoin",
@@ -136,6 +145,7 @@ const FREQ_PRIO: Record<string, [string, number]> = {
   "/aviso-legal": ["yearly", 0.3],
   "/terminos": ["yearly", 0.3],
   "/privacidad": ["yearly", 0.3],
+  "/precio-bitcoin": ["daily", 0.9],
   "/comparar/oro-vs-bitcoin": ["weekly", 0.75],
   "/comparar/oro-vs-sp500": ["weekly", 0.75],
   "/donde-comprar": ["monthly", 0.7],

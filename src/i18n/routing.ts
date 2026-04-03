@@ -258,6 +258,16 @@ export const routing = defineRouting({
       hi: "/sona-mulya-widget",
     },
 
+    "/precio-bitcoin": {
+      es: "/precio-bitcoin",
+      en: "/bitcoin-price",
+      de: "/bitcoin-preis",
+      zh: "/bitcoin-jiage",
+      ar: "/sier-bitcoin",
+      tr: "/bitcoin-fiyati",
+      hi: "/bitcoin-mulya",
+    },
+
     "/alertas": {
       es: "/alertas",
       en: "/alerts",

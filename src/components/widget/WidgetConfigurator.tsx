@@ -19,14 +19,19 @@ const METAL_COLORS: Record<string, string> = {
   copper: "#B87333",
 };
 
-function calcHeight(count: number): number {
-  return 80 + count * 40;
-}
+type WidgetVariant = "standard" | "mini" | "ticker";
+
+const VARIANT_SIZES: Record<WidgetVariant, { width: number | string; height: (n: number) => number }> = {
+  standard: { width: 320, height: (n) => 80 + n * 40 },
+  mini: { width: 320, height: () => 40 },
+  ticker: { width: "100%", height: () => 44 },
+};
 
 export function WidgetConfigurator() {
   const t = useTranslations("widget");
   const [selected, setSelected] = useState<Set<string>>(() => new Set(["gold"]));
   const [theme, setTheme] = useState<"dark" | "light">("dark");
+  const [variant, setVariant] = useState<WidgetVariant>("standard");
   const [copied, setCopied] = useState(false);
 
   const toggle = (id: string) => {
@@ -44,10 +49,13 @@ export function WidgetConfigurator() {
   const metalsParam = METALS.filter((m) => selected.has(m.id))
     .map((m) => m.id)
     .join(",");
-  const widgetUrl = `https://metalorix.com/api/widget?metals=${metalsParam}&theme=${theme}`;
-  const height = calcHeight(selected.size);
+  const variantParam = variant !== "standard" ? `&variant=${variant}` : "";
+  const widgetUrl = `https://metalorix.com/api/widget?metals=${metalsParam}&theme=${theme}${variantParam}`;
+  const sz = VARIANT_SIZES[variant];
+  const width = sz.width;
+  const height = sz.height(selected.size);
 
-  const embedCode = `<iframe src="${widgetUrl}"\n  width="320" height="${height}"\n  style="border:none;border-radius:12px"\n  loading="lazy"></iframe>`;
+  const embedCode = `<iframe src="${widgetUrl}"\n  width="${width}" height="${height}"\n  style="border:none;border-radius:${variant === "ticker" ? "0" : "12px"}"\n  loading="lazy"></iframe>`;
 
   const copy = async () => {
     try {
@@ -66,11 +74,11 @@ export function WidgetConfigurator() {
         </h2>
         <div className="flex justify-center lg:justify-start">
           <iframe
-            key={`${metalsParam}-${theme}`}
+            key={`${metalsParam}-${theme}-${variant}`}
             src={widgetUrl}
-            width={320}
+            width={typeof width === "number" ? width : 400}
             height={height}
-            style={{ border: "none", borderRadius: 12 }}
+            style={{ border: "none", borderRadius: variant === "ticker" ? 0 : 12 }}
             loading="lazy"
             title="Metalorix Widget Preview"
           />
@@ -129,6 +137,27 @@ export function WidgetConfigurator() {
                 </button>
               ))}
             </div>
+          </div>
+
+          {/* Variant */}
+          <div>
+            <h3 className="text-xs font-medium text-content-2 mb-3">{t("variant")}</h3>
+            <div className="flex gap-2 flex-wrap">
+              {(["standard", "mini", "ticker"] as const).map((v) => (
+                <button
+                  key={v}
+                  onClick={() => setVariant(v)}
+                  className={`text-sm px-4 py-1.5 rounded-sm border transition-all ${
+                    variant === v
+                      ? "border-brand-gold/50 bg-brand-gold/10 text-content-0"
+                      : "border-border bg-surface-0 text-content-2 hover:text-content-1"
+                  }`}
+                >
+                  {t(`variant_${v}`)}
+                </button>
+              ))}
+            </div>
+            <p className="text-[11px] text-content-3 mt-2">{t(`variantDesc_${variant}`)}</p>
           </div>
         </div>
 

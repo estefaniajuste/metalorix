@@ -30,7 +30,7 @@ const METAL_COLORS: Record<string, string> = {
 
 const OZ_TO_GRAMS = 31.1035;
 
-function loadHoldings(): Holding[] {
+function loadLocalHoldings(): Holding[] {
   if (typeof window === "undefined") return [];
   try {
     const raw = localStorage.getItem("mtx-portfolio");
@@ -40,7 +40,7 @@ function loadHoldings(): Holding[] {
   }
 }
 
-function saveHoldings(holdings: Holding[]) {
+function saveLocalHoldings(holdings: Holding[]) {
   try {
     localStorage.setItem("mtx-portfolio", JSON.stringify(holdings));
   } catch { /* quota exceeded — silent */ }
@@ -48,6 +48,18 @@ function saveHoldings(holdings: Holding[]) {
 
 function genId() {
   return Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+}
+
+function dbRowToHolding(row: any): Holding {
+  return {
+    id: String(row.id),
+    symbol: row.symbol,
+    quantity: Number(row.quantity),
+    unit: row.unit as "g" | "oz",
+    purchasePrice: Number(row.purchasePrice ?? row.purchase_price),
+    purchaseDate: row.purchaseDate ?? row.purchase_date ?? "",
+    notes: row.notes ?? "",
+  };
 }
 
 export function PortfolioTracker() {
@@ -59,6 +71,8 @@ export function PortfolioTracker() {
   const [mounted, setMounted] = useState(false);
   const [showForm, setShowForm] = useState(false);
   const [editId, setEditId] = useState<string | null>(null);
+  const [loggedIn, setLoggedIn] = useState(false);
+  const [syncing, setSyncing] = useState(false);
 
   const [formSymbol, setFormSymbol] = useState("XAU");
   const [formQty, setFormQty] = useState("");
@@ -68,13 +82,34 @@ export function PortfolioTracker() {
   const [formNotes, setFormNotes] = useState("");
 
   useEffect(() => {
-    setHoldings(loadHoldings());
     setMounted(true);
+    let cancelled = false;
+    (async () => {
+      try {
+        const r = await fetch("/api/auth/me");
+        if (r.ok) {
+          const { user } = await r.json();
+          if (user && !cancelled) {
+            setLoggedIn(true);
+            const pr = await fetch("/api/user/portfolio");
+            if (pr.ok) {
+              const { holdings: dbHoldings } = await pr.json();
+              if (!cancelled && Array.isArray(dbHoldings)) {
+                setHoldings(dbHoldings.map(dbRowToHolding));
+                return;
+              }
+            }
+          }
+        }
+      } catch { /* not logged in or offline */ }
+      if (!cancelled) setHoldings(loadLocalHoldings());
+    })();
+    return () => { cancelled = true; };
   }, []);
 
   useEffect(() => {
-    if (mounted) saveHoldings(holdings);
-  }, [holdings, mounted]);
+    if (mounted && !loggedIn) saveLocalHoldings(holdings);
+  }, [holdings, mounted, loggedIn]);
 
   const spotPriceMap = useMemo(() => {
     const map: Record<string, number> = {};
@@ -95,13 +130,12 @@ export function PortfolioTracker() {
     setShowForm(false);
   }, []);
 
-  const handleSave = useCallback(() => {
+  const handleSave = useCallback(async () => {
     const qty = parseFloat(formQty);
     const price = parseFloat(formPrice);
     if (!qty || qty <= 0 || !price || price <= 0) return;
 
-    const holding: Holding = {
-      id: editId || genId(),
+    const payload = {
       symbol: formSymbol,
       quantity: qty,
       unit: formUnit,
@@ -110,11 +144,45 @@ export function PortfolioTracker() {
       notes: formNotes,
     };
 
-    setHoldings((prev) =>
-      editId ? prev.map((h) => (h.id === editId ? holding : h)) : [...prev, holding]
-    );
+    if (loggedIn) {
+      setSyncing(true);
+      try {
+        if (editId) {
+          const r = await fetch("/api/user/portfolio", {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ id: Number(editId), ...payload }),
+          });
+          if (r.ok) {
+            const { holding: updated } = await r.json();
+            setHoldings((prev) =>
+              prev.map((h) => (h.id === editId ? dbRowToHolding(updated) : h)),
+            );
+          }
+        } else {
+          const r = await fetch("/api/user/portfolio", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+          });
+          if (r.ok) {
+            const { holding: created } = await r.json();
+            setHoldings((prev) => [...prev, dbRowToHolding(created)]);
+          }
+        }
+      } catch { /* offline fallback */ }
+      setSyncing(false);
+    } else {
+      const holding: Holding = {
+        id: editId || genId(),
+        ...payload,
+      };
+      setHoldings((prev) =>
+        editId ? prev.map((h) => (h.id === editId ? holding : h)) : [...prev, holding],
+      );
+    }
     resetForm();
-  }, [formSymbol, formQty, formUnit, formPrice, formDate, formNotes, editId, resetForm]);
+  }, [formSymbol, formQty, formUnit, formPrice, formDate, formNotes, editId, resetForm, loggedIn]);
 
   const handleEdit = useCallback((h: Holding) => {
     setFormSymbol(h.symbol);
@@ -127,9 +195,20 @@ export function PortfolioTracker() {
     setShowForm(true);
   }, []);
 
-  const handleDelete = useCallback((id: string) => {
+  const handleDelete = useCallback(async (id: string) => {
+    if (loggedIn) {
+      setSyncing(true);
+      try {
+        await fetch("/api/user/portfolio", {
+          method: "DELETE",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ id: Number(id) }),
+        });
+      } catch { /* offline fallback */ }
+      setSyncing(false);
+    }
     setHoldings((prev) => prev.filter((h) => h.id !== id));
-  }, []);
+  }, [loggedIn]);
 
   const getOzQty = (h: Holding) => (h.unit === "oz" ? h.quantity : h.quantity / OZ_TO_GRAMS);
   const getCost = (h: Holding) => getOzQty(h) * h.purchasePrice;
@@ -371,13 +450,24 @@ export function PortfolioTracker() {
         </div>
       )}
 
-      {/* Data privacy notice */}
+      {/* Sync / privacy indicator */}
       <p className="text-center text-[11px] text-content-3">
-        <svg className="inline mr-1 -mt-0.5" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-          <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-          <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-        </svg>
-        {t("dataStoredLocally")}
+        {loggedIn ? (
+          <>
+            <svg className="inline mr-1 -mt-0.5" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#34D399" strokeWidth="2" strokeLinecap="round">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><polyline points="22 4 12 14.01 9 11.01" />
+            </svg>
+            {syncing ? t("syncing") : t("cloudSynced")}
+          </>
+        ) : (
+          <>
+            <svg className="inline mr-1 -mt-0.5" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+              <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+            </svg>
+            {t("dataStoredLocally")}
+          </>
+        )}
       </p>
 
       {lastUpdate && (
