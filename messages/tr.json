@@ -253,25 +253,25 @@
       "ogDescription": "Altına yatırım yapsaydınız ne kadar kazanırdınız? Gerçek verilerle getiri hesaplayın."
     },
     "ratio": {
-      "title": "Bugün Altın/Gümüş Oranı — Tarihsel Grafik ve Analiz | Metalorix",
+      "title": "Altın/Gümüş Oranı Bugün — Grafik ve Analiz | Metalorix",
       "description": "Altın/gümüş oranı anlık olarak tarihsel grafikle. Altının gümüşe göre aşırı değerli olup olmadığını keşfedin.",
       "ogTitle": "Bugün Altın/Gümüş Oranı — Metalorix",
       "ogDescription": "Anlık altın/gümüş oranı, tarihsel grafik ve aşırı değerleme bölgeleri."
     },
     "conversor": {
-      "title": "Altın Fiyatı: Euro, Sterlin, Frank ve Diğer Para Birimlerinde — Metalorix",
+      "title": "Altın Fiyatı: Euro, Sterlin ve Diğer Dövizlerde | Metalorix",
       "description": "Altın, gümüş ve platin fiyatları 11 para biriminde: EUR, GBP, CHF, JPY, AUD, CAD, CNY, INR, MXN, BRL.",
       "ogTitle": "Farklı Para Birimlerinde Altın Fiyatı — Metalorix",
       "ogDescription": "Altın, gümüş ve platin fiyatlarını EUR, GBP, CHF, JPY ve daha fazla para biriminde görüntüleyin."
     },
     "comparador": {
-      "title": "Altın vs Gümüş vs Platin Karşılaştırma — Tarihsel Getiri | Metalorix",
+      "title": "Altın vs Gümüş vs Platin — Tarihsel Getiri | Metalorix",
       "description": "Altın, gümüş ve platinin tarihsel performansını karşılaştırın. 1 aydan 10+ yıla kadar interaktif grafik.",
       "ogTitle": "Altın vs Gümüş vs Platin Karşılaştırma — Metalorix",
       "ogDescription": "Hangi metal en iyi performansı gösterdi? Altın, gümüş ve platini interaktif grafikte karşılaştırın."
     },
     "calendario": {
-      "title": "Kıymetli Metaller İçin Ekonomik Takvim — FOMC, ECB, TÜFE, Tarım Dışı | Metalorix",
+      "title": "Ekonomik Takvim — FOMC, ECB, TÜFE | Metalorix",
       "description": "Altın, gümüş ve platin fiyatlarını etkileyen önemli ekonomik olaylar takvimi. Fed ve ECB toplantıları, enflasyon ve istihdam verileri.",
       "ogTitle": "Kıymetli Metaller İçin Ekonomik Takvim — Metalorix",
       "ogDescription": "Altın fiyatını etkileyen önemli olaylar: FOMC, ECB, TÜFE, tarım dışı istihdam ve daha fazlası."
@@ -1332,7 +1332,7 @@
     "disclaimer": "Değer piyasa spot fiyatına göre hesaplanmıştır. Kuyumcu veya rehincilerin geri alım fiyatı %20-40 daha düşük olabilir."
   },
   "jewelryPage": {
-    "metaTitle": "Altın, Gümüş ve Platin Mücevher Değer Hesaplayıcı — Ayara Göre Güncel Fiyat",
+    "metaTitle": "Mücevher Değer Hesaplayıcı — Güncel Ayar Fiyatı | Metalorix",
     "metaDesc": "Altın, gümüş veya platin takılarınızın bugünkü piyasa değerini hesaplayın. Gram ve ayarı girin, değeri anında öğrenin.",
     "h1": "Takılarınız Ne Kadar Ediyor? Ayar Değer Hesaplayıcı",
     "subtitle": "Altın, gümüş veya platin takılarınızın ağırlığını ve ayarını girin, gerçek zamanlı piyasa fiyatına göre değerini hesaplayın.",
@@ -1382,7 +1382,7 @@
     "label_extreme_greed": "Aşırı Açgözlülük"
   },
   "fearGreedPage": {
-    "metaTitle": "Değerli Metaller için Korku ve Açgözlülük Endeksi — Altın ve Gümüş Piyasa Duygusu",
+    "metaTitle": "Korku ve Açgözlülük Endeksi — Altın ve Gümüş | Metalorix",
     "metaDesc": "Değerli metaller için ilk korku ve açgözlülük endeksi.",
     "h1": "Korku & Açgözlülük Endeksi — Değerli Metaller",
     "subtitle": "Bugün altın piyasasına korku mu yoksa açgözlülük mü hâkim?",
@@ -1552,7 +1552,7 @@
     "fearGreedLink": "Korku ve Açgözlülük Endeksi"
   },
   "portfolio": {
-    "metaTitle": "Kıymetli Maden Portföy Takibi — Altın ve Gümüş Varlıklarınızı İzleyin",
+    "metaTitle": "Portföy Takibi — Altın ve Gümüş Varlıkları | Metalorix",
     "metaDesc": "Altın, gümüş ve platin varlıklarınızın gerçek zamanlı değerini takip edin. Kar/zarar hesaplayın, dağılımı ve performansı görün.",
     "h1": "Portföy Takibi",
     "subtitle": "Kıymetli maden varlıklarınızın gerçek zamanlı değerini izleyin. Altın, gümüş, platin ve paladyum ekleyerek toplam değer, kar/zarar ve dağılımı görün.",

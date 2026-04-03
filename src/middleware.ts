@@ -60,7 +60,6 @@ const LEARN_SLUG_REDIRECTS: Record<string, { cluster: string; slug: string }> = 
   "gold-silver-platinum-volatility-comparison": { cluster: "comparisons", slug: "volatility-comparison-across-precious-metals" },
   "gold-silver-platinum-liquidity-comparison": { cluster: "comparisons", slug: "liquidity-comparison-across-precious-metals" },
   "liquidity-comparison-across-metals": { cluster: "comparisons", slug: "liquidity-comparison-across-precious-metals" },
-  "how-to-sell-scrap-gold": { cluster: "production-industry", slug: "how-to-sell-scrap-gold" },
   "how-does-ppi-affect-gold-prices": { cluster: "price-factors", slug: "ppi-and-gold" },
   "gold-performance-during-hyperinflation": { cluster: "history", slug: "hyperinflation-and-precious-metals" },
 };
