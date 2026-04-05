@@ -178,6 +178,7 @@
     "portfolioTrackerDesc": "Altın, gümüş ve platin varlıklarınızı gerçek zamanlı olarak takip edin. Toplam değer, kâr/zarar ve dağılımı görün.",
     "goldWidget": "Altın Fiyat Widget'ı",
     "goldWidgetDesc": "Web sitenize canlı kıymetli maden fiyatları ekleyin. Ücretsiz, özelleştirilebilir ve her zaman güncel.",
+    "faqTitle": "Sıkça sorulan sorular",
     "faq1Q": "Metalorix hangi ücretsiz araçları sunuyor?",
     "faq1A": "Metalorix; DCA hesaplayıcı, getiri simülatörü, altın/gümüş oranı takipçisi, çoklu döviz çevirici, ekonomik takvim, mücevher değer hesaplayıcı, korku ve açgözlülük endeksi, portföy takipçisi ve gömülebilir fiyat widget'ı sunar — hepsi ücretsiz.",
     "faq2Q": "Bu araçlardaki fiyat verileri ne kadar doğru?",
@@ -685,6 +686,7 @@
     "roiCalcDesc": "Geçmiş yatırımları simüle edin",
     "alertsLink": "Fiyat uyarıları",
     "alertsLinkDesc": "E-posta bildirimleri alın",
+    "faqTitle": "Altın hakkında sıkça sorulan sorular",
     "faq1Q": "Altın spot fiyatı nedir?",
     "faq1A": "Spot fiyat, altının anında teslim için alınıp satılabileceği güncel piyasa fiyatıdır. COMEX ve LBMA gibi küresel borsalardaki işlemlerle belirlenir ve piyasa saatlerinde birkaç saniyede bir güncellenir.",
     "faq2Q": "Bugün altın fiyatını hangi faktörler etkiliyor?",
@@ -729,6 +731,7 @@
     "historicalMaxDesc": "Mart 2020 (COVID krizi)",
     "historicalMin": "Son dönem en düşüğü",
     "historicalMinDesc": "Nisan 2011 (gümüş rallisi)",
+    "faqTitle": "Altın/gümüş oranı hakkında sıkça sorulan sorular",
     "faq1Q": "Altın/gümüş oranı nedir?",
     "faq1A": "Altın/gümüş oranı, bir ons altın almak için kaç ons gümüş gerektiğini ölçer. Altın spot fiyatının gümüş spot fiyatına bölünmesiyle hesaplanır.",
     "faq2Q": "Yüksek altın/gümüş oranı ne anlama gelir?",
@@ -1465,6 +1468,7 @@
     "citiesSection": "Şehre göre gözat",
     "cityBreadcrumb": "Şehirler",
     "citySeoKeywords": "{city}'de altın satın al,{city} kıymetli maden satıcıları,{city} altın mağazaları",
+    "faqTitle": "Değerli metal satın alma hakkında sıkça sorulan sorular",
     "faq1Q": "Güvenilir bir kıymetli maden satıcısını nasıl seçerim?",
     "faq1A": "Sektör akreditasyonu (LBMA, PCGS yetkili), spot üzeri şeffaf fiyatlandırma, güvenli kargo ve güçlü müşteri değerlendirmelerine sahip satıcıları arayın.",
     "faq2Q": "Online altın satın almak güvenli mi?",
@@ -1655,5 +1659,10 @@
     "faq4A": "Hayır. Widget bir iframe içinde yüklenir, 5 KB'ın altındadır ve sitenizin performansını etkilemez.",
     "faq5Q": "Widget kodunu güncellemem gerekir mi?",
     "faq5A": "Hayır. Widget otomatik olarak en güncel fiyatları çeker. Bir kez gömüldüğünde bakım gerektirmez."
+  },
+  "instagram": {
+    "cta": "Canlı fiyatlar için bio'daki link",
+    "follow": "Günlük güncellemeler için @metalorix'i takip edin",
+    "hashtags": "#altın #gümüş #platin #paladyum #değerlimetaller #yatırım #metalorix"
   }
 }

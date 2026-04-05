@@ -179,6 +179,7 @@
     "portfolioTrackerDesc": "Verfolge deine Gold-, Silber- und Platinbestände in Echtzeit. Gesamtwert, Gewinn/Verlust und Aufteilung auf einen Blick.",
     "goldWidget": "Goldpreis-Widget",
     "goldWidgetDesc": "Einbettbare Edelmetallpreise in Echtzeit für deine Website. Kostenlos, anpassbar und immer aktuell.",
+    "faqTitle": "Häufig gestellte Fragen",
     "faq1Q": "Welche kostenlosen Werkzeuge bietet Metalorix?",
     "faq1A": "Metalorix bietet DCA-Rechner, Renditesimulator, Gold/Silber-Verhältnis-Tracker, Mehrwährungsrechner, Wirtschaftskalender, Schmuck-Wertrechner, Angst-und-Gier-Index, Portfolio-Tracker und ein einbettbares Preis-Widget — alles kostenlos.",
     "faq2Q": "Wie genau sind die Preisdaten in diesen Werkzeugen?",
@@ -672,6 +673,7 @@
     "roiCalcDesc": "Vergangene Investitionen simulieren",
     "alertsLink": "Preisalarme",
     "alertsLinkDesc": "E-Mail-Benachrichtigungen erhalten",
+    "faqTitle": "Häufig gestellte Fragen zum Gold",
     "faq1Q": "Was ist der Gold-Spotpreis?",
     "faq1A": "Der Spotpreis ist der aktuelle Marktpreis, zu dem Gold sofort gekauft oder verkauft werden kann. Er wird durch den Handel an globalen Börsen wie COMEX und LBMA bestimmt und aktualisiert sich während der Handelszeiten alle paar Sekunden.",
     "faq2Q": "Welche Faktoren beeinflussen den Goldpreis heute?",
@@ -716,6 +718,7 @@
     "historicalMaxDesc": "März 2020 (COVID-Krise)",
     "historicalMin": "Jüngstes Tief",
     "historicalMinDesc": "April 2011 (Silber-Rally)",
+    "faqTitle": "Häufig gestellte Fragen zum Gold/Silber-Verhältnis",
     "faq1Q": "Was ist das Gold/Silber-Verhältnis?",
     "faq1A": "Das Gold/Silber-Verhältnis misst, wie viele Unzen Silber nötig sind, um eine Unze Gold zu kaufen. Es wird berechnet, indem der Gold-Spotpreis durch den Silber-Spotpreis geteilt wird.",
     "faq2Q": "Was bedeutet ein hohes Gold/Silber-Verhältnis?",
@@ -1452,6 +1455,7 @@
     "citiesSection": "Nach Stadt durchsuchen",
     "cityBreadcrumb": "Städte",
     "citySeoKeywords": "Gold kaufen {city}, Edelmetallhändler {city}, Goldgeschäfte {city}",
+    "faqTitle": "Häufig gestellte Fragen zum Kauf von Edelmetallen",
     "faq1Q": "Wie wähle ich einen vertrauenswürdigen Edelmetallhändler?",
     "faq1A": "Achten Sie auf Händler mit Branchenakkreditierung (LBMA, PCGS-autorisiert), transparenter Preisgestaltung mit klaren Aufschlägen über Spot, sicherem Versand und guten Kundenbewertungen.",
     "faq2Q": "Ist es sicher, Gold online zu kaufen?",
@@ -1642,5 +1646,10 @@
     "faq4A": "Nein. Das Widget wird in einem iframe geladen, ist unter 5 KB groß und hat keinen Einfluss auf die Leistung deiner Website.",
     "faq5Q": "Muss ich den Widget-Code aktualisieren?",
     "faq5A": "Nein. Das Widget ruft automatisch die neuesten Preise ab. Einmal eingebettet, ist es wartungsfrei."
+  },
+  "instagram": {
+    "cta": "Link in der Bio für Live-Preise",
+    "follow": "Folge @metalorix für tägliche Updates",
+    "hashtags": "#gold #silber #platin #palladium #edelmetalle #geldanlage #metalorix"
   }
 }

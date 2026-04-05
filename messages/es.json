@@ -179,6 +179,7 @@
     "portfolioTrackerDesc": "Registra tus tenencias de oro, plata y platino y sigue su valor en tiempo real. Ve el valor total, beneficios/pérdidas y distribución.",
     "goldWidget": "Widget Precio del Oro",
     "goldWidgetDesc": "Embebe precios de metales preciosos en tiempo real en tu web. Gratis, personalizable y siempre actualizado.",
+    "faqTitle": "Preguntas frecuentes",
     "faq1Q": "¿Qué herramientas ofrece Metalorix gratis?",
     "faq1A": "Metalorix ofrece calculadora DCA, simulador de rentabilidad, ratio oro/plata, conversor multi-divisa, calendario económico, calculadora de valor de joyas, índice miedo y codicia, tracker de portfolio y un widget embebible — todo gratis.",
     "faq2Q": "¿Qué tan precisos son los datos de precios?",
@@ -730,6 +731,7 @@
     "roiCalcDesc": "Simula inversiones pasadas",
     "alertsLink": "Alertas de precio",
     "alertsLinkDesc": "Recibe avisos por email",
+    "faqTitle": "Preguntas frecuentes sobre el oro",
     "faq1Q": "¿Qué es el precio spot del oro?",
     "faq1A": "El precio spot es el precio de mercado actual al que se puede comprar o vender oro para entrega inmediata. Se establece mediante la negociación en mercados globales como COMEX y LBMA y se actualiza cada pocos segundos durante el horario de mercado.",
     "faq2Q": "¿Qué factores mueven el precio del oro hoy?",
@@ -774,6 +776,7 @@
     "historicalMaxDesc": "Marzo 2020 (crisis COVID)",
     "historicalMin": "Mínimo reciente",
     "historicalMinDesc": "Abril 2011 (rally de plata)",
+    "faqTitle": "Preguntas frecuentes sobre el ratio oro/plata",
     "faq1Q": "¿Qué es el ratio oro/plata?",
     "faq1A": "El ratio oro/plata mide cuántas onzas de plata se necesitan para comprar una onza de oro. Se calcula dividiendo el precio spot del oro entre el de la plata.",
     "faq2Q": "¿Qué significa un ratio oro/plata alto?",
@@ -1466,6 +1469,7 @@
     "citiesSection": "Explorar por ciudad",
     "cityBreadcrumb": "Ciudades",
     "citySeoKeywords": "comprar oro {city}, dealers metales preciosos {city}, tiendas oro {city}",
+    "faqTitle": "Preguntas frecuentes sobre comprar metales preciosos",
     "faq1Q": "¿Cómo elegir un dealer de metales preciosos fiable?",
     "faq1A": "Busca dealers con acreditación del sector (LBMA, PCGS autorizado), precios transparentes con primas claras sobre spot, envío seguro y buenas reseñas de clientes.",
     "faq2Q": "¿Es seguro comprar oro online?",
@@ -1656,5 +1660,10 @@
     "faq4A": "No. El widget se carga en un iframe, pesa menos de 5 KB y no afecta al rendimiento de tu sitio.",
     "faq5Q": "¿Necesito actualizar el código del widget?",
     "faq5A": "No. El widget obtiene los precios más recientes automáticamente. Una vez embebido, no requiere mantenimiento."
+  },
+  "instagram": {
+    "cta": "Enlace en bio para precios en vivo",
+    "follow": "Síguenos en @metalorix para análisis diarios",
+    "hashtags": "#oro #plata #platino #paladio #metalespreciosos #inversion #metalorix"
   }
 }

@@ -179,6 +179,7 @@
     "portfolioTrackerDesc": "Track your gold, silver and platinum holdings in real time. See total value, profit/loss and allocation.",
     "goldWidget": "Gold Price Widget",
     "goldWidgetDesc": "Embed live precious metals prices on your website. Free, customizable and always up to date.",
+    "faqTitle": "Frequently asked questions",
     "faq1Q": "What tools does Metalorix offer for free?",
     "faq1A": "Metalorix provides a DCA calculator, ROI simulator, gold/silver ratio tracker, multi-currency converter, economic calendar, jewelry value calculator, fear & greed index, portfolio tracker, and an embeddable price widget — all free.",
     "faq2Q": "How accurate is the price data in these tools?",
@@ -730,6 +731,7 @@
     "roiCalcDesc": "Simulate past investments",
     "alertsLink": "Price alerts",
     "alertsLinkDesc": "Get email notifications",
+    "faqTitle": "Frequently asked questions about gold",
     "faq1Q": "What is the gold spot price?",
     "faq1A": "The spot price is the current market price at which gold can be bought or sold for immediate delivery. It is set by trading on global exchanges like COMEX and LBMA and updates every few seconds during market hours.",
     "faq2Q": "What factors move the gold price today?",
@@ -774,6 +776,7 @@
     "historicalMaxDesc": "March 2020 (COVID crisis)",
     "historicalMin": "Recent low",
     "historicalMinDesc": "April 2011 (silver rally)",
+    "faqTitle": "Frequently asked questions about the gold/silver ratio",
     "faq1Q": "What is the gold/silver ratio?",
     "faq1A": "The gold/silver ratio measures how many ounces of silver are needed to buy one ounce of gold. It is calculated by dividing the gold spot price by the silver spot price.",
     "faq2Q": "What does a high gold/silver ratio mean?",
@@ -1466,6 +1469,7 @@
     "citiesSection": "Browse by city",
     "cityBreadcrumb": "Cities",
     "citySeoKeywords": "buy gold {city}, precious metals dealers {city}, gold stores {city}",
+    "faqTitle": "Frequently asked questions about buying precious metals",
     "faq1Q": "How do I choose a trustworthy precious metals dealer?",
     "faq1A": "Look for dealers with industry accreditation (LBMA, PCGS authorized), transparent pricing with clear premiums over spot, secure shipping, and a strong track record of customer reviews.",
     "faq2Q": "Is it safe to buy gold online?",
@@ -1656,5 +1660,10 @@
     "faq4A": "No. The widget loads in an iframe, is under 5 KB, and has zero impact on your site's performance.",
     "faq5Q": "Do I need to update the widget code?",
     "faq5A": "No. The widget automatically fetches the latest prices. Once embedded, it requires zero maintenance."
+  },
+  "instagram": {
+    "cta": "Link in bio for live prices",
+    "follow": "Follow @metalorix for daily updates",
+    "hashtags": "#gold #silver #platinum #palladium #preciousmetals #investing #metalorix"
   }
 }

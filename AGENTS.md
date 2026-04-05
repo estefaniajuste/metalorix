@@ -223,13 +223,7 @@ No asumir que los cambios están en producción solo porque el código está lis
 
 ### Pendiente — Acciones de código (agente puede hacer)
 
-1. **Añadir FAQ schema a más páginas de alto tráfico**
-   - `precio-oro-hoy/page.tsx` — sin FAQ JSON-LD (necesita crear FAQs en messages/*.json namespace `goldToday`)
-   - `precio-gramo-oro/page.tsx` — sin FAQ JSON-LD (namespace `gramPrice`)
-   - `ratio-oro-plata/page.tsx` — sin FAQ JSON-LD (namespace `ratioPage`)
-   - `herramientas/page.tsx` — sin FAQ JSON-LD (namespace `tools`)
-   - `donde-comprar/page.tsx` — sin FAQ JSON-LD (namespace `dealers`)
-   - **Referencia**: ver cómo `fear-greed/page.tsx` implementa FAQ schema con `faqSchema()` de `@/lib/seo/schemas`
+1. ~~**Añadir FAQ schema a más páginas de alto tráfico**~~ — **COMPLETADO** (abril 2026): las 5 páginas ya tenían FAQ JSON-LD schema; se añadió **FAQ visible (accordion UI)** para cumplir las directrices de Google (el structured data debe coincidir con contenido visible). Páginas: `precio-oro-hoy`, `precio-gramo-oro`, `ratio-oro-plata`, `herramientas`, `donde-comprar`. Se añadió `faqTitle` en los 7 locales.
 
 2. **Revisar y acortar title tags en messages/*.json**
    - Muchos titles exceden 60 chars con el sufijo "— Metalorix" o "| Metalorix"
@@ -400,9 +394,9 @@ Las queries con más volumen global (datos de Ahrefs/SimilarWeb):
 
 #### Media prioridad (SEO técnico — agente puede hacer)
 
-6. **FAQ schema en páginas de alto tráfico** — Falta en: `precio-oro-hoy`, `precio-gramo-oro`, `ratio-oro-plata`, `herramientas`, `donde-comprar`. Referencia: `fear-greed/page.tsx`.
+6. ~~**FAQ schema en páginas de alto tráfico**~~ — **COMPLETADO** (abril 2026): FAQ JSON-LD ya existía; se añadió FAQ visible (accordion) + `faqTitle` en 7 locales.
 
-7. **Meta description truncada** en páginas estáticas restantes — `precio-oro-hoy`, `precio-gramo-oro`, `ratio-oro-plata`, `herramientas`, `donde-comprar`. Mismo patrón que `guia-inversion`.
+7. ~~**Meta description truncada**~~ — **YA ESTABA HECHO**: las 5 páginas ya truncan a 155 chars.
 
 8. **Revisar y acortar title tags** en `messages/*.json` — Muchos > 60 chars con sufijo "— Metalorix". Priorizar: `precioOroHoy.title`, `fearGreedPage.metaTitle`, `guide.title`.
 
@@ -608,3 +602,109 @@ El directorio de dealers (`/donde-comprar`) fue implementado en marzo 2026 con ~
    - `https://metalorix.com/en/where-to-buy/uae/dubai`
    - `https://metalorix.com/en/where-to-buy/united-kingdom/blackpool`
    - `https://metalorix.com/en/where-to-buy/united-kingdom/llantrisant`
+
+---
+
+## Instagram Auto-Posting — IMPLEMENTADO (abril 2026)
+
+### Arquitectura
+
+Sistema automatizado que publica 1 post/día en Instagram (excepto sábados) con contenido rotativo de metales preciosos. Usa Instagram Graph API + imágenes generadas con `next/og` + captions con Gemini.
+
+| Día | Contenido | Datos |
+|-----|-----------|-------|
+| Lunes | Precios del día | metal_prices (4 metales + cambio %) |
+| Martes | Fear & Greed Index | /api/fear-greed |
+| Miércoles | Gold vs Bitcoin | /api/prices + /api/btc-price |
+| Jueves | Resumen del mercado | Último artículo diario de DB |
+| Viernes | Tip educativo | Artículo learn aleatorio de DB |
+| Sábado | Sin publicación | — |
+| Domingo | Resumen semanal | Artículo semanal si existe |
+
+### Archivos clave
+
+| Archivo | Función |
+|---------|---------|
+| `src/lib/social/instagram.ts` | Cliente Instagram Graph API: publishPhoto, refreshToken, buildImageUrl, verifyImageSignature |
+| `src/lib/ai/instagram-captions.ts` | Generación de captions con Gemini por tipo de contenido + hashtags |
+| `src/app/api/instagram/image/route.tsx` | Generador de imágenes 1080×1080 con ImageResponse (Edge runtime). 5 variantes: prices, fear_greed, gold_btc, market_summary, learn_tip |
+| `src/app/api/cron/instagram/route.ts` | Orquestador: determina contenido del día, genera imagen+caption, publica |
+| `.github/workflows/scheduled-crons.yml` | Job `instagram-post`: 1x/día a 09:30 UTC, no sábados |
+| `messages/*.json` | Namespace `instagram` con CTA, follow, hashtags por idioma |
+
+### Variables de entorno
+
+| Variable | Obligatoria | Descripción |
+|----------|-------------|-------------|
+| `INSTAGRAM_ACCESS_TOKEN` | Sí | Long-lived user access token de Instagram Graph API (60 días, renovable) |
+| `INSTAGRAM_USER_ID` | Sí | ID numérico de la cuenta Instagram Business |
+| `INSTAGRAM_IMAGE_SECRET` | Recomendada | String aleatoria para firmar URLs del endpoint de imagen (anti-abuso) |
+| `FACEBOOK_APP_ID` | Solo para refresh | App ID de la Facebook App (necesario para renovar token automáticamente) |
+| `FACEBOOK_APP_SECRET` | Solo para refresh | App Secret de la Facebook App |
+
+### Setup manual del usuario (única vez, ~15 min)
+
+1. **Crear cuenta Instagram Business**:
+   - Abrir la app Instagram → Ajustes → Cuenta → Cambiar a cuenta profesional → Business
+   - Nombre: "Metalorix"
+
+2. **Crear Facebook Business Page**:
+   - facebook.com/pages/create → categoría "Finance" o "Website"
+   - Vincular la cuenta de Instagram en ajustes de la Page
+
+3. **Crear Facebook App**:
+   - developers.facebook.com → My Apps → Create App → Business → nombre "Metalorix Bot"
+   - Agregar producto "Instagram Graph API"
+
+4. **Obtener access token**:
+   - En Graph API Explorer: seleccionar la app
+   - Permisos: `instagram_basic`, `instagram_content_publish`, `pages_read_engagement`
+   - Generar token de usuario → extenderlo a long-lived (60 días) con:
+     ```
+     GET https://graph.facebook.com/v21.0/oauth/access_token?
+       grant_type=fb_exchange_token&
+       client_id={APP_ID}&
+       client_secret={APP_SECRET}&
+       fb_exchange_token={SHORT_LIVED_TOKEN}
+     ```
+   - Obtener Instagram User ID:
+     ```
+     GET https://graph.facebook.com/v21.0/me/accounts?access_token={TOKEN}
+     → usar page_id del resultado
+     GET https://graph.facebook.com/v21.0/{PAGE_ID}?fields=instagram_business_account&access_token={TOKEN}
+     → el id dentro de instagram_business_account es el INSTAGRAM_USER_ID
+     ```
+
+5. **Guardar en GitHub Secrets**:
+   - Repo → Settings → Secrets and variables → Actions
+   - Añadir: `INSTAGRAM_ACCESS_TOKEN`, `INSTAGRAM_USER_ID`, `INSTAGRAM_IMAGE_SECRET` (generar con `openssl rand -hex 32`)
+
+6. **Añadir a Cloud Run**:
+   - Las mismas variables deben estar en el servicio de Cloud Run (si no se inyectan desde GitHub Secrets en el build)
+
+### Limitaciones
+
+- **Token expira cada 60 días**: el endpoint `refreshToken()` en `instagram.ts` puede renovarlo, pero necesita `FACEBOOK_APP_ID` + `FACEBOOK_APP_SECRET`
+- **Instagram no permite links clicables en captions**: cada post dice "Link in bio"
+- **Rate limit**: 25 publicaciones/día (más que suficiente)
+- **Solo imágenes estáticas**: Reels/carousels posibles en fase 2
+- **App Review de Meta**: para producción, Meta requiere App Review (puede tardar días); en modo desarrollo funciona con tu propia cuenta
+- **El endpoint de imagen es Edge runtime**: no puede acceder a DB directamente, hace fetch a las APIs internas
+
+### Ejecución manual (testing)
+
+```bash
+# Ejecutar desde GitHub Actions
+gh workflow run "Scheduled Cron Jobs" -f job=instagram
+
+# O directamente via curl (requiere CRON_SECRET)
+curl -X POST -H "Authorization: Bearer $CRON_SECRET" \
+  "https://metalorix.com/api/cron/instagram"
+
+# Forzar un tipo específico (ignorar rotación diaria)
+curl -X POST -H "Authorization: Bearer $CRON_SECRET" \
+  "https://metalorix.com/api/cron/instagram?type=prices"
+
+# Verificar que el generador de imágenes funciona (sin firma en dev)
+curl -o test.png "http://localhost:3000/api/instagram/image?type=prices"
+```

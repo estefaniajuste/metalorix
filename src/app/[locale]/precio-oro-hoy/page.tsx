@@ -40,12 +40,13 @@ export default async function PrecioOroHoyPage() {
     tc("breadcrumbHome"),
     locale,
   );
-  const faq = faqSchema([
+  const faqItems = [
     { question: t("faq1Q"), answer: t("faq1A") },
     { question: t("faq2Q"), answer: t("faq2A") },
     { question: t("faq3Q"), answer: t("faq3A") },
     { question: t("faq4Q"), answer: t("faq4A") },
-  ]);
+  ];
+  const faq = faqSchema(faqItems);
 
   const bulletItems = [
     t("fedDecisions"),
@@ -125,6 +126,25 @@ export default async function PrecioOroHoyPage() {
                 </Link>
               ))}
             </div>
+          </div>
+        </div>
+        {/* FAQ */}
+        <div className="mt-12">
+          <h2 className="text-xl font-bold text-content-0 mb-5">{t("faqTitle")}</h2>
+          <div className="space-y-3">
+            {faqItems.map((item, i) => (
+              <details key={i} className="group rounded-DEFAULT border border-border bg-surface-1 overflow-hidden">
+                <summary className="flex items-center justify-between px-5 py-4 cursor-pointer text-sm font-semibold text-content-0 [&::-webkit-details-marker]:hidden list-none">
+                  {item.question}
+                  <svg className="shrink-0 ml-3 w-4 h-4 text-content-3 transition-transform group-open:rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                    <polyline points="6 9 12 15 18 9"/>
+                  </svg>
+                </summary>
+                <div className="px-5 pb-4 text-sm text-content-2 leading-relaxed border-t border-border pt-3">
+                  {item.answer}
+                </div>
+              </details>
+            ))}
           </div>
         </div>
       </div>
