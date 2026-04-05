@@ -63,6 +63,11 @@ const LEARN_SLUG_REDIRECTS: Record<string, { cluster: string; slug: string }> = 
   "volatility-comparison-across-metals": { cluster: "comparisons", slug: "volatility-comparison-across-precious-metals" },
   "how-does-ppi-affect-gold-prices": { cluster: "price-factors", slug: "ppi-and-gold" },
   "gold-performance-during-hyperinflation": { cluster: "history", slug: "hyperinflation-and-precious-metals" },
+  "above-ground-gold-stock": { cluster: "price-factors", slug: "above-ground-gold-stock-all-the-gold-ever-mined" },
+  "hyperinflation-episodes-and-gold": { cluster: "macroeconomics", slug: "hyperinflation-and-precious-metals-lessons-from-weimar-to-zimbabwe" },
+  "comparing-gold-etfs-in-europe": { cluster: "guides", slug: "comparing-gold-etfs-and-etcs-in-europe-a-comprehensive-guide" },
+  "silver-chemical-symbol-ag": { cluster: "fundamentals", slug: "why-silvers-chemical-symbol-is-ag" },
+  "coin-grading-scale-ms-pf": { cluster: "security-authenticity", slug: "coin-grading-scale-understanding-ms-pf-and-the-70-point-system" },
 };
 
 const METAL_SLUGS: Record<string, Record<string, string>> = {
