@@ -265,6 +265,10 @@ export async function generateMetadata({
     permanentRedirect(path);
   }
 
+  const canonicalSlug = (await getLocalizedArticleSlug(topic.slug, locale)) || topic.slug;
+  const canonicalCluster = getLocalizedClusterSlug(baseClusterSlug, locale);
+  const isNonCanonical = params.slug !== canonicalSlug || params.cluster !== canonicalCluster;
+
   const data = await getArticleData(topic.slug, locale);
   const rawTitle = data?.localization.seoTitle || topic.titleEn;
   const title = rawTitle
@@ -298,6 +302,7 @@ export async function generateMetadata({
       description,
     },
     alternates,
+    ...(isNonCanonical && { robots: { index: false, follow: true } }),
   };
 }
 
