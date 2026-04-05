@@ -14,18 +14,19 @@ export async function generateMetadata({
   const t = await getTranslations({ locale, namespace: "pages" });
   const rawDesc = t("precioGramoOro.description");
   const description = rawDesc.length > 155 ? rawDesc.slice(0, rawDesc.slice(0, 155).lastIndexOf(" ")) : rawDesc;
+  const alternates = getAlternates(locale, "/precio-gramo-oro");
   return {
     title: t("precioGramoOro.title"),
     description,
     keywords: locale === "es"
       ? ["precio gramo oro", "precio gramo oro hoy", "precio gramo oro euros", "cuanto vale un gramo de oro", "precio gramo oro 18 kilates", "precio gramo oro 24 kilates", "valor gramo oro", "cotización gramo oro"]
       : ["gold price per gram", "gold price per gram today", "gold gram price euros", "how much is a gram of gold", "18 karat gold gram price", "24 karat gold gram price", "gold gram value"],
-    alternates: getAlternates(locale, "/precio-gramo-oro"),
+    alternates,
     openGraph: {
       title: t("precioGramoOro.ogTitle"),
-      description: t("precioGramoOro.ogDescription"),
+      description,
       type: "website",
-      url: "https://metalorix.com/precio-gramo-oro",
+      url: alternates.canonical,
     },
   };
 }

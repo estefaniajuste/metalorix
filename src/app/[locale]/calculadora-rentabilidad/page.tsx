@@ -12,9 +12,11 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = params;
   const t = await getTranslations({ locale, namespace: "pages" });
+  const rawDesc = t("calculadora.description");
+  const description = rawDesc.length > 155 ? rawDesc.slice(0, rawDesc.slice(0, 155).lastIndexOf(" ")) : rawDesc;
   return {
     title: t("calculadora.title"),
-    description: t("calculadora.description"),
+    description,
     keywords: locale === "es"
       ? ["calculadora rentabilidad oro", "simulador inversión oro", "cuanto habría ganado invirtiendo en oro", "rentabilidad histórica oro", "invertir en oro rentabilidad", "calculadora inversión metales preciosos"]
       : ["gold ROI calculator", "gold investment simulator", "gold historical returns", "gold investment calculator", "precious metals ROI calculator"],

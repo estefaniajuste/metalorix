@@ -14,10 +14,19 @@ export async function generateMetadata({
 }) {
   const { locale } = params;
   const t = await getTranslations({ locale, namespace: "news" });
+  const rawDesc = t("subtitle");
+  const description = rawDesc.length > 155 ? rawDesc.slice(0, rawDesc.slice(0, 155).lastIndexOf(" ")) : rawDesc;
+  const alternates = getAlternates(locale, "/noticias");
   return {
     title: `${t("title")} — Metalorix`,
-    description: t("subtitleEmpty"),
-    alternates: getAlternates(locale, "/noticias"),
+    description,
+    alternates,
+    openGraph: {
+      title: `${t("title")} — Metalorix`,
+      description,
+      type: "website",
+      url: alternates.canonical,
+    },
   };
 }
 

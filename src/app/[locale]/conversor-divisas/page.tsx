@@ -12,9 +12,11 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = params;
   const t = await getTranslations({ locale, namespace: "pages" });
+  const rawDesc = t("conversor.description");
+  const description = rawDesc.length > 155 ? rawDesc.slice(0, rawDesc.slice(0, 155).lastIndexOf(" ")) : rawDesc;
   return {
     title: t("conversor.title"),
-    description: t("conversor.description"),
+    description,
     keywords: locale === "es"
       ? ["precio oro en euros", "precio oro en libras", "precio gramo oro euros", "gold price eur", "precio platino euros", "precio plata euros", "conversor divisas oro"]
       : ["gold price in euros", "gold price in pounds", "gold gram price euros", "gold price EUR", "platinum price euros", "silver price euros", "gold currency converter"],

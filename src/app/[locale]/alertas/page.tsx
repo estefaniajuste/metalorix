@@ -11,10 +11,19 @@ export async function generateMetadata({
 }) {
   const { locale } = params;
   const t = await getTranslations({ locale, namespace: "metadata" });
+  const rawDesc = t("alertsDesc");
+  const description = rawDesc.length > 155 ? rawDesc.slice(0, rawDesc.slice(0, 155).lastIndexOf(" ")) : rawDesc;
+  const alternates = getAlternates(locale, "/alertas");
   return {
     title: t("alertsTitle"),
-    description: t("alertsDesc"),
-    alternates: getAlternates(locale, "/alertas"),
+    description,
+    alternates,
+    openGraph: {
+      title: t("alertsTitle"),
+      description,
+      type: "website",
+      url: alternates.canonical,
+    },
   };
 }
 

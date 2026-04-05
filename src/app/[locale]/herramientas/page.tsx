@@ -27,10 +27,17 @@ export async function generateMetadata({
   const t = await getTranslations({ locale, namespace: "metadata" });
   const rawDesc = t("toolsDesc");
   const description = rawDesc.length > 155 ? rawDesc.slice(0, rawDesc.slice(0, 155).lastIndexOf(" ")) : rawDesc;
+  const alternates = getAlternates(locale, "/herramientas");
   return {
     title: t("toolsTitle"),
     description,
-    alternates: getAlternates(locale, "/herramientas"),
+    alternates,
+    openGraph: {
+      title: t("toolsTitle"),
+      description,
+      type: "website",
+      url: alternates.canonical,
+    },
   };
 }
 

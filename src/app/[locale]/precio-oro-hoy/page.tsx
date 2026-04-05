@@ -14,18 +14,19 @@ export async function generateMetadata({
   const t = await getTranslations({ locale, namespace: "pages" });
   const rawDesc = t("precioOroHoy.description");
   const description = rawDesc.length > 155 ? rawDesc.slice(0, rawDesc.slice(0, 155).lastIndexOf(" ")) : rawDesc;
+  const alternates = getAlternates(locale, "/precio-oro-hoy");
   return {
     title: t("precioOroHoy.title"),
     description,
     keywords: locale === "es"
       ? ["precio oro hoy", "cotización oro hoy", "precio oro tiempo real", "gold price today", "xau usd hoy", "precio onza oro hoy", "valor del oro hoy"]
       : ["gold price today", "gold quote today", "gold price real time", "xau usd today", "gold ounce price today", "gold value today"],
-    alternates: getAlternates(locale, "/precio-oro-hoy"),
+    alternates,
     openGraph: {
       title: t("precioOroHoy.ogTitle"),
-      description: t("precioOroHoy.ogDescription"),
+      description,
       type: "website",
-      url: "https://metalorix.com/precio-oro-hoy",
+      url: alternates.canonical,
     },
   };
 }

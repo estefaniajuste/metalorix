@@ -9,9 +9,11 @@ export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("pages");
   const locale = await getLocale();
   const alternates = getAlternates(locale, "/calendario-economico");
+  const rawDesc = t("calendario.description");
+  const description = rawDesc.length > 155 ? rawDesc.slice(0, rawDesc.slice(0, 155).lastIndexOf(" ")) : rawDesc;
   return {
     title: t("calendario.title"),
-    description: t("calendario.description"),
+    description,
     keywords: locale === "es"
       ? ["calendario económico oro", "FOMC oro", "reunión Fed tipos interés", "IPC inflación oro", "NFP nóminas no agrícolas", "BCE tipos interés", "eventos económicos metales preciosos"]
       : ["economic calendar gold", "FOMC gold", "Fed interest rate meeting", "CPI inflation gold", "NFP non-farm payrolls", "ECB interest rates", "economic events precious metals"],

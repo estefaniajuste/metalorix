@@ -12,9 +12,11 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = params;
   const t = await getTranslations({ locale, namespace: "pages" });
+  const rawDesc = t("productos.description");
+  const description = rawDesc.length > 155 ? rawDesc.slice(0, rawDesc.slice(0, 155).lastIndexOf(" ")) : rawDesc;
   return {
     title: t("productos.title"),
-    description: t("productos.description"),
+    description,
     keywords: locale === "es"
       ? ["monedas oro inversión", "lingotes oro inversión", "Krugerrand", "Maple Leaf oro", "Filarmónica Viena oro", "comprar oro España", "monedas plata inversión", "lingote oro 1 oz", "lingote plata 1 kg"]
       : ["gold investment coins", "gold investment bars", "Krugerrand", "Maple Leaf gold", "Vienna Philharmonic gold", "buy gold", "silver investment coins", "gold bar 1 oz", "silver bar 1 kg"],
