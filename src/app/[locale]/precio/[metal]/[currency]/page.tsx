@@ -38,7 +38,7 @@ export async function generateMetadata({
   const internalSlug = resolveMetalSlug(metal) ?? metal;
   const seo = getMetalSEO(internalSlug, locale);
   const curr = getCurrencyBySlug(currSlug);
-  if (!seo || !curr) return { title: "Not Found" };
+  if (!seo || !curr) notFound();
 
   const year = new Date().getFullYear();
   const currName = curr.names[locale] || curr.names.en;

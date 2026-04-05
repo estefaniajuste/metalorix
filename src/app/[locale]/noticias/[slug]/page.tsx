@@ -210,8 +210,7 @@ export async function generateMetadata({
   const article = await getArticle(params.slug, params.locale);
 
   if (!article) {
-    const t = await getTranslations("article");
-    return { title: t("notFound"), robots: { index: false, follow: false } };
+    notFound();
   }
 
   const locale = params.locale;

@@ -252,7 +252,7 @@ export async function generateMetadata({
       });
       permanentRedirect(path);
     }
-    return { title: tl("notFound"), robots: { index: false, follow: false } };
+    notFound();
   }
 
   if (topic.clusterSlug !== baseClusterSlug) {

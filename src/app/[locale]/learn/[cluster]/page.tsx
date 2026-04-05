@@ -63,7 +63,7 @@ export async function generateMetadata({
 
   const baseClusterSlug = getBaseClusterSlug(params.cluster, locale);
   const cluster = TAXONOMY.find((c) => c.slug === baseClusterSlug);
-  if (!cluster) return { title: t("notFound") };
+  if (!cluster) notFound();
 
   const localized = getLocalizedCluster(cluster.slug, locale);
   const clusterName = localized?.name ?? cluster.nameEn;

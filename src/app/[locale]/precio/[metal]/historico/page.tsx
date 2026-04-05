@@ -62,7 +62,7 @@ export async function generateMetadata({
   const t = await getTranslations({ locale, namespace: "historicalPrice" });
   const internalSlug = resolveMetalSlug(metal) ?? metal;
   const seo = getMetalSEO(internalSlug, locale);
-  if (!seo) return { title: "Not Found" };
+  if (!seo) notFound();
 
   const year = new Date().getFullYear();
   const title = `${t("title", { metal: seo.name })} [${year}] — Metalorix`;

@@ -29,7 +29,7 @@ export async function generateMetadata({
   const t = await getTranslations({ locale, namespace: "prices" });
   const internalSlug = resolveMetalSlug(metal) ?? metal;
   const seo = getMetalSEO(internalSlug, locale);
-  if (!seo) return { title: t("notFound"), robots: { index: false, follow: false } };
+  if (!seo) notFound();
 
   const localizedSlug = getLocalizedMetalSlug(seo.slug, locale);
   const alternates = getAlternates(locale, {
