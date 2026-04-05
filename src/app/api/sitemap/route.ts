@@ -120,6 +120,35 @@ function localizedCluster(baseSlug: string, locale: string): string {
   return CLUSTER_SLUG_I18N[locale]?.[baseSlug] ?? baseSlug;
 }
 
+const SLUG_REDIRECTS: Record<string, string> = {
+  "coin-grading-scale-explained-ms70-to-good": "coin-grading-scale-ms-pf",
+  "pcgs-vs-ngc-coin-grading-services-comparison": "coin-grading-ngc-and-pcgs",
+  "pcgs-vs-ngc-coin-grading-services-comparison-chart": "coin-grading-ngc-and-pcgs",
+  "what-is-a-carat-and-how-does-it-apply-to-gold": "gold-purity-karat-system",
+  "what-is-sterling-silver": "sterling-silver-explained",
+  "silver-chemical-symbol-and-abbreviation": "why-silvers-chemical-symbol-is-ag",
+  "what-is-a-troy-ounce": "the-troy-ounce-explained",
+  "what-is-fiat-money": "fiat-money-explained",
+  "what-are-base-metals": "precious-metals-vs-base-metals",
+  "gold-silver-platinum-volatility-comparison": "volatility-comparison-across-precious-metals",
+  "gold-silver-platinum-liquidity-comparison": "liquidity-comparison-across-precious-metals",
+  "liquidity-comparison-across-metals": "liquidity-comparison-across-precious-metals",
+  "volatility-comparison-across-metals": "volatility-comparison-across-precious-metals",
+  "how-does-ppi-affect-gold-prices": "ppi-and-gold",
+  "gold-performance-during-hyperinflation": "hyperinflation-and-precious-metals",
+  "above-ground-gold-stock": "above-ground-gold-stock-all-the-gold-ever-mined",
+  "hyperinflation-episodes-and-gold": "hyperinflation-and-precious-metals-lessons-from-weimar-to-zimbabwe",
+  "comparing-gold-etfs-in-europe": "comparing-gold-etfs-and-etcs-in-europe-a-comprehensive-guide",
+  "silver-chemical-symbol-ag": "why-silvers-chemical-symbol-is-ag",
+  "coin-grading-scale-ms-pf": "coin-grading-scale-understanding-ms-pf-and-the-70-point-system",
+};
+
+function cleanSlug(slug: string): string {
+  return SLUG_REDIRECTS[slug] ?? slug;
+}
+
+const GARBAGE_SLUG_RE = /^[\d]+-[\d]|^[\d]+-\d{4}-\d{2}-\d{2}$/;
+
 const GLOSSARY_CLUSTER: Record<string, string> = {
   es: "glosario", en: "glossary", de: "glossar", zh: "shuyu", ar: "mustalahat", tr: "sozluk", hi: "shabdavali",
 };
@@ -270,10 +299,13 @@ export async function GET() {
     const paths: Record<string, string> = {};
 
     if (item.type === "article") {
+      let skipArticle = false;
       for (const loc of LOCALES) {
         const locSlug = item.localizedSlugs?.[loc] ?? item.slug;
+        if (GARBAGE_SLUG_RE.test(locSlug)) { skipArticle = true; break; }
         paths[loc] = `/${loc}/${NEWS_BASE[loc]}/${locSlug}`;
       }
+      if (skipArticle) continue;
       urls.push(...urlEntries(paths, "weekly", 0.7, item.lastmod || today));
     } else if (item.type === "cluster") {
       for (const loc of LOCALES) paths[loc] = `/${loc}/${LEARN_BASE[loc]}/${localizedCluster(item.slug, loc)}`;
@@ -282,6 +314,7 @@ export async function GET() {
       for (const loc of LOCALES) {
         let gSlug = item.localizedSlugs?.[loc] ?? item.slug;
         if (gSlug.length < MIN_SLUG_LENGTH) gSlug = item.slug;
+        gSlug = cleanSlug(gSlug);
         paths[loc] = `/${loc}/${LEARN_BASE[loc]}/${GLOSSARY_CLUSTER[loc] ?? "glossary"}/${gSlug}`;
       }
       urls.push(...urlEntries(paths, "monthly", 0.5, today));
@@ -290,6 +323,7 @@ export async function GET() {
       for (const loc of LOCALES) {
         let aSlug = item.localizedSlugs?.[loc] ?? item.slug;
         if (aSlug.length < MIN_SLUG_LENGTH) aSlug = item.slug;
+        aSlug = cleanSlug(aSlug);
         const cSlug = localizedCluster(item.cluster, loc);
         const fullPath = `/${loc}/${LEARN_BASE[loc]}/${cSlug}/${aSlug}`;
         if (emittedLocs.has(fullPath)) {
