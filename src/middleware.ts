@@ -83,28 +83,17 @@ for (const [internal, locales] of Object.entries(METAL_SLUGS)) {
   for (const slug of Object.values(locales)) METAL_REVERSE[slug] = internal;
 }
 
-const PATH_ALIASES: Record<string, string> = {
-  "/oro": "/precio/oro",
-  "/plata": "/precio/plata",
-  "/platino": "/precio/platino",
-  "/paladio": "/precio/paladio",
-  "/cobre": "/precio/cobre",
-  "/gold": "/precio/oro",
-  "/silver": "/precio/plata",
-  "/platinum": "/precio/platino",
-  "/palladium": "/precio/paladio",
-  "/copper": "/precio/cobre",
-  "/tools": "/herramientas",
-  "/news": "/noticias",
-  "/glossary": "/learn",
-  "/glosario": "/learn",
-  "/education": "/learn",
-  "/educacion": "/learn",
-  "/aprender": "/learn",
-  "/lernen": "/learn",
-  "/xuexi": "/learn",
-  "/taallam": "/learn",
-  "/ogren": "/learn",
+const METAL_ALIASES: Record<string, { locale: string; internal: string }> = {
+  "/oro": { locale: "es", internal: "oro" },
+  "/plata": { locale: "es", internal: "plata" },
+  "/platino": { locale: "es", internal: "platino" },
+  "/paladio": { locale: "es", internal: "paladio" },
+  "/cobre": { locale: "es", internal: "cobre" },
+  "/gold": { locale: "en", internal: "oro" },
+  "/silver": { locale: "en", internal: "plata" },
+  "/platinum": { locale: "en", internal: "platino" },
+  "/palladium": { locale: "en", internal: "paladio" },
+  "/copper": { locale: "en", internal: "cobre" },
 };
 
 const handleI18nRouting = createMiddleware(routing);
@@ -170,8 +159,8 @@ export function middleware(request: NextRequest) {
   // Handle bare paths without locale prefix (next-intl would 307, we want 301)
   if (!LOCALES.has(segments[0])) {
     const learnPrefixes = ["learn", "aprende-inversion", "aprende", "glosario", "glossary",
-      "lernen-investition", "xuexi", "taallam", "ogren-yatirim", "gyaan-nivesh",
-      "educacion", "education"];
+      "lernen-investition", "lernen", "xuexi", "taallam", "ogren-yatirim", "ogren",
+      "gyaan-nivesh", "educacion", "education"];
     if (learnPrefixes.some((p) => lower === `/${p}` || lower.startsWith(`/${p}/`))) {
       const rest = segments.slice(1);
       // Resolve foreign cluster slug to English base in the same redirect
@@ -195,7 +184,7 @@ export function middleware(request: NextRequest) {
       );
     }
 
-    // Bare news/content paths without locale prefix → 301 to correct locale
+    // Bare paths without locale prefix → 301 to correct locale (avoids next-intl 307)
     const CONTENT_PATH_TO_LOCALE: Record<string, { locale: string; path: string }> = {
       noticias: { locale: "es", path: "noticias" },
       news: { locale: "en", path: "news" },
@@ -207,12 +196,42 @@ export function middleware(request: NextRequest) {
       productos: { locale: "es", path: "productos" },
       products: { locale: "en", path: "products" },
       produkte: { locale: "de", path: "produkte" },
+      chanpin: { locale: "zh", path: "chanpin" },
+      muntajat: { locale: "ar", path: "muntajat" },
+      urunler: { locale: "tr", path: "urunler" },
+      utpad: { locale: "hi", path: "utpad" },
+      precio: { locale: "es", path: "precio" },
+      price: { locale: "en", path: "price" },
+      preis: { locale: "de", path: "preis" },
+      jiage: { locale: "zh", path: "jiage" },
+      sier: { locale: "ar", path: "sier" },
+      fiyat: { locale: "tr", path: "fiyat" },
+      mulya: { locale: "hi", path: "mulya" },
+      herramientas: { locale: "es", path: "herramientas" },
+      tools: { locale: "en", path: "tools" },
+      werkzeuge: { locale: "de", path: "werkzeuge" },
+      gongju: { locale: "zh", path: "gongju" },
+      adawat: { locale: "ar", path: "adawat" },
+      araclar: { locale: "tr", path: "araclar" },
+      upakar: { locale: "hi", path: "upakar" },
+      alertas: { locale: "es", path: "alertas" },
+      alerts: { locale: "en", path: "alerts" },
+      benachrichtigungen: { locale: "de", path: "benachrichtigungen" },
+      portfolio: { locale: "en", path: "portfolio" },
     };
     const contentMatch = CONTENT_PATH_TO_LOCALE[segments[0]];
     if (contentMatch) {
-      const rest = segments.slice(1).join("/");
+      const rest = segments.slice(1);
+      const isPricePath = Object.values(PRICE_PATHS).includes(contentMatch.path);
+      if (isPricePath && rest.length >= 1) {
+        const internal = METAL_REVERSE[rest[0]];
+        if (internal) {
+          rest[0] = METAL_SLUGS[internal]?.[contentMatch.locale] ?? rest[0];
+        }
+      }
+      const restStr = rest.join("/");
       return NextResponse.redirect(
-        new URL(`/${contentMatch.locale}/${contentMatch.path}${rest ? `/${rest}` : ""}`, request.url),
+        new URL(`/${contentMatch.locale}/${contentMatch.path}${restStr ? `/${restStr}` : ""}`, request.url),
         301
       );
     }
@@ -275,11 +294,13 @@ export function middleware(request: NextRequest) {
     }
   }
 
-  const alias = PATH_ALIASES[lower];
-  if (alias) {
-    const rewritten = new URL(alias, request.url);
-    rewritten.search = request.nextUrl.search;
-    return NextResponse.redirect(rewritten, 301);
+  const metalAlias = METAL_ALIASES[lower];
+  if (metalAlias) {
+    const { locale: mLoc, internal } = metalAlias;
+    const metalSlug = METAL_SLUGS[internal]?.[mLoc] ?? internal;
+    const dest = new URL(`/${mLoc}/${PRICE_PATHS[mLoc]}/${metalSlug}`, request.url);
+    dest.search = request.nextUrl.search;
+    return NextResponse.redirect(dest, 301);
   }
 
   const response = handleI18nRouting(request);
