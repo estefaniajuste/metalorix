@@ -36,7 +36,7 @@ const GENERIC_TITLE_PATTERNS = [
 const MANUAL_TITLE_OVERRIDES: Record<string, { seo_title: string; meta_description: string }> = {
   "coin-grading-scale-ms-pf": {
     seo_title: "Coin Grading Scale Explained: MS-70 to Good — Complete Chart",
-    meta_description: "Every coin grade from MS-70 (perfect) to Good (G-4) explained with price impact. Master the Sheldon 70-point scale for business strikes and proofs before buying.",
+    meta_description: "Every coin grade from MS-70 (perfect) to Good (G-4) explained with price impact. Master the Sheldon 70-point scale for business strikes and proofs.",
   },
   "coin-grading-ngc-and-pcgs": {
     seo_title: "NGC vs PCGS: Fees, Standards & Which Grading Service Wins",
@@ -72,7 +72,7 @@ const MANUAL_TITLE_OVERRIDES: Record<string, { seo_title: string; meta_descripti
   },
   "the-miller-process": {
     seo_title: "The Miller Process: How Chlorine Refines Gold to 99.5%+ Purity",
-    meta_description: "The Miller process bubbles chlorine gas through molten gold to remove base metals and silver. Learn how it works, why tin causes problems, and Miller vs Wohlwill.",
+    meta_description: "The Miller process bubbles chlorine through molten gold to remove base metals and silver. How it works, why tin causes problems, and Miller vs Wohlwill.",
   },
   "the-wohlwill-electrolytic-process": {
     seo_title: "Wohlwill Process Explained: Electrolytic Gold Refining to 999.9",
@@ -84,11 +84,11 @@ const MANUAL_TITLE_OVERRIDES: Record<string, { seo_title: string; meta_descripti
   },
   "bretton-woods-system-explained": {
     seo_title: "Bretton Woods Explained: Why Gold Was Pegged at $35/oz Until 1971",
-    meta_description: "The 1944 Bretton Woods agreement fixed gold at $35 per ounce and pegged all currencies to the dollar. Learn how it worked, why it collapsed, and its legacy today.",
+    meta_description: "The 1944 Bretton Woods agreement fixed gold at $35/oz and pegged all currencies to the dollar. How it worked, why it collapsed, and its legacy today.",
   },
   "e-waste-precious-metals-content": {
     seo_title: "Gold, Silver & Palladium in E-Waste: How Much Is in Your Phone?",
-    meta_description: "A smartphone contains ~0.03g gold, 0.3g silver and 0.015g palladium. See the full precious metals content in laptops, TVs and circuit boards — richer than most ores.",
+    meta_description: "A smartphone holds ~0.03g gold, 0.3g silver and 0.015g palladium. Precious metals content in laptops, TVs and circuit boards — richer than most ores.",
   },
 };
 
@@ -438,7 +438,7 @@ export async function POST(request: NextRequest) {
       const existingFaq = !!row.faq;
       const manualOverride = MANUAL_TITLE_OVERRIDES[row.slug];
       const improved = manualOverride
-        ? { seo_title: manualOverride.seo_title, meta_description: manualOverride.meta_description, faq: undefined as any }
+        ? { seo_title: manualOverride.seo_title.slice(0, 120), meta_description: smartTruncate(manualOverride.meta_description, 155), faq: undefined as any }
         : await optimizeLearnTitleWithGemini(
             row.title,
             row.seoTitle,
