@@ -281,6 +281,25 @@ export function middleware(request: NextRequest) {
     }
   }
 
+  // Redirect product pages with wrong-locale slug to canonical localized slug
+  const PRODUCT_PATHS: Record<string, string> = {
+    es: "productos", en: "products", de: "produkte", zh: "chanpin", ar: "muntajat", tr: "urunler", hi: "utpad",
+  };
+  if (segments.length === 3 && LOCALES.has(segments[0])) {
+    const locale = segments[0];
+    const prodSeg = PRODUCT_PATHS[locale];
+    if (prodSeg && segments[1] === prodSeg) {
+      const slugInUrl = segments[2];
+      const canonSlug = _resolveProductSlug(slugInUrl, locale);
+      if (canonSlug && canonSlug !== slugInUrl) {
+        return NextResponse.redirect(
+          new URL(`/${locale}/${prodSeg}/${canonSlug}`, request.url),
+          301
+        );
+      }
+    }
+  }
+
   const metalAlias = METAL_ALIASES[lower];
   if (metalAlias) {
     const { locale: mLoc, internal } = metalAlias;
@@ -301,3 +320,41 @@ export const config = {
     "/((?!_next/static|_next/image|favicon\\.svg|favicon\\.png|icon-.*\\.png|manifest\\.json|robots\\.txt|google.*\\.html).*)",
   ],
 };
+
+/* ── Product slug resolution (inline to avoid Edge-incompatible imports) ── */
+const _PROD_SLUGS: Record<string, Record<string, string>> = {
+  en: {
+    "krugerrand-oro":"krugerrand-gold","maple-leaf-oro":"maple-leaf-gold","filarmonica-oro":"philharmonic-gold","britannia-oro":"britannia-gold","eagle-oro":"eagle-gold",
+    "maple-leaf-plata":"maple-leaf-silver","filarmonica-plata":"philharmonic-silver","britannia-plata":"britannia-silver","eagle-plata":"eagle-silver","krugerrand-plata":"krugerrand-silver",
+    "lingote-oro-1oz":"gold-bar-1oz","lingote-oro-100g":"gold-bar-100g","lingote-oro-1kg":"gold-bar-1kg","lingote-plata-1kg":"silver-bar-1kg",
+  },
+  de: {
+    "krugerrand-oro":"krugerrand-gold","maple-leaf-oro":"maple-leaf-gold","filarmonica-oro":"philharmoniker-gold","britannia-oro":"britannia-gold","eagle-oro":"eagle-gold",
+    "maple-leaf-plata":"maple-leaf-silber","filarmonica-plata":"philharmoniker-silber","britannia-plata":"britannia-silber","eagle-plata":"eagle-silber","krugerrand-plata":"krugerrand-silber",
+    "lingote-oro-1oz":"goldbarren-1oz","lingote-oro-100g":"goldbarren-100g","lingote-oro-1kg":"goldbarren-1kg","lingote-plata-1kg":"silberbarren-1kg",
+  },
+  tr: {
+    "krugerrand-oro":"krugerrand-altin","maple-leaf-oro":"maple-leaf-altin","filarmonica-oro":"filarmoni-altin","britannia-oro":"britannia-altin","eagle-oro":"eagle-altin",
+    "maple-leaf-plata":"maple-leaf-gumus","filarmonica-plata":"filarmoni-gumus","britannia-plata":"britannia-gumus","eagle-plata":"eagle-gumus","krugerrand-plata":"krugerrand-gumus",
+    "lingote-oro-1oz":"altin-kulce-1oz","lingote-oro-100g":"altin-kulce-100g","lingote-oro-1kg":"altin-kulce-1kg","lingote-plata-1kg":"gumus-kulce-1kg",
+  },
+};
+_PROD_SLUGS.zh = _PROD_SLUGS.en;
+_PROD_SLUGS.ar = _PROD_SLUGS.en;
+_PROD_SLUGS.hi = _PROD_SLUGS.en;
+
+const _PROD_REV: Record<string, string> = {};
+for (const mapping of Object.values(_PROD_SLUGS)) {
+  for (const [base, loc] of Object.entries(mapping)) {
+    _PROD_REV[loc] = base;
+    _PROD_REV[base] = base;
+  }
+}
+
+function _resolveProductSlug(slugInUrl: string, locale: string): string | null {
+  const baseSlug = _PROD_REV[slugInUrl] ?? slugInUrl;
+  if (locale === "es") return baseSlug === slugInUrl ? null : baseSlug;
+  const locSlug = _PROD_SLUGS[locale]?.[baseSlug] ?? _PROD_SLUGS.en?.[baseSlug];
+  if (!locSlug) return null;
+  return locSlug;
+}

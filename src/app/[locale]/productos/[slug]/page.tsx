@@ -1,10 +1,8 @@
 import type { Metadata } from "next";
-import { notFound, permanentRedirect } from "next/navigation";
+import { notFound } from "next/navigation";
 import { Link } from "@/i18n/navigation";
 import { getTranslations, getLocale } from "next-intl/server";
 import { getAlternates } from "@/lib/seo/alternates";
-import { getPathname } from "@/i18n/navigation";
-import type { Locale } from "@/i18n/config";
 import { PRODUCTS, getProduct, getLocalizedProducts } from "@/lib/data/products";
 import { getAllLocalizedSlugsForBase, getBaseProductSlug } from "@/lib/data/product-slugs";
 import { ProductSpotPrice } from "@/components/products/ProductSpotPrice";
@@ -32,21 +30,10 @@ export async function generateMetadata({
   const product = getProduct(slug, locale);
   if (!product) notFound();
 
-  if (product.slug !== slug) {
-    const canonPath = getPathname({
-      locale: locale as Locale,
-      href: { pathname: "/productos/[slug]", params: { slug: product.slug } } as any,
-    });
-    permanentRedirect(canonPath);
-  }
-
   const alternates = getAlternates(locale, {
     pathname: "/productos/[slug]",
     params: { slug: product.slug },
   });
-
-  const baseUrl = (process.env.NEXT_PUBLIC_URL || "https://metalorix.com").replace(/\/$/, "");
-  const ogImageUrl = `${baseUrl}/en/opengraph-image`;
 
   return {
     title: product.seo.title + " | Metalorix",
@@ -57,7 +44,6 @@ export async function generateMetadata({
       description: product.seo.description,
       type: "website",
       url: alternates.canonical,
-      images: [{ url: ogImageUrl, width: 1200, height: 630 }],
     },
     alternates,
   };
@@ -158,14 +144,6 @@ export default async function ProductoPage({
   const locale = await getLocale();
   const product = getProduct(params.slug, locale);
   if (!product) notFound();
-
-  if (product.slug !== params.slug) {
-    const canonPath = getPathname({
-      locale: locale as Locale,
-      href: { pathname: "/productos/[slug]", params: { slug: product.slug } } as any,
-    });
-    permanentRedirect(canonPath);
-  }
 
   const allProducts = getLocalizedProducts(locale);
   const relatedProducts = allProducts.filter(
