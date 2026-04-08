@@ -41,7 +41,7 @@ export async function generateMetadata({
   const pageTitle = `${t("priceOf", { metal: seo.name })} [${year}] — Metalorix`;
 
   const baseUrl = (process.env.NEXT_PUBLIC_URL || "https://metalorix.com").replace(/\/$/, "");
-  const ogImageUrl = `${baseUrl}/api/og?metal=${encodeURIComponent(metal)}&locale=${locale}`;
+  const ogImageUrl = `${baseUrl}/en/opengraph-image`;
 
   return {
     title: pageTitle,
