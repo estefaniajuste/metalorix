@@ -1,12 +1,36 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getDb } from "@/lib/db";
-import { articles, articleTranslations, glossaryTerms, learnClusters, learnArticles } from "@/lib/db/schema";
+import { articles, articleTranslations, glossaryTerms, learnClusters, learnArticles, learnArticleLocalizations } from "@/lib/db/schema";
 import { eq, desc, isNotNull, inArray } from "drizzle-orm";
 import { routing } from "@/i18n/routing";
 import { getPathname } from "@/i18n/navigation";
 import { INTERNAL_METAL_SLUGS, getLocalizedMetalSlug } from "@/lib/utils/metal-slugs";
 import { PRODUCTS } from "@/lib/data/products";
 import { pingSearchEngines, pingIndexNow } from "@/lib/seo/ping";
+import { getLocalizedClusterSlug } from "@/lib/learn/slug-i18n";
+
+const SLUG_CANONICALIZE: Record<string, string> = {
+  "coin-grading-scale-explained-ms70-to-good": "coin-grading-scale-understanding-ms-pf-and-the-70-point-system",
+  "pcgs-vs-ngc-coin-grading-services-comparison": "coin-grading-ngc-and-pcgs",
+  "pcgs-vs-ngc-coin-grading-services-comparison-chart": "coin-grading-ngc-and-pcgs",
+  "what-is-a-carat-and-how-does-it-apply-to-gold": "gold-purity-karat-system",
+  "what-is-sterling-silver": "sterling-silver-explained",
+  "silver-chemical-symbol-and-abbreviation": "why-silvers-chemical-symbol-is-ag",
+  "what-is-a-troy-ounce": "the-troy-ounce-explained",
+  "what-is-fiat-money": "fiat-money-explained",
+  "what-are-base-metals": "precious-metals-vs-base-metals",
+  "gold-silver-platinum-volatility-comparison": "volatility-comparison-across-precious-metals",
+  "gold-silver-platinum-liquidity-comparison": "liquidity-comparison-across-precious-metals",
+  "liquidity-comparison-across-metals": "liquidity-comparison-across-precious-metals",
+  "volatility-comparison-across-metals": "volatility-comparison-across-precious-metals",
+  "how-does-ppi-affect-gold-prices": "ppi-and-gold",
+  "gold-performance-during-hyperinflation": "hyperinflation-and-precious-metals",
+  "above-ground-gold-stock": "above-ground-gold-stock-all-the-gold-ever-mined",
+  "hyperinflation-episodes-and-gold": "hyperinflation-and-precious-metals-lessons-from-weimar-to-zimbabwe",
+  "comparing-gold-etfs-in-europe": "comparing-gold-etfs-and-etcs-in-europe-a-comprehensive-guide",
+  "silver-chemical-symbol-ag": "why-silvers-chemical-symbol-is-ag",
+  "coin-grading-scale-ms-pf": "coin-grading-scale-understanding-ms-pf-and-the-70-point-system",
+};
 
 const CRON_SECRET = process.env.CRON_SECRET;
 const BASE = "https://metalorix.com";
@@ -107,14 +131,49 @@ export async function POST(request: NextRequest) {
       }
 
       const learnRows = await db
-        .select({ slug: learnArticles.slug, clusterSlug: learnClusters.slug })
+        .select({ id: learnArticles.id, slug: learnArticles.slug, clusterSlug: learnClusters.slug })
         .from(learnArticles)
         .innerJoin(learnClusters, eq(learnArticles.clusterId, learnClusters.id))
         .where(isNotNull(learnArticles.publishedAt))
         .limit(500);
 
+      const learnArticleIds = learnRows.map((r) => r.id);
+      const learnLocRows = learnArticleIds.length > 0
+        ? await db
+            .select({
+              articleId: learnArticleLocalizations.articleId,
+              locale: learnArticleLocalizations.locale,
+              slug: learnArticleLocalizations.slug,
+            })
+            .from(learnArticleLocalizations)
+            .where(inArray(learnArticleLocalizations.articleId, learnArticleIds))
+        : [];
+
+      const learnSlugsByArticle = new Map<number, Record<string, string>>();
+      for (const row of learnLocRows) {
+        if (!row.slug || row.slug.length < 5) continue;
+        if (!learnSlugsByArticle.has(row.articleId)) learnSlugsByArticle.set(row.articleId, {});
+        learnSlugsByArticle.get(row.articleId)![row.locale] = row.slug;
+      }
+
+      const emittedLearnUrls = new Set<string>();
       for (const la of learnRows) {
-        allUrls.push(...allLocaleUrls({ pathname: "/learn/[cluster]/[slug]", params: { cluster: la.clusterSlug, slug: la.slug } }));
+        const canonicalBaseSlug = SLUG_CANONICALIZE[la.slug] ?? la.slug;
+        const locSlugs = learnSlugsByArticle.get(la.id);
+
+        for (const loc of routing.locales) {
+          const locCluster = getLocalizedClusterSlug(la.clusterSlug, loc as any);
+          let locSlug = loc === "en"
+            ? canonicalBaseSlug
+            : (locSlugs?.[loc] ?? canonicalBaseSlug);
+          locSlug = SLUG_CANONICALIZE[locSlug] ?? locSlug;
+
+          const url = `${BASE}${getPathname({ locale: loc, href: { pathname: "/learn/[cluster]/[slug]", params: { cluster: locCluster, slug: locSlug } } } as any)}`;
+          if (!emittedLearnUrls.has(url)) {
+            emittedLearnUrls.add(url);
+            allUrls.push(url);
+          }
+        }
       }
     } catch (err) {
       console.error("DB fetch for index-all failed:", err);

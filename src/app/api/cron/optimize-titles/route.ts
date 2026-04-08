@@ -31,6 +31,67 @@ const GENERIC_TITLE_PATTERNS = [
   "resumen diario",
 ];
 
+// Manually crafted CTR-optimized titles for the highest-impression zero-click pages.
+// These override Gemini when the slug matches, ensuring reliable quality.
+const MANUAL_TITLE_OVERRIDES: Record<string, { seo_title: string; meta_description: string }> = {
+  "coin-grading-scale-ms-pf": {
+    seo_title: "Coin Grading Scale Explained: MS-70 to Good — Complete Chart",
+    meta_description: "Every coin grade from MS-70 (perfect) to Good (G-4) explained with price impact. Master the Sheldon 70-point scale for business strikes and proofs before buying.",
+  },
+  "coin-grading-ngc-and-pcgs": {
+    seo_title: "NGC vs PCGS: Fees, Standards & Which Grading Service Wins",
+    meta_description: "NGC vs PCGS compared: submission fees, turnaround times, holder quality and resale premiums. See which coin grading service is better for your collection.",
+  },
+  "volatility-comparison-across-metals": {
+    seo_title: "Gold vs Silver vs Platinum Volatility: Which Metal Swings Most?",
+    meta_description: "Silver averages 30% annualized volatility vs gold's 16%. Compare 10-year data for gold, silver, platinum and palladium with daily max moves and ranking tables.",
+  },
+  "liquidity-comparison-across-metals": {
+    seo_title: "Gold vs Silver vs Platinum Liquidity: Spreads, Volume & Ease of Selling",
+    meta_description: "Gold trades $130B+/day; platinum just $4B. Rank precious metals by daily volume, bid-ask spread and market depth. Liquidity data matters when you need to sell.",
+  },
+  "hyperinflation-episodes-and-gold": {
+    seo_title: "Does Gold Protect in Hyperinflation? Weimar, Zimbabwe & Venezuela Data",
+    meta_description: "Gold preserved 90%+ of purchasing power in Weimar Germany, Zimbabwe and Venezuela. Real price data from history's worst hyperinflation episodes analyzed.",
+  },
+  "above-ground-gold-stock": {
+    seo_title: "All Gold Ever Mined: 212,000 Tonnes — Where Is It Now? [2026]",
+    meta_description: "Total above-ground gold stock: ~212,000 tonnes worth $16T+. Breakdown: 46% jewelry, 22% investment, 17% central banks. Updated 2026 World Gold Council data.",
+  },
+  "hyperinflation-and-precious-metals": {
+    seo_title: "Gold in Hyperinflation: Weimar, Zimbabwe & Venezuela Case Studies",
+    meta_description: "Gold surged 1 trillion% in Weimar marks and quadrillions in Zimbabwe dollars. See exactly how gold and silver performed in history's worst currency collapses.",
+  },
+  "silver-chemical-symbol-ag": {
+    seo_title: "Why Is Silver's Chemical Symbol Ag? The Latin Origin Explained",
+    meta_description: "Silver's symbol Ag comes from Latin 'argentum' meaning shiny or white. Learn the full history behind this periodic table anomaly and why it persists today.",
+  },
+  "comparing-gold-etfs-in-europe": {
+    seo_title: "Best Gold ETFs in Europe 2026: Xetra-Gold vs iShares Fees Compared",
+    meta_description: "Compare Europe's top gold ETFs and ETCs: Xetra-Gold, iShares Physical Gold, Invesco and more. Fees, AUM, physical backing and tax treatment compared.",
+  },
+  "the-miller-process": {
+    seo_title: "The Miller Process: How Chlorine Refines Gold to 99.5%+ Purity",
+    meta_description: "The Miller process bubbles chlorine gas through molten gold to remove base metals and silver. Learn how it works, why tin causes problems, and Miller vs Wohlwill.",
+  },
+  "the-wohlwill-electrolytic-process": {
+    seo_title: "Wohlwill Process Explained: Electrolytic Gold Refining to 999.9",
+    meta_description: "The Wohlwill electrolytic process refines gold to 99.99% (four nines). See how it works, why anode slime matters, and when refiners choose Wohlwill over Miller.",
+  },
+  "gold-price-in-different-decades": {
+    seo_title: "Gold Price by Decade: 1970s Through 2020s — Returns Charted",
+    meta_description: "Gold returned +2,300% in the 1970s, -52% in the 1980s and +25% in the 2010s. See average gold prices, real returns and the dominant driver of each decade.",
+  },
+  "bretton-woods-system-explained": {
+    seo_title: "Bretton Woods Explained: Why Gold Was Pegged at $35/oz Until 1971",
+    meta_description: "The 1944 Bretton Woods agreement fixed gold at $35 per ounce and pegged all currencies to the dollar. Learn how it worked, why it collapsed, and its legacy today.",
+  },
+  "e-waste-precious-metals-content": {
+    seo_title: "Gold, Silver & Palladium in E-Waste: How Much Is in Your Phone?",
+    meta_description: "A smartphone contains ~0.03g gold, 0.3g silver and 0.015g palladium. See the full precious metals content in laptops, TVs and circuit boards — richer than most ores.",
+  },
+};
+
 const LANGUAGE_NAMES: Record<string, string> = {
   en: "English",
   zh: "Simplified Chinese",
@@ -230,7 +291,11 @@ export async function POST(request: NextRequest) {
   // target=learn → only learn articles; target=news → only news; default → both
   const target = url.searchParams.get("target") || "all";
   // slugs=a,b,c → force-process specific learn article slugs regardless of needsOptimization
-  const forceSlugs = url.searchParams.get("slugs")?.split(",").map((s) => s.trim()).filter(Boolean) ?? [];
+  // slugs=manual → force all MANUAL_TITLE_OVERRIDES slugs
+  const rawSlugs = url.searchParams.get("slugs") || "";
+  const forceSlugs = rawSlugs === "manual"
+    ? Object.keys(MANUAL_TITLE_OVERRIDES)
+    : rawSlugs.split(",").map((s) => s.trim()).filter(Boolean);
 
   const db = getDb();
   if (!db) return NextResponse.json({ error: "DB unavailable" }, { status: 503 });
@@ -373,14 +438,17 @@ export async function POST(request: NextRequest) {
       if (!row.title || !row.content) continue;
 
       const existingFaq = !!row.faq;
-      const improved = await optimizeLearnTitleWithGemini(
-        row.title,
-        row.seoTitle,
-        row.metaDescription,
-        row.content,
-        row.slug,
-        existingFaq
-      );
+      const manualOverride = MANUAL_TITLE_OVERRIDES[row.slug];
+      const improved = manualOverride
+        ? { seo_title: manualOverride.seo_title, meta_description: manualOverride.meta_description, faq: undefined as any }
+        : await optimizeLearnTitleWithGemini(
+            row.title,
+            row.seoTitle,
+            row.metaDescription,
+            row.content,
+            row.slug,
+            existingFaq
+          );
 
       if (!improved) {
         failed.push({ id: row.locId, locale: "en-learn", reason: "Gemini returned null" });

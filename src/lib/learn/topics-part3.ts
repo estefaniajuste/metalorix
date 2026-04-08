@@ -384,9 +384,9 @@ export const TOPICS_PART3: TopicDefinition[] = [
     difficulty: "intermediate",
     articleType: "explainer",
     metals: ["gold"],
-    titleEn: "The Miller Process: Chlorine-Based Gold Refining",
+    titleEn: "The Miller Process: How Chlorine Refines Gold to 99.5%+ Purity",
     summaryEn:
-      "Learn how the Miller process uses chlorine gas to remove base metals and silver from molten gold, producing bullion of 99.5% purity or higher.",
+      "The Miller process bubbles chlorine gas through molten gold to remove base metals and silver. Learn how it works, why tin causes problems, and Miller vs Wohlwill compared.",
     tags: ["miller-process", "chlorine", "refining", "gold"],
     relatedSlugs: [
       "how-gold-is-refined",
@@ -401,9 +401,9 @@ export const TOPICS_PART3: TopicDefinition[] = [
     difficulty: "advanced",
     articleType: "explainer",
     metals: ["gold"],
-    titleEn: "The Wohlwill Electrolytic Process: Achieving 999.9 Purity",
+    titleEn: "Wohlwill Process Explained: Electrolytic Gold Refining to 999.9",
     summaryEn:
-      "Understand the electrochemical process that refines gold to 99.99% purity, why it's preferred for investment-grade bars, and its advantages over the Miller process.",
+      "The Wohlwill electrolytic process refines gold to 99.99% (four nines) purity. See how it works, why anode slime matters, and when refiners choose Wohlwill over Miller.",
     tags: ["wohlwill", "electrolysis", "purity", "refining", "gold"],
     relatedSlugs: ["how-gold-is-refined", "the-miller-process"],
     priority: 2,
@@ -1166,9 +1166,9 @@ export const TOPICS_PART3: TopicDefinition[] = [
     difficulty: "intermediate",
     articleType: "explainer",
     metals: ["gold", "silver", "palladium", "platinum"],
-    titleEn: "Precious Metals Content in E-Waste: What's Inside Your Devices",
+    titleEn: "Gold, Silver & Palladium in E-Waste: How Much Is in Your Phone?",
     summaryEn:
-      "Quantify the gold, silver, palladium, and platinum found in phones, computers, TVs, and other electronics, and why e-waste is richer than most ores.",
+      "A smartphone contains ~0.03g gold, 0.3g silver and 0.015g palladium. See the full precious metals content in laptops, TVs and circuit boards — richer than most ores.",
     tags: ["e-waste", "precious-metals", "content", "devices"],
     relatedSlugs: [
       "gold-recovery-from-electronics",
@@ -3378,9 +3378,9 @@ export const TOPICS_PART3: TopicDefinition[] = [
     subclusterSlug: "certification-grading",
     difficulty: "intermediate",
     articleType: "explainer",
-    titleEn: "Coin Grading Scale: Understanding MS, PF, and the 70-Point System",
+    titleEn: "Coin Grading Scale Explained: MS-70 to Good — Complete 70-Point Chart",
     summaryEn:
-      "Decode the Sheldon 70-point coin grading scale — from AG-3 to MS-70 for business strikes and PF-70 for proofs — and understand how grade affects value.",
+      "Every grade from MS-70 (perfect) to Good (G-4) explained with photos and price impact. Learn the Sheldon 70-point scale for business strikes (MS) and proofs (PF) before you buy or sell.",
     tags: ["grading-scale", "sheldon", "ms", "pf", "numismatics"],
     relatedSlugs: [
       "ngc-coin-grading-explained",

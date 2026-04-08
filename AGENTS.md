@@ -234,9 +234,7 @@ No asumir que los cambios están en producción solo porque el código está lis
    - `precio-oro-hoy`, `precio-gramo-oro`, `ratio-oro-plata`, `herramientas`, `donde-comprar`
    - Mismo patrón que `guia-inversion` y `fear-greed` (truncar a 155 chars en `generateMetadata`)
 
-4. **Consolidar URL duplicada (canibalización)**
-   - `/en/learn/comparisons/liquidity-comparison-across-precious-metals` y `/en/learn/comparisons/liquidity-comparison-across-metals` sirven el mismo contenido
-   - Añadir redirect 301 del slug corto al largo (o viceversa)
+4. ~~**Consolidar URL duplicada (canibalización)**~~ — **COMPLETADO** (abril 2026): los 301 ya existían en middleware desde antes. El problema real era seoTitles débiles + index-all enviando slugs no canónicos. Ambos arreglados.
 
 ### Pendiente — Acciones manuales del usuario (no puede hacer el agente)
 
@@ -510,10 +508,44 @@ IndexNow pinguéado para 28 URLs (4 artículos × 7 idiomas). Esperar impacto en
 ### Errores técnicos encontrados (abril 2026)
 
 1. **~50 URLs en GSC con 301 redirect** — Google indexó URLs con cluster slugs antiguos/extranjeros. Los 301 están correctos pero Google aún muestra las URLs viejas en SERPs. **Requiere acción manual del usuario en GSC.**
-2. **Posible canibalización**: `/en/learn/comparisons/liquidity-comparison-across-precious-metals` y `/en/learn/comparisons/liquidity-comparison-across-metals` sirven el mismo contenido con URLs diferentes. **Pendiente: consolidar con redirect 301.**
+2. ~~**Posible canibalización**: `/en/learn/comparisons/liquidity-comparison-across-precious-metals` y `/en/learn/comparisons/liquidity-comparison-across-metals`~~ → **RESUELTO** (abril 2026): los 301 ya existían en middleware + sitemap `cleanSlug`. El problema visible en GSC era indexación lagging, no duplicados reales.
 3. **Herramientas sin visibilidad SEO**: ninguna herramienta aparece en GSC. Necesitan más internal links, FAQ schema, y contenido landing optimizado.
 4. ~~**272 learn articles + 5 glossary con slugs < 5 chars** en zh/ar/hi/es — causaban duplicados en sitemap~~ → **RESUELTO** (abril 2026): slugs regenerados con Gemini vía `/api/cron/fix-slugs`, sitemap deduplicado, soft redirects convertidos a 308.
 5. ~~**542 páginas "Crawled: currently not indexed"** — causado por slugs duplicados, OpenGraph URLs crawleadas, y soft redirects~~ → **MITIGADO** (abril 2026): robots.txt bloquea opengraph-image, sitemap limpio de duplicados, redirects reales. Monitorizar en GSC en 2-4 semanas.
+
+### ✅ CTR Zero-Click Fix — Top 14 Pages Optimized (9 abril 2026)
+
+**Problema:** GSC (14 mar - 6 abr 2026) muestra ~229K impresiones pero solo ~438 clics (CTR 0.19%). Las 14 páginas con más impresiones y 0 clics tenían títulos genéricos/académicos que no invitan al clic. Desktop CTR = 0.09% (10x peor que mobile 0.9%).
+
+**Cambios implementados:**
+
+1. **`MANUAL_TITLE_OVERRIDES` en `optimize-titles/route.ts`** — Títulos y meta descriptions CTR-optimizados para 14 páginas, escritos a mano (no generados por Gemini). Se aplican automáticamente cuando `?slugs=manual` o cuando el slug coincide durante el cron. Páginas:
+   - `coin-grading-scale-ms-pf` (7.3K imp, pos 4.8) — "Coin Grading Scale Explained: MS-70 to Good — Complete Chart"
+   - `volatility-comparison-across-metals` (4.8K imp, pos 4.3) — "Gold vs Silver vs Platinum Volatility: Which Metal Swings Most?"
+   - `above-ground-gold-stock` (4.4K imp, pos 6.5) — "All Gold Ever Mined: 212,000 Tonnes — Where Is It Now? [2026]"
+   - `hyperinflation-episodes-and-gold` (3.7K imp, pos 4.4) — "Does Gold Protect in Hyperinflation? Weimar, Zimbabwe & Venezuela Data"
+   - `liquidity-comparison-across-metals` (3K imp, pos 2.6) — "Gold vs Silver vs Platinum Liquidity: Spreads, Volume & Ease of Selling"
+   - `silver-chemical-symbol-ag` (2.9K imp) — "Why Is Silver's Chemical Symbol Ag? The Latin Origin Explained"
+   - `the-miller-process` (2.7K imp, pos 6.4) — "The Miller Process: How Chlorine Refines Gold to 99.5%+ Purity"
+   - `gold-price-in-different-decades` (2.6K imp, pos 9.4) — "Gold Price by Decade: 1970s Through 2020s — Returns Charted"
+   - `the-wohlwill-electrolytic-process` (1.6K imp, pos 5.8) — "Wohlwill Process Explained: Electrolytic Gold Refining to 999.9"
+   - `coin-grading-ngc-and-pcgs` (1.7K imp, pos 9.8) — "NGC vs PCGS: Fees, Standards & Which Grading Service Wins"
+   - `e-waste-precious-metals-content` (1.4K imp, pos 8.9) — "Gold, Silver & Palladium in E-Waste: How Much Is in Your Phone?"
+   - `bretton-woods-system-explained` (1.3K imp, pos 6.2) — "Bretton Woods Explained: Why Gold Was Pegged at $35/oz Until 1971"
+   - `comparing-gold-etfs-in-europe` (3.2K imp, pos 6.7) — "Best Gold ETFs in Europe 2026: Xetra-Gold vs iShares Fees Compared"
+   - `hyperinflation-and-precious-metals` — "Gold in Hyperinflation: Weimar, Zimbabwe & Venezuela Case Studies"
+
+2. **`titleEn` + `summaryEn` actualizados en topics** — Todas las páginas arriba tienen fallbacks CTR-optimizados en `topics-part1/2/3/4.ts`.
+
+3. **`index-all/route.ts` corregido** — Ahora usa slugs canónicos (via `SLUG_CANONICALIZE` map) y clusters localizados. Antes enviaba slugs raw de DB que no coincidían con el sitemap (ej: `volatility-comparison-across-metals` vs sitemap `volatility-comparison-across-precious-metals`).
+
+**Para aplicar los títulos en DB:** ejecutar el endpoint:
+```bash
+curl -X POST -H "Authorization: Bearer $CRON_SECRET" \
+  "https://metalorix.com/api/cron/optimize-titles?target=learn&slugs=manual"
+```
+
+**Impacto esperado:** Si el CTR sube de 0% a 2-3% en estas ~35K impresiones combinadas, eso son ~700-1000 clics/mes adicionales. Monitorizar en GSC en 2-4 semanas.
 
 ---
 

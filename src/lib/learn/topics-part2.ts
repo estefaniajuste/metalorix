@@ -3153,9 +3153,9 @@ export const TOPICS_PART2: TopicDefinition[] = [
     subclusterSlug: "historic-coins",
     difficulty: "intermediate",
     articleType: "explainer",
-    titleEn: "Coin Grading: NGC and PCGS Standards Explained",
+    titleEn: "NGC vs PCGS: Fees, Standards & Which Coin Grading Service Is Better",
     summaryEn:
-      "Understand how the two leading coin grading services — NGC and PCGS — evaluate and encapsulate coins, and what grades mean for value and authenticity.",
+      "NGC vs PCGS head-to-head: submission fees, turnaround times, holder quality, resale premiums and population reports compared. Find out which grading service suits your collection.",
     tags: ["ngc", "pcgs", "grading", "authentication"],
     relatedSlugs: [
       "sheldon-grading-scale",
@@ -3804,9 +3804,9 @@ export const TOPICS_PART2: TopicDefinition[] = [
     difficulty: "intermediate",
     articleType: "explainer",
     metals: ["gold"],
-    titleEn: "Above-Ground Gold Stock: All the Gold Ever Mined",
+    titleEn: "All Gold Ever Mined: 212,000 Tonnes — Where Is It Now? [2026 Data]",
     summaryEn:
-      "Learn that approximately 212,000 tonnes of gold have been mined in human history, where it sits today, and why this stock matters for supply-demand analysis.",
+      "Total above-ground gold stock is ~212,000 tonnes worth $16+ trillion. See the breakdown: 46% jewelry, 22% investment, 17% central banks, 15% industrial. Updated 2026 figures.",
     tags: ["above-ground-stock", "gold", "total-supply", "distribution"],
     relatedSlugs: [
       "annual-gold-mine-production",

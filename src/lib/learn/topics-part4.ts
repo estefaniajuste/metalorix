@@ -71,9 +71,9 @@ export const TOPICS_PART4: TopicDefinition[] = [
     difficulty: "intermediate",
     articleType: "macro",
     metals: ["gold", "silver"],
-    titleEn: "Hyperinflation and Precious Metals: Lessons from Weimar to Zimbabwe",
+    titleEn: "Does Gold Protect in Hyperinflation? Weimar, Zimbabwe & Venezuela Data",
     summaryEn:
-      "Examine how gold and silver performed during extreme inflation events in Germany, Zimbabwe, Venezuela, and Argentina, and what investors can learn from these episodes.",
+      "How did gold and silver perform during hyperinflation in Weimar Germany, Zimbabwe, Venezuela and Argentina? Real data shows gold preserved 90%+ of purchasing power in each case.",
     tags: ["hyperinflation", "gold", "silver", "wealth-preservation", "case-studies"],
     relatedSlugs: [
       "currency-debasement-through-history",
@@ -2335,9 +2335,9 @@ export const TOPICS_PART4: TopicDefinition[] = [
     difficulty: "intermediate",
     articleType: "comparison",
     metals: ["gold", "silver", "platinum", "palladium"],
-    titleEn: "Volatility Comparison Across Precious Metals",
+    titleEn: "Gold vs Silver vs Platinum Volatility: Which Metal Swings Most?",
     summaryEn:
-      "Compare historical and implied volatility across gold, silver, platinum, and palladium — annualized vol, max daily moves, and how volatility characteristics affect position sizing.",
+      "Compare annualized volatility for gold, silver, platinum and palladium over 10+ years. Silver averages 30% vol vs gold's 16%. See daily max moves, ranking tables and position-sizing implications.",
     tags: ["volatility", "comparison", "risk", "data"],
     relatedSlugs: [
       "comparing-all-precious-metals-at-once",
@@ -2354,9 +2354,9 @@ export const TOPICS_PART4: TopicDefinition[] = [
     difficulty: "intermediate",
     articleType: "comparison",
     metals: ["gold", "silver", "platinum", "palladium"],
-    titleEn: "Liquidity Comparison Across Precious Metals",
+    titleEn: "Gold vs Silver vs Platinum Liquidity: Spreads, Volume & Ease of Selling",
     summaryEn:
-      "Rank precious metals by liquidity — daily trading volume, bid-ask spread, market depth — and understand why liquidity matters for entry, exit, and crisis-time execution.",
+      "Rank gold, silver, platinum and palladium by daily volume, bid-ask spread and market depth. Gold trades $130B+/day; platinum just $4B. See why liquidity matters when you need to sell fast.",
     tags: ["liquidity", "comparison", "trading-volume", "spread"],
     relatedSlugs: ["volatility-comparison-across-metals", "comparing-all-precious-metals-at-once"],
     glossaryTermSlugs: ["liquidity-definition"],
