@@ -254,26 +254,6 @@ export function middleware(request: NextRequest) {
     }
   }
 
-  // Redirect learn pages under wrong cluster slug to the correct localized cluster.
-  if (segments.length >= 3 && LOCALES.has(segments[0])) {
-    const locale = segments[0];
-    const learnSegment = LEARN_PATHS[locale]?.replace("/", "") || "learn";
-    if (segments[1] === learnSegment && segments.length >= 3) {
-      const clusterInUrl = segments[2];
-      const baseCluster = CLUSTER_REVERSE[clusterInUrl];
-      if (baseCluster) {
-        const expected = locale === "en" ? baseCluster : (CLUSTER_SLUG_BY_LOCALE[locale]?.[baseCluster] ?? baseCluster);
-        if (clusterInUrl !== expected) {
-          const rest = segments.slice(3).join("/");
-          return NextResponse.redirect(
-            new URL(`/${locale}/${learnSegment}/${expected}${rest ? `/${rest}` : ""}`, request.url),
-            301
-          );
-        }
-      }
-    }
-  }
-
   // Redirect product pages with wrong locale metal slug.
   if (segments.length >= 3 && LOCALES.has(segments[0])) {
     const locale = segments[0];

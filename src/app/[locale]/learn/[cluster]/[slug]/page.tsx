@@ -210,10 +210,16 @@ export async function generateMetadata({
     const glossaryData = await getGlossaryTermData(params.slug, locale);
     if (glossaryData) {
       const { term: gTerm, isLocaleMatch } = glossaryData;
-      const title = isLocaleMatch ? gTerm.term : tl("typeGlossary");
-      const description = isLocaleMatch
-        ? truncateDescription(gTerm.definition, 155)
-        : tl("title");
+      if (!isLocaleMatch) {
+        const enGlossaryCluster = getLocalizedClusterSlug("glossary", "en");
+        const enPath = getPathname({
+          locale: "en" as Locale,
+          href: { pathname: "/learn/[cluster]/[slug]", params: { cluster: enGlossaryCluster, slug: gTerm.slug } } as any,
+        });
+        permanentRedirect(enPath);
+      }
+      const title = gTerm.term;
+      const description = truncateDescription(gTerm.definition, 155);
       const alternates = getAlternates(locale, (loc) => ({
         pathname: "/learn/[cluster]/[slug]",
         params: {
@@ -236,7 +242,6 @@ export async function generateMetadata({
           description,
         },
         alternates,
-        ...(isLocaleMatch ? {} : { robots: { index: false } }),
       };
     }
   }
@@ -268,6 +273,14 @@ export async function generateMetadata({
   const canonicalSlug = (await getLocalizedArticleSlug(topic.slug, locale)) || topic.slug;
   const canonicalCluster = getLocalizedClusterSlug(baseClusterSlug, locale);
   const isNonCanonical = params.slug !== canonicalSlug || params.cluster !== canonicalCluster;
+
+  if (isNonCanonical) {
+    const canonPath = getPathname({
+      locale: locale as Locale,
+      href: { pathname: "/learn/[cluster]/[slug]", params: { cluster: canonicalCluster, slug: canonicalSlug } } as any,
+    });
+    permanentRedirect(canonPath);
+  }
 
   const data = await getArticleData(topic.slug, locale);
   const rawTitle = data?.localization.seoTitle || topic.titleEn;
@@ -302,7 +315,6 @@ export async function generateMetadata({
       description,
     },
     alternates,
-    ...(isNonCanonical && { robots: { index: false, follow: true } }),
   };
 }
 
@@ -327,11 +339,17 @@ export default async function LearnArticlePage({
     const glossaryData = await getGlossaryTermData(params.slug, locale);
     if (glossaryData) {
       const { term: glossaryTerm, isLocaleMatch } = glossaryData;
+      if (!isLocaleMatch) {
+        const enGlossaryCluster = getLocalizedClusterSlug("glossary", "en");
+        const enPath = getPathname({
+          locale: "en" as Locale,
+          href: { pathname: "/learn/[cluster]/[slug]", params: { cluster: enGlossaryCluster, slug: glossaryTerm.slug } } as any,
+        });
+        permanentRedirect(enPath);
+      }
       const locClusterSlug = getLocalizedClusterSlug("glossary", locale);
       const localizedCluster = getLocalizedCluster("glossary", locale);
       const clusterName = localizedCluster?.name ?? "Glossary & Terminology";
-      const showContent = isLocaleMatch;
-
       return (
         <article className="py-[var(--section-py)]">
           <div className="mx-auto max-w-[780px] px-6">
@@ -343,89 +361,62 @@ export default async function LearnArticlePage({
                   label: clusterName,
                   href: { pathname: "/learn/[cluster]" as const, params: { cluster: locClusterSlug } },
                 },
-                { label: showContent ? glossaryTerm.term : t("typeGlossary") },
+                { label: glossaryTerm.term },
               ]}
               locale={locale}
               ariaLabel={tc("breadcrumbNav")}
             />
 
-            {showContent ? (
-              <>
-                <header className="mb-8">
-                  <div className="flex items-center gap-2 mb-4 flex-wrap">
-                    <span className="text-[10px] font-semibold px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-400">
-                      {t("difficultyBeginner")}
-                    </span>
-                    <span className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-surface-2 text-content-3">
-                      {t("typeGlossary")}
-                    </span>
-                    {glossaryTerm.category && (
-                      <span className="text-[10px] text-content-3">
-                        {glossaryTerm.category}
-                      </span>
-                    )}
-                  </div>
-
-                  <h1 className="text-2xl sm:text-3xl font-extrabold text-content-0 tracking-tight leading-tight mb-4">
-                    {glossaryTerm.term}
-                  </h1>
-
-                  <p className="text-lg text-content-2 leading-relaxed">
-                    {glossaryTerm.definition}
-                  </p>
-                </header>
-
-                {glossaryTerm.content ? (
-                  <div className="prose-metalorix text-content-1 leading-relaxed text-[15px] [&>p]:mb-5 [&>h2]:text-xl [&>h2]:font-bold [&>h2]:text-content-0 [&>h2]:mt-10 [&>h2]:mb-4 [&>h3]:text-lg [&>h3]:font-semibold [&>h3]:text-content-0 [&>h3]:mt-8 [&>h3]:mb-3 [&>ul]:list-disc [&>ul]:pl-5 [&>ul]:mb-5 [&>ol]:list-decimal [&>ol]:pl-5 [&>ol]:mb-5 [&>blockquote]:border-l-2 [&>blockquote]:border-brand-gold [&>blockquote]:pl-4 [&>blockquote]:italic [&>blockquote]:text-content-2 [&>blockquote]:my-6">
-                    {glossaryTerm.content.split("\n").map((line, i) => {
-                      if (!line.trim()) return null;
-                      if (line.startsWith("## "))
-                        return <h2 key={i}>{line.slice(3)}</h2>;
-                      if (line.startsWith("### "))
-                        return <h3 key={i}>{line.slice(4)}</h3>;
-                      if (line.startsWith("- "))
-                        return (
-                          <ul key={i}>
-                            <li>{line.slice(2)}</li>
-                          </ul>
-                        );
-                      return <p key={i}>{line}</p>;
-                    })}
-                  </div>
-                ) : (
-                  <div className="p-8 rounded-lg border border-border bg-surface-1 text-center">
-                    <p className="text-content-2 mb-2">
-                      {t("preparingArticle")}
-                    </p>
-                    <p className="text-sm text-content-3">
-                      {t("preparingArticleHint", { name: clusterName })}
-                    </p>
-                  </div>
+            <header className="mb-8">
+              <div className="flex items-center gap-2 mb-4 flex-wrap">
+                <span className="text-[10px] font-semibold px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-400">
+                  {t("difficultyBeginner")}
+                </span>
+                <span className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-surface-2 text-content-3">
+                  {t("typeGlossary")}
+                </span>
+                {glossaryTerm.category && (
+                  <span className="text-[10px] text-content-3">
+                    {glossaryTerm.category}
+                  </span>
                 )}
-              </>
+              </div>
+
+              <h1 className="text-2xl sm:text-3xl font-extrabold text-content-0 tracking-tight leading-tight mb-4">
+                {glossaryTerm.term}
+              </h1>
+
+              <p className="text-lg text-content-2 leading-relaxed">
+                {glossaryTerm.definition}
+              </p>
+            </header>
+
+            {glossaryTerm.content ? (
+              <div className="prose-metalorix text-content-1 leading-relaxed text-[15px] [&>p]:mb-5 [&>h2]:text-xl [&>h2]:font-bold [&>h2]:text-content-0 [&>h2]:mt-10 [&>h2]:mb-4 [&>h3]:text-lg [&>h3]:font-semibold [&>h3]:text-content-0 [&>h3]:mt-8 [&>h3]:mb-3 [&>ul]:list-disc [&>ul]:pl-5 [&>ul]:mb-5 [&>ol]:list-decimal [&>ol]:pl-5 [&>ol]:mb-5 [&>blockquote]:border-l-2 [&>blockquote]:border-brand-gold [&>blockquote]:pl-4 [&>blockquote]:italic [&>blockquote]:text-content-2 [&>blockquote]:my-6">
+                {glossaryTerm.content.split("\n").map((line, i) => {
+                  if (!line.trim()) return null;
+                  if (line.startsWith("## "))
+                    return <h2 key={i}>{line.slice(3)}</h2>;
+                  if (line.startsWith("### "))
+                    return <h3 key={i}>{line.slice(4)}</h3>;
+                  if (line.startsWith("- "))
+                    return (
+                      <ul key={i}>
+                        <li>{line.slice(2)}</li>
+                      </ul>
+                    );
+                  return <p key={i}>{line}</p>;
+                })}
+              </div>
             ) : (
-              <>
-                <header className="mb-8">
-                  <div className="flex items-center gap-2 mb-4 flex-wrap">
-                    <span className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-surface-2 text-content-3">
-                      {t("typeGlossary")}
-                    </span>
-                  </div>
-
-                  <h1 className="text-2xl sm:text-3xl font-extrabold text-content-0 tracking-tight leading-tight mb-4">
-                    {t("typeGlossary")}
-                  </h1>
-                </header>
-
-                <div className="p-8 rounded-lg border border-border bg-surface-1 text-center">
-                  <p className="text-content-2 mb-2">
-                    {t("contentComingSoon")}
-                  </p>
-                  <p className="text-sm text-content-3">
-                    {t("preparingArticleHint", { name: clusterName })}
-                  </p>
-                </div>
-              </>
+              <div className="p-8 rounded-lg border border-border bg-surface-1 text-center">
+                <p className="text-content-2 mb-2">
+                  {t("preparingArticle")}
+                </p>
+                <p className="text-sm text-content-3">
+                  {t("preparingArticleHint", { name: clusterName })}
+                </p>
+              </div>
             )}
 
             <footer className="mt-10 pt-6 border-t border-border">
