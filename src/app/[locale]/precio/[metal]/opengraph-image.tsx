@@ -1,10 +1,17 @@
 import { ImageResponse } from "next/og";
-import { resolveMetalSlug } from "@/lib/utils/metal-slugs";
 
 export const runtime = "edge";
 export const alt = "Metal price";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
+
+const SLUG_TO_INTERNAL: Record<string, string> = {
+  oro: "oro", gold: "oro", huangjin: "oro", dhahab: "oro", altin: "oro", sona: "oro", thahab: "oro",
+  plata: "plata", silver: "plata", silber: "plata", baiyin: "plata", fiddah: "plata", gumus: "plata", chandi: "plata",
+  platino: "platino", platinum: "platino", platin: "platino", bojin: "platino", blatiin: "platino", platinam: "platino",
+  paladio: "paladio", palladium: "paladio", bajin: "paladio", baladiyum: "paladio", paladyum: "paladio",
+  cobre: "cobre", copper: "cobre", kupfer: "cobre", tong: "cobre", nuhas: "cobre", bakir: "cobre", tamba: "cobre",
+};
 
 const METAL_INFO: Record<string, { name: string; symbol: string; color: string }> = {
   oro: { name: "Gold", symbol: "XAU", color: "#D6B35A" },
@@ -34,7 +41,7 @@ const LABELS: Record<string, { priceToday: string; liveData: string }> = {
 
 export default async function OGImage({ params }: { params: { locale: string; metal: string } }) {
   const { locale, metal } = params;
-  const internalSlug = resolveMetalSlug(metal) ?? metal;
+  const internalSlug = SLUG_TO_INTERNAL[metal] ?? metal;
   const info = METAL_INFO[internalSlug];
   if (!info) {
     return new ImageResponse(
