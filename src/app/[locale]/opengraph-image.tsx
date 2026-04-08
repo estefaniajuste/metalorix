@@ -8,7 +8,7 @@ export const contentType = "image/png";
 const i18n: Record<string, { heading: string; subtitle: string; metals: string[] }> = {
   es: {
     heading: "Metales Preciosos e Industriales",
-    subtitle: "Precios spot en tiempo real, gráficos profesionales y analítica para Oro, Plata, Platino, Paladio y Cobre",
+    subtitle: "Precios spot en tiempo real, graficos profesionales y analitica para Oro, Plata, Platino, Paladio y Cobre",
     metals: ["Oro", "Plata", "Platino", "Paladio", "Cobre"],
   },
   en: {
@@ -17,29 +17,29 @@ const i18n: Record<string, { heading: string; subtitle: string; metals: string[]
     metals: ["Gold", "Silver", "Platinum", "Palladium", "Copper"],
   },
   ar: {
-    heading: "المعادن الثمينة والصناعية",
-    subtitle: "أسعار فورية في الوقت الفعلي، رسوم بيانية احترافية وتحليلات للذهب والفضة والبلاتين والبلاديوم والنحاس",
-    metals: ["الذهب", "الفضة", "البلاتين", "البلاديوم", "النحاس"],
+    heading: "Precious & Industrial Metals",
+    subtitle: "Real-time spot prices, professional charts and analytics for Gold, Silver, Platinum, Palladium and Copper",
+    metals: ["Gold", "Silver", "Platinum", "Palladium", "Copper"],
   },
   de: {
     heading: "Edel- und Industriemetalle",
-    subtitle: "Echtzeit-Spotpreise, professionelle Charts und Analysen für Gold, Silber, Platin, Palladium und Kupfer",
+    subtitle: "Echtzeit-Spotpreise, professionelle Charts und Analysen fur Gold, Silber, Platin, Palladium und Kupfer",
     metals: ["Gold", "Silber", "Platin", "Palladium", "Kupfer"],
   },
   tr: {
-    heading: "Değerli ve Endüstriyel Metaller",
-    subtitle: "Altın, Gümüş, Platin, Paladyum ve Bakır için gerçek zamanlı spot fiyatlar, profesyonel grafikler ve analizler",
-    metals: ["Altın", "Gümüş", "Platin", "Paladyum", "Bakır"],
+    heading: "Degerli ve Endustriyel Metaller",
+    subtitle: "Altin, Gumus, Platin, Paladyum ve Bakir icin gercek zamanli spot fiyatlar ve analizler",
+    metals: ["Altin", "Gumus", "Platin", "Paladyum", "Bakir"],
   },
   zh: {
-    heading: "贵金属与工业金属",
-    subtitle: "黄金、白银、铂金、钯金和铜的实时现货价格、专业图表和分析",
-    metals: ["黄金", "白银", "铂金", "钯金", "铜"],
+    heading: "Precious & Industrial Metals",
+    subtitle: "Real-time spot prices, professional charts and analytics for Gold, Silver, Platinum, Palladium and Copper",
+    metals: ["Gold", "Silver", "Platinum", "Palladium", "Copper"],
   },
   hi: {
-    heading: "कीमती और औद्योगिक धातुएं",
-    subtitle: "सोना, चांदी, प्लैटिनम, पैलेडियम और तांबे के लिए रीयल-टाइम स्पॉट कीमतें, प्रोफेशनल चार्ट और एनालिटिक्स",
-    metals: ["सोना", "चांदी", "प्लैटिनम", "पैलेडियम", "तांबा"],
+    heading: "Precious & Industrial Metals",
+    subtitle: "Real-time spot prices, professional charts and analytics for Gold, Silver, Platinum, Palladium and Copper",
+    metals: ["Gold", "Silver", "Platinum", "Palladium", "Copper"],
   },
 };
 

@@ -15,29 +15,22 @@ const METAL_INFO: Record<string, { name: string; symbol: string; color: string }
 };
 
 const NAMES_I18N: Record<string, Record<string, string>> = {
-  oro: { es: "Oro", en: "Gold", de: "Gold", zh: "黄金", ar: "الذهب", tr: "Altın", hi: "सोना" },
-  plata: { es: "Plata", en: "Silver", de: "Silber", zh: "白银", ar: "الفضة", tr: "Gümüş", hi: "चांदी" },
-  platino: { es: "Platino", en: "Platinum", de: "Platin", zh: "铂金", ar: "البلاتين", tr: "Platin", hi: "प्लैटिनम" },
-  paladio: { es: "Paladio", en: "Palladium", de: "Palladium", zh: "钯金", ar: "البلاديوم", tr: "Paladyum", hi: "पैलेडियम" },
-  cobre: { es: "Cobre", en: "Copper", de: "Kupfer", zh: "铜", ar: "النحاس", tr: "Bakır", hi: "तांबा" },
+  oro: { es: "Oro", en: "Gold", de: "Gold", zh: "Gold", ar: "Gold", tr: "Altin", hi: "Gold" },
+  plata: { es: "Plata", en: "Silver", de: "Silber", zh: "Silver", ar: "Silver", tr: "Gumus", hi: "Silver" },
+  platino: { es: "Platino", en: "Platinum", de: "Platin", zh: "Platinum", ar: "Platinum", tr: "Platin", hi: "Platinum" },
+  paladio: { es: "Paladio", en: "Palladium", de: "Palladium", zh: "Palladium", ar: "Palladium", tr: "Paladyum", hi: "Palladium" },
+  cobre: { es: "Cobre", en: "Copper", de: "Kupfer", zh: "Copper", ar: "Copper", tr: "Bakir", hi: "Copper" },
 };
 
 const LABELS: Record<string, { priceToday: string; liveData: string }> = {
   es: { priceToday: "Precio hoy", liveData: "Datos en tiempo real" },
   en: { priceToday: "Price today", liveData: "Live data" },
   de: { priceToday: "Preis heute", liveData: "Echtzeitdaten" },
-  zh: { priceToday: "今日价格", liveData: "实时数据" },
-  ar: { priceToday: "السعر اليوم", liveData: "بيانات مباشرة" },
-  tr: { priceToday: "Bugünkü fiyat", liveData: "Canlı veri" },
-  hi: { priceToday: "आज का भाव", liveData: "लाइव डेटा" },
+  zh: { priceToday: "Price today", liveData: "Live data" },
+  ar: { priceToday: "Price today", liveData: "Live data" },
+  tr: { priceToday: "Bugunku fiyat", liveData: "Canli veri" },
+  hi: { priceToday: "Price today", liveData: "Live data" },
 };
-
-type PricesApiRow = { symbol?: string; price?: number };
-
-function pricesApiUrl(): string {
-  const base = (process.env.NEXT_PUBLIC_URL || "https://metalorix.com").replace(/\/$/, "");
-  return `${base}/api/prices`;
-}
 
 export default async function OGImage({ params }: { params: { locale: string; metal: string } }) {
   const { locale, metal } = params;
@@ -64,20 +57,6 @@ export default async function OGImage({ params }: { params: { locale: string; me
   const metalName = NAMES_I18N[internalSlug]?.[locale] || info.name;
   const label = LABELS[locale] || LABELS.en;
 
-  let priceText = "";
-  try {
-    const res = await fetch(pricesApiUrl(), { next: { revalidate: 60 } });
-    if (res.ok) {
-      const data = (await res.json()) as { prices?: PricesApiRow[] };
-      const spot = data.prices?.find((p) => p.symbol === info.symbol);
-      if (spot != null && typeof spot.price === "number") {
-        priceText = `$${spot.price.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-      }
-    }
-  } catch {
-    /* OG still renders without price */
-  }
-
   return new ImageResponse(
     <div
       style={{
@@ -97,22 +76,10 @@ export default async function OGImage({ params }: { params: { locale: string; me
 
       <div style={{ display: "flex", flexDirection: "column", flex: 1, justifyContent: "center" }}>
         <div style={{ color: "#8891a5", fontSize: "28px", marginBottom: "8px" }}>
-          {info.symbol}/USD · {label.priceToday}
+          {info.symbol}/USD
         </div>
         <div style={{ color: "#f1f3f7", fontSize: "72px", fontWeight: "800", letterSpacing: "-2px" }}>{metalName}</div>
-        {priceText ? (
-          <div
-            style={{
-              color: info.color,
-              fontSize: "80px",
-              fontWeight: "800",
-              marginTop: "8px",
-              letterSpacing: "-2px",
-            }}
-          >
-            {priceText}
-          </div>
-        ) : null}
+        <div style={{ color: "#8891a5", fontSize: "32px", marginTop: "12px" }}>{label.priceToday}</div>
       </div>
 
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
