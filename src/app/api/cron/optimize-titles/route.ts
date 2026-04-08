@@ -285,13 +285,11 @@ export async function POST(request: NextRequest) {
     }
   }
 
+  try {
   const url = new URL(request.url);
   const limit = Math.min(parseInt(url.searchParams.get("limit") || "5"), 20);
   const esOnly = url.searchParams.get("es_only") === "true";
-  // target=learn → only learn articles; target=news → only news; default → both
   const target = url.searchParams.get("target") || "all";
-  // slugs=a,b,c → force-process specific learn article slugs regardless of needsOptimization
-  // slugs=manual → force all MANUAL_TITLE_OVERRIDES slugs
   const rawSlugs = url.searchParams.get("slugs") || "";
   const forceSlugs = rawSlugs === "manual"
     ? Object.keys(MANUAL_TITLE_OVERRIDES)
@@ -487,7 +485,6 @@ export async function POST(request: NextRequest) {
     }
   }
 
-  // Ping IndexNow for all updated URLs so Google recrawls them fast
   if (pingUrls.length) await pingIndexNow(pingUrls);
 
   return NextResponse.json({
@@ -498,4 +495,11 @@ export async function POST(request: NextRequest) {
     changes: optimized,
     timestamp: new Date().toISOString(),
   });
+  } catch (err: any) {
+    console.error("optimize-titles error:", err);
+    return NextResponse.json(
+      { error: err?.message || "Internal error", stack: err?.stack?.split("\n").slice(0, 5) },
+      { status: 500 }
+    );
+  }
 }
