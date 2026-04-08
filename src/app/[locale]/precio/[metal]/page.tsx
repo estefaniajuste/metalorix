@@ -40,6 +40,9 @@ export async function generateMetadata({
   const year = new Date().getFullYear();
   const pageTitle = `${t("priceOf", { metal: seo.name })} [${year}] — Metalorix`;
 
+  const baseUrl = (process.env.NEXT_PUBLIC_URL || "https://metalorix.com").replace(/\/$/, "");
+  const ogImageUrl = `${baseUrl}/api/og?metal=${encodeURIComponent(metal)}&locale=${locale}`;
+
   return {
     title: pageTitle,
     description: seo.description,
@@ -49,6 +52,7 @@ export async function generateMetadata({
       description: seo.description,
       type: "website",
       url: alternates.canonical,
+      images: [{ url: ogImageUrl, width: 1200, height: 630 }],
     },
     alternates,
   };

@@ -1,9 +1,5 @@
 import { ImageResponse } from "next/og";
-
-export const runtime = "nodejs";
-export const alt = "Metal price";
-export const size = { width: 1200, height: 630 };
-export const contentType = "image/png";
+import { type NextRequest } from "next/server";
 
 const SLUG_TO_INTERNAL: Record<string, string> = {
   oro: "oro", gold: "oro", huangjin: "oro", dhahab: "oro", altin: "oro", sona: "oro", thahab: "oro",
@@ -39,27 +35,34 @@ const LABELS: Record<string, { priceToday: string; liveData: string }> = {
   hi: { priceToday: "Price today", liveData: "Live data" },
 };
 
-export default async function OGImage({ params }: { params: { locale: string; metal: string } }) {
-  const { locale, metal } = params;
+const SIZE = { width: 1200, height: 630 };
+
+function fallbackImage() {
+  return new ImageResponse(
+    <div
+      style={{
+        display: "flex",
+        width: "100%",
+        height: "100%",
+        background: "#0B0F17",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      <div style={{ color: "#D6B35A", fontSize: 60, fontWeight: "bold" }}>Metalorix</div>
+    </div>,
+    { ...SIZE }
+  );
+}
+
+export async function GET(request: NextRequest) {
+  const { searchParams } = request.nextUrl;
+  const metal = searchParams.get("metal") || "oro";
+  const locale = searchParams.get("locale") || "en";
+
   const internalSlug = SLUG_TO_INTERNAL[metal] ?? metal;
   const info = METAL_INFO[internalSlug];
-  if (!info) {
-    return new ImageResponse(
-      <div
-        style={{
-          display: "flex",
-          width: "100%",
-          height: "100%",
-          background: "#0B0F17",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        <div style={{ color: "#D6B35A", fontSize: 60, fontWeight: "bold" }}>Metalorix</div>
-      </div>,
-      { ...size }
-    );
-  }
+  if (!info) return fallbackImage();
 
   const metalName = NAMES_I18N[internalSlug]?.[locale] || info.name;
   const label = LABELS[locale] || LABELS.en;
@@ -94,6 +97,6 @@ export default async function OGImage({ params }: { params: { locale: string; me
         <div style={{ color: "#5a6478", fontSize: "20px" }}>metalorix.com</div>
       </div>
     </div>,
-    { ...size }
+    { ...SIZE }
   );
 }
