@@ -14,6 +14,7 @@ import { DealerCard } from "@/components/tools/DealerCard";
 import { breadcrumbSchema } from "@/lib/seo/schemas";
 import { getAlternates } from "@/lib/seo/alternates";
 import { routing, type Locale } from "@/i18n/routing";
+import { SetLocalePathOverrides } from "@/components/layout/SetLocalePathOverrides";
 
 export const revalidate = 86400;
 
@@ -150,8 +151,17 @@ export default async function CityDealersPage({ params }: Props) {
 
   const countrySlug = countryData.slug[locale] ?? countryData.slug.en;
 
+  const localeHrefs: Record<string, { pathname: string; params: { country: string; city: string } }> = {};
+  for (const loc of routing.locales) {
+    localeHrefs[loc] = {
+      pathname: "/donde-comprar/[country]/[city]",
+      params: { country: countryData.slug[loc] ?? countryData.slug.en, city: params.city },
+    };
+  }
+
   return (
     <>
+      <SetLocalePathOverrides hrefs={localeHrefs} />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(bc) }}

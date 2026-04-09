@@ -17,6 +17,7 @@ import { breadcrumbSchema, faqSchema } from "@/lib/seo/schemas";
 import { getAlternates } from "@/lib/seo/alternates";
 import { routing, type Locale } from "@/i18n/routing";
 import { DealerProfileClient } from "@/components/dealers/DealerProfileClient";
+import { SetLocalePathOverrides } from "@/components/layout/SetLocalePathOverrides";
 
 export const revalidate = 86400;
 
@@ -201,8 +202,21 @@ export default async function DealerProfilePage({ params }: Props) {
     .map((m) => METAL_SYMBOLS_API[m])
     .filter(Boolean);
 
+  const localeHrefs: Record<string, { pathname: string; params: { country: string; city: string; dealer: string } }> = {};
+  for (const loc of routing.locales) {
+    localeHrefs[loc] = {
+      pathname: "/donde-comprar/[country]/[city]/[dealer]",
+      params: {
+        country: countryData.slug[loc] ?? countryData.slug.en,
+        city: params.city,
+        dealer: params.dealer,
+      },
+    };
+  }
+
   return (
     <>
+      <SetLocalePathOverrides hrefs={localeHrefs} />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(bc) }}
