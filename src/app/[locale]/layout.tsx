@@ -10,6 +10,7 @@ import { NextIntlClientProvider, hasLocale } from "next-intl";
 import { getMessages, getTranslations, setRequestLocale } from "next-intl/server";
 import { WebVitals } from "../web-vitals";
 import { ServiceWorkerRegistration } from "@/components/layout/ServiceWorker";
+import { InstallPrompt } from "@/components/layout/InstallPrompt";
 import { DynamicTitle } from "@/components/layout/DynamicTitle";
 import { AnalyticsLoader } from "@/components/layout/AnalyticsLoader";
 import { routing } from "@/i18n/routing";
@@ -55,7 +56,10 @@ export async function generateMetadata({
     metadataBase: new URL("https://metalorix.com"),
     icons: {
       icon: "/favicon.png",
-      apple: "/icon-192.png",
+      apple: [
+        { url: "/icon-192.png", sizes: "192x192" },
+        { url: "/icon-512.png", sizes: "512x512" },
+      ],
     },
     manifest: "/manifest.json",
     appleWebApp: {
@@ -149,6 +153,7 @@ export default async function LocaleLayout({
             <AnalyticsLoader />
             <WebVitals />
             <ServiceWorkerRegistration />
+            <InstallPrompt />
             <DynamicTitle />
           </ThemeProvider>
         </NextIntlClientProvider>

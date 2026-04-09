@@ -269,6 +269,15 @@
     "essentialOnly": "Essential only",
     "accept": "Accept"
   },
+  "installPrompt": {
+    "title": "Install Metalorix",
+    "subtitle": "Quick access to real-time prices from your home screen",
+    "iosSubtitle": "Add it to your home screen in 2 steps",
+    "iosStep1": "Tap the Share button",
+    "iosStep2": "Tap \"Add to Home Screen\"",
+    "install": "Install",
+    "notNow": "Not now"
+  },
   "errors": {
     "somethingWrong": "Something went wrong",
     "unexpectedError": "An unexpected error occurred. You can try reloading the page or go back to the dashboard.",

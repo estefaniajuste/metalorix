@@ -217,6 +217,15 @@
     "essentialOnly": "仅必要",
     "accept": "接受"
   },
+  "installPrompt": {
+    "title": "安装 Metalorix",
+    "subtitle": "从主屏幕快速访问实时价格",
+    "iosSubtitle": "两步添加到主屏幕",
+    "iosStep1": "点击分享按钮",
+    "iosStep2": "点击「添加到主屏幕」",
+    "install": "安装",
+    "notNow": "以后再说"
+  },
   "errors": {
     "somethingWrong": "出了点问题",
     "unexpectedError": "发生了意外错误。您可以尝试重新加载页面或返回仪表盘。",

@@ -269,6 +269,15 @@
     "essentialOnly": "Solo esenciales",
     "accept": "Aceptar"
   },
+  "installPrompt": {
+    "title": "Instalar Metalorix",
+    "subtitle": "Acceso rápido a precios en tiempo real desde tu pantalla de inicio",
+    "iosSubtitle": "Añádelo a tu pantalla de inicio en 2 pasos",
+    "iosStep1": "Pulsa el botón Compartir",
+    "iosStep2": "Pulsa «Añadir a pantalla de inicio»",
+    "install": "Instalar",
+    "notNow": "Ahora no"
+  },
   "errors": {
     "somethingWrong": "Algo salió mal",
     "unexpectedError": "Se ha producido un error inesperado. Puedes intentar recargar la página o volver al dashboard.",

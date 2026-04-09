@@ -217,6 +217,15 @@
     "essentialOnly": "Nur essenzielle",
     "accept": "Akzeptieren"
   },
+  "installPrompt": {
+    "title": "Metalorix installieren",
+    "subtitle": "Schneller Zugriff auf Echtzeitpreise von deinem Startbildschirm",
+    "iosSubtitle": "In 2 Schritten zum Startbildschirm hinzufügen",
+    "iosStep1": "Tippe auf die Teilen-Taste",
+    "iosStep2": "Tippe auf \u201EZum Home-Bildschirm\u201C",
+    "install": "Installieren",
+    "notNow": "Nicht jetzt"
+  },
   "errors": {
     "somethingWrong": "Etwas ist schiefgelaufen",
     "unexpectedError": "Ein unerwarteter Fehler ist aufgetreten. Sie können versuchen, die Seite neu zu laden oder zum Dashboard zurückzukehren.",

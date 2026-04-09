@@ -216,6 +216,15 @@
     "essentialOnly": "Sadece gerekli",
     "accept": "Kabul et"
   },
+  "installPrompt": {
+    "title": "Metalorix'i Yükle",
+    "subtitle": "Ana ekranından gerçek zamanlı fiyatlara hızlı erişim",
+    "iosSubtitle": "2 adımda ana ekranına ekle",
+    "iosStep1": "Paylaş düğmesine bas",
+    "iosStep2": "\"Ana Ekrana Ekle\" seçeneğine bas",
+    "install": "Yükle",
+    "notNow": "Şimdi değil"
+  },
   "errors": {
     "somethingWrong": "Bir şeyler ters gitti",
     "unexpectedError": "Beklenmeyen bir hata oluştu. Sayfayı yeniden yüklemeyi veya panele dönmeyi deneyebilirsiniz.",
