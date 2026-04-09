@@ -9,6 +9,9 @@ import { ProductSpotPrice } from "@/components/products/ProductSpotPrice";
 import { TaxByCountrySelector } from "@/components/products/TaxByCountrySelector";
 import type { MetalSymbol } from "@/lib/providers/metals";
 import { DEALER_COUNTRIES, getDealersByCountry, getCountryName } from "@/lib/data/dealers";
+import { getProductSlugsByLocale } from "@/lib/data/product-slugs";
+import { SetLocalePathOverrides } from "@/components/layout/SetLocalePathOverrides";
+import { routing } from "@/i18n/routing";
 
 export function generateStaticParams() {
   const params: { slug: string }[] = [];
@@ -237,8 +240,18 @@ export default async function ProductoPage({
     { label: t("specLiquidity"), value: product.liquidity },
   ];
 
+  const slugsByLocale = getProductSlugsByLocale(baseSlug);
+  const localeHrefs: Record<string, { pathname: string; params: { slug: string } }> = {};
+  for (const loc of routing.locales) {
+    localeHrefs[loc] = {
+      pathname: "/productos/[slug]",
+      params: { slug: slugsByLocale[loc] ?? baseSlug },
+    };
+  }
+
   return (
     <>
+      <SetLocalePathOverrides hrefs={localeHrefs} />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}

@@ -10,6 +10,8 @@ import {
   getLocalizedMetalSlug,
 } from "@/lib/utils/metal-slugs";
 import { MetalPageContent } from "@/components/dashboard/MetalPageContent";
+import { SetLocalePathOverrides } from "@/components/layout/SetLocalePathOverrides";
+import { routing } from "@/i18n/routing";
 
 export const revalidate = 3600;
 
@@ -98,8 +100,17 @@ export default async function HistoricalPricePage({
   const localizedMetal = getLocalizedMetalSlug(seo.slug, locale);
   const yearlyData = YEARLY_DATA[seo.slug] ?? [];
 
+  const localeHrefs: Record<string, { pathname: string; params: { metal: string } }> = {};
+  for (const loc of routing.locales) {
+    localeHrefs[loc] = {
+      pathname: "/precio/[metal]/historico",
+      params: { metal: getLocalizedMetalSlug(seo.slug, loc) },
+    };
+  }
+
   return (
     <section className="py-[var(--section-py)]">
+      <SetLocalePathOverrides hrefs={localeHrefs} />
       <div className="mx-auto max-w-[1200px] px-6">
         <nav className="text-sm text-content-3 mb-6" aria-label={tc("breadcrumbNav")}>
           <Link href="/" className="hover:text-content-1 transition-colors">

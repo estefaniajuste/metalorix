@@ -15,7 +15,8 @@ import {
   CURRENCY_PAGES,
 } from "@/lib/data/currency-pages";
 import { CurrencyPriceDisplay } from "@/components/dashboard/CurrencyPriceDisplay";
-import type { Locale } from "@/i18n/routing";
+import { routing, type Locale } from "@/i18n/routing";
+import { SetLocalePathOverrides } from "@/components/layout/SetLocalePathOverrides";
 
 export const revalidate = 60;
 
@@ -98,8 +99,17 @@ export default async function CurrencyPricePage({
     locale
   );
 
+  const localeHrefs: Record<string, { pathname: string; params: { metal: string; currency: string } }> = {};
+  for (const loc of routing.locales) {
+    localeHrefs[loc] = {
+      pathname: "/precio/[metal]/[currency]",
+      params: { metal: getLocalizedMetalSlug(seo.slug, loc), currency: curr.slug },
+    };
+  }
+
   return (
     <section className="py-[var(--section-py)]">
+      <SetLocalePathOverrides hrefs={localeHrefs} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(bcSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema(faqItems)) }} />
 

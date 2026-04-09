@@ -13,6 +13,8 @@ import {
   getLocalizedMetalSlug,
 } from "@/lib/utils/metal-slugs";
 import { DEALER_COUNTRIES, getDealersByCountry } from "@/lib/data/dealers";
+import { SetLocalePathOverrides } from "@/components/layout/SetLocalePathOverrides";
+import { routing } from "@/i18n/routing";
 
 export const revalidate = 60;
 
@@ -178,8 +180,17 @@ export default async function PrecioMetalPage({
     .filter((slug) => slug !== seo.slug)
     .map((slug) => ({ ...getMetalSEO(slug, locale)!, localSlug: getLocalizedMetalSlug(slug, locale) }));
 
+  const localeHrefs: Record<string, { pathname: string; params: { metal: string } }> = {};
+  for (const loc of routing.locales) {
+    localeHrefs[loc] = {
+      pathname: "/precio/[metal]",
+      params: { metal: getLocalizedMetalSlug(seo.slug, loc) },
+    };
+  }
+
   return (
     <>
+      <SetLocalePathOverrides hrefs={localeHrefs} />
       <JsonLd slug={seo.slug} locale={locale} canonicalUrl={alternates.canonical} />
 
       <section className="py-[var(--section-py)]">

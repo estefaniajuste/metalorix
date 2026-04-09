@@ -10,6 +10,8 @@ import { eq, and, ne, desc, sql } from "drizzle-orm";
 import { injectGlossaryLinks } from "@/lib/ai/glossary-generator";
 import { ArticleShareBar } from "@/components/dashboard/ArticleShareBar";
 import { ContextualToolCards, InlineToolCallout, getToolsForNews } from "@/components/tools/ContextualToolCards";
+import { SetLocalePathOverrides } from "@/components/layout/SetLocalePathOverrides";
+import { routing } from "@/i18n/routing";
 
 async function getArticle(slug: string, locale: string) {
   const db = getDb();
@@ -390,6 +392,15 @@ export default async function ArticlePage({
   const displayContent = translation?.content ?? article.content;
   const displaySlug = translation?.slug ?? article.slug;
 
+  const slugsByLocale = await getAllTranslationSlugs(article.id);
+  const localeHrefs: Record<string, { pathname: string; params: { slug: string } }> = {};
+  for (const loc of routing.locales) {
+    localeHrefs[loc] = {
+      pathname: "/noticias/[slug]",
+      params: { slug: loc === "es" ? article.slug : (slugsByLocale[loc] ?? article.slug) },
+    };
+  }
+
   const linkedContent = await injectGlossaryLinks(displayContent);
   const relatedNews = await getRelatedArticles(article.id, article.category, locale);
   const relatedLearn = await getRelatedLearnArticles(article.metals, locale, 3);
@@ -462,6 +473,7 @@ export default async function ArticlePage({
 
   return (
     <>
+      <SetLocalePathOverrides hrefs={localeHrefs} />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
