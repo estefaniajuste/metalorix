@@ -544,6 +544,7 @@ export default async function ArticlePage({
               <ArticleShareBar
                 title={displayTitle}
                 url={`https://metalorix.com${getPathname({ locale: locale as Locale, href: { pathname: "/noticias/[slug]", params: { slug: displaySlug } } as any })}`}
+                excerpt={displayExcerpt ?? undefined}
               />
             </div>
           </header>
@@ -601,6 +602,7 @@ export default async function ArticlePage({
             <ArticleShareBar
               title={displayTitle}
               url={`https://metalorix.com${getPathname({ locale: locale as Locale, href: { pathname: "/noticias/[slug]", params: { slug: displaySlug } } as any })}`}
+              excerpt={displayExcerpt ?? undefined}
             />
           </div>
 

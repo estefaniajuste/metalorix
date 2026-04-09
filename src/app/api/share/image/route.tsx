@@ -192,39 +192,111 @@ function renderArticle(params: URLSearchParams) {
   const title = params.get("title") || "Metalorix";
   const excerpt = params.get("excerpt") || "";
 
+  const displayTitle = title.length > 120 ? title.slice(0, 117) + "..." : title;
+  const displayExcerpt = excerpt.length > 160 ? excerpt.slice(0, 157) + "..." : excerpt;
+  const titleSize = displayTitle.length > 80 ? "36px" : displayTitle.length > 50 ? "40px" : "46px";
+
   return new ImageResponse(
     (
       <div
         style={{
           width: "100%", height: "100%", display: "flex", flexDirection: "column",
-          alignItems: "center", justifyContent: "center",
           background: BG_GRADIENT, fontFamily: "system-ui, sans-serif",
-          position: "relative", padding: "60px",
+          position: "relative",
         }}
       >
         <GoldBar />
-        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%" }}>
+
+        {/* Decorative side accent */}
+        <div style={{
+          position: "absolute", left: "0", top: "120px", bottom: "120px",
+          width: "5px", background: `linear-gradient(180deg, transparent, ${GOLD}, transparent)`,
+        }} />
+
+        {/* Top section: logo + badge */}
+        <div style={{
+          display: "flex", alignItems: "center", justifyContent: "space-between",
+          padding: "48px 56px 0",
+        }}>
           <Logo />
-          <DateStamp />
-          <div style={{ fontSize: "20px", fontWeight: 700, color: GOLD, marginTop: "40px", letterSpacing: "3px", textTransform: "uppercase" }}>
-            News &amp; Analysis
-          </div>
           <div style={{
-            fontSize: "42px", fontWeight: 800, color: TEXT_PRIMARY,
-            textAlign: "center", marginTop: "36px", lineHeight: 1.3, maxWidth: "900px",
+            fontSize: "14px", fontWeight: 700, color: GOLD,
+            letterSpacing: "2px", textTransform: "uppercase",
+            background: "rgba(214,179,90,0.12)",
+            border: "1px solid rgba(214,179,90,0.25)",
+            borderRadius: "8px", padding: "8px 16px",
           }}>
-            {title.length > 90 ? title.slice(0, 90) + "..." : title}
+            Breaking News
           </div>
-          {excerpt && (
+        </div>
+
+        {/* Main content area */}
+        <div style={{
+          display: "flex", flexDirection: "column", flex: 1,
+          justifyContent: "center", padding: "0 56px",
+        }}>
+          {/* Gold decorative line */}
+          <div style={{
+            width: "60px", height: "4px", borderRadius: "2px",
+            background: GOLD, marginBottom: "28px",
+          }} />
+
+          {/* Title */}
+          <div style={{
+            fontSize: titleSize, fontWeight: 800, color: TEXT_PRIMARY,
+            lineHeight: 1.25, letterSpacing: "-0.5px",
+            maxWidth: "920px",
+          }}>
+            {displayTitle}
+          </div>
+
+          {/* Excerpt */}
+          {displayExcerpt && (
             <div style={{
               fontSize: "22px", color: TEXT_SECONDARY,
-              textAlign: "center", marginTop: "24px", lineHeight: 1.5, maxWidth: "800px",
+              lineHeight: 1.5, marginTop: "20px", maxWidth: "860px",
             }}>
-              {excerpt.length > 200 ? excerpt.slice(0, 200) + "..." : excerpt}
+              {displayExcerpt}
             </div>
           )}
+
+          {/* CTA */}
+          <div style={{
+            display: "flex", alignItems: "center", gap: "10px",
+            marginTop: "36px",
+          }}>
+            <div style={{
+              display: "flex", alignItems: "center", gap: "8px",
+              background: `linear-gradient(135deg, ${GOLD}, #B8962E)`,
+              borderRadius: "10px", padding: "12px 24px",
+              fontSize: "18px", fontWeight: 700, color: BG_DARK,
+            }}>
+              Read Full Article →
+            </div>
+            <div style={{
+              fontSize: "16px", color: TEXT_SECONDARY,
+            }}>
+              metalorix.com
+            </div>
+          </div>
         </div>
-        <Footer />
+
+        {/* Bottom bar */}
+        <div style={{
+          display: "flex", alignItems: "center", justifyContent: "space-between",
+          padding: "0 56px 40px",
+        }}>
+          <DateStamp />
+          <div style={{
+            display: "flex", alignItems: "center", gap: "6px",
+            fontSize: "16px", color: TEXT_SECONDARY,
+          }}>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill={TEXT_SECONDARY}>
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
+            </svg>
+            Verified Sources
+          </div>
+        </div>
       </div>
     ),
     { width: SIZE, height: SIZE },
