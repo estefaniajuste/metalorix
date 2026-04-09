@@ -242,6 +242,7 @@ export async function generateMetadata({
           description,
         },
         alternates,
+        ...(!gTerm.content && { robots: { index: false, follow: true } }),
       };
     }
   }
@@ -300,6 +301,12 @@ export async function generateMetadata({
     },
   }));
 
+  const contentRaw = data?.localization.content || "";
+  const hasMetaContent = contentRaw
+    .replace(/## Key Takeaways[\s\S]*?(?=\n## |\n*$)/, "")
+    .replace(/## Frequently Asked Questions[\s\S]*?(?=\n## |\n*$)/, "")
+    .trim().length > 0;
+
   return {
     title: `${title} | Metalorix`,
     description,
@@ -315,6 +322,7 @@ export async function generateMetadata({
       description,
     },
     alternates,
+    ...(!hasMetaContent && { robots: { index: false, follow: true } }),
   };
 }
 

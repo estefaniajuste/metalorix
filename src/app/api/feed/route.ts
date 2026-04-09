@@ -43,7 +43,7 @@ export async function GET() {
     : [];
 
   const enMap = new Map(
-    translationRows.map((t) => [t.articleId, { title: t.title, excerpt: t.excerpt }])
+    translationRows.map((t) => [t.articleId, { title: t.title, excerpt: t.excerpt, slug: t.slug }])
   );
 
   const items = rows
@@ -55,11 +55,12 @@ export async function GET() {
 
       const displayTitle = en?.title || a.title;
       const displayExcerpt = en?.excerpt || a.excerpt || a.title;
+      const enSlug = en?.slug || a.slug;
 
       return `    <item>
       <title>${escapeXml(displayTitle)}</title>
-      <link>${BASE_URL}/en/news/${a.slug}</link>
-      <guid isPermaLink="true">${BASE_URL}/en/news/${a.slug}</guid>
+      <link>${BASE_URL}/en/news/${enSlug}</link>
+      <guid isPermaLink="true">${BASE_URL}/en/news/${enSlug}</guid>
       <pubDate>${pubDate}</pubDate>
       <description>${escapeXml(displayExcerpt)}</description>
       <dc:language>en</dc:language>
@@ -80,7 +81,7 @@ export async function GET() {
     <description>Daily analysis of gold, silver, platinum, palladium and copper markets. Spot prices, trends and news.</description>
     <language>en</language>
     <lastBuildDate>${new Date().toUTCString()}</lastBuildDate>
-    <atom:link href="${BASE_URL}/feed.xml" rel="self" type="application/rss+xml"/>
+    <atom:link href="${BASE_URL}/api/feed" rel="self" type="application/rss+xml"/>
     <image>
       <url>${BASE_URL}/icon-512.png</url>
       <title>Metalorix</title>

@@ -13,6 +13,14 @@ export async function GET(request: NextRequest) {
       { status: 429, headers: { "Retry-After": "60", "X-RateLimit-Remaining": "0" } }
     );
   }
-  const { prices, source } = await getSpotPrices();
-  return NextResponse.json({ source, prices });
+  try {
+    const { prices, source } = await getSpotPrices();
+    return NextResponse.json({ source, prices });
+  } catch (err) {
+    console.error("[Prices] Error:", err);
+    return NextResponse.json(
+      { error: "Failed to fetch prices" },
+      { status: 500 }
+    );
+  }
 }

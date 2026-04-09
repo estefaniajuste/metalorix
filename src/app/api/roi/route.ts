@@ -28,33 +28,41 @@ export async function GET(request: NextRequest) {
     );
   }
 
-  const [historicalPrice, currentPrices] = await Promise.all([
-    getHistoricalPrice(symbol, date),
-    fetchAllSpotPrices(),
-  ]);
+  try {
+    const [historicalPrice, currentPrices] = await Promise.all([
+      getHistoricalPrice(symbol, date),
+      fetchAllSpotPrices(),
+    ]);
 
-  if (!historicalPrice) {
+    if (!historicalPrice) {
+      return NextResponse.json(
+        { error: "Could not fetch historical price for that date" },
+        { status: 404 }
+      );
+    }
+
+    const currentSpot = currentPrices?.find((p) => p.symbol === symbol);
+    if (!currentSpot) {
+      return NextResponse.json(
+        { error: "Could not fetch current price" },
+        { status: 502 }
+      );
+    }
+
+    const result = calculateRoi(
+      historicalPrice,
+      currentSpot.price,
+      amount,
+      date,
+      symbol
+    );
+
+    return NextResponse.json(result);
+  } catch (err) {
+    console.error("[ROI] Error:", err);
     return NextResponse.json(
-      { error: "Could not fetch historical price for that date" },
-      { status: 404 }
+      { error: "Failed to calculate ROI" },
+      { status: 500 }
     );
   }
-
-  const currentSpot = currentPrices?.find((p) => p.symbol === symbol);
-  if (!currentSpot) {
-    return NextResponse.json(
-      { error: "Could not fetch current price" },
-      { status: 502 }
-    );
-  }
-
-  const result = calculateRoi(
-    historicalPrice,
-    currentSpot.price,
-    amount,
-    date,
-    symbol
-  );
-
-  return NextResponse.json(result);
 }
