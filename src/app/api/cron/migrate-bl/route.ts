@@ -13,6 +13,7 @@ export async function POST(req: Request) {
 
   try {
     const db = getDb();
+    if (!db) return NextResponse.json({ error: "No DB connection" }, { status: 500 });
 
     await db.execute(sql`
       CREATE TABLE IF NOT EXISTS business_listings (
