@@ -796,7 +796,10 @@
     "chineseYuan": "Chinesischer Yuan",
     "indianRupee": "Indische Rupie",
     "mexicanPeso": "Mexikanischer Peso",
-    "brazilianReal": "Brasilianischer Real"
+    "brazilianReal": "Brasilianischer Real",
+    "turkishLira": "Türkische Lira",
+    "uaeDirham": "VAE-Dirham",
+    "saudiRiyal": "Saudi-Riyal"
   },
   "comparatorPage": {
     "title": "Vergleich: Gold vs Silber vs Platin",
@@ -1224,7 +1227,14 @@
     "whyTitle": "Warum den {metal}-Preis in {currency} verfolgen?",
     "whyText": "Wenn Sie in {currency} ({code}) handeln, hängen die realen Kosten Ihrer {metal}-Investition vom Wechselkurs ab. Selbst wenn {metal} in USD steigt, kann Ihre tatsächliche Rendite je nach Stärke Ihrer Landeswährung variieren.",
     "allCurrencies": "In allen Währungen anzeigen",
-    "otherCurrencies": "Andere Währungen"
+    "otherCurrencies": "Andere Währungen",
+    "faqTitle": "Häufige Fragen: {metal} in {currency}",
+    "faq1q": "Was bestimmt den {metal}-Preis in {currency} ({code})?",
+    "faq1a": "Der {metal}-Preis in {currency} hängt von zwei Faktoren ab: dem internationalen Spotpreis in USD und dem {code}/USD-Wechselkurs. Selbst wenn {metal} in Dollar steigt, muss es in {currency} nicht steigen, wenn Ihre Währung gleichzeitig gegenüber dem Dollar aufwertet.",
+    "faq2q": "Wie oft wird der {metal}-Preis in {currency} aktualisiert?",
+    "faq2a": "Unser {metal}-Preis in {currency} wird während der Handelszeiten alle 60 Sekunden aktualisiert. Wir beziehen Spotpreise von mehreren Anbietern (Yahoo Finance, Gold API, Twelve Data) und rechnen mit Echtzeit-Wechselkursen um.",
+    "faq3q": "Sollte man {metal} kaufen, wenn {currency} stark oder schwach ist?",
+    "faq3a": "Wenn {currency} gegenüber dem USD stark ist, wird {metal} in {code} günstiger – das kann eine gute Kaufgelegenheit sein. Bei schwachem {currency} zahlen Sie mehr pro Unze. Die Verfolgung des {metal}/{code}-Preises hilft beim Timing basierend auf der lokalen Kaufkraft."
   },
   "comparisons": {
     "btcTitle": "Gold vs. Bitcoin",

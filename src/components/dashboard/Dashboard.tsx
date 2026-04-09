@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import {
   METALS,
   type HistoryResult,
@@ -11,7 +11,7 @@ import {
 import { MetalCard } from "./MetalCard";
 import { RangeSelector } from "./RangeSelector";
 import { CurrencyUnitToggle } from "./CurrencyUnitToggle";
-import type { Currency, PriceUnit } from "@/lib/utils/units";
+import { type Currency, type PriceUnit, type ForexRates, getLocaleCurrency } from "@/lib/utils/units";
 import { usePrices } from "@/lib/hooks/use-prices";
 
 async function apiFetchHistory(
@@ -25,12 +25,14 @@ async function apiFetchHistory(
 export function Dashboard() {
   const t = useTranslations("dashboard");
   const tc = useTranslations("common");
+  const locale = useLocale();
+  const localeCfg = getLocaleCurrency(locale);
   const [activeRange, setActiveRange] = useState<TimeRange>("1D");
   const { prices, source: dataSource, lastUpdate } = usePrices();
   const [history, setHistory] = useState<Record<string, HistoryResult>>({});
-  const [currency, setCurrency] = useState<Currency>("USD");
+  const [currency, setCurrency] = useState<Currency>(localeCfg.defaultCurrency);
   const [unit, setUnit] = useState<PriceUnit>("oz");
-  const [eurUsdRate, setEurUsdRate] = useState(1.08);
+  const [forexRates, setForexRates] = useState<ForexRates>({ EUR: 1.08 });
   const historyRef = useRef(history);
   historyRef.current = history;
 
@@ -52,7 +54,8 @@ export function Dashboard() {
     fetch("/api/forex")
       .then((r) => r.json())
       .then((d) => {
-        if (d.EURUSD) setEurUsdRate(d.EURUSD);
+        if (d.rates) setForexRates(d.rates);
+        else if (d.EURUSD) setForexRates({ EUR: d.EURUSD });
       })
       .catch(() => {});
   }, []);
@@ -154,7 +157,7 @@ export function Dashboard() {
                       rangeChange={rangeChange}
                       currency={currency}
                       unit={unit}
-                      eurUsdRate={eurUsdRate}
+                      forexRates={forexRates}
                       marketClosed={marketClosed}
                     />
                   </div>

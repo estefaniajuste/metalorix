@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { getTranslations, getLocale } from "next-intl/server";
 import { getAlternates } from "@/lib/seo/alternates";
 import { getMetalSEO } from "@/lib/seo/metal-content";
+import { breadcrumbSchema, faqSchema } from "@/lib/seo/schemas";
 import { Link } from "@/i18n/navigation";
 import {
   resolveMetalSlug,
@@ -82,8 +83,26 @@ export default async function CurrencyPricePage({
   const currName = curr.names[locale] || curr.names.en;
   const localizedMetal = getLocalizedMetalSlug(seo.slug, locale);
 
+  const faqItems = [
+    { question: t("faq1q", { metal: seo.name, currency: currName, code: curr.code }), answer: t("faq1a", { metal: seo.name, currency: currName, code: curr.code }) },
+    { question: t("faq2q", { metal: seo.name, currency: currName, code: curr.code }), answer: t("faq2a", { metal: seo.name, currency: currName, code: curr.code }) },
+    { question: t("faq3q", { metal: seo.name, currency: currName, code: curr.code }), answer: t("faq3a", { metal: seo.name, currency: currName, code: curr.code }) },
+  ];
+
+  const bcSchema = breadcrumbSchema(
+    [
+      { name: seo.name, path: `/precio/${seo.slug}` },
+      { name: currName, path: `/precio/${seo.slug}/${curr.slug}` },
+    ],
+    tc("breadcrumbHome"),
+    locale
+  );
+
   return (
     <section className="py-[var(--section-py)]">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(bcSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema(faqItems)) }} />
+
       <div className="mx-auto max-w-[1200px] px-6">
         <nav
           className="text-sm text-content-3 mb-6"
@@ -145,6 +164,26 @@ export default async function CurrencyPricePage({
               code: curr.code,
             })}
           </p>
+        </div>
+
+        {/* FAQ section */}
+        <div className="mt-8 bg-surface-1 border border-border rounded-DEFAULT p-6">
+          <h2 className="text-lg font-bold text-content-0 mb-4">
+            {t("faqTitle", { metal: seo.name, currency: currName })}
+          </h2>
+          <div className="space-y-4">
+            {faqItems.map((item, i) => (
+              <details key={i} className="group">
+                <summary className="cursor-pointer text-sm font-semibold text-content-0 hover:text-brand-gold transition-colors list-none flex items-center gap-2">
+                  <svg className="w-4 h-4 text-content-3 group-open:rotate-90 transition-transform flex-shrink-0" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clipRule="evenodd" /></svg>
+                  {item.question}
+                </summary>
+                <p className="text-sm text-content-2 leading-relaxed mt-2 pl-6">
+                  {item.answer}
+                </p>
+              </details>
+            ))}
+          </div>
         </div>
 
         <div className="mt-6 flex flex-wrap gap-3">

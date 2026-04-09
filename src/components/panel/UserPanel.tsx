@@ -11,7 +11,7 @@ const METALS = [
   { symbol: "HG", nameKey: "copper" as const, color: "#B87333" },
 ] as const;
 
-const CURRENCIES = ["USD", "EUR", "GBP", "CHF", "JPY"] as const;
+const CURRENCIES = ["USD", "EUR", "GBP", "TRY", "INR", "AED", "SAR", "CNY", "CHF", "JPY"] as const;
 const UNITS = ["oz", "g", "kg"] as const;
 
 interface Preferences {

@@ -1,6 +1,12 @@
 "use client";
 
-import type { Currency, PriceUnit } from "@/lib/utils/units";
+import { useLocale } from "next-intl";
+import {
+  type Currency,
+  type PriceUnit,
+  CURRENCY_SYMBOLS,
+  getLocaleCurrency,
+} from "@/lib/utils/units";
 
 interface CurrencyUnitToggleProps {
   currency: Currency;
@@ -15,11 +21,13 @@ export function CurrencyUnitToggle({
   onCurrencyChange,
   onUnitChange,
 }: CurrencyUnitToggleProps) {
+  const locale = useLocale();
+  const { toggleOptions } = getLocaleCurrency(locale);
+
   return (
     <div className="flex items-center gap-2">
-      {/* Currency toggle */}
       <div className="flex bg-surface-1 border border-border rounded-sm overflow-hidden">
-        {(["USD", "EUR"] as Currency[]).map((c) => (
+        {toggleOptions.map((c) => (
           <button
             key={c}
             onClick={() => onCurrencyChange(c)}
@@ -29,12 +37,11 @@ export function CurrencyUnitToggle({
                 : "text-content-3 hover:text-content-1"
             }`}
           >
-            {c === "USD" ? "$" : "€"} {c}
+            {CURRENCY_SYMBOLS[c]} {c}
           </button>
         ))}
       </div>
 
-      {/* Unit toggle */}
       <div className="flex bg-surface-1 border border-border rounded-sm overflow-hidden">
         {(["oz", "g", "kg"] as PriceUnit[]).map((u) => (
           <button

@@ -854,7 +854,10 @@
     "chineseYuan": "Chinese Yuan",
     "indianRupee": "Indian Rupee",
     "mexicanPeso": "Mexican Peso",
-    "brazilianReal": "Brazilian Real"
+    "brazilianReal": "Brazilian Real",
+    "turkishLira": "Turkish Lira",
+    "uaeDirham": "UAE Dirham",
+    "saudiRiyal": "Saudi Riyal"
   },
   "comparatorPage": {
     "title": "Comparator: Gold vs Silver vs Platinum",
@@ -1290,7 +1293,14 @@
     "whyTitle": "Why track {metal} price in {currency}?",
     "whyText": "If you operate in {currency} ({code}), the real cost of your {metal} investment depends on the exchange rate. Even if {metal} rises in USD, your actual return may vary based on the strength of your local currency.",
     "allCurrencies": "View in all currencies",
-    "otherCurrencies": "Other currencies"
+    "otherCurrencies": "Other currencies",
+    "faqTitle": "Frequently asked questions: {metal} in {currency}",
+    "faq1q": "What determines the {metal} price in {currency} ({code})?",
+    "faq1a": "The {metal} price in {currency} depends on two factors: the international spot price in USD and the {code}/USD exchange rate. Even if {metal} rises in dollars, it may not rise in {currency} if your currency strengthens against the dollar at the same time.",
+    "faq2q": "How often is the {metal} price in {currency} updated?",
+    "faq2a": "Our {metal} price in {currency} is updated every 60 seconds during market hours. We source spot prices from multiple providers (Yahoo Finance, Gold API, Twelve Data) and convert using real-time forex rates.",
+    "faq3q": "Is it better to buy {metal} when {currency} is strong or weak?",
+    "faq3a": "When {currency} is strong relative to USD, {metal} becomes cheaper in {code} terms, which can be a good buying opportunity. Conversely, a weak {currency} means you pay more per ounce. Tracking the {metal}/{code} price helps you time purchases based on local purchasing power."
   },
   "comparisons": {
     "btcTitle": "Gold vs Bitcoin",

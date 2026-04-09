@@ -13,6 +13,7 @@ import {
   type Currency,
   type PriceUnit,
   type BaseUnit,
+  type ForexRates,
 } from "@/lib/utils/units";
 
 const SLUG_MAP: Record<string, string> = {
@@ -45,6 +46,7 @@ interface MetalCardProps {
   currency?: Currency;
   unit?: PriceUnit;
   eurUsdRate?: number;
+  forexRates?: ForexRates;
   marketClosed?: boolean;
 }
 
@@ -55,6 +57,7 @@ export function MetalCard({
   currency = "USD",
   unit = "oz",
   eurUsdRate = 1.08,
+  forexRates,
   marketClosed = false,
 }: MetalCardProps) {
   const td = useTranslations("dashboard");
@@ -68,8 +71,9 @@ export function MetalCard({
   const change = useSpotFallback ? spot.change : (rangeChange?.change ?? spot.change);
   const changePct = useSpotFallback ? spot.changePct : (rangeChange?.changePct ?? spot.changePct);
   const isUp = change >= 0;
-  const displayPrice = convertPrice(spot.price, effectiveUnit, currency, eurUsdRate, baseUnit);
-  const displayChange = convertPrice(change, effectiveUnit, currency, eurUsdRate, baseUnit);
+  const rates = forexRates ?? { EUR: eurUsdRate };
+  const displayPrice = convertPrice(spot.price, effectiveUnit, currency, rates, baseUnit);
+  const displayChange = convertPrice(change, effectiveUnit, currency, rates, baseUnit);
   const sym = currencySymbol(currency);
   const unitLabel = effectiveUnit !== "oz" && effectiveUnit !== "lb" ? `/${effectiveUnit}` : "";
   const prevPrice = useRef(spot.price);

@@ -854,7 +854,10 @@
     "chineseYuan": "Yuan chino",
     "indianRupee": "Rupia india",
     "mexicanPeso": "Peso mexicano",
-    "brazilianReal": "Real brasileño"
+    "brazilianReal": "Real brasileño",
+    "turkishLira": "Lira turca",
+    "uaeDirham": "Dírham emiratí",
+    "saudiRiyal": "Riyal saudí"
   },
   "comparatorPage": {
     "title": "Comparador: Oro vs Plata vs Platino",
@@ -1290,7 +1293,14 @@
     "whyTitle": "¿Por qué seguir el precio de {metal} en {currency}?",
     "whyText": "Si operas en {currency} ({code}), el coste real de tu inversión en {metal} depende del tipo de cambio. Aunque {metal} suba en USD, tu rentabilidad real puede variar según la fortaleza de tu moneda local.",
     "allCurrencies": "Ver en todas las divisas",
-    "otherCurrencies": "Otras divisas"
+    "otherCurrencies": "Otras divisas",
+    "faqTitle": "Preguntas frecuentes: {metal} en {currency}",
+    "faq1q": "¿Qué determina el precio del {metal} en {currency} ({code})?",
+    "faq1a": "El precio del {metal} en {currency} depende de dos factores: el precio spot internacional en USD y el tipo de cambio {code}/USD. Aunque el {metal} suba en dólares, puede no subir en {currency} si tu moneda se fortalece frente al dólar al mismo tiempo.",
+    "faq2q": "¿Con qué frecuencia se actualiza el precio del {metal} en {currency}?",
+    "faq2a": "Nuestro precio del {metal} en {currency} se actualiza cada 60 segundos durante el horario de mercado. Obtenemos precios spot de múltiples proveedores (Yahoo Finance, Gold API, Twelve Data) y convertimos usando tipos de cambio en tiempo real.",
+    "faq3q": "¿Es mejor comprar {metal} cuando el {currency} está fuerte o débil?",
+    "faq3a": "Cuando el {currency} está fuerte frente al USD, el {metal} resulta más barato en {code}, lo que puede ser una buena oportunidad de compra. Por el contrario, un {currency} débil implica pagar más por onza. Seguir el precio {metal}/{code} te ayuda a elegir el momento según tu poder adquisitivo local."
   },
   "comparisons": {
     "btcTitle": "Oro vs Bitcoin",

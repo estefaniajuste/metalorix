@@ -796,7 +796,10 @@
     "chineseYuan": "人民币",
     "indianRupee": "印度卢比",
     "mexicanPeso": "墨西哥比索",
-    "brazilianReal": "巴西雷亚尔"
+    "brazilianReal": "巴西雷亚尔",
+    "turkishLira": "土耳其里拉",
+    "uaeDirham": "阿联酋迪拉姆",
+    "saudiRiyal": "沙特里亚尔"
   },
   "comparatorPage": {
     "title": "对比：黄金 vs 白银 vs 铂金",
@@ -1224,7 +1227,14 @@
     "whyTitle": "为什么关注{metal}的{currency}价格？",
     "whyText": "如果您使用{currency}（{code}）交易，{metal}投资的实际成本取决于汇率。即使{metal}美元价格上涨，您的实际收益也可能因当地货币强弱而异。",
     "allCurrencies": "查看所有货币",
-    "otherCurrencies": "其他货币"
+    "otherCurrencies": "其他货币",
+    "faqTitle": "常见问题：{currency}计价的{metal}",
+    "faq1q": "{currency}（{code}）计价的{metal}价格由什么决定？",
+    "faq1a": "{currency}计价的{metal}价格取决于两个因素：以美元计的国际现货价和{code}/USD汇率。即使{metal}美元价格上涨，如果您的货币同时对美元升值，{currency}计价的价格可能不会上涨。",
+    "faq2q": "{currency}计价的{metal}价格多久更新一次？",
+    "faq2a": "我们的{currency}计价{metal}价格在交易时段每60秒更新一次。现货价格来自多个数据源（Yahoo Finance、Gold API、Twelve Data），并使用实时汇率进行换算。",
+    "faq3q": "{currency}走强还是走弱时买{metal}更划算？",
+    "faq3a": "当{currency}对美元走强时，{metal}的{code}价格更便宜，这可能是较好的买入时机。相反，{currency}走弱意味着每盎司需要支付更多。跟踪{metal}/{code}价格有助于根据当地购买力把握时机。"
   },
   "comparisons": {
     "btcTitle": "黄金 vs 比特币",

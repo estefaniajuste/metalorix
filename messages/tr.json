@@ -809,7 +809,10 @@
     "chineseYuan": "Çin Yuanı",
     "indianRupee": "Hint Rupisi",
     "mexicanPeso": "Meksika Pesosu",
-    "brazilianReal": "Brezilya Reali"
+    "brazilianReal": "Brezilya Reali",
+    "turkishLira": "Türk Lirası",
+    "uaeDirham": "BAE Dirhemi",
+    "saudiRiyal": "Suudi Riyali"
   },
   "comparatorPage": {
     "title": "Karşılaştırma: Altın vs Gümüş vs Platin",
@@ -1237,7 +1240,14 @@
     "whyTitle": "{metal} fiyatını neden {currency} cinsinden takip etmelisiniz?",
     "whyText": "{currency} ({code}) ile işlem yapıyorsanız, {metal} yatırımınızın gerçek maliyeti döviz kuruna bağlıdır. {metal} USD cinsinden yükselse bile, gerçek getiri yerel para biriminizin gücüne göre değişebilir.",
     "allCurrencies": "Tüm para birimlerinde görüntüle",
-    "otherCurrencies": "Diğer para birimleri"
+    "otherCurrencies": "Diğer para birimleri",
+    "faqTitle": "Sık sorulan sorular: {currency} cinsinden {metal}",
+    "faq1q": "{currency} ({code}) cinsinden {metal} fiyatını ne belirler?",
+    "faq1a": "{currency} cinsinden {metal} fiyatı iki faktöre bağlıdır: USD cinsinden uluslararası spot fiyat ve {code}/USD döviz kuru. {metal} dolar bazında yükselse bile, {currency} aynı anda dolara karşı değer kazanıyorsa {currency} cinsinden yükselmeyebilir.",
+    "faq2q": "{currency} cinsinden {metal} fiyatı ne sıklıkla güncellenir?",
+    "faq2a": "{currency} cinsinden {metal} fiyatımız piyasa saatlerinde her 60 saniyede güncellenir. Spot fiyatları birden fazla kaynaktan (Yahoo Finance, Gold API, Twelve Data) alıp gerçek zamanlı döviz kurlarıyla dönüştürüyoruz.",
+    "faq3q": "{currency} güçlüyken mi yoksa zayıfken mi {metal} almak daha iyi?",
+    "faq3a": "{currency} USD'ye karşı güçlü olduğunda, {metal} {code} bazında daha ucuz olur – bu iyi bir alım fırsatı olabilir. Zayıf {currency} ise ons başına daha fazla ödeme demektir. {metal}/{code} fiyatını takip etmek, yerel alım gücünüze göre zamanlama yapmanıza yardımcı olur."
   },
   "comparisons": {
     "btcTitle": "Altın vs Bitcoin",
