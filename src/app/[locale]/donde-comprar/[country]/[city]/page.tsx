@@ -145,6 +145,7 @@ export default async function CityDealersPage({ params }: Props) {
     metalsAccepted: t("metalsAccepted"),
     featured: t("featured"),
     verified: t("verified"),
+    viewProfile: t("viewProfile"),
   };
 
   const countrySlug = countryData.slug[locale] ?? countryData.slug.en;
@@ -221,6 +222,7 @@ export default async function CityDealersPage({ params }: Props) {
                   key={dealer.id}
                   dealer={dealer}
                   locale={locale}
+                  countrySlug={countrySlug}
                   t={tValues}
                 />
               ))}

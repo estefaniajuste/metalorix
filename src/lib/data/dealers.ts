@@ -1435,3 +1435,72 @@ export const DEALER_BASE_PATHS: Record<string, string> = {
   tr: "/nereden-alinir",
   hi: "/kahan-kharidem",
 };
+
+export function slugifyDealer(name: string): string {
+  return name
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
+export function getDealerBySlug(
+  countryCode: string,
+  citySlug: string,
+  dealerSlug: string
+): Dealer | undefined {
+  return DEALERS.find(
+    (d) =>
+      d.countryCode === countryCode &&
+      d.city &&
+      slugifyCity(d.city) === citySlug &&
+      slugifyDealer(d.name) === dealerSlug
+  );
+}
+
+export function businessListingToDealer(bl: {
+  id: number;
+  businessName: string;
+  countryCode: string;
+  city: string;
+  type: string;
+  metals: string[];
+  website: string | null;
+  description: string | null;
+  locale: string;
+  featured: boolean;
+  verified: boolean;
+}): Dealer {
+  return {
+    id: `bl-${bl.id}`,
+    name: bl.businessName,
+    countryCode: bl.countryCode,
+    type: bl.type as DealerType,
+    metals: bl.metals as MetalSymbol[],
+    website: bl.website || undefined,
+    description: { [bl.locale]: bl.description || "" },
+    city: bl.city,
+    featured: bl.featured,
+    verified: bl.verified,
+  };
+}
+
+export function getAllDealerSlugs(): {
+  country: string;
+  city: string;
+  dealer: string;
+  countryCode: string;
+}[] {
+  const result: { country: string; city: string; dealer: string; countryCode: string }[] = [];
+  for (const d of DEALERS) {
+    if (!d.city) continue;
+    result.push({
+      countryCode: d.countryCode,
+      country: "", // filled per-locale at call site
+      city: slugifyCity(d.city),
+      dealer: slugifyDealer(d.name),
+    });
+  }
+  return result;
+}

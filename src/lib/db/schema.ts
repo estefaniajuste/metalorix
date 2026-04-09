@@ -608,6 +608,52 @@ export const errorLogs = pgTable(
 );
 
 /* ==========================================================
+   Business Listings — Self-service dealer directory
+   ========================================================== */
+
+export const businessListings = pgTable(
+  "business_listings",
+  {
+    id: serial("id").primaryKey(),
+    email: varchar("email", { length: 255 }).notNull(),
+    businessName: varchar("business_name", { length: 255 }).notNull(),
+    slug: varchar("slug", { length: 255 }).notNull(),
+    countryCode: varchar("country_code", { length: 5 }).notNull(),
+    city: varchar("city", { length: 255 }).notNull(),
+    address: varchar("address", { length: 500 }),
+    website: varchar("website", { length: 500 }),
+    phone: varchar("phone", { length: 50 }),
+    whatsapp: varchar("whatsapp", { length: 50 }),
+    instagram: varchar("instagram", { length: 100 }),
+    type: varchar("type", { length: 20 }).notNull().default("physical"),
+    metals: varchar("metals", { length: 10 }).array().notNull(),
+    services: varchar("services", { length: 30 }).array().notNull(),
+    description: text("description"),
+    locale: varchar("locale", { length: 5 }).notNull().default("en"),
+    status: varchar("status", { length: 20 }).notNull().default("pending"),
+    featured: boolean("featured").notNull().default(false),
+    verified: boolean("verified").notNull().default(false),
+    verificationToken: varchar("verification_token", { length: 100 }),
+    emailVerified: boolean("email_verified").notNull().default(false),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  (table) => ({
+    statusIdx: index("business_listings_status_idx").on(table.status),
+    countryIdx: index("business_listings_country_idx").on(table.countryCode),
+    slugIdx: index("business_listings_slug_idx").on(table.slug),
+    emailIdx: index("business_listings_email_idx").on(table.email),
+  })
+);
+
+export type BusinessListing = typeof businessListings.$inferSelect;
+export type NewBusinessListing = typeof businessListings.$inferInsert;
+
+/* ==========================================================
    Type exports
    ========================================================== */
 

@@ -9,6 +9,7 @@ type FilterType = "all" | "online" | "physical";
 interface DealerListProps {
   dealers: Dealer[];
   locale: string;
+  countrySlug?: string;
   t: {
     filterAll: string;
     filterOnline: string;
@@ -22,10 +23,11 @@ interface DealerListProps {
     metalsAccepted: string;
     featured: string;
     verified: string;
+    viewProfile?: string;
   };
 }
 
-export function DealerList({ dealers, locale, t }: DealerListProps) {
+export function DealerList({ dealers, locale, countrySlug, t }: DealerListProps) {
   const [filter, setFilter] = useState<FilterType>("all");
 
   const filtered = dealers.filter((d) => {
@@ -79,6 +81,7 @@ export function DealerList({ dealers, locale, t }: DealerListProps) {
               key={dealer.id}
               dealer={dealer}
               locale={locale}
+              countrySlug={countrySlug}
               t={t}
             />
           ))}

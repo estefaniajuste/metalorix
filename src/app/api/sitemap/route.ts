@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { getProductSlugsByLocale } from "@/lib/data/product-slugs";
 import { CURRENCY_PAGES } from "@/lib/data/currency-pages";
-import { DEALER_COUNTRIES, DEALER_BASE_PATHS, getCitiesByCountry } from "@/lib/data/dealers";
+import { DEALER_COUNTRIES, DEALER_BASE_PATHS, getCitiesByCountry, getDealersByCity, slugifyDealer } from "@/lib/data/dealers";
 
 export const dynamic = "force-dynamic";
 
@@ -33,6 +33,7 @@ const PATHNAMES: Record<string, Record<string, string>> = {
   "/privacidad": { es: "/es/privacidad", en: "/en/privacy", de: "/de/datenschutz", zh: "/zh/yinsi", ar: "/ar/khususiyah", tr: "/tr/gizlilik", hi: "/hi/gagta" },
   "/donde-comprar": { es: "/es/donde-comprar", en: "/en/where-to-buy", de: "/de/wo-kaufen", zh: "/zh/goumai-didian", ar: "/ar/amakin-alshira", tr: "/tr/nereden-alinir", hi: "/hi/kahan-kharidem" },
   "/donde-comprar/mejores": { es: "/es/donde-comprar/mejores", en: "/en/where-to-buy/best", de: "/de/wo-kaufen/beste", zh: "/zh/goumai-didian/zuijia", ar: "/ar/amakin-alshira/afdal", tr: "/tr/nereden-alinir/en-iyi", hi: "/hi/kahan-kharidem/sabse-achhe" },
+  "/donde-comprar/registrar": { es: "/es/donde-comprar/registrar", en: "/en/where-to-buy/register", de: "/de/wo-kaufen/registrieren", zh: "/zh/goumai-didian/zhuce", ar: "/ar/amakin-alshira/tasjil", tr: "/tr/nereden-alinir/kayit", hi: "/hi/kahan-kharidem/register" },
   "/prensa": { es: "/es/prensa", en: "/en/press", de: "/de/presse", zh: "/zh/xinwen-ziyuan", ar: "/ar/sahafa", tr: "/tr/basin", hi: "/hi/press" },
   "/precio-bitcoin": {
     es: "/es/precio-bitcoin",
@@ -172,6 +173,7 @@ const FREQ_PRIO: Record<string, [string, number]> = {
   "/comparar/oro-vs-bitcoin": ["weekly", 0.75],
   "/comparar/oro-vs-sp500": ["weekly", 0.75],
   "/donde-comprar": ["monthly", 0.7],
+  "/donde-comprar/registrar": ["monthly", 0.6],
 };
 
 function esc(s: string): string {
@@ -281,6 +283,18 @@ export async function GET() {
         cityPaths[loc] = `/${loc}${base}/${countrySlug}/${cityEntry.slug}`;
       }
       urls.push(...urlEntries(cityPaths, "monthly", 0.5, today));
+
+      const cityDealers = getDealersByCity(country.code, cityEntry.slug);
+      for (const dealer of cityDealers) {
+        const dealerSlug = slugifyDealer(dealer.name);
+        const dealerPaths: Record<string, string> = {};
+        for (const loc of LOCALES) {
+          const base = DEALER_BASE_PATHS[loc] ?? "/where-to-buy";
+          const cSlug = country.slug[loc] ?? country.slug.en;
+          dealerPaths[loc] = `/${loc}${base}/${cSlug}/${cityEntry.slug}/${dealerSlug}`;
+        }
+        urls.push(...urlEntries(dealerPaths, "monthly", 0.4, today));
+      }
     }
   }
 

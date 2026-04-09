@@ -368,6 +368,26 @@ export const routing = defineRouting({
       tr: "/nereden-alinir/[country]/[city]",
       hi: "/kahan-kharidem/[country]/[city]",
     },
+
+    "/donde-comprar/[country]/[city]/[dealer]": {
+      es: "/donde-comprar/[country]/[city]/[dealer]",
+      en: "/where-to-buy/[country]/[city]/[dealer]",
+      de: "/wo-kaufen/[country]/[city]/[dealer]",
+      zh: "/goumai-didian/[country]/[city]/[dealer]",
+      ar: "/amakin-alshira/[country]/[city]/[dealer]",
+      tr: "/nereden-alinir/[country]/[city]/[dealer]",
+      hi: "/kahan-kharidem/[country]/[city]/[dealer]",
+    },
+
+    "/donde-comprar/registrar": {
+      es: "/donde-comprar/registrar",
+      en: "/where-to-buy/register",
+      de: "/wo-kaufen/registrieren",
+      zh: "/goumai-didian/zhuce",
+      ar: "/amakin-alshira/tasjil",
+      tr: "/nereden-alinir/kayit",
+      hi: "/kahan-kharidem/register",
+    },
   },
 });
 

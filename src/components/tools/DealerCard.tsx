@@ -1,4 +1,6 @@
+import { Link } from "@/i18n/navigation";
 import type { Dealer } from "@/lib/data/dealers";
+import { slugifyDealer, slugifyCity } from "@/lib/data/dealers";
 
 const METAL_LABELS: Record<string, string> = {
   XAU: "Au",
@@ -10,6 +12,7 @@ const METAL_LABELS: Record<string, string> = {
 interface DealerCardProps {
   dealer: Dealer;
   locale: string;
+  countrySlug?: string;
   t: {
     typeOnline: string;
     typePhysical: string;
@@ -18,6 +21,7 @@ interface DealerCardProps {
     metalsAccepted: string;
     featured: string;
     verified: string;
+    viewProfile?: string;
   };
 }
 
@@ -42,12 +46,16 @@ function TypeBadge({ type, t }: { type: Dealer["type"]; t: DealerCardProps["t"] 
   );
 }
 
-export function DealerCard({ dealer, locale, t }: DealerCardProps) {
+export function DealerCard({ dealer, locale, countrySlug, t }: DealerCardProps) {
   const description =
     dealer.description[locale] ??
     dealer.description.en ??
     dealer.description.es ??
     "";
+
+  const hasDetailPage = !!dealer.city && !!countrySlug;
+  const citySlug = dealer.city ? slugifyCity(dealer.city) : "";
+  const dealerSlug = slugifyDealer(dealer.name);
 
   return (
     <article className="group relative flex flex-col gap-3 p-5 rounded-DEFAULT bg-surface-1 border border-border hover:border-brand-gold/30 transition-colors">
@@ -63,7 +71,19 @@ export function DealerCard({ dealer, locale, t }: DealerCardProps) {
         </div>
         <div className="min-w-0">
           <h3 className="font-semibold text-content-0 text-sm leading-tight">
-            {dealer.name}
+            {hasDetailPage ? (
+              <Link
+                href={{
+                  pathname: "/donde-comprar/[country]/[city]/[dealer]" as const,
+                  params: { country: countrySlug!, city: citySlug, dealer: dealerSlug },
+                }}
+                className="hover:text-brand-gold transition-colors"
+              >
+                {dealer.name}
+              </Link>
+            ) : (
+              dealer.name
+            )}
           </h3>
           {dealer.city && (
             <p className="text-xs text-content-3 mt-0.5">{dealer.city}</p>
@@ -99,31 +119,37 @@ export function DealerCard({ dealer, locale, t }: DealerCardProps) {
         </p>
       )}
 
-      {dealer.website && (
-        <a
-          href={dealer.website}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="mt-auto inline-flex items-center gap-1.5 text-xs font-semibold text-brand-gold hover:text-brand-gold/80 transition-colors"
-        >
-          {t.visitWebsite}
-          <svg
-            width="11"
-            height="11"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            aria-hidden="true"
+      <div className="mt-auto flex items-center gap-3">
+        {hasDetailPage && t.viewProfile && (
+          <Link
+            href={{
+              pathname: "/donde-comprar/[country]/[city]/[dealer]" as const,
+              params: { country: countrySlug!, city: citySlug, dealer: dealerSlug },
+            }}
+            className="inline-flex items-center gap-1.5 text-xs font-semibold text-brand-gold hover:text-brand-gold/80 transition-colors"
           >
-            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
-            <polyline points="15 3 21 3 21 9" />
-            <line x1="10" y1="14" x2="21" y2="3" />
-          </svg>
-        </a>
-      )}
+            {t.viewProfile}
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" aria-hidden="true">
+              <polyline points="9 18 15 12 9 6" />
+            </svg>
+          </Link>
+        )}
+        {dealer.website && (
+          <a
+            href={dealer.website}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 text-xs font-semibold text-content-2 hover:text-content-0 transition-colors"
+          >
+            {t.visitWebsite}
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+              <polyline points="15 3 21 3 21 9" />
+              <line x1="10" y1="14" x2="21" y2="3" />
+            </svg>
+          </a>
+        )}
+      </div>
     </article>
   );
 }

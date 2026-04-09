@@ -136,6 +136,7 @@ export default async function CountryDealersPage({ params }: Props) {
     metalsAccepted: t("metalsAccepted"),
     featured: t("featured"),
     verified: t("verified"),
+    viewProfile: t("viewProfile"),
   };
 
   const cities = getCitiesByCountry(countryData.code);
@@ -191,7 +192,7 @@ export default async function CountryDealersPage({ params }: Props) {
             {t("countryDesc").replace("{country}", countryName)}
           </p>
 
-          <DealerList dealers={dealers} locale={locale} t={tValues} />
+          <DealerList dealers={dealers} locale={locale} countrySlug={countrySlug} t={tValues} />
 
           {cities.length > 0 && (
             <div className="mt-12">
@@ -236,7 +237,21 @@ export default async function CountryDealersPage({ params }: Props) {
             </Link>
           </div>
 
-          <div className="mt-16 p-6 rounded-DEFAULT bg-surface-1 border border-border">
+          {/* Register CTA */}
+          <div className="mt-12 p-5 rounded-DEFAULT bg-brand-gold/5 border border-brand-gold/20 flex items-center justify-between gap-4 flex-wrap">
+            <p className="font-semibold text-sm text-content-0">{t("registerCta")}</p>
+            <Link
+              href="/donde-comprar/registrar"
+              className="inline-flex items-center gap-2 text-sm font-semibold text-brand-gold hover:text-brand-gold/80 transition-colors"
+            >
+              {t("registerCtaBtn")}
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" aria-hidden="true">
+                <polyline points="9 18 15 12 9 6" />
+              </svg>
+            </Link>
+          </div>
+
+          <div className="mt-10 p-6 rounded-DEFAULT bg-surface-1 border border-border">
             <h3 className="text-base font-semibold text-content-0 mb-2">
               {t("disclaimer")}
             </h3>
