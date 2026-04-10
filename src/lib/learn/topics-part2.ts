@@ -1087,9 +1087,9 @@ export const TOPICS_PART2: TopicDefinition[] = [
     difficulty: "intermediate",
     articleType: "explainer",
     metals: ["silver"],
-    titleEn: "Silver Mining Stocks: High Beta Exposure to Silver Prices",
+    titleEn: "Silver Mining Stocks: Why They Move 2-3× More Than Silver Itself",
     summaryEn:
-      "Learn how silver mining stocks can amplify silver price movements, the unique economics of silver mining, and key companies in the space.",
+      "Silver miners have a beta of 2-3× to the metal. See which stocks offer the most leverage, the risks of operational gearing, and how to size the position.",
     tags: ["silver", "mining-stocks", "equities", "leverage"],
     relatedSlugs: [
       "gold-mining-stocks-overview",
@@ -1235,9 +1235,9 @@ export const TOPICS_PART2: TopicDefinition[] = [
     difficulty: "beginner",
     articleType: "explainer",
     metals: ["gold"],
-    titleEn: "The Classic 5-10% Gold Allocation: Origin and Rationale",
+    titleEn: "The 5-10% Gold Rule: Where It Came From and If It Still Works",
     summaryEn:
-      "Understand where the widely cited 5-10% gold allocation recommendation comes from, the research backing it, and whether it still makes sense today.",
+      "Financial advisors recommend 5-10% gold allocation — but the evidence behind this rule may surprise you. Historical Sharpe ratios at different gold weights.",
     tags: ["allocation", "5-percent", "10-percent", "conventional"],
     relatedSlugs: [
       "how-much-gold-in-a-portfolio",
@@ -3153,9 +3153,9 @@ export const TOPICS_PART2: TopicDefinition[] = [
     subclusterSlug: "historic-coins",
     difficulty: "intermediate",
     articleType: "explainer",
-    titleEn: "NGC vs PCGS: Fees, Standards & Which Coin Grading Service Is Better",
+    titleEn: "NGC vs PCGS 2026: Fee Comparison Table & Which Adds More Resale Value",
     summaryEn:
-      "NGC vs PCGS head-to-head: submission fees, turnaround times, holder quality, resale premiums and population reports compared. Find out which grading service suits your collection.",
+      "We compared NGC and PCGS submission fees, turnaround speed, holder quality and the resale premium each adds. One consistently outperforms — see the data.",
     tags: ["ngc", "pcgs", "grading", "authentication"],
     relatedSlugs: [
       "sheldon-grading-scale",
@@ -3465,9 +3465,9 @@ export const TOPICS_PART2: TopicDefinition[] = [
     subclusterSlug: "storage-custody",
     difficulty: "beginner",
     articleType: "comparison",
-    titleEn: "Precious Metals Storage Costs Compared: Home, Bank, and Vault",
+    titleEn: "Gold Storage: Home vs Bank vs Vault — Real Costs Compared [2026]",
     summaryEn:
-      "Compare the true cost of different storage options — home safes, bank boxes, private vaults, and online platforms — including hidden costs and insurance.",
+      "A home safe costs $200 once; a bank box $150/yr; a vault 0.12-0.5%/yr of holdings. Full cost comparison including insurance, access and hidden fees.",
     tags: ["storage-costs", "comparison", "fees", "value"],
     relatedSlugs: [
       "cost-of-owning-gold",
@@ -3804,9 +3804,9 @@ export const TOPICS_PART2: TopicDefinition[] = [
     difficulty: "intermediate",
     articleType: "explainer",
     metals: ["gold"],
-    titleEn: "All Gold Ever Mined: 212,000 Tonnes — Where Is It Now? [2026 Data]",
+    titleEn: "Who Owns the World's 212,000 Tonnes of Gold? The Full Breakdown [2026]",
     summaryEn:
-      "Total above-ground gold stock is ~212,000 tonnes worth $16+ trillion. See the breakdown: 46% jewelry, 22% investment, 17% central banks, 15% industrial. Updated 2026 figures.",
+      "Five countries control nearly half of all above-ground gold. See the complete breakdown — jewelry, central banks, ETFs, private vaults — with 2026 data.",
     tags: ["above-ground-stock", "gold", "total-supply", "distribution"],
     relatedSlugs: [
       "annual-gold-mine-production",
@@ -4442,9 +4442,9 @@ export const TOPICS_PART2: TopicDefinition[] = [
     difficulty: "intermediate",
     articleType: "explainer",
     metals: ["gold"],
-    titleEn: "CPI Data Releases and Gold Price Reactions",
+    titleEn: "CPI Release Day: How Gold Reacts Within Minutes (Data Since 2020)",
     summaryEn:
-      "Understand how Consumer Price Index data releases affect gold prices in real time — surprise beats, misses, and the market's reaction function.",
+      "Gold moves 0.5-2% within 30 minutes of a CPI print. See the pattern: higher-than-expected CPI = gold up; lower = gold down. Six years of data charted.",
     tags: ["cpi", "data-release", "gold", "market-reaction"],
     relatedSlugs: [
       "ppi-and-gold-correlation",
@@ -4698,9 +4698,9 @@ export const TOPICS_PART2: TopicDefinition[] = [
     difficulty: "intermediate",
     articleType: "explainer",
     metals: ["gold"],
-    titleEn: "Gold Price in Japanese Yen: All-Time Highs and the Weak Yen Story",
+    titleEn: "Gold Price in Yen: Why Japanese Investors See Different All-Time Highs",
     summaryEn:
-      "Examine how gold denominated in yen has reached dramatic all-time highs due to yen weakness, and what Japanese investors' experience teaches about currency risk.",
+      "Gold in yen hit records while gold in USD was flat. The weak yen effect explained with charts showing gold performance in JPY vs USD since 2012.",
     tags: ["yen", "japan", "gold", "currency-weakness"],
     relatedSlugs: [
       "gold-price-in-euros",

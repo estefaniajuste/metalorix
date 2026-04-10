@@ -1278,9 +1278,9 @@ export const TOPICS_PART4: TopicDefinition[] = [
     difficulty: "intermediate",
     articleType: "guide",
     metals: ["gold", "silver"],
-    titleEn: "Comparing Vault Storage Services for Precious Metals",
+    titleEn: "Gold Vault Storage 2026: Fees, Insurance & Minimums Compared",
     summaryEn:
-      "Side-by-side comparison of major vault storage services — BullionVault, GoldMoney, Brink's, Loomis — covering fees, insurance, audit practices, and redemption options.",
+      "BullionVault charges 0.12%/yr; Brinks starts at $100/mo. Compare 8 vault storage services by fees, insurance limits, audit frequency and delivery options.",
     tags: ["vault-storage", "comparison", "fees", "guide"],
     relatedSlugs: ["international-gold-storage-guide", "allocated-vs-unallocated-storage"],
     priority: 2,

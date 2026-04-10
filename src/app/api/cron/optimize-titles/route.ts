@@ -31,64 +31,104 @@ const GENERIC_TITLE_PATTERNS = [
   "resumen diario",
 ];
 
-// Manually crafted CTR-optimized titles for the highest-impression zero-click pages.
-// These override Gemini when the slug matches, ensuring reliable quality.
+// Anti-zero-click titles: create an information gap Google snippets can't satisfy.
+// Each title promises data, comparisons or insights that REQUIRE clicking through.
 const MANUAL_TITLE_OVERRIDES: Record<string, { seo_title: string; meta_description: string }> = {
   "coin-grading-scale-ms-pf": {
-    seo_title: "Coin Grading Scale Explained: MS-70 to Good — Complete Chart",
-    meta_description: "Every coin grade from MS-70 (perfect) to Good (G-4) explained with price impact. Master the Sheldon 70-point scale for business strikes and proofs.",
+    seo_title: "Coin Grading Scale: Why One Grade Up Can Double Your Coin's Value",
+    meta_description: "The jump from MS-65 to MS-67 can mean a 5× price increase. See the full Sheldon 70-point scale with real auction prices at every grade level.",
   },
   "coin-grading-ngc-and-pcgs": {
-    seo_title: "NGC vs PCGS: Fees, Standards & Which Grading Service Wins",
-    meta_description: "NGC vs PCGS compared: submission fees, turnaround times, holder quality and resale premiums. See which coin grading service is better for your collection.",
+    seo_title: "NGC vs PCGS 2026: Fee Comparison Table & Which Adds More Resale Value",
+    meta_description: "We compared NGC and PCGS submission fees, turnaround speed, holder quality and the resale premium each adds. One consistently outperforms — see the data.",
   },
   "volatility-comparison-across-metals": {
-    seo_title: "Gold vs Silver vs Platinum Volatility: Which Metal Swings Most?",
-    meta_description: "Silver averages 30% annualized volatility vs gold's 16%. Compare 10-year data for gold, silver, platinum and palladium with daily max moves and ranking tables.",
+    seo_title: "Gold vs Silver vs Platinum: 10-Year Volatility Data Ranked",
+    meta_description: "Silver's annualized volatility is nearly 2× gold's. Full 10-year ranking with daily max swings and worst drawdowns for all four precious metals.",
   },
   "liquidity-comparison-across-metals": {
-    seo_title: "Gold vs Silver vs Platinum Liquidity: Spreads, Volume & Ease of Selling",
-    meta_description: "Gold trades $130B+/day; platinum just $4B. Rank precious metals by daily volume, bid-ask spread and market depth. Liquidity data matters when you need to sell.",
+    seo_title: "Which Precious Metal Is Hardest to Sell? Liquidity Ranked by Spread",
+    meta_description: "Gold trades $130B/day with tight spreads; palladium can take days to move. See bid-ask spreads, daily volumes and real dealer markups for each metal.",
   },
   "hyperinflation-episodes-and-gold": {
-    seo_title: "Does Gold Protect in Hyperinflation? Weimar, Zimbabwe & Venezuela Data",
-    meta_description: "Gold preserved 90%+ of purchasing power in Weimar Germany, Zimbabwe and Venezuela. Real price data from history's worst hyperinflation episodes analyzed.",
+    seo_title: "Gold in Hyperinflation: Real Returns From Weimar, Zimbabwe & Venezuela",
+    meta_description: "Gold preserved 90%+ of purchasing power while currencies lost everything. Actual price data from three of history's worst currency collapses.",
   },
   "above-ground-gold-stock": {
-    seo_title: "All Gold Ever Mined: 212,000 Tonnes — Where Is It Now? [2026]",
-    meta_description: "Total above-ground gold stock: ~212,000 tonnes worth $16T+. Breakdown: 46% jewelry, 22% investment, 17% central banks. Updated 2026 World Gold Council data.",
+    seo_title: "Who Owns the World's 212,000 Tonnes of Gold? The Full Breakdown [2026]",
+    meta_description: "Five countries control nearly half of all above-ground gold. See the complete breakdown — jewelry, central banks, ETFs, private vaults — with 2026 data.",
   },
   "hyperinflation-and-precious-metals": {
-    seo_title: "Gold in Hyperinflation: Weimar, Zimbabwe & Venezuela Case Studies",
-    meta_description: "Gold surged 1 trillion% in Weimar marks and quadrillions in Zimbabwe dollars. See exactly how gold and silver performed in history's worst currency collapses.",
+    seo_title: "How Gold Performed in 3 Hyperinflations: Weimar, Zimbabwe, Venezuela",
+    meta_description: "Gold surged 1 trillion% in Weimar marks. But silver actually outperformed in two of three cases. Real price data and the lessons for today's investors.",
   },
   "silver-chemical-symbol-ag": {
-    seo_title: "Why Is Silver's Chemical Symbol Ag? The Latin Origin Explained",
-    meta_description: "Silver's symbol Ag comes from Latin 'argentum' meaning shiny or white. Learn the full history behind this periodic table anomaly and why it persists today.",
+    seo_title: "Why Silver Is 'Ag' — And 6 Other Periodic Table Naming Surprises",
+    meta_description: "Silver's symbol Ag comes from Latin 'argentum.' But it's not the only element with a surprising symbol. See the full story behind precious metal nomenclature.",
   },
   "comparing-gold-etfs-in-europe": {
-    seo_title: "Best Gold ETFs in Europe 2026: Xetra-Gold vs iShares Fees Compared",
-    meta_description: "Compare Europe's top gold ETFs and ETCs: Xetra-Gold, iShares Physical Gold, Invesco and more. Fees, AUM, physical backing and tax treatment compared.",
+    seo_title: "Gold ETFs in Europe 2026: Fees, Tax & Physical Delivery Compared",
+    meta_description: "Xetra-Gold lets you take physical delivery; iShares doesn't. Compare 8 European gold ETFs/ETCs by expense ratio, AUM, tax treatment and physical backing.",
   },
   "the-miller-process": {
-    seo_title: "The Miller Process: How Chlorine Refines Gold to 99.5%+ Purity",
-    meta_description: "The Miller process bubbles chlorine through molten gold to remove base metals and silver. How it works, why tin causes problems, and Miller vs Wohlwill.",
+    seo_title: "Miller Process: Why 99.5% Gold Purity Isn't Good Enough",
+    meta_description: "The Miller process refines gold to 99.5% — but investment bars need 99.99%. See how it works, where it fails, and when refiners must switch to Wohlwill.",
   },
   "the-wohlwill-electrolytic-process": {
-    seo_title: "Wohlwill Process Explained: Electrolytic Gold Refining to 999.9",
-    meta_description: "The Wohlwill electrolytic process refines gold to 99.99% (four nines). See how it works, why anode slime matters, and when refiners choose Wohlwill over Miller.",
+    seo_title: "Wohlwill Process: The Only Way to Reach 99.99% Gold Purity",
+    meta_description: "The Wohlwill electrolytic process is slower and costlier than Miller — but it's the only path to four-nines gold. Step-by-step breakdown with cost comparison.",
   },
   "gold-price-in-different-decades": {
-    seo_title: "Gold Price by Decade: 1970s Through 2020s — Returns Charted",
-    meta_description: "Gold returned +2,300% in the 1970s, -52% in the 1980s and +25% in the 2010s. See average gold prices, real returns and the dominant driver of each decade.",
+    seo_title: "Gold Price by Decade: The Best and Worst 10-Year Returns Since 1970",
+    meta_description: "+2,300% in the 1970s. -52% in the 1980s. See what drove gold in each decade and which pattern the 2020s are following so far.",
   },
   "bretton-woods-system-explained": {
-    seo_title: "Bretton Woods Explained: Why Gold Was Pegged at $35/oz Until 1971",
-    meta_description: "The 1944 Bretton Woods agreement fixed gold at $35/oz and pegged all currencies to the dollar. How it worked, why it collapsed, and its legacy today.",
+    seo_title: "Bretton Woods: The $35 Gold Peg That Broke the World Economy",
+    meta_description: "In 1971, the U.S. abandoned the gold standard and changed finance forever. The full timeline from 1944 Bretton Woods to Nixon's shock — and what it means today.",
   },
   "e-waste-precious-metals-content": {
-    seo_title: "Gold, Silver & Palladium in E-Waste: How Much Is in Your Phone?",
-    meta_description: "A smartphone holds ~0.03g gold, 0.3g silver and 0.015g palladium. Precious metals content in laptops, TVs and circuit boards — richer than most ores.",
+    seo_title: "Precious Metals in Your Phone: Exact Gold, Silver & Palladium Content",
+    meta_description: "A single smartphone contains more gold per tonne than most mine ore. Exact gram-by-gram content for phones, laptops, TVs and servers — with current scrap value.",
+  },
+  "lbma-gold-price-process": {
+    seo_title: "How the Gold Price Is Actually Set: Inside the LBMA Auction",
+    meta_description: "Twice daily, a handful of banks determine the benchmark gold price used worldwide. How the LBMA auction works, who participates, and why it replaced the London Fix.",
+  },
+  "silver-mining-stocks": {
+    seo_title: "Silver Mining Stocks: Why They Move 2-3× More Than Silver Itself",
+    meta_description: "Silver miners have a beta of 2-3× to the metal. See which stocks offer the most leverage, the risks of operational gearing, and how to size the position.",
+  },
+  "cpi-data-impact-on-gold": {
+    seo_title: "CPI Release Day: How Gold Reacts Within Minutes (Data Since 2020)",
+    meta_description: "Gold moves 0.5-2% within 30 minutes of a CPI print. See the pattern: higher-than-expected CPI = gold up; lower = gold down. Six years of data charted.",
+  },
+  "1980-gold-peak-explained": {
+    seo_title: "Gold's 1980 Crash: What Happened After the $850 Peak",
+    meta_description: "Gold hit $850 in January 1980 and didn't recover for 28 years. The three forces that created the bubble — and the warning signs investors missed.",
+  },
+  "gold-price-in-yen": {
+    seo_title: "Gold Price in Yen: Why Japanese Investors See Different All-Time Highs",
+    meta_description: "Gold in yen hit records while gold in USD was flat. The weak yen effect explained with charts showing gold performance in JPY vs USD since 2012.",
+  },
+  "vat-on-gold-in-the-eu": {
+    seo_title: "Gold VAT in the EU: Which Countries Charge 0% and Which Don't",
+    meta_description: "Investment gold is VAT-exempt across the EU — but the definition varies by country. See the exact criteria, exceptions, and what happens with coins vs bars.",
+  },
+  "tael-and-tola-explained": {
+    seo_title: "Tael, Tola, Baht: Gold Weight Units That Affect What You Pay",
+    meta_description: "A tola (11.66g) costs different than a troy ounce (31.1g). See all Asian and South Asian gold weight units with conversion tables and where each is used.",
+  },
+  "comparing-vault-storage-services": {
+    seo_title: "Gold Vault Storage 2026: Fees, Insurance & Minimums Compared",
+    meta_description: "BullionVault charges 0.12%/yr; Brinks starts at $100/mo. Compare 8 vault storage services by fees, insurance limits, audit frequency and delivery options.",
+  },
+  "traditional-5-10-percent-allocation": {
+    seo_title: "The 5-10% Gold Rule: Where It Came From and If It Still Works",
+    meta_description: "Financial advisors recommend 5-10% gold allocation — but the evidence behind this rule may surprise you. Historical Sharpe ratios at different gold weights.",
+  },
+  "storage-costs-comparison": {
+    seo_title: "Gold Storage: Home vs Bank vs Vault — Real Costs Compared [2026]",
+    meta_description: "A home safe costs $200 once; a bank box $150/yr; a vault 0.12-0.5%/yr of holdings. Full cost comparison including insurance, access and hidden fees.",
   },
 };
 
@@ -214,7 +254,7 @@ RULES for FAQ (3-5 questions):
 
   const faqJsonHint = existingFaq ? "" : ', "faq": [{"question": "...", "answer": "..."}]';
 
-  const prompt = `You are an expert SEO editor specializing in educational content about precious metals. Optimize this article's search appearance to maximize click-through rate on Google.
+  const prompt = `You are an expert SEO editor. Your ONLY goal: make people CLICK the Google result instead of reading the snippet.
 
 Article slug: "${slug}"
 Current title: "${title}"
@@ -224,22 +264,23 @@ Current meta description: "${metaDescription || ""}"
 Content excerpt:
 ${contentSnippet}
 
-RULES for the SEO title (50-60 characters):
-- Use one of these CTR-proven patterns (pick the best fit):
-  1. Question: "Why Does Gold Rise When Inflation Spikes?"
-  2. Comparison: "NGC vs PCGS: Which Grading Service Is Better?"
-  3. Number/fact: "All Gold Ever Mined: 197,576 Tonnes Explained"
-  4. How-to: "How to Read a COT Report to Predict Gold Prices"
-  5. Benefit/outcome: "Gold ETFs in Europe: Lowest-Fee Options Compared"
-- Include the main search keyword naturally
-- NEVER start with "Introduction to", "Overview of", "Understanding", or "Guide to"
-- Do NOT repeat the current generic title word-for-word
+ANTI-ZERO-CLICK RULES for SEO title (50-60 chars):
+Google shows answers in snippets — users never click. Your title MUST create an INFORMATION GAP that the snippet cannot satisfy.
 
-RULES for the meta description (140-155 characters):
-- Start with what the reader will specifically learn or be able to do
-- Include 1-2 concrete facts, numbers, or named examples from the article
-- End with a hook that creates curiosity or signals clear value
-- Do NOT write "In this article..." or "This page explains..."
+Winning patterns:
+1. Tension/surprise: "Miller Process: Why 99.5% Gold Purity Isn't Good Enough"
+2. Comparison with verdict: "NGC vs PCGS 2026: Fee Table & Which Adds More Resale Value"
+3. Exclusive data: "CPI Release Day: How Gold Reacts Within Minutes (Data Since 2020)"
+4. Challenge a belief: "The 5-10% Gold Rule: Where It Came From and If It Still Works"
+5. Personal stakes: "Which Precious Metal Is Hardest to Sell? Liquidity Ranked"
+
+FORBIDDEN: titles that ANSWER the query, "Introduction to", "Overview of", "Understanding", "Explained", "A Guide to", generic academic titles.
+
+RULES for meta description (140-155 chars):
+- Start with a SURPRISING fact or number
+- Promise EXCLUSIVE content: a table, chart, ranking, or comparison
+- End with a curiosity hook
+- NEVER "In this article..." or "Learn about..."
 ${faqInstruction}
 
 Output ONLY valid JSON: {"seo_title": "...", "meta_description": "..."${faqJsonHint}}

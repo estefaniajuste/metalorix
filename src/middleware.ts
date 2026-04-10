@@ -62,6 +62,18 @@ const LEARN_SLUG_REDIRECTS: Record<string, { cluster: string; slug: string }> = 
   "how-does-ppi-affect-gold-prices": { cluster: "price-factors", slug: "ppi-and-gold" },
   "gold-performance-during-hyperinflation": { cluster: "history", slug: "hyperinflation-and-precious-metals" },
   "hyperinflation-episodes-and-gold": { cluster: "history", slug: "hyperinflation-and-precious-metals" },
+  // GSC April 2026: duplicate long-slug variants that split impressions with the canonical short slug
+  "coin-grading-ngc-and-pcgs-standards-explained": { cluster: "physical-metals", slug: "coin-grading-ngc-and-pcgs" },
+  "the-us-silver-purchase-act-government-as-silver-buyer": { cluster: "history", slug: "us-silver-purchase-act" },
+  "gold-recyclers-and-their-market-impact": { cluster: "markets-trading", slug: "gold-recyclers-in-the-market" },
+  "historical-goldsilver-ratio-chart-100-years-of-data-analyzed": { cluster: "ratios-analytics", slug: "historical-gold-silver-ratio-chart" },
+  "do-i-need-to-report-gold-purchases-general-reporting-rules": { cluster: "faq-mistakes", slug: "do-i-need-to-report-gold-purchases" },
+  "paying-too-high-a-premium-how-to-spot-overpriced-gold-and-silver": { cluster: "faq-mistakes", slug: "paying-too-high-a-premium" },
+  "buying-gold-from-unverified-sources-risks-and-red-flags": { cluster: "faq-mistakes", slug: "buying-gold-from-unverified-sources" },
+  "sovereign-wealth-funds-and-gold-allocation-a-strategic-shift": { cluster: "markets-trading", slug: "sovereign-wealth-funds-and-gold" },
+  "precious-metals-recycling-rates-compared-unlocking-value-from-the-vault": { cluster: "production-industry", slug: "precious-metals-recycling-overview" },
+  "gold-etf-vs-physical-gold-weighing-your-investment-options": { cluster: "comparisons", slug: "physical-gold-vs-gold-etf-the-complete-comparison" },
+  "silver-demonetization-how-silver-lost-its-monetary-role": { cluster: "history", slug: "demonetization-of-silver-1870s" },
 };
 
 const METAL_SLUGS: Record<string, Record<string, string>> = {

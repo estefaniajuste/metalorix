@@ -384,9 +384,9 @@ export const TOPICS_PART3: TopicDefinition[] = [
     difficulty: "intermediate",
     articleType: "explainer",
     metals: ["gold"],
-    titleEn: "The Miller Process: How Chlorine Refines Gold to 99.5%+ Purity",
+    titleEn: "Miller Process: Why 99.5% Gold Purity Isn't Good Enough",
     summaryEn:
-      "The Miller process bubbles chlorine gas through molten gold to remove base metals and silver. Learn how it works, why tin causes problems, and Miller vs Wohlwill compared.",
+      "The Miller process refines gold to 99.5% — but investment bars need 99.99%. See how it works, where it fails, and when refiners must switch to Wohlwill.",
     tags: ["miller-process", "chlorine", "refining", "gold"],
     relatedSlugs: [
       "how-gold-is-refined",
@@ -401,9 +401,9 @@ export const TOPICS_PART3: TopicDefinition[] = [
     difficulty: "advanced",
     articleType: "explainer",
     metals: ["gold"],
-    titleEn: "Wohlwill Process Explained: Electrolytic Gold Refining to 999.9",
+    titleEn: "Wohlwill Process: The Only Way to Reach 99.99% Gold Purity",
     summaryEn:
-      "The Wohlwill electrolytic process refines gold to 99.99% (four nines) purity. See how it works, why anode slime matters, and when refiners choose Wohlwill over Miller.",
+      "The Wohlwill electrolytic process is slower and costlier than Miller — but it's the only path to four-nines gold. Step-by-step breakdown with cost comparison.",
     tags: ["wohlwill", "electrolysis", "purity", "refining", "gold"],
     relatedSlugs: ["how-gold-is-refined", "the-miller-process"],
     priority: 2,
@@ -1166,7 +1166,7 @@ export const TOPICS_PART3: TopicDefinition[] = [
     difficulty: "intermediate",
     articleType: "explainer",
     metals: ["gold", "silver", "palladium", "platinum"],
-    titleEn: "Gold, Silver & Palladium in E-Waste: How Much Is in Your Phone?",
+    titleEn: "Precious Metals in Your Phone: Exact Gold, Silver & Palladium Content",
     summaryEn:
       "A smartphone contains ~0.03g gold, 0.3g silver and 0.015g palladium. See the full precious metals content in laptops, TVs and circuit boards — richer than most ores.",
     tags: ["e-waste", "precious-metals", "content", "devices"],
@@ -2240,9 +2240,9 @@ export const TOPICS_PART3: TopicDefinition[] = [
     difficulty: "intermediate",
     articleType: "explainer",
     metals: ["gold"],
-    titleEn: "VAT on Gold in the EU: Investment Gold Exemption and Rules",
+    titleEn: "Gold VAT in the EU: Which Countries Charge 0% and Which Don't",
     summaryEn:
-      "Learn how the EU VAT Directive exempts investment gold from value-added tax, what qualifies as 'investment gold,' and how the rules vary by member state.",
+      "Investment gold is VAT-exempt across the EU — but the definition varies by country. See the exact criteria, exceptions, and what happens with coins vs bars.",
     tags: ["vat", "eu", "gold", "investment-gold", "tax-exemption"],
     relatedSlugs: [
       "investment-gold-tax-exemption-eu",
@@ -3378,9 +3378,9 @@ export const TOPICS_PART3: TopicDefinition[] = [
     subclusterSlug: "certification-grading",
     difficulty: "intermediate",
     articleType: "explainer",
-    titleEn: "Coin Grading Scale Explained: MS-70 to Good — Complete 70-Point Chart",
+    titleEn: "Coin Grading Scale: Why One Grade Up Can Double Your Coin's Value",
     summaryEn:
-      "Every grade from MS-70 (perfect) to Good (G-4) explained with photos and price impact. Learn the Sheldon 70-point scale for business strikes (MS) and proofs (PF) before you buy or sell.",
+      "The jump from MS-65 to MS-67 can mean a 5× price increase. See the full Sheldon 70-point scale with real auction prices at every grade level.",
     tags: ["grading-scale", "sheldon", "ms", "pf", "numismatics"],
     relatedSlugs: [
       "ngc-coin-grading-explained",

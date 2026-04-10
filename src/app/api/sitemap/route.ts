@@ -136,6 +136,17 @@ const SLUG_REDIRECTS: Record<string, string> = {
   "how-does-ppi-affect-gold-prices": "ppi-and-gold",
   "gold-performance-during-hyperinflation": "hyperinflation-and-precious-metals",
   "hyperinflation-episodes-and-gold": "hyperinflation-and-precious-metals",
+  "coin-grading-ngc-and-pcgs-standards-explained": "coin-grading-ngc-and-pcgs",
+  "the-us-silver-purchase-act-government-as-silver-buyer": "us-silver-purchase-act",
+  "gold-recyclers-and-their-market-impact": "gold-recyclers-in-the-market",
+  "historical-goldsilver-ratio-chart-100-years-of-data-analyzed": "historical-gold-silver-ratio-chart",
+  "do-i-need-to-report-gold-purchases-general-reporting-rules": "do-i-need-to-report-gold-purchases",
+  "paying-too-high-a-premium-how-to-spot-overpriced-gold-and-silver": "paying-too-high-a-premium",
+  "buying-gold-from-unverified-sources-risks-and-red-flags": "buying-gold-from-unverified-sources",
+  "sovereign-wealth-funds-and-gold-allocation-a-strategic-shift": "sovereign-wealth-funds-and-gold",
+  "precious-metals-recycling-rates-compared-unlocking-value-from-the-vault": "precious-metals-recycling-overview",
+  "gold-etf-vs-physical-gold-weighing-your-investment-options": "physical-gold-vs-gold-etf-the-complete-comparison",
+  "silver-demonetization-how-silver-lost-its-monetary-role": "demonetization-of-silver-1870s",
 };
 
 function cleanSlug(slug: string): string {
