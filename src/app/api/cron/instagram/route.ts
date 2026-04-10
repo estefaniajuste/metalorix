@@ -13,7 +13,6 @@ import {
   buildImageUrl,
   isConfigured,
 } from "@/lib/social/instagram";
-import { cacheImage } from "@/lib/social/image-cache";
 
 const CRON_SECRET = process.env.CRON_SECRET?.trim();
 const NEXT_PUBLIC_URL = process.env.NEXT_PUBLIC_URL || "https://metalorix.com";
@@ -72,20 +71,33 @@ export async function POST(request: NextRequest) {
     // Generate caption via Gemini
     const caption = await generateCaption(captionData);
 
-    // Pre-generate the image and cache it for instant serving
+    // Pre-generate the image and upload to external hosting
+    // (Instagram can't fetch dynamic images from Cloud Run — too slow)
     const sourceImageUrl = buildImageUrl(NEXT_PUBLIC_URL, contentType, imageParams);
-    const imgRes = await fetch(sourceImageUrl, { signal: AbortSignal.timeout(15_000) });
+    const imgRes = await fetch(sourceImageUrl, { signal: AbortSignal.timeout(20_000) });
     if (!imgRes.ok) {
       return NextResponse.json(
         { error: `Image generation failed: HTTP ${imgRes.status}`, contentType },
         { status: 502 },
       );
     }
-    const imgBuffer = Buffer.from(await imgRes.arrayBuffer());
-    const cacheId = `ig-${Date.now()}`;
-    cacheImage(cacheId, imgBuffer);
+    const imgBlob = await imgRes.blob();
 
-    const imageUrl = `${NEXT_PUBLIC_URL}/api/instagram/serve?id=${cacheId}`;
+    const form = new FormData();
+    form.append("reqtype", "fileupload");
+    form.append("fileToUpload", imgBlob, "instagram-post.png");
+    const uploadRes = await fetch("https://catbox.moe/user/api.php", {
+      method: "POST",
+      body: form,
+      signal: AbortSignal.timeout(30_000),
+    });
+    if (!uploadRes.ok) {
+      return NextResponse.json(
+        { error: `Image upload failed: HTTP ${uploadRes.status}`, contentType },
+        { status: 502 },
+      );
+    }
+    const imageUrl = (await uploadRes.text()).trim();
 
     // Publish to Instagram
     const result = await publishPhoto(imageUrl, caption);
