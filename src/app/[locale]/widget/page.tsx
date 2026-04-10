@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import dynamic from "next/dynamic";
 import { getTranslations, getLocale } from "next-intl/server";
-import { getAlternates } from "@/lib/seo/alternates";
+import { getAlternates, buildMetaTitle } from "@/lib/seo/alternates";
 import { breadcrumbSchema, softwareAppSchema, faqSchema, howToSchema } from "@/lib/seo/schemas";
 import { Link } from "@/i18n/navigation";
 
@@ -28,12 +28,12 @@ export async function generateMetadata(): Promise<Metadata> {
       ? rawDesc.slice(0, rawDesc.lastIndexOf(" ", 152)) + "…"
       : rawDesc;
   return {
-    title: `${t("metaTitle")} — Metalorix`,
+    title: buildMetaTitle(t("metaTitle"), "—"),
     description: metaDesc,
     keywords: t("keywords"),
     alternates,
     openGraph: {
-      title: `${t("metaTitle")} — Metalorix`,
+      title: t("metaTitle"),
       description: metaDesc,
       type: "website",
     },

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getDb } from "@/lib/db";
 import { articles, articleTranslations, learnArticles, learnArticleLocalizations, learnClusters } from "@/lib/db/schema";
-import { eq, and, or, desc, isNotNull } from "drizzle-orm";
+import { eq, and, or, desc, isNotNull, inArray } from "drizzle-orm";
 import { generateText } from "@/lib/ai/gemini";
 import { pingIndexNow } from "@/lib/seo/ping";
 import { routing, type Locale } from "@/i18n/routing";
@@ -459,11 +459,12 @@ export async function POST(request: NextRequest) {
       .where(
         and(
           eq(learnArticleLocalizations.locale, "en"),
-          isNotNull(learnArticleLocalizations.content)
+          isNotNull(learnArticleLocalizations.content),
+          ...(forceSlugs.length > 0 ? [inArray(learnArticles.slug, forceSlugs)] : [])
         )
       )
       .orderBy(desc(learnArticleLocalizations.updatedAt))
-      .limit(100);
+      .limit(forceSlugs.length > 0 ? 500 : 100);
 
     const toOptimizeLearn = learnRows
       .filter((r) => {

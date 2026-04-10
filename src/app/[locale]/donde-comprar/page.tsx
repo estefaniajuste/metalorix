@@ -7,7 +7,7 @@ import {
   getCountryName,
 } from "@/lib/data/dealers";
 import { breadcrumbSchema, faqSchema } from "@/lib/seo/schemas";
-import { getAlternates } from "@/lib/seo/alternates";
+import { getAlternates, buildMetaTitle } from "@/lib/seo/alternates";
 
 export const revalidate = 86400;
 
@@ -19,12 +19,12 @@ export async function generateMetadata(): Promise<Metadata> {
   const rawDesc = t("pageDesc");
   const description = rawDesc.length > 155 ? rawDesc.slice(0, rawDesc.slice(0, 155).lastIndexOf(" ")) : rawDesc;
   return {
-    title: t("pageTitle") + " — Metalorix",
+    title: buildMetaTitle(t("pageTitle"), "—"),
     description,
     keywords: t("seoKeywords"),
     alternates,
     openGraph: {
-      title: t("pageTitle") + " — Metalorix",
+      title: t("pageTitle"),
       description: t("pageDesc"),
       type: "website",
       url: alternates.canonical,

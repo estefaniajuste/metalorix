@@ -1,6 +1,6 @@
 import { Link } from "@/i18n/navigation";
 import { getTranslations } from "next-intl/server";
-import { getAlternates } from "@/lib/seo/alternates";
+import { getAlternates, buildMetaTitle } from "@/lib/seo/alternates";
 
 export async function generateMetadata({
   params,
@@ -10,7 +10,7 @@ export async function generateMetadata({
   const { locale } = params;
   const t = await getTranslations({ locale, namespace: "legal" });
   return {
-    title: `${t("legalTitle")} — Metalorix`,
+    title: buildMetaTitle(t("legalTitle"), "—"),
     robots: { index: true, follow: true },
     alternates: getAlternates(locale, "/aviso-legal"),
   };

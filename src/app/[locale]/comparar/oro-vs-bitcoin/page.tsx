@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import dynamic from "next/dynamic";
 import { getTranslations, getLocale } from "next-intl/server";
-import { getAlternates } from "@/lib/seo/alternates";
+import { getAlternates, buildMetaTitle } from "@/lib/seo/alternates";
 import { Link } from "@/i18n/navigation";
 import { breadcrumbSchema, webPageSchema, faqSchema } from "@/lib/seo/schemas";
 import { getLocalizedMetalSlug } from "@/lib/utils/metal-slugs";
@@ -42,7 +42,7 @@ export async function generateMetadata({
   const { locale } = params;
   const t = await getTranslations({ locale, namespace: "comparisons" });
   const year = new Date().getFullYear();
-  const title = `${t("btcTitle")} [${year}] — Metalorix`;
+  const title = buildMetaTitle(`${t("btcTitle")} [${year}]`, "—");
   const rawDesc = t("btcDescription");
   const description =
     rawDesc.length > 155

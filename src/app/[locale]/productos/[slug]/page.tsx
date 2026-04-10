@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Link } from "@/i18n/navigation";
 import { getTranslations, getLocale } from "next-intl/server";
-import { getAlternates } from "@/lib/seo/alternates";
+import { getAlternates, buildMetaTitle } from "@/lib/seo/alternates";
 import { PRODUCTS, getProduct, getLocalizedProducts } from "@/lib/data/products";
 import { getAllLocalizedSlugsForBase, getBaseProductSlug } from "@/lib/data/product-slugs";
 import { ProductSpotPrice } from "@/components/products/ProductSpotPrice";
@@ -39,7 +39,7 @@ export async function generateMetadata({
   });
 
   return {
-    title: product.seo.title + " | Metalorix",
+    title: buildMetaTitle(product.seo.title),
     description: product.seo.description,
     keywords: product.seo.keywords,
     openGraph: {

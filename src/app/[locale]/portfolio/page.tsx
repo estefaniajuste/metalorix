@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import dynamic from "next/dynamic";
 import { getTranslations, getLocale } from "next-intl/server";
-import { getAlternates } from "@/lib/seo/alternates";
+import { getAlternates, buildMetaTitle } from "@/lib/seo/alternates";
 import { breadcrumbSchema, softwareAppSchema, faqSchema } from "@/lib/seo/schemas";
 import { Link } from "@/i18n/navigation";
 
@@ -19,7 +19,7 @@ export async function generateMetadata(): Promise<Metadata> {
     ? rawDesc.slice(0, rawDesc.slice(0, 155).lastIndexOf(".") + 1) || rawDesc.slice(0, 155)
     : rawDesc;
   return {
-    title: `${t("h1")} — Metalorix`,
+    title: buildMetaTitle(t("h1"), "—"),
     description: metaDesc,
     keywords: locale === "es"
       ? ["portfolio metales preciosos", "tracker oro plata", "valor cartera oro", "rentabilidad inversión oro"]

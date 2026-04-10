@@ -12,7 +12,7 @@ import {
   breadcrumbSchema as breadcrumbSchemaFn,
   faqSchema as faqSchemaFn,
 } from "@/lib/seo/schemas";
-import { getAlternates } from "@/lib/seo/alternates";
+import { getAlternates, buildMetaTitle } from "@/lib/seo/alternates";
 
 const SEO_KEYWORDS: Record<string, string[]> = {
   es: [
@@ -40,12 +40,12 @@ export async function generateMetadata(): Promise<Metadata> {
       : desc.slice(0, desc.slice(0, 155).lastIndexOf(" ")))
     : desc;
   return {
-    title: t("title") + " — Metalorix",
+    title: buildMetaTitle(t("title"), "—"),
     description: metaDesc,
     keywords: SEO_KEYWORDS[locale] || SEO_KEYWORDS.es,
     alternates,
     openGraph: {
-      title: t("title") + " — Metalorix",
+      title: t("title"),
       description: metaDesc,
       type: "website",
       url: alternates.canonical,

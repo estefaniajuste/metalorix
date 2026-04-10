@@ -20,6 +20,21 @@ type HrefInput =
 
 type HrefInputOrPerLocale = HrefInput | ((loc: Locale) => HrefInput);
 
+const MAX_TITLE = 60;
+const BRAND = " | Metalorix";
+const BRAND_DASH = " — Metalorix";
+
+/**
+ * Build a <title> that fits within Google's ~60-char display limit.
+ * Appends the brand suffix only if the total stays ≤ 60 chars.
+ */
+export function buildMetaTitle(title: string, separator: "|" | "—" = "|"): string {
+  const suffix = separator === "—" ? BRAND_DASH : BRAND;
+  return (title.length + suffix.length <= MAX_TITLE)
+    ? `${title}${suffix}`
+    : title;
+}
+
 export function getAlternates(
   locale: string,
   href: HrefInputOrPerLocale

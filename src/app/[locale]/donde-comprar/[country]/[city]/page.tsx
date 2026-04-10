@@ -12,7 +12,7 @@ import {
 } from "@/lib/data/dealers";
 import { DealerCard } from "@/components/tools/DealerCard";
 import { breadcrumbSchema } from "@/lib/seo/schemas";
-import { getAlternates } from "@/lib/seo/alternates";
+import { getAlternates, buildMetaTitle } from "@/lib/seo/alternates";
 import { routing, type Locale } from "@/i18n/routing";
 import { SetLocalePathOverrides } from "@/components/layout/SetLocalePathOverrides";
 
@@ -66,10 +66,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     },
   }));
 
-  const title =
+  const title = buildMetaTitle(
     t("cityTitle")
       .replace("{city}", cityEntry.city)
-      .replace("{country}", countryName) + " — Metalorix";
+      .replace("{country}", countryName),
+    "—"
+  );
 
   const description = t("cityDesc")
     .replace("{city}", cityEntry.city)

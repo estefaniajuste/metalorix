@@ -1,6 +1,6 @@
 import { Link } from "@/i18n/navigation";
 import { getTranslations, getLocale } from "next-intl/server";
-import { getAlternates } from "@/lib/seo/alternates";
+import { getAlternates, buildMetaTitle } from "@/lib/seo/alternates";
 import { getLocalizedMetalSlug } from "@/lib/utils/metal-slugs";
 import { getDb } from "@/lib/db";
 import { articles, articleTranslations } from "@/lib/db/schema";
@@ -18,11 +18,11 @@ export async function generateMetadata({
   const description = rawDesc.length > 155 ? rawDesc.slice(0, rawDesc.slice(0, 155).lastIndexOf(" ")) : rawDesc;
   const alternates = getAlternates(locale, "/noticias");
   return {
-    title: `${t("title")} — Metalorix`,
+    title: buildMetaTitle(t("title"), "—"),
     description,
     alternates,
     openGraph: {
-      title: `${t("title")} — Metalorix`,
+      title: t("title"),
       description,
       type: "website",
       url: alternates.canonical,

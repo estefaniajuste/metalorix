@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getTranslations, getLocale } from "next-intl/server";
-import { getAlternates } from "@/lib/seo/alternates";
+import { getAlternates, buildMetaTitle } from "@/lib/seo/alternates";
 import { getPathname } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
 import { TAXONOMY } from "@/lib/learn/taxonomy";
@@ -75,10 +75,10 @@ export async function generateMetadata({
   }));
 
   return {
-    title: `${clusterName} — ${t("breadcrumb")} | Metalorix`,
+    title: buildMetaTitle(`${clusterName} — ${t("breadcrumb")}`),
     description: clusterDesc,
     openGraph: {
-      title: `${clusterName} — ${t("breadcrumb")} | Metalorix`,
+      title: `${clusterName} — ${t("breadcrumb")}`,
       description: clusterDesc,
       url: alternates.canonical,
     },

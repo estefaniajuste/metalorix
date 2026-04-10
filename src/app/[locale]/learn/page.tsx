@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Link, getPathname } from "@/i18n/navigation";
 import { getTranslations, getLocale } from "next-intl/server";
-import { getAlternates } from "@/lib/seo/alternates";
+import { getAlternates, buildMetaTitle } from "@/lib/seo/alternates";
 import { TAXONOMY } from "@/lib/learn/taxonomy";
 import { ALL_TOPICS } from "@/lib/learn/topics";
 import { LearnBreadcrumb } from "@/components/learn/LearnBreadcrumb";
@@ -23,10 +23,10 @@ export async function generateMetadata(): Promise<Metadata> {
   const rawDesc = t("description");
   const description = rawDesc.length > 155 ? rawDesc.slice(0, rawDesc.slice(0, 155).lastIndexOf(" ")) : rawDesc;
   return {
-    title: `${t("title")} — Metalorix`,
+    title: buildMetaTitle(t("title"), "—"),
     description,
     openGraph: {
-      title: `${t("title")} — Metalorix`,
+      title: t("title"),
       description,
       url: alternates.canonical,
     },

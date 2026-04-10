@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Link } from "@/i18n/navigation";
 import { notFound, permanentRedirect } from "next/navigation";
 import { getTranslations, getLocale } from "next-intl/server";
-import { getAlternates } from "@/lib/seo/alternates";
+import { getAlternates, buildMetaTitle } from "@/lib/seo/alternates";
 import { howToSchema, organizationSchema } from "@/lib/seo/schemas";
 import { getPathname } from "@/i18n/navigation";
 import { getDb } from "@/lib/db";
@@ -227,9 +227,7 @@ export async function generateMetadata({
           slug: gTerm.slug,
         },
       }));
-      const glossaryMetaTitle = (title.length + " | Metalorix".length <= 60)
-        ? `${title} | Metalorix`
-        : title;
+      const glossaryMetaTitle = buildMetaTitle(title);
       return {
         title: glossaryMetaTitle,
         description,
@@ -310,11 +308,7 @@ export async function generateMetadata({
     .replace(/## Frequently Asked Questions[\s\S]*?(?=\n## |\n*$)/, "")
     .trim().length > 0;
 
-  const MAX_TITLE_LENGTH = 60;
-  const BRAND_SUFFIX = " | Metalorix";
-  const metaTitle = (title.length + BRAND_SUFFIX.length <= MAX_TITLE_LENGTH)
-    ? `${title}${BRAND_SUFFIX}`
-    : title;
+  const metaTitle = buildMetaTitle(title);
 
   return {
     title: metaTitle,

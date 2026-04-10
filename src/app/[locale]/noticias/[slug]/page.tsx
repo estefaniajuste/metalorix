@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Link, getPathname } from "@/i18n/navigation";
 import { notFound, redirect } from "next/navigation";
 import { getTranslations, getLocale } from "next-intl/server";
-import { getAlternates } from "@/lib/seo/alternates";
+import { getAlternates, buildMetaTitle } from "@/lib/seo/alternates";
 import type { Locale } from "@/i18n/routing";
 import { getDb } from "@/lib/db";
 import { articles, articleTranslations, glossaryTerms, learnArticles, learnArticleLocalizations } from "@/lib/db/schema";
@@ -236,7 +236,7 @@ export async function generateMetadata({
   const hasWrongSlug = params.slug !== correctSlug;
 
   return {
-    title: `${title} | Metalorix`,
+    title: buildMetaTitle(title),
     description,
     openGraph: {
       title,

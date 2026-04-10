@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getTranslations, getLocale } from "next-intl/server";
-import { getAlternates } from "@/lib/seo/alternates";
+import { getAlternates, buildMetaTitle } from "@/lib/seo/alternates";
 import { getMetalSEO } from "@/lib/seo/metal-content";
 import { breadcrumbSchema, faqSchema } from "@/lib/seo/schemas";
 import { Link } from "@/i18n/navigation";
@@ -44,7 +44,7 @@ export async function generateMetadata({
 
   const year = new Date().getFullYear();
   const currName = curr.names[locale] || curr.names.en;
-  const title = `${t("title", { metal: seo.name, currency: currName })} [${year}] — Metalorix`;
+  const title = buildMetaTitle(`${t("title", { metal: seo.name, currency: currName })} [${year}]`, "—");
   const description = t("description", {
     metal: seo.name,
     currency: currName,

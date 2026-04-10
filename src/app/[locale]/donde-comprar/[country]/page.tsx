@@ -11,7 +11,7 @@ import {
 } from "@/lib/data/dealers";
 import { DealerList } from "@/components/tools/DealerList";
 import { breadcrumbSchema } from "@/lib/seo/schemas";
-import { getAlternates } from "@/lib/seo/alternates";
+import { getAlternates, buildMetaTitle } from "@/lib/seo/alternates";
 import { routing, type Locale } from "@/i18n/routing";
 import { SetLocalePathOverrides } from "@/components/layout/SetLocalePathOverrides";
 
@@ -52,7 +52,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     params: { country: countryData.slug[loc] ?? countryData.slug.en },
   }));
 
-  const title = t("countryTitle").replace("{country}", countryName) + " — Metalorix";
+  const title = buildMetaTitle(t("countryTitle").replace("{country}", countryName), "—");
   const description = t("countryDesc").replace("{country}", countryName);
 
   return {

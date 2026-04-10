@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { getTranslations, getLocale } from "next-intl/server";
-import { getAlternates } from "@/lib/seo/alternates";
+import { getAlternates, buildMetaTitle } from "@/lib/seo/alternates";
 import { Link } from "@/i18n/navigation";
 import { breadcrumbSchema, webPageSchema } from "@/lib/seo/schemas";
 import { getLocalizedMetalSlug } from "@/lib/utils/metal-slugs";
@@ -15,7 +15,7 @@ export async function generateMetadata({
   const { locale } = params;
   const t = await getTranslations({ locale, namespace: "comparisons" });
   const year = new Date().getFullYear();
-  const title = `${t("sp500Title")} [${year}] — Metalorix`;
+  const title = buildMetaTitle(`${t("sp500Title")} [${year}]`, "—");
   const description = t("sp500Description");
   const alternates = getAlternates(locale, "/comparar/oro-vs-sp500");
   const kwEs = [

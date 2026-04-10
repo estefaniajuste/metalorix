@@ -3,7 +3,7 @@ import { getTranslations, getLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { DEALER_COUNTRIES, getCountryName } from "@/lib/data/dealers";
 import { breadcrumbSchema } from "@/lib/seo/schemas";
-import { getAlternates } from "@/lib/seo/alternates";
+import { getAlternates, buildMetaTitle } from "@/lib/seo/alternates";
 import { BusinessForm } from "@/components/dealers/BusinessForm";
 
 export const revalidate = 86400;
@@ -14,12 +14,12 @@ export async function generateMetadata(): Promise<Metadata> {
   const alternates = getAlternates(locale, "/donde-comprar/registrar");
 
   return {
-    title: t("registerTitle") + " — Metalorix",
+    title: buildMetaTitle(t("registerTitle"), "—"),
     description: t("registerSeoDesc"),
     keywords: t("registerSeoKw"),
     alternates,
     openGraph: {
-      title: t("registerTitle") + " — Metalorix",
+      title: t("registerTitle"),
       description: t("registerSeoDesc"),
       type: "website",
       url: alternates.canonical,

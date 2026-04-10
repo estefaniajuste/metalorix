@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getTranslations, getLocale } from "next-intl/server";
-import { getAlternates } from "@/lib/seo/alternates";
+import { getAlternates, buildMetaTitle } from "@/lib/seo/alternates";
 import { getMetalSEO } from "@/lib/seo/metal-content";
 import { Link } from "@/i18n/navigation";
 import {
@@ -67,7 +67,7 @@ export async function generateMetadata({
   if (!seo) notFound();
 
   const year = new Date().getFullYear();
-  const title = `${t("title", { metal: seo.name })} [${year}] — Metalorix`;
+  const title = buildMetaTitle(`${t("title", { metal: seo.name })} [${year}]`, "—");
   const description = t("description", { metal: seo.name });
 
   const localizedSlug = getLocalizedMetalSlug(seo.slug, locale);

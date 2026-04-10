@@ -1,6 +1,6 @@
 import { getTranslations, getLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
-import { getAlternates } from "@/lib/seo/alternates";
+import { getAlternates, buildMetaTitle } from "@/lib/seo/alternates";
 import { CopySnippet } from "./CopySnippet";
 
 export async function generateMetadata({
@@ -13,7 +13,7 @@ export async function generateMetadata({
   const rawDesc = t("metaDescription");
   const metaDescription = rawDesc.length > 155 ? rawDesc.slice(0, rawDesc.slice(0, 155).lastIndexOf(" ")) : rawDesc;
   return {
-    title: `${t("title")} — Metalorix`,
+    title: buildMetaTitle(t("title"), "—"),
     description: metaDescription,
     robots: { index: true, follow: true },
     alternates: getAlternates(locale, "/prensa"),

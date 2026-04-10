@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getTranslations, getLocale } from "next-intl/server";
-import { getAlternates } from "@/lib/seo/alternates";
+import { getAlternates, buildMetaTitle } from "@/lib/seo/alternates";
 import { getMetalSEO, METAL_SEO, type MetalFAQ } from "@/lib/seo/metal-content";
 import { MetalPageContent } from "@/components/dashboard/MetalPageContent";
 import { UnitPriceTable } from "@/components/dashboard/UnitPriceTable";
@@ -40,7 +40,8 @@ export async function generateMetadata({
   });
 
   const year = new Date().getFullYear();
-  const pageTitle = `${t("priceOf", { metal: seo.name })} [${year}] — Metalorix`;
+  const rawTitle = `${t("priceOf", { metal: seo.name })} [${year}]`;
+  const pageTitle = buildMetaTitle(rawTitle, "—");
 
   const baseUrl = (process.env.NEXT_PUBLIC_URL || "https://metalorix.com").replace(/\/$/, "");
   const ogImageUrl = `${baseUrl}/en/opengraph-image`;

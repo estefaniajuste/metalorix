@@ -1,6 +1,6 @@
 import { Link } from "@/i18n/navigation";
 import { getTranslations } from "next-intl/server";
-import { getAlternates } from "@/lib/seo/alternates";
+import { getAlternates, buildMetaTitle } from "@/lib/seo/alternates";
 import { CookieConsentManager } from "@/components/layout/CookieConsentManager";
 
 export async function generateMetadata({
@@ -11,7 +11,7 @@ export async function generateMetadata({
   const { locale } = params;
   const t = await getTranslations({ locale, namespace: "legal" });
   return {
-    title: `${t("privacyTitle")} — Metalorix`,
+    title: buildMetaTitle(t("privacyTitle"), "—"),
     alternates: getAlternates(locale, "/privacidad"),
   };
 }
