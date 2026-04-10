@@ -1,4 +1,4 @@
-const GRAPH_API = "https://graph.facebook.com/v21.0";
+const GRAPH_API = process.env.INSTAGRAM_API_BASE_URL || "https://graph.instagram.com/v21.0";
 
 const IG_USER_ID = process.env.INSTAGRAM_USER_ID;
 const IG_IMAGE_SECRET = process.env.INSTAGRAM_IMAGE_SECRET;
@@ -131,10 +131,7 @@ export async function refreshToken(): Promise<string | null> {
 
   try {
     const res = await fetch(
-      `${GRAPH_API}/oauth/access_token?grant_type=fb_exchange_token` +
-      `&client_id=${process.env.FACEBOOK_APP_ID ?? ""}` +
-      `&client_secret=${process.env.FACEBOOK_APP_SECRET ?? ""}` +
-      `&fb_exchange_token=${accessToken}`,
+      `https://graph.instagram.com/refresh_access_token?grant_type=ig_refresh_token&access_token=${accessToken}`,
       { signal: AbortSignal.timeout(10_000) },
     );
 
