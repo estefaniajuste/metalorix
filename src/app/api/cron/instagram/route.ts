@@ -13,6 +13,7 @@ import {
   buildImageUrl,
   isConfigured,
 } from "@/lib/social/instagram";
+import { cacheImage } from "@/lib/social/image-cache";
 
 const CRON_SECRET = process.env.CRON_SECRET?.trim();
 const NEXT_PUBLIC_URL = process.env.NEXT_PUBLIC_URL || "https://metalorix.com";
@@ -71,8 +72,20 @@ export async function POST(request: NextRequest) {
     // Generate caption via Gemini
     const caption = await generateCaption(captionData);
 
-    // Build signed image URL
-    const imageUrl = buildImageUrl(NEXT_PUBLIC_URL, contentType, imageParams);
+    // Pre-generate the image and cache it for instant serving
+    const sourceImageUrl = buildImageUrl(NEXT_PUBLIC_URL, contentType, imageParams);
+    const imgRes = await fetch(sourceImageUrl, { signal: AbortSignal.timeout(15_000) });
+    if (!imgRes.ok) {
+      return NextResponse.json(
+        { error: `Image generation failed: HTTP ${imgRes.status}`, contentType },
+        { status: 502 },
+      );
+    }
+    const imgBuffer = Buffer.from(await imgRes.arrayBuffer());
+    const cacheId = `ig-${Date.now()}`;
+    cacheImage(cacheId, imgBuffer);
+
+    const imageUrl = `${NEXT_PUBLIC_URL}/api/instagram/serve?id=${cacheId}`;
 
     // Publish to Instagram
     const result = await publishPhoto(imageUrl, caption);

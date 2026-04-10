@@ -26,15 +26,15 @@ export async function publishPhoto(
   }
 
   try {
-    // Step 1: Create media container
+    // Step 1: Create media container (form-encoded required by Instagram Login API)
+    const containerParams = new URLSearchParams();
+    containerParams.set("image_url", imageUrl);
+    containerParams.set("caption", caption);
+    containerParams.set("access_token", accessToken);
+
     const containerRes = await fetch(`${GRAPH_API}/${IG_USER_ID}/media`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        image_url: imageUrl,
-        caption,
-        access_token: accessToken,
-      }),
+      body: containerParams,
       signal: AbortSignal.timeout(30_000),
     });
 
@@ -55,13 +55,13 @@ export async function publishPhoto(
     await waitForContainer(containerId);
 
     // Step 3: Publish the container
+    const publishParams = new URLSearchParams();
+    publishParams.set("creation_id", containerId);
+    publishParams.set("access_token", accessToken);
+
     const publishRes = await fetch(`${GRAPH_API}/${IG_USER_ID}/media_publish`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        creation_id: containerId,
-        access_token: accessToken,
-      }),
+      body: publishParams,
       signal: AbortSignal.timeout(30_000),
     });
 
