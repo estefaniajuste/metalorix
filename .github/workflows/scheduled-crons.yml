@@ -441,6 +441,22 @@ jobs:
             echo "should_run=false" >> $GITHUB_OUTPUT
           fi
 
+      - name: Apply manual title overrides (hand-crafted anti-zero-click titles)
+        if: steps.check.outputs.should_run == 'true'
+        run: |
+          response=$(curl -s -w "\n%{http_code}" -X POST \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+            "${{ env.SERVICE_URL }}/api/cron/optimize-titles?target=learn&slugs=manual")
+          http_code=$(echo "$response" | tail -1)
+          body=$(echo "$response" | head -n -1)
+          echo "Manual overrides status: $http_code"
+          echo "Response: $body"
+          if [ "$http_code" -ge 500 ]; then
+            echo "::error::manual title overrides failed with status $http_code"
+            exit 1
+          fi
+          sleep 5
+
       - name: Optimize generic news article titles with Gemini
         if: steps.check.outputs.should_run == 'true'
         run: |

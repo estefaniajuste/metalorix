@@ -227,8 +227,11 @@ export async function generateMetadata({
           slug: gTerm.slug,
         },
       }));
+      const glossaryMetaTitle = (title.length + " | Metalorix".length <= 60)
+        ? `${title} | Metalorix`
+        : title;
       return {
-        title: `${title} | Metalorix`,
+        title: glossaryMetaTitle,
         description,
         openGraph: {
           title,
@@ -307,8 +310,14 @@ export async function generateMetadata({
     .replace(/## Frequently Asked Questions[\s\S]*?(?=\n## |\n*$)/, "")
     .trim().length > 0;
 
+  const MAX_TITLE_LENGTH = 60;
+  const BRAND_SUFFIX = " | Metalorix";
+  const metaTitle = (title.length + BRAND_SUFFIX.length <= MAX_TITLE_LENGTH)
+    ? `${title}${BRAND_SUFFIX}`
+    : title;
+
   return {
-    title: `${title} | Metalorix`,
+    title: metaTitle,
     description,
     openGraph: {
       title,
@@ -853,6 +862,24 @@ export default async function LearnArticlePage({
 
           {hasContent ? (
             <>
+              {keyTakeaways.length > 0 && (
+                <div className="mb-8 p-5 rounded-lg bg-surface-1 border border-brand-gold/30">
+                  <h2 className="text-sm font-bold text-brand-gold uppercase tracking-wider mb-3">
+                    {t("keyTakeaways")}
+                  </h2>
+                  <ul className="space-y-2">
+                    {keyTakeaways.map((takeaway: string, i: number) => (
+                      <li
+                        key={i}
+                        className="flex gap-2 text-sm text-content-1"
+                      >
+                        <span className="text-brand-gold shrink-0">✓</span>
+                        {takeaway}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
               {(() => {
                 const headings = strippedContent
                   .split("\n")
@@ -930,25 +957,6 @@ export default async function LearnArticlePage({
               <p className="text-sm text-content-3">
                 {t("preparingArticleHint", { name: clusterName })}
               </p>
-            </div>
-          )}
-
-          {keyTakeaways.length > 0 && (
-            <div className="mt-10 p-5 rounded-lg bg-surface-1 border border-border">
-              <h2 className="text-base font-bold text-content-0 mb-3">
-                {t("keyTakeaways")}
-              </h2>
-              <ul className="space-y-2">
-                {keyTakeaways.map((takeaway: string, i: number) => (
-                  <li
-                    key={i}
-                    className="flex gap-2 text-sm text-content-1"
-                  >
-                    <span className="text-brand-gold shrink-0">•</span>
-                    {takeaway}
-                  </li>
-                ))}
-              </ul>
             </div>
           )}
 
