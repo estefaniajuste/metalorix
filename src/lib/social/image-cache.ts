@@ -5,9 +5,10 @@ const TTL_MS = 10 * 60 * 1000; // 10 minutes
 export function cacheImage(id: string, data: Buffer): void {
   cache.set(id, { data, expires: Date.now() + TTL_MS });
 
-  for (const [key, entry] of cache.entries()) {
-    if (entry.expires < Date.now()) cache.delete(key);
-  }
+  const now = Date.now();
+  cache.forEach((entry, key) => {
+    if (entry.expires < now) cache.delete(key);
+  });
 }
 
 export function getCachedImage(id: string): Buffer | null {
