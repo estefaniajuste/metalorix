@@ -89,6 +89,7 @@ const PATHNAMES: Record<string, Record<string, string>> = {
   "/precio-bitcoin": { es: "/es/precio-bitcoin", en: "/en/bitcoin-price", de: "/de/bitcoin-preis", zh: "/zh/bitcoin-jiage", ar: "/ar/sier-bitcoin", tr: "/tr/bitcoin-fiyati", hi: "/hi/bitcoin-mulya" },
   "/comparar/oro-vs-bitcoin": { es: "/es/comparar/oro-vs-bitcoin", en: "/en/compare/gold-vs-bitcoin", de: "/de/vergleich/gold-vs-bitcoin", zh: "/zh/bijiao/huangjin-vs-bitcoin", ar: "/ar/muqarana/dhahab-vs-bitcoin", tr: "/tr/karsilastir/altin-vs-bitcoin", hi: "/hi/tulana/sona-vs-bitcoin" },
   "/comparar/oro-vs-sp500": { es: "/es/comparar/oro-vs-sp500", en: "/en/compare/gold-vs-sp500", de: "/de/vergleich/gold-vs-sp500", zh: "/zh/bijiao/huangjin-vs-sp500", ar: "/ar/muqarana/dhahab-vs-sp500", tr: "/tr/karsilastir/altin-vs-sp500", hi: "/hi/tulana/sona-vs-sp500" },
+  "/outlook": { es: "/es/predicciones", en: "/en/outlook", de: "/de/prognose", zh: "/zh/yuce", ar: "/ar/tawaquat", tr: "/tr/tahmin", hi: "/hi/purvanuaman" },
 };
 
 const FREQ_PRIO: Record<string, [string, number]> = {
@@ -103,7 +104,7 @@ const FREQ_PRIO: Record<string, [string, number]> = {
   "/precio-gramo-oro": ["daily", 0.8], "/aviso-legal": ["yearly", 0.3],
   "/terminos": ["yearly", 0.3], "/privacidad": ["yearly", 0.3],
   "/precio-bitcoin": ["daily", 0.9], "/comparar/oro-vs-bitcoin": ["weekly", 0.75],
-  "/comparar/oro-vs-sp500": ["weekly", 0.75], "/donde-comprar": ["monthly", 0.7],
+  "/comparar/oro-vs-sp500": ["weekly", 0.75], "/outlook": ["daily", 0.85], "/donde-comprar": ["monthly", 0.7],
   "/donde-comprar/registrar": ["monthly", 0.6],
 };
 

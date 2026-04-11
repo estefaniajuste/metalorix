@@ -9,6 +9,7 @@ import {
   integer,
   index,
   uniqueIndex,
+  jsonb,
 } from "drizzle-orm/pg-core";
 
 /* ==========================================================
@@ -652,6 +653,38 @@ export const businessListings = pgTable(
 
 export type BusinessListing = typeof businessListings.$inferSelect;
 export type NewBusinessListing = typeof businessListings.$inferInsert;
+
+/* ==========================================================
+   Metal Outlooks — Predictive model scores + narratives
+   ========================================================== */
+
+export const metalOutlooks = pgTable(
+  "metal_outlooks",
+  {
+    id: serial("id").primaryKey(),
+    symbol: varchar("symbol", { length: 10 }).notNull(),
+    timeframe: varchar("timeframe", { length: 10 }).notNull(),
+    score: integer("score").notNull(),
+    signal: varchar("signal", { length: 20 }).notNull(),
+    confidence: varchar("confidence", { length: 10 }).notNull(),
+    factorsJson: jsonb("factors_json").notNull(),
+    narrative: text("narrative"),
+    narrativeEs: text("narrative_es"),
+    generatedAt: timestamp("generated_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  (table) => ({
+    symbolTimeframeIdx: index("outlook_symbol_tf_idx").on(
+      table.symbol,
+      table.timeframe
+    ),
+    generatedAtIdx: index("outlook_generated_idx").on(table.generatedAt),
+  })
+);
+
+export type MetalOutlook = typeof metalOutlooks.$inferSelect;
+export type NewMetalOutlook = typeof metalOutlooks.$inferInsert;
 
 /* ==========================================================
    Type exports

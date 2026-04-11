@@ -26,6 +26,7 @@ on:
           - optimize-titles
           - index-all
           - instagram
+          - outlook
       content_type:
         description: 'When job=content: daily, evening, weekly, auto, translate, replace_today, regenerate_translations, fix_slugs'
         required: false
@@ -635,5 +636,41 @@ jobs:
           echo "Response: $body"
           if [ "$http_code" -ge 500 ]; then
             echo "::error::Instagram post failed with status $http_code"
+            exit 1
+          fi
+
+  generate-outlook:
+    if: >
+      (github.event_name == 'schedule' && github.event.schedule == '*/15 * * * *') ||
+      github.event.inputs.job == 'all' ||
+      github.event.inputs.job == 'outlook'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check if outlook generation should run
+        id: check
+        run: |
+          hour=$(date -u +%H)
+          minute=$(date -u +%M)
+          # Generate outlooks every 4 hours (at 02, 06, 10, 14, 18, 22 UTC)
+          if ([ "$hour" = "02" ] || [ "$hour" = "06" ] || [ "$hour" = "10" ] || [ "$hour" = "14" ] || [ "$hour" = "18" ] || [ "$hour" = "22" ]) && [ "$minute" -lt "15" ]; then
+            echo "should_run=true" >> $GITHUB_OUTPUT
+          elif [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "should_run=true" >> $GITHUB_OUTPUT
+          else
+            echo "should_run=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Generate metal outlooks
+        if: steps.check.outputs.should_run == 'true'
+        run: |
+          response=$(curl -s -w "\n%{http_code}" -X POST \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+            "${{ env.SERVICE_URL }}/api/cron/generate-outlook")
+          http_code=$(echo "$response" | tail -1)
+          body=$(echo "$response" | head -n -1)
+          echo "Status: $http_code"
+          echo "Response: $body"
+          if [ "$http_code" -ge 500 ]; then
+            echo "::error::Generate outlook failed with status $http_code"
             exit 1
           fi

@@ -43,6 +43,19 @@ export async function generateMetadata({
 
 const TOOL_CARDS = [
   {
+    href: "/outlook" as const,
+    titleKey: "outlook" as const,
+    descKey: "outlookDesc" as const,
+    icon: (
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M2 20h20" />
+        <path d="M5 20V9l4-5 3 4 4-6 3 4v14" />
+        <circle cx="16" cy="6" r="1" fill="currentColor" />
+      </svg>
+    ),
+    highlight: true,
+  },
+  {
     href: "/comparador" as const,
     titleKey: "comparator" as const,
     descKey: "comparatorDesc" as const,
@@ -183,9 +196,18 @@ export default async function HerramientasPage() {
               <Link
                 key={tool.href}
                 href={tool.href}
-                className="bg-surface-1 border border-border rounded-DEFAULT p-6 hover:border-brand-gold/40 hover:shadow-card transition-all group"
+                className={`bg-surface-1 border rounded-DEFAULT p-6 hover:border-brand-gold/40 hover:shadow-card transition-all group ${
+                  "highlight" in tool && tool.highlight
+                    ? "border-brand-gold/30 ring-1 ring-brand-gold/10"
+                    : "border-border"
+                }`}
               >
-                <div className="text-brand-gold mb-3">{tool.icon}</div>
+                <div className="text-brand-gold mb-3 flex items-center gap-2">
+                  {tool.icon}
+                  {"highlight" in tool && tool.highlight && (
+                    <span className="text-[10px] font-bold uppercase tracking-wider bg-brand-gold/15 text-brand-gold px-1.5 py-0.5 rounded">NEW</span>
+                  )}
+                </div>
                 <h3 className="text-base font-semibold text-content-0 mb-1 group-hover:text-brand-gold transition-colors">
                   {t(tool.titleKey)}
                 </h3>
