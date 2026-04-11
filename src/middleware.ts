@@ -120,7 +120,7 @@ export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   if (pathname === "/feed.xml") {
-    return NextResponse.redirect(new URL("/api/feed", request.url), 302);
+    return NextResponse.redirect(new URL("/api/feed", request.url), 301);
   }
 
   if (pathname === "/sitemap.xml" || pathname === "/sitemap_index.xml") {
@@ -316,6 +316,17 @@ export function middleware(request: NextRequest) {
   }
 
   const response = handleI18nRouting(request);
+
+  // next-intl uses 307 (temporary) for locale prefix redirects.
+  // Convert to 301 (permanent) so Google consolidates link equity and
+  // stops re-crawling the non-prefixed URL.
+  if (response.status === 307) {
+    const location = response.headers.get("location");
+    if (location) {
+      return NextResponse.redirect(location, 301);
+    }
+  }
+
   // Propagate the original URL so not-found/error pages can log it
   response.headers.set("x-pathname", pathname);
   return response;
