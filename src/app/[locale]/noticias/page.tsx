@@ -37,7 +37,15 @@ async function getPublishedArticles() {
   if (!db) return [];
   try {
     return await db
-      .select()
+      .select({
+        id: articles.id,
+        slug: articles.slug,
+        title: articles.title,
+        excerpt: articles.excerpt,
+        category: articles.category,
+        metals: articles.metals,
+        publishedAt: articles.publishedAt,
+      })
       .from(articles)
       .where(eq(articles.published, true))
       .orderBy(desc(articles.publishedAt))
