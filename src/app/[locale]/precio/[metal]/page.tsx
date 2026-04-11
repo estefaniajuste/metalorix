@@ -23,7 +23,7 @@ const METAL_LEARN_LINKS: Record<string, Array<{ slug: string; cluster: string }>
   oro: [
     { slug: "above-ground-gold-stock", cluster: "price-factors" },
     { slug: "central-bank-gold-reserves-explained", cluster: "price-factors" },
-    { slug: "gold-as-an-inflation-hedge", cluster: "price-factors" },
+    { slug: "gold-inflation-hedge", cluster: "investment" },
     { slug: "comparing-gold-etfs-in-europe", cluster: "guides" },
   ],
   plata: [
