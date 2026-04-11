@@ -612,9 +612,9 @@ const OPTIMIZED_METADATA: {
   {
     slug: "above-ground-gold-stock",
     locale: "en",
-    seoTitle: "Total Above-Ground Gold Stock [2026]: Tonnes & Value",
+    seoTitle: "Above-Ground Gold Stock: 212,000 Tonnes & $21T Value [2026]",
     metaDescription:
-      "The world holds ~212,000 tonnes of above-ground gold worth over $16 trillion in 2026. Breakdown by jewelry, central banks, ETFs, and industrial use.",
+      "Total above-ground gold stock is ~212,000 tonnes worth over $21 trillion in 2026. Full breakdown by jewelry, central banks, ETFs & industrial use.",
     faq: [
       { question: "How much gold has been mined in total?", answer: "As of 2026, approximately 212,000 tonnes of gold have been mined throughout history. This would form a cube roughly 22 meters on each side." },
       { question: "What is the total value of all above-ground gold?", answer: "At current 2026 prices, the total above-ground gold stock is worth over $16 trillion — roughly the GDP of the European Union." },

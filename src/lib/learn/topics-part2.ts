@@ -3804,9 +3804,9 @@ export const TOPICS_PART2: TopicDefinition[] = [
     difficulty: "intermediate",
     articleType: "explainer",
     metals: ["gold"],
-    titleEn: "Who Owns the World's 212,000 Tonnes of Gold? The Full Breakdown [2026]",
+    titleEn: "Above-Ground Gold Stock: 212,000 Tonnes & $21T Value [2026]",
     summaryEn:
-      "Five countries control nearly half of all above-ground gold. See the complete breakdown — jewelry, central banks, ETFs, private vaults — with 2026 data.",
+      "Total above-ground gold stock is ~212,000 tonnes worth over $21 trillion in 2026. Full breakdown by jewelry, central banks, ETFs & industrial use.",
     tags: ["above-ground-stock", "gold", "total-supply", "distribution"],
     relatedSlugs: [
       "annual-gold-mine-production",

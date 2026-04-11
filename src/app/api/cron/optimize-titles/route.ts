@@ -55,8 +55,8 @@ const MANUAL_TITLE_OVERRIDES: Record<string, { seo_title: string; meta_descripti
     meta_description: "Gold preserved 90%+ of purchasing power while currencies lost everything. Actual price data from three of history's worst currency collapses.",
   },
   "above-ground-gold-stock": {
-    seo_title: "Who Owns the World's 212,000 Tonnes of Gold? The Full Breakdown [2026]",
-    meta_description: "Five countries control nearly half of all above-ground gold. See the complete breakdown — jewelry, central banks, ETFs, private vaults — with 2026 data.",
+    seo_title: "Above-Ground Gold Stock: 212,000 Tonnes & $21T Value [2026]",
+    meta_description: "Total above-ground gold stock is ~212,000 tonnes worth over $21 trillion in 2026. Full breakdown by jewelry, central banks, ETFs & industrial use.",
   },
   "hyperinflation-and-precious-metals": {
     seo_title: "How Gold Performed in 3 Hyperinflations: Weimar, Zimbabwe, Venezuela",
