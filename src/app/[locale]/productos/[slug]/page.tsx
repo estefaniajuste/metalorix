@@ -148,6 +148,8 @@ export default async function ProductoPage({
   const product = getProduct(params.slug, locale);
   if (!product) notFound();
 
+  const baseSlug = getBaseProductSlug(params.slug, locale);
+
   const allProducts = getLocalizedProducts(locale);
   const relatedProducts = allProducts.filter(
     (p) => {
@@ -167,7 +169,6 @@ export default async function ProductoPage({
     pathname: "/productos/[slug]",
     params: { slug: product.slug },
   });
-  const baseSlug = getBaseProductSlug(params.slug, locale);
 
   const breadcrumbSchema = {
     "@context": "https://schema.org",
