@@ -15,6 +15,36 @@ import {
 import { DEALER_COUNTRIES, getDealersByCountry } from "@/lib/data/dealers";
 import { SetLocalePathOverrides } from "@/components/layout/SetLocalePathOverrides";
 import { routing } from "@/i18n/routing";
+import { getLocalizedClusterSlug } from "@/lib/learn/slug-i18n";
+import { getTopicBySlug } from "@/lib/learn/topics";
+import type { Locale } from "@/i18n/routing";
+
+const METAL_LEARN_LINKS: Record<string, Array<{ slug: string; cluster: string }>> = {
+  oro: [
+    { slug: "above-ground-gold-stock", cluster: "price-factors" },
+    { slug: "central-bank-gold-reserves-explained", cluster: "price-factors" },
+    { slug: "gold-as-an-inflation-hedge", cluster: "price-factors" },
+    { slug: "comparing-gold-etfs-in-europe", cluster: "guides" },
+  ],
+  plata: [
+    { slug: "silver-chemical-symbol-ag", cluster: "fundamentals" },
+    { slug: "volatility-comparison-across-metals", cluster: "comparisons" },
+    { slug: "liquidity-comparison-across-metals", cluster: "comparisons" },
+  ],
+  platino: [
+    { slug: "what-is-platinum", cluster: "fundamentals" },
+    { slug: "the-miller-process", cluster: "production-industry" },
+    { slug: "volatility-comparison-across-metals", cluster: "comparisons" },
+  ],
+  paladio: [
+    { slug: "volatility-comparison-across-metals", cluster: "comparisons" },
+    { slug: "liquidity-comparison-across-metals", cluster: "comparisons" },
+  ],
+  cobre: [
+    { slug: "volatility-comparison-across-metals", cluster: "comparisons" },
+    { slug: "liquidity-comparison-across-metals", cluster: "comparisons" },
+  ],
+};
 
 export const revalidate = 60;
 
@@ -308,6 +338,43 @@ export default async function PrecioMetalPage({
               </div>
 
               <WhereToBuyBlock locale={locale} metalName={seo.name} t={t} />
+
+              {METAL_LEARN_LINKS[seo.slug] && METAL_LEARN_LINKS[seo.slug].length > 0 && (
+                <div className="bg-surface-1 border border-border rounded-DEFAULT p-6 mt-6">
+                  <h3 className="text-base font-semibold text-content-0 mb-3 flex items-center gap-2">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#D6B35A" strokeWidth="2" strokeLinecap="round" className="flex-shrink-0">
+                      <path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z" />
+                      <path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z" />
+                    </svg>
+                    {t("deeperDive", { metal: seo.name })}
+                  </h3>
+                  <ul className="space-y-2.5">
+                    {METAL_LEARN_LINKS[seo.slug].map((article) => {
+                      const topic = getTopicBySlug(article.slug);
+                      if (!topic) return null;
+                      return (
+                        <li key={article.slug}>
+                          <Link
+                            href={{
+                              pathname: "/learn/[cluster]/[slug]" as const,
+                              params: {
+                                cluster: getLocalizedClusterSlug(article.cluster, locale as Locale) as string,
+                                slug: article.slug,
+                              },
+                            }}
+                            className="flex items-start gap-2 text-sm text-content-2 hover:text-brand-gold transition-colors group"
+                          >
+                            <svg className="w-3.5 h-3.5 text-content-3 group-hover:text-brand-gold mt-0.5 flex-shrink-0 transition-colors" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                              <polyline points="9 18 15 12 9 6" />
+                            </svg>
+                            <span className="leading-snug">{topic.titleEn}</span>
+                          </Link>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </div>
+              )}
 
               <div className="bg-surface-1 border border-border rounded-DEFAULT p-6 mt-6">
                 <h3 className="text-base font-semibold text-content-0 mb-3">{tf("legalNotice")}</h3>

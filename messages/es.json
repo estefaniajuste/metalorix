@@ -57,6 +57,8 @@
     "learnSection": "Guías rápidas",
     "learnSectionDesc": "Conceptos clave del mercado de metales preciosos, explicados con claridad.",
     "viewAllLearn": "Ver glosario completo",
+    "popularGuides": "Guías populares",
+    "popularGuidesDesc": "Los artículos más leídos de nuestro centro de aprendizaje",
     "exploreTitle": "Explora Metalorix",
     "quickPrices": "Precios en vivo",
     "quickPricesDesc": "5 metales con gráficos y datos históricos",
@@ -459,7 +461,8 @@
     "whereToBuyTitle": "Dónde comprar {metal}",
     "whereToBuyDesc": "Encuentra dealers verificados y tiendas de confianza en tu país.",
     "whereToBuyCta": "Ver todos los países",
-    "relatedSearches": "Búsquedas relacionadas"
+    "relatedSearches": "Búsquedas relacionadas",
+    "deeperDive": "Aprende sobre {metal}"
   },
   "historicalPrice": {
     "title": "Histórico del precio de {metal}",

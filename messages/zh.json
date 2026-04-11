@@ -57,6 +57,8 @@
     "learnSection": "快速指南",
     "learnSectionDesc": "贵金属市场核心概念，通俗易懂。",
     "viewAllLearn": "查看完整词汇表",
+    "popularGuides": "热门指南",
+    "popularGuidesDesc": "学习中心最受欢迎的文章",
     "exploreTitle": "探索 Metalorix",
     "quickPrices": "实时价格",
     "quickPricesDesc": "5种金属，带图表和历史数据",
@@ -401,7 +403,8 @@
     "whereToBuyTitle": "在哪里购买{metal}",
     "whereToBuyDesc": "在您的国家找到经过验证的经销商和可信商店。",
     "whereToBuyCta": "查看所有国家",
-    "relatedSearches": "相关搜索"
+    "relatedSearches": "相关搜索",
+    "deeperDive": "了解{metal}"
   },
   "historicalPrice": {
     "title": "{metal}历史价格",

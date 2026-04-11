@@ -57,6 +57,8 @@
     "learnSection": "त्वरित गाइड",
     "learnSectionDesc": "कीमती धातुओं के बाज़ार की मुख्य अवधारणाएँ, स्पष्ट भाषा में।",
     "viewAllLearn": "पूरी शब्दावली देखें",
+    "popularGuides": "लोकप्रिय गाइड",
+    "popularGuidesDesc": "हमारे लर्निंग सेंटर के सबसे पढ़े गए लेख",
     "exploreTitle": "Metalorix अन्वेषण करें",
     "quickPrices": "लाइव कीमतें",
     "quickPricesDesc": "चार्ट और ऐतिहासिक डेटा के साथ 5 धातुएं",
@@ -391,7 +393,8 @@
     "whereToBuyTitle": "{metal} कहाँ खरीदें",
     "whereToBuyDesc": "अपने देश में सत्यापित डीलरों और विश्वसनीय स्टोरों को खोजें।",
     "whereToBuyCta": "सभी देश देखें",
-    "relatedSearches": "संबंधित खोजें"
+    "relatedSearches": "संबंधित खोजें",
+    "deeperDive": "{metal} के बारे में जानें"
   },
   "historicalPrice": {
     "title": "{metal} मूल्य इतिहास",

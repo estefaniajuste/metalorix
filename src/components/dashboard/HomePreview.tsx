@@ -3,11 +3,19 @@ import { HomeEmailCapture } from "@/components/dashboard/HomeEmailCapture";
 import { getTranslations, getLocale } from "next-intl/server";
 import { getLocalizedClusterSlug } from "@/lib/learn/slug-i18n";
 import { getCategoryLabel } from "@/lib/data/glossary-categories";
+import { getTopicBySlug } from "@/lib/learn/topics";
 import type { Locale } from "@/i18n/routing";
 import { getDb } from "@/lib/db";
 import { articles, articleTranslations, glossaryTerms } from "@/lib/db/schema";
 import { eq, desc, and, inArray } from "drizzle-orm";
 import { DEALER_COUNTRIES, getDealersByCountry, getCountryName } from "@/lib/data/dealers";
+
+const FEATURED_GUIDES = [
+  { slug: "above-ground-gold-stock", cluster: "price-factors" },
+  { slug: "coin-grading-scale-ms-pf", cluster: "security-authenticity" },
+  { slug: "volatility-comparison-across-metals", cluster: "comparisons" },
+  { slug: "hyperinflation-episodes-and-gold", cluster: "macroeconomics" },
+];
 
 const METAL_COLORS: Record<string, string> = {
   XAU: "#D6B35A",
@@ -298,6 +306,61 @@ export async function HomePreview() {
             </div>
           </div>
         )}
+
+        <div className={hasGlossary ? "mt-10" : ""}>
+          <div className="flex items-center justify-between mb-6">
+            <div>
+              <h2 className="text-xl font-bold text-content-0 flex items-center gap-2">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#D6B35A" strokeWidth="2" strokeLinecap="round" className="flex-shrink-0">
+                  <path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z" />
+                  <path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z" />
+                </svg>
+                {t("popularGuides")}
+              </h2>
+              <p className="text-sm text-content-2 mt-1">{t("popularGuidesDesc")}</p>
+            </div>
+            <Link
+              href="/learn"
+              className="text-sm font-semibold text-brand-gold hover:underline flex-shrink-0 flex items-center gap-1"
+            >
+              {t("viewAllLearn")}
+              <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                <polyline points="9 18 15 12 9 6" />
+              </svg>
+            </Link>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {FEATURED_GUIDES.map(({ slug, cluster }) => {
+              const topic = getTopicBySlug(slug);
+              if (!topic) return null;
+              return (
+                <Link
+                  key={slug}
+                  href={{
+                    pathname: "/learn/[cluster]/[slug]" as const,
+                    params: {
+                      cluster: getLocalizedClusterSlug(cluster, locale as Locale),
+                      slug,
+                    },
+                  }}
+                  className="bg-surface-1 border border-border rounded-DEFAULT p-4 hover:border-border-hover hover:-translate-y-0.5 transition-all group"
+                >
+                  <span className="text-[10px] font-medium text-brand-gold/70 uppercase tracking-wider">
+                    {cluster.replace(/-/g, " ")}
+                  </span>
+                  <h3 className="text-sm font-semibold text-content-0 mt-1 mb-1.5 group-hover:text-brand-gold transition-colors leading-snug line-clamp-2">
+                    {topic.titleEn}
+                  </h3>
+                  {topic.summaryEn && (
+                    <p className="text-xs text-content-2 leading-relaxed line-clamp-2">
+                      {topic.summaryEn}
+                    </p>
+                  )}
+                </Link>
+              );
+            })}
+          </div>
+        </div>
 
         {!hasNews && !hasGlossary && (
           <div>

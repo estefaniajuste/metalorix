@@ -57,6 +57,8 @@
     "learnSection": "أدلة سريعة",
     "learnSectionDesc": "المفاهيم الأساسية لسوق المعادن الثمينة بشرح واضح.",
     "viewAllLearn": "عرض المسرد الكامل",
+    "popularGuides": "أدلة شائعة",
+    "popularGuidesDesc": "المقالات الأكثر قراءة من مركز التعلم",
     "exploreTitle": "استكشف Metalorix",
     "quickPrices": "الأسعار الحية",
     "quickPricesDesc": "5 معادن مع رسوم بيانية وبيانات تاريخية",
@@ -401,7 +403,8 @@
     "whereToBuyTitle": "أين تشتري {metal}",
     "whereToBuyDesc": "ابحث عن تجار موثوقين ومتاجر موثوقة في بلدك.",
     "whereToBuyCta": "عرض جميع الدول",
-    "relatedSearches": "عمليات بحث ذات صلة"
+    "relatedSearches": "عمليات بحث ذات صلة",
+    "deeperDive": "تعرّف على {metal}"
   },
   "historicalPrice": {
     "title": "تاريخ سعر {metal}",

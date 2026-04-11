@@ -57,6 +57,8 @@
     "learnSection": "Kurzanleitungen",
     "learnSectionDesc": "Wichtige Konzepte des Edelmetallmarktes, klar erklärt.",
     "viewAllLearn": "Vollständiges Glossar anzeigen",
+    "popularGuides": "Beliebte Ratgeber",
+    "popularGuidesDesc": "Die meistgelesenen Artikel unseres Lernzentrums",
     "exploreTitle": "Metalorix entdecken",
     "quickPrices": "Live-Preise",
     "quickPricesDesc": "5 Metalle mit Charts und historischen Daten",
@@ -401,7 +403,8 @@
     "whereToBuyTitle": "{metal} kaufen — wo und wie",
     "whereToBuyDesc": "Finden Sie verifizierte Händler und vertrauenswürdige Geschäfte in Ihrem Land.",
     "whereToBuyCta": "Alle Länder anzeigen",
-    "relatedSearches": "Verwandte Suchanfragen"
+    "relatedSearches": "Verwandte Suchanfragen",
+    "deeperDive": "Mehr über {metal} erfahren"
   },
   "historicalPrice": {
     "title": "{metal} Preisverlauf",
