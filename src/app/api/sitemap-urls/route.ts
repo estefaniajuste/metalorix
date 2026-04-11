@@ -8,14 +8,26 @@ import { eq, desc, isNotNull, inArray } from "drizzle-orm";
 
 export const dynamic = "force-dynamic";
 
+type SitemapUrl = {
+  slug: string;
+  type: string;
+  cluster?: string;
+  lastmod?: string;
+  localizedSlugs?: Record<string, string>;
+};
+
+const CACHE_TTL_MS = 3_600_000; // 1 hour
+let cachedUrls: SitemapUrl[] | null = null;
+let cachedAt = 0;
+
 export async function GET() {
-  const urls: Array<{
-    slug: string;
-    type: string;
-    cluster?: string;
-    lastmod?: string;
-    localizedSlugs?: Record<string, string>;
-  }> = [];
+  if (cachedUrls && Date.now() - cachedAt < CACHE_TTL_MS) {
+    return NextResponse.json({ urls: cachedUrls }, {
+      headers: { "Cache-Control": "public, s-maxage=3600, stale-while-revalidate=600" },
+    });
+  }
+
+  const urls: SitemapUrl[] = [];
 
   try {
     const db = getDb();
@@ -111,6 +123,9 @@ export async function GET() {
   } catch (err) {
     console.error("[sitemap-urls] DB error:", err);
   }
+
+  cachedUrls = urls;
+  cachedAt = Date.now();
 
   return NextResponse.json({ urls }, {
     headers: { "Cache-Control": "public, s-maxage=3600, stale-while-revalidate=600" },

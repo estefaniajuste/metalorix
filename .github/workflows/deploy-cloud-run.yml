@@ -108,13 +108,19 @@ jobs:
             cat /tmp/sitemap.xml
             exit 1
           fi
-          if ! grep -q '<urlset' /tmp/sitemap.xml; then
-            echo "::error::Sitemap response is not valid XML (missing <urlset>)"
+          if ! grep -q '<sitemapindex\|<urlset' /tmp/sitemap.xml; then
+            echo "::error::Sitemap response is not valid XML (missing <sitemapindex> or <urlset>)"
             head -20 /tmp/sitemap.xml
             exit 1
           fi
-          URL_COUNT=$(grep -c '<url>' /tmp/sitemap.xml || true)
-          echo "Sitemap OK — HTTP $STATUS, $URL_COUNT URLs"
+          echo "Sitemap index OK — HTTP $STATUS"
+          SUB_STATUS=$(curl -s -o /tmp/sitemap-pages.xml -w "%{http_code}" "https://metalorix.com/api/sitemap?s=pages")
+          if [ "$SUB_STATUS" != "200" ]; then
+            echo "::error::Sitemap pages returned HTTP $SUB_STATUS"
+            exit 1
+          fi
+          URL_COUNT=$(grep -c '<url>' /tmp/sitemap-pages.xml || true)
+          echo "Sitemap pages OK — HTTP $SUB_STATUS, $URL_COUNT URLs"
 
       - name: Verify robots.txt returns 200
         run: |
@@ -145,13 +151,12 @@ jobs:
             head -50 /tmp/sitemap-from-robots.xml
             exit 1
           fi
-          if ! grep -q '<urlset' /tmp/sitemap-from-robots.xml; then
-            echo "::error::Sitemap response is not valid XML (missing <urlset>)"
+          if ! grep -q '<sitemapindex\|<urlset' /tmp/sitemap-from-robots.xml; then
+            echo "::error::Sitemap response is not valid XML (missing <sitemapindex> or <urlset>)"
             head -20 /tmp/sitemap-from-robots.xml
             exit 1
           fi
-          URL_COUNT=$(grep -c '<url>' /tmp/sitemap-from-robots.xml || true)
-          echo "Sitemap URL from robots.txt OK — HTTP $STATUS, $URL_COUNT URLs, valid XML"
+          echo "Sitemap URL from robots.txt OK — HTTP $STATUS, valid XML"
 
       - name: Verify homepage returns 200
         run: |

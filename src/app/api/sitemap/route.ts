@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
 import { getProductSlugsByLocale } from "@/lib/data/product-slugs";
 import { CURRENCY_PAGES } from "@/lib/data/currency-pages";
 import { DEALER_COUNTRIES, DEALER_BASE_PATHS, getCitiesByCountry, getDealersByCity, slugifyDealer } from "@/lib/data/dealers";
@@ -8,6 +9,56 @@ export const dynamic = "force-dynamic";
 const BASE = "https://metalorix.com";
 const LOCALES = ["es", "en", "zh", "ar", "tr", "de", "hi"] as const;
 const DEFAULT_LOCALE = "en";
+
+const SECTIONS = ["pages", "prices", "products", "dealers", "news", "learn"] as const;
+type Section = (typeof SECTIONS)[number];
+
+/* ── Shared helpers ── */
+
+function esc(s: string): string {
+  return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+
+function urlEntries(
+  paths: Record<string, string>,
+  changefreq: string,
+  priority: number,
+  lastmod: string,
+): string[] {
+  const xhtmlLinks = LOCALES.map(
+    (loc) =>
+      `    <xhtml:link rel="alternate" hreflang="${loc}" href="${esc(`${BASE}${paths[loc]}`)}" />`
+  ).join("\n");
+  const xDefault = `    <xhtml:link rel="alternate" hreflang="x-default" href="${esc(`${BASE}${paths[DEFAULT_LOCALE]}`)}" />`;
+
+  return LOCALES.map((loc) => `  <url>
+    <loc>${esc(`${BASE}${paths[loc]}`)}</loc>
+    <lastmod>${lastmod}</lastmod>
+    <changefreq>${changefreq}</changefreq>
+    <priority>${priority.toFixed(1)}</priority>
+${xhtmlLinks}
+${xDefault}
+  </url>`);
+}
+
+function wrapUrlset(entries: string[]): string {
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+${entries.join("\n")}
+</urlset>`;
+}
+
+function xmlResponse(xml: string): NextResponse {
+  return new NextResponse(xml, {
+    headers: {
+      "Content-Type": "application/xml; charset=utf-8",
+      "Cache-Control": "public, s-maxage=3600, stale-while-revalidate=600",
+    },
+  });
+}
+
+/* ── Static data ── */
 
 const PATHNAMES: Record<string, Record<string, string>> = {
   "/": { es: "/es", en: "/en", zh: "/zh", ar: "/ar", tr: "/tr", de: "/de", hi: "/hi" },
@@ -35,33 +86,25 @@ const PATHNAMES: Record<string, Record<string, string>> = {
   "/donde-comprar/mejores": { es: "/es/donde-comprar/mejores", en: "/en/where-to-buy/best", de: "/de/wo-kaufen/beste", zh: "/zh/goumai-didian/zuijia", ar: "/ar/amakin-alshira/afdal", tr: "/tr/nereden-alinir/en-iyi", hi: "/hi/kahan-kharidem/sabse-achhe" },
   "/donde-comprar/registrar": { es: "/es/donde-comprar/registrar", en: "/en/where-to-buy/register", de: "/de/wo-kaufen/registrieren", zh: "/zh/goumai-didian/zhuce", ar: "/ar/amakin-alshira/tasjil", tr: "/tr/nereden-alinir/kayit", hi: "/hi/kahan-kharidem/register" },
   "/prensa": { es: "/es/prensa", en: "/en/press", de: "/de/presse", zh: "/zh/xinwen-ziyuan", ar: "/ar/sahafa", tr: "/tr/basin", hi: "/hi/press" },
-  "/precio-bitcoin": {
-    es: "/es/precio-bitcoin",
-    en: "/en/bitcoin-price",
-    de: "/de/bitcoin-preis",
-    zh: "/zh/bitcoin-jiage",
-    ar: "/ar/sier-bitcoin",
-    tr: "/tr/bitcoin-fiyati",
-    hi: "/hi/bitcoin-mulya",
-  },
-  "/comparar/oro-vs-bitcoin": {
-    es: "/es/comparar/oro-vs-bitcoin",
-    en: "/en/compare/gold-vs-bitcoin",
-    de: "/de/vergleich/gold-vs-bitcoin",
-    zh: "/zh/bijiao/huangjin-vs-bitcoin",
-    ar: "/ar/muqarana/dhahab-vs-bitcoin",
-    tr: "/tr/karsilastir/altin-vs-bitcoin",
-    hi: "/hi/tulana/sona-vs-bitcoin",
-  },
-  "/comparar/oro-vs-sp500": {
-    es: "/es/comparar/oro-vs-sp500",
-    en: "/en/compare/gold-vs-sp500",
-    de: "/de/vergleich/gold-vs-sp500",
-    zh: "/zh/bijiao/huangjin-vs-sp500",
-    ar: "/ar/muqarana/dhahab-vs-sp500",
-    tr: "/tr/karsilastir/altin-vs-sp500",
-    hi: "/hi/tulana/sona-vs-sp500",
-  },
+  "/precio-bitcoin": { es: "/es/precio-bitcoin", en: "/en/bitcoin-price", de: "/de/bitcoin-preis", zh: "/zh/bitcoin-jiage", ar: "/ar/sier-bitcoin", tr: "/tr/bitcoin-fiyati", hi: "/hi/bitcoin-mulya" },
+  "/comparar/oro-vs-bitcoin": { es: "/es/comparar/oro-vs-bitcoin", en: "/en/compare/gold-vs-bitcoin", de: "/de/vergleich/gold-vs-bitcoin", zh: "/zh/bijiao/huangjin-vs-bitcoin", ar: "/ar/muqarana/dhahab-vs-bitcoin", tr: "/tr/karsilastir/altin-vs-bitcoin", hi: "/hi/tulana/sona-vs-bitcoin" },
+  "/comparar/oro-vs-sp500": { es: "/es/comparar/oro-vs-sp500", en: "/en/compare/gold-vs-sp500", de: "/de/vergleich/gold-vs-sp500", zh: "/zh/bijiao/huangjin-vs-sp500", ar: "/ar/muqarana/dhahab-vs-sp500", tr: "/tr/karsilastir/altin-vs-sp500", hi: "/hi/tulana/sona-vs-sp500" },
+};
+
+const FREQ_PRIO: Record<string, [string, number]> = {
+  "/herramientas": ["weekly", 0.8], "/calculadora-rentabilidad": ["monthly", 0.7],
+  "/valor-joyas": ["weekly", 0.8], "/fear-greed": ["daily", 0.9],
+  "/portfolio": ["monthly", 0.8], "/widget": ["monthly", 0.7],
+  "/conversor-divisas": ["monthly", 0.7], "/comparador": ["monthly", 0.7],
+  "/ratio-oro-plata": ["daily", 0.8], "/calendario-economico": ["weekly", 0.7],
+  "/guia-inversion": ["monthly", 0.7], "/productos": ["monthly", 0.7],
+  "/noticias": ["daily", 0.9], "/learn": ["weekly", 0.7],
+  "/alertas": ["monthly", 0.5], "/precio-oro-hoy": ["daily", 0.9],
+  "/precio-gramo-oro": ["daily", 0.8], "/aviso-legal": ["yearly", 0.3],
+  "/terminos": ["yearly", 0.3], "/privacidad": ["yearly", 0.3],
+  "/precio-bitcoin": ["daily", 0.9], "/comparar/oro-vs-bitcoin": ["weekly", 0.75],
+  "/comparar/oro-vs-sp500": ["weekly", 0.75], "/donde-comprar": ["monthly", 0.7],
+  "/donde-comprar/registrar": ["monthly", 0.6],
 };
 
 const METAL_SLUGS: Record<string, Record<string, string>> = {
@@ -75,33 +118,22 @@ const METAL_SLUGS: Record<string, Record<string, string>> = {
 const PRICE_PATHS: Record<string, string> = {
   es: "precio", en: "price", de: "preis", zh: "jiage", ar: "sier", tr: "fiyat", hi: "mulya",
 };
-
 const HISTORICAL_SEGMENT: Record<string, string> = {
-  es: "historico",
-  en: "history",
-  de: "historie",
-  zh: "lishi",
-  ar: "tarikhi",
-  tr: "gecmis",
-  hi: "itihaas",
+  es: "historico", en: "history", de: "historie", zh: "lishi", ar: "tarikhi", tr: "gecmis", hi: "itihaas",
 };
 
 const PRODUCT_SLUGS = [
   "krugerrand-oro", "maple-leaf-oro", "filarmonica-oro", "britannia-oro", "eagle-oro",
   "maple-leaf-plata", "filarmonica-plata", "britannia-plata", "eagle-plata", "krugerrand-plata",
-  "lingote-oro-1oz", "lingote-oro-100g", "lingote-oro-1kg",
-  "lingote-plata-1kg",
+  "lingote-oro-1oz", "lingote-oro-100g", "lingote-oro-1kg", "lingote-plata-1kg",
 ];
-
 const PRODUCT_BASE: Record<string, string> = {
-  es: "productos", en: "products", de: "produkte",
-  zh: "chanpin", ar: "muntajat", tr: "urunler", hi: "utpad",
+  es: "productos", en: "products", de: "produkte", zh: "chanpin", ar: "muntajat", tr: "urunler", hi: "utpad",
 };
 
 const NEWS_BASE: Record<string, string> = {
   es: "noticias", en: "news", de: "nachrichten", zh: "xinwen", ar: "akhbar", tr: "haberler", hi: "samachar",
 };
-
 const LEARN_BASE: Record<string, string> = {
   es: "aprende-inversion", en: "learn", de: "lernen-investition",
   zh: "xuexi", ar: "taallam", tr: "ogren-yatirim", hi: "gyaan-nivesh",
@@ -120,6 +152,10 @@ function localizedCluster(baseSlug: string, locale: string): string {
   if (locale === "en") return baseSlug;
   return CLUSTER_SLUG_I18N[locale]?.[baseSlug] ?? baseSlug;
 }
+
+const GLOSSARY_CLUSTER: Record<string, string> = {
+  es: "glosario", en: "glossary", de: "glossar", zh: "shuyu", ar: "mustalahat", tr: "sozluk", hi: "shabdavali",
+};
 
 const SLUG_REDIRECTS: Record<string, string> = {
   "coin-grading-scale-explained-ms70-to-good": "coin-grading-scale-ms-pf",
@@ -149,69 +185,12 @@ const SLUG_REDIRECTS: Record<string, string> = {
   "silver-demonetization-how-silver-lost-its-monetary-role": "demonetization-of-silver-1870s",
 };
 
-function cleanSlug(slug: string): string {
-  return SLUG_REDIRECTS[slug] ?? slug;
-}
+function cleanSlug(slug: string): string { return SLUG_REDIRECTS[slug] ?? slug; }
 
 const GARBAGE_SLUG_RE = /^[\d]+-[\d]|^[\d]+-\d{4}-\d{2}-\d{2}$/;
+const MIN_SLUG_LENGTH = 5;
 
-const GLOSSARY_CLUSTER: Record<string, string> = {
-  es: "glosario", en: "glossary", de: "glossar", zh: "shuyu", ar: "mustalahat", tr: "sozluk", hi: "shabdavali",
-};
-
-const FREQ_PRIO: Record<string, [string, number]> = {
-  "/herramientas": ["weekly", 0.8],
-  "/calculadora-rentabilidad": ["monthly", 0.7],
-  "/valor-joyas": ["weekly", 0.8],
-  "/fear-greed": ["daily", 0.9],
-  "/portfolio": ["monthly", 0.8],
-  "/widget": ["monthly", 0.7],
-  "/conversor-divisas": ["monthly", 0.7],
-  "/comparador": ["monthly", 0.7],
-  "/ratio-oro-plata": ["daily", 0.8],
-  "/calendario-economico": ["weekly", 0.7],
-  "/guia-inversion": ["monthly", 0.7],
-  "/productos": ["monthly", 0.7],
-  "/noticias": ["daily", 0.9],
-  "/learn": ["weekly", 0.7],
-  "/alertas": ["monthly", 0.5],
-  "/precio-oro-hoy": ["daily", 0.9],
-  "/precio-gramo-oro": ["daily", 0.8],
-  "/aviso-legal": ["yearly", 0.3],
-  "/terminos": ["yearly", 0.3],
-  "/privacidad": ["yearly", 0.3],
-  "/precio-bitcoin": ["daily", 0.9],
-  "/comparar/oro-vs-bitcoin": ["weekly", 0.75],
-  "/comparar/oro-vs-sp500": ["weekly", 0.75],
-  "/donde-comprar": ["monthly", 0.7],
-  "/donde-comprar/registrar": ["monthly", 0.6],
-};
-
-function esc(s: string): string {
-  return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-}
-
-function urlEntries(
-  paths: Record<string, string>,
-  changefreq: string,
-  priority: number,
-  lastmod: string,
-): string[] {
-  const xhtmlLinks = LOCALES.map(
-    (loc) =>
-      `    <xhtml:link rel="alternate" hreflang="${loc}" href="${esc(`${BASE}${paths[loc]}`)}" />`
-  ).join("\n");
-  const xDefault = `    <xhtml:link rel="alternate" hreflang="x-default" href="${esc(`${BASE}${paths[DEFAULT_LOCALE]}`)}" />`;
-
-  return LOCALES.map((loc) => `  <url>
-    <loc>${esc(`${BASE}${paths[loc]}`)}</loc>
-    <lastmod>${lastmod}</lastmod>
-    <changefreq>${changefreq}</changefreq>
-    <priority>${priority.toFixed(1)}</priority>
-${xhtmlLinks}
-${xDefault}
-  </url>`);
-}
+/* ── Dynamic URL fetcher ── */
 
 interface DynamicUrl {
   slug: string;
@@ -219,7 +198,6 @@ interface DynamicUrl {
   cluster?: string;
   lastmod?: string;
   localizedSlugs?: Record<string, string>;
-  localizedClusters?: Record<string, string>;
 }
 
 async function fetchDynamicUrls(): Promise<DynamicUrl[]> {
@@ -237,30 +215,29 @@ async function fetchDynamicUrls(): Promise<DynamicUrl[]> {
   }
 }
 
-export async function GET() {
-  const today = new Date().toISOString().split("T")[0];
+/* ── Section builders ── */
+
+function buildPages(today: string): string[] {
   const urls: string[] = [];
-
   urls.push(...urlEntries(PATHNAMES["/"], "daily", 1.0, today));
-
   for (const [key, [freq, prio]] of Object.entries(FREQ_PRIO)) {
     if (PATHNAMES[key]) urls.push(...urlEntries(PATHNAMES[key], freq, prio, today));
   }
+  return urls;
+}
 
+function buildPrices(today: string): string[] {
+  const urls: string[] = [];
   for (const [, slugsByLocale] of Object.entries(METAL_SLUGS)) {
     const paths: Record<string, string> = {};
     for (const loc of LOCALES) paths[loc] = `/${loc}/${PRICE_PATHS[loc]}/${slugsByLocale[loc]}`;
     urls.push(...urlEntries(paths, "daily", 0.9, today));
   }
-
   for (const [, slugsByLocale] of Object.entries(METAL_SLUGS)) {
     const paths: Record<string, string> = {};
-    for (const loc of LOCALES) {
-      paths[loc] = `/${loc}/${PRICE_PATHS[loc]}/${slugsByLocale[loc]}/${HISTORICAL_SEGMENT[loc]}`;
-    }
+    for (const loc of LOCALES) paths[loc] = `/${loc}/${PRICE_PATHS[loc]}/${slugsByLocale[loc]}/${HISTORICAL_SEGMENT[loc]}`;
     urls.push(...urlEntries(paths, "weekly", 0.85, today));
   }
-
   for (const [, slugsByLocale] of Object.entries(METAL_SLUGS)) {
     for (const curr of CURRENCY_PAGES) {
       const paths: Record<string, string> = {};
@@ -268,65 +245,79 @@ export async function GET() {
       urls.push(...urlEntries(paths, "daily", 0.7, today));
     }
   }
+  return urls;
+}
 
+function buildProducts(today: string): string[] {
+  const urls: string[] = [];
   for (const slug of PRODUCT_SLUGS) {
     const paths: Record<string, string> = {};
     const locSlugs = getProductSlugsByLocale(slug);
     for (const loc of LOCALES) paths[loc] = `/${loc}/${PRODUCT_BASE[loc]}/${locSlugs[loc] ?? slug}`;
     urls.push(...urlEntries(paths, "monthly", 0.6, today));
   }
+  return urls;
+}
 
+function buildDealers(today: string): string[] {
+  const urls: string[] = [];
   for (const country of DEALER_COUNTRIES) {
     const paths: Record<string, string> = {};
     for (const loc of LOCALES) {
       const base = DEALER_BASE_PATHS[loc] ?? "/where-to-buy";
-      const countrySlug = country.slug[loc] ?? country.slug.en;
-      paths[loc] = `/${loc}${base}/${countrySlug}`;
+      paths[loc] = `/${loc}${base}/${country.slug[loc] ?? country.slug.en}`;
     }
     urls.push(...urlEntries(paths, "monthly", 0.6, today));
 
-    const cities = getCitiesByCountry(country.code);
-    for (const cityEntry of cities) {
+    for (const cityEntry of getCitiesByCountry(country.code)) {
       const cityPaths: Record<string, string> = {};
       for (const loc of LOCALES) {
         const base = DEALER_BASE_PATHS[loc] ?? "/where-to-buy";
-        const countrySlug = country.slug[loc] ?? country.slug.en;
-        cityPaths[loc] = `/${loc}${base}/${countrySlug}/${cityEntry.slug}`;
+        cityPaths[loc] = `/${loc}${base}/${country.slug[loc] ?? country.slug.en}/${cityEntry.slug}`;
       }
       urls.push(...urlEntries(cityPaths, "monthly", 0.5, today));
 
-      const cityDealers = getDealersByCity(country.code, cityEntry.slug);
-      for (const dealer of cityDealers) {
-        const dealerSlug = slugifyDealer(dealer.name);
+      for (const dealer of getDealersByCity(country.code, cityEntry.slug)) {
         const dealerPaths: Record<string, string> = {};
+        const dealerSlug = slugifyDealer(dealer.name);
         for (const loc of LOCALES) {
           const base = DEALER_BASE_PATHS[loc] ?? "/where-to-buy";
-          const cSlug = country.slug[loc] ?? country.slug.en;
-          dealerPaths[loc] = `/${loc}${base}/${cSlug}/${cityEntry.slug}/${dealerSlug}`;
+          dealerPaths[loc] = `/${loc}${base}/${country.slug[loc] ?? country.slug.en}/${cityEntry.slug}/${dealerSlug}`;
         }
         urls.push(...urlEntries(dealerPaths, "monthly", 0.4, today));
       }
     }
   }
+  return urls;
+}
 
+async function buildNews(today: string): Promise<string[]> {
   const dynamicUrls = await fetchDynamicUrls();
+  const urls: string[] = [];
+  for (const item of dynamicUrls) {
+    if (item.type !== "article") continue;
+    const paths: Record<string, string> = {};
+    let skip = false;
+    for (const loc of LOCALES) {
+      const locSlug = item.localizedSlugs?.[loc] ?? item.slug;
+      if (GARBAGE_SLUG_RE.test(locSlug)) { skip = true; break; }
+      paths[loc] = `/${loc}/${NEWS_BASE[loc]}/${locSlug}`;
+    }
+    if (skip) continue;
+    urls.push(...urlEntries(paths, "weekly", 0.7, item.lastmod || today));
+  }
+  return urls;
+}
 
-  const MIN_SLUG_LENGTH = 5;
+async function buildLearn(today: string): Promise<string[]> {
+  const dynamicUrls = await fetchDynamicUrls();
+  const urls: string[] = [];
   const emittedLocs = new Set<string>();
 
   for (const item of dynamicUrls) {
     const paths: Record<string, string> = {};
 
-    if (item.type === "article") {
-      let skipArticle = false;
-      for (const loc of LOCALES) {
-        const locSlug = item.localizedSlugs?.[loc] ?? item.slug;
-        if (GARBAGE_SLUG_RE.test(locSlug)) { skipArticle = true; break; }
-        paths[loc] = `/${loc}/${NEWS_BASE[loc]}/${locSlug}`;
-      }
-      if (skipArticle) continue;
-      urls.push(...urlEntries(paths, "weekly", 0.7, item.lastmod || today));
-    } else if (item.type === "cluster") {
+    if (item.type === "cluster") {
       for (const loc of LOCALES) paths[loc] = `/${loc}/${LEARN_BASE[loc]}/${localizedCluster(item.slug, loc)}`;
       urls.push(...urlEntries(paths, "weekly", 0.6, today));
     } else if (item.type === "glossary") {
@@ -345,10 +336,7 @@ export async function GET() {
         aSlug = cleanSlug(aSlug);
         const cSlug = localizedCluster(item.cluster, loc);
         const fullPath = `/${loc}/${LEARN_BASE[loc]}/${cSlug}/${aSlug}`;
-        if (emittedLocs.has(fullPath)) {
-          hasDuplicate = true;
-          break;
-        }
+        if (emittedLocs.has(fullPath)) { hasDuplicate = true; break; }
         paths[loc] = fullPath;
       }
       if (hasDuplicate) continue;
@@ -356,17 +344,35 @@ export async function GET() {
       urls.push(...urlEntries(paths, "monthly", 0.5, item.lastmod || today));
     }
   }
+  return urls;
+}
+
+/* ── Main handler ── */
+
+export async function GET(request: NextRequest) {
+  const section = request.nextUrl.searchParams.get("s") as Section | null;
+  const today = new Date().toISOString().split("T")[0];
+
+  if (section && SECTIONS.includes(section)) {
+    let entries: string[];
+    switch (section) {
+      case "pages": entries = buildPages(today); break;
+      case "prices": entries = buildPrices(today); break;
+      case "products": entries = buildProducts(today); break;
+      case "dealers": entries = buildDealers(today); break;
+      case "news": entries = await buildNews(today); break;
+      case "learn": entries = await buildLearn(today); break;
+    }
+    return xmlResponse(wrapUrlset(entries));
+  }
 
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-        xmlns:xhtml="http://www.w3.org/1999/xhtml">
-${urls.join("\n")}
-</urlset>`;
+<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${SECTIONS.map((s) => `  <sitemap>
+    <loc>${esc(`${BASE}/api/sitemap?s=${s}`)}</loc>
+    <lastmod>${today}</lastmod>
+  </sitemap>`).join("\n")}
+</sitemapindex>`;
 
-  return new NextResponse(xml, {
-    headers: {
-      "Content-Type": "application/xml; charset=utf-8",
-      "Cache-Control": "public, s-maxage=3600, stale-while-revalidate=600",
-    },
-  });
+  return xmlResponse(xml);
 }
