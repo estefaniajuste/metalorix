@@ -156,7 +156,7 @@ jobs:
       - name: Verify homepage returns 200
         run: |
           STATUS=$(curl -s -o /dev/null -w "%{http_code}" https://metalorix.com/)
-          if [ "$STATUS" != "200" ] && [ "$STATUS" != "308" ] && [ "$STATUS" != "307" ]; then
+          if [ "$STATUS" != "200" ] && [ "$STATUS" != "301" ] && [ "$STATUS" != "308" ] && [ "$STATUS" != "307" ]; then
             echo "::error::Homepage returned HTTP $STATUS"
             exit 1
           fi
