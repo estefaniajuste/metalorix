@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getDb } from "@/lib/db";
 import { metalOutlooks } from "@/lib/db/schema";
-import { eq, and, desc } from "drizzle-orm";
+import { eq, and, desc, sql } from "drizzle-orm";
 
 export const dynamic = "force-dynamic";
 
@@ -16,6 +16,12 @@ export async function GET(req: NextRequest) {
   const timeframe = url.searchParams.get("timeframe");
 
   try {
+    await db.execute(sql`CREATE TABLE IF NOT EXISTS metal_outlooks (
+      id serial PRIMARY KEY NOT NULL, symbol varchar(10) NOT NULL,
+      timeframe varchar(10) NOT NULL, score integer NOT NULL,
+      signal varchar(20) NOT NULL, confidence varchar(10) NOT NULL,
+      factors_json jsonb NOT NULL, narrative text, narrative_es text,
+      generated_at timestamp with time zone DEFAULT now() NOT NULL)`);
     if (timeframe && (timeframe === "short" || timeframe === "long")) {
       const rows = await db
         .select()

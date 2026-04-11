@@ -11,7 +11,7 @@ import type { MetalSymbol } from "@/lib/providers/metals";
 import { DEALER_COUNTRIES, getDealersByCountry, getCountryName } from "@/lib/data/dealers";
 import { getProductSlugsByLocale } from "@/lib/data/product-slugs";
 import { SetLocalePathOverrides } from "@/components/layout/SetLocalePathOverrides";
-import { routing } from "@/i18n/routing";
+import { routing, type Locale } from "@/i18n/routing";
 
 export function generateStaticParams() {
   const params: { slug: string }[] = [];
@@ -33,10 +33,12 @@ export async function generateMetadata({
   const product = getProduct(slug, locale);
   if (!product) notFound();
 
-  const alternates = getAlternates(locale, {
-    pathname: "/productos/[slug]",
-    params: { slug: product.slug },
-  });
+  const baseSlug = getBaseProductSlug(slug, locale);
+  const slugsByLocale = getProductSlugsByLocale(baseSlug);
+  const alternates = getAlternates(locale, (loc: Locale) => ({
+    pathname: "/productos/[slug]" as const,
+    params: { slug: slugsByLocale[loc] ?? baseSlug },
+  }));
 
   return {
     title: buildMetaTitle(product.seo.title),

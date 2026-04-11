@@ -1,13 +1,31 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getDb } from "@/lib/db";
 import { metalPrices, priceHistory, newsSources, metalOutlooks } from "@/lib/db/schema";
-import { eq, desc, gte } from "drizzle-orm";
+import { eq, desc, gte, sql } from "drizzle-orm";
 import { generateText } from "@/lib/ai/gemini";
 import { generateOutlook, type OutlookInput } from "@/lib/predictions/outlook-engine";
 import { OUTLOOK_METALS, TIMEFRAMES, type OutlookMetal, type Timeframe } from "@/lib/predictions/types";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 120;
+
+async function ensureTable(db: NonNullable<ReturnType<typeof getDb>>) {
+  await db.execute(sql`
+    CREATE TABLE IF NOT EXISTS metal_outlooks (
+      id serial PRIMARY KEY NOT NULL,
+      symbol varchar(10) NOT NULL,
+      timeframe varchar(10) NOT NULL,
+      score integer NOT NULL,
+      signal varchar(20) NOT NULL,
+      confidence varchar(10) NOT NULL,
+      factors_json jsonb NOT NULL,
+      narrative text,
+      narrative_es text,
+      generated_at timestamp with time zone DEFAULT now() NOT NULL
+    )`);
+  await db.execute(sql`CREATE INDEX IF NOT EXISTS outlook_symbol_tf_idx ON metal_outlooks (symbol, timeframe)`);
+  await db.execute(sql`CREATE INDEX IF NOT EXISTS outlook_generated_idx ON metal_outlooks (generated_at)`);
+}
 
 const CRON_SECRET = process.env.CRON_SECRET;
 
@@ -83,6 +101,7 @@ export async function POST(req: NextRequest) {
   const results: string[] = [];
 
   try {
+    await ensureTable(db);
     const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
     const [allNews, fearGreed] = await Promise.all([
       db

@@ -133,13 +133,6 @@ export function middleware(request: NextRequest) {
     return response;
   }
 
-  if (pathname.includes("/opengraph-image")) {
-    const segs = pathname.split("/").filter(Boolean);
-    if (segs.length > 2) {
-      return new NextResponse(null, { status: 404 });
-    }
-  }
-
   const lower = pathname.toLowerCase();
   const segments = lower.split("/").filter(Boolean);
 

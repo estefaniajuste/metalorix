@@ -105,7 +105,8 @@ const FREQ_PRIO: Record<string, [string, number]> = {
   "/terminos": ["yearly", 0.3], "/privacidad": ["yearly", 0.3],
   "/precio-bitcoin": ["daily", 0.9], "/comparar/oro-vs-bitcoin": ["weekly", 0.75],
   "/comparar/oro-vs-sp500": ["weekly", 0.75], "/outlook": ["daily", 0.85], "/donde-comprar": ["monthly", 0.7],
-  "/donde-comprar/registrar": ["monthly", 0.6],
+  "/donde-comprar/mejores": ["monthly", 0.7], "/donde-comprar/registrar": ["monthly", 0.6],
+  "/prensa": ["monthly", 0.5],
 };
 
 const METAL_SLUGS: Record<string, Record<string, string>> = {

@@ -64,10 +64,10 @@ export async function generateMetadata({
   if (!seo) notFound();
 
   const localizedSlug = getLocalizedMetalSlug(seo.slug, locale);
-  const alternates = getAlternates(locale, {
-    pathname: "/precio/[metal]",
-    params: { metal: localizedSlug },
-  });
+  const alternates = getAlternates(locale, (loc: Locale) => ({
+    pathname: "/precio/[metal]" as const,
+    params: { metal: getLocalizedMetalSlug(seo.slug, loc) },
+  }));
 
   const year = new Date().getFullYear();
   const rawTitle = `${t("priceOf", { metal: seo.name })} [${year}]`;

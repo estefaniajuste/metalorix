@@ -11,7 +11,7 @@ import {
 } from "@/lib/utils/metal-slugs";
 import { MetalPageContent } from "@/components/dashboard/MetalPageContent";
 import { SetLocalePathOverrides } from "@/components/layout/SetLocalePathOverrides";
-import { routing } from "@/i18n/routing";
+import { routing, type Locale } from "@/i18n/routing";
 
 export const revalidate = 3600;
 
@@ -71,10 +71,10 @@ export async function generateMetadata({
   const description = t("description", { metal: seo.name });
 
   const localizedSlug = getLocalizedMetalSlug(seo.slug, locale);
-  const alternates = getAlternates(locale, {
-    pathname: "/precio/[metal]/historico",
-    params: { metal: localizedSlug },
-  });
+  const alternates = getAlternates(locale, (loc: Locale) => ({
+    pathname: "/precio/[metal]/historico" as const,
+    params: { metal: getLocalizedMetalSlug(seo.slug, loc) },
+  }));
 
   return {
     title,
