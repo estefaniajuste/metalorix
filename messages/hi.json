@@ -23,7 +23,8 @@
     "changeLanguage": "भाषा बदलें",
     "whereToBuy": "कहां खरीदें",
     "buy": "खरीदें",
-    "portfolio": "पोर्टफोलियो"
+    "portfolio": "पोर्टफोलियो",
+    "outlookNav": "Outlook"
   },
   "footer": {
     "prices": "कीमतें",
@@ -1779,6 +1780,27 @@
     "faq4q": "अल्पकालिक और दीर्घकालिक आउटलुक में क्या अंतर है?",
     "faq4a": "अल्पकालिक (1-7 दिन) तकनीकी संकेतकों को अधिक भार देता है — ट्रेडर्स के लिए। दीर्घकालिक (1-12 महीने) मैक्रो/भू-राजनीतिक कारकों को प्राथमिकता देता है — निवेशकों के लिए।",
     "faq5q": "कौन से डेटा स्रोत पूर्वानुमानों को शक्ति देते हैं?",
-    "faq5a": "Yahoo Finance मूल्य डेटा, Reuters, Kitco, CNBC, Investing.com और अन्य वित्तीय RSS फीड से समाचार, साथ ही कीमती धातुओं के लिए हमारा स्वयं का भय और लालच सूचकांक।"
+    "faq5a": "Yahoo Finance मूल्य डेटा, Reuters, Kitco, CNBC, Investing.com और अन्य वित्तीय RSS फीड से समाचार, साथ ही कीमती धातुओं के लिए हमारा स्वयं का भय और लालच सूचकांक।",
+    "sig_neutral": "तटस्थ",
+    "sig_overbought": "अतिखरीद",
+    "sig_oversold": "अतिबिक्री",
+    "sig_bullish": "तेजी",
+    "sig_bearish": "मंदी",
+    "sig_bullish_contracting": "तेजी कमजोर",
+    "sig_bearish_contracting": "मंदी कमजोर",
+    "sig_bullish_expanding": "तेजी मजबूत",
+    "sig_bearish_expanding": "मंदी मजबूत",
+    "sig_above_upper": "ऊपरी बैंड के ऊपर",
+    "sig_below_lower": "निचले बैंड के नीचे",
+    "sig_middle": "मध्य क्षेत्र",
+    "sig_well_above_sma20": "SMA20 से काफी ऊपर",
+    "sig_above_sma20": "SMA20 से ऊपर",
+    "sig_below_sma20": "SMA20 से नीचे",
+    "sig_well_below_sma20": "SMA20 से काफी नीचे",
+    "sig_bullish_alignment": "तेजी संरेखण",
+    "sig_bearish_alignment": "मंदी संरेखण",
+    "sig_sideways": "सपाट",
+    "sig_uptrend": "ऊपर का रुझान",
+    "sig_downtrend": "नीचे का रुझान"
   }
 }

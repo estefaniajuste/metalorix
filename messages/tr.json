@@ -22,7 +22,8 @@
     "learn": "Öğren",
     "changeLanguage": "Dil değiştir",
     "whereToBuy": "Nereden Alınır",
-    "buy": "Satın Al"
+    "buy": "Satın Al",
+    "outlookNav": "Outlook"
   },
   "footer": {
     "prices": "Fiyatlar",
@@ -1804,6 +1805,27 @@
     "faq4q": "Kısa ve uzun vadeli tahmin arasındaki fark nedir?",
     "faq4a": "Kısa vadeli (1-7 gün) teknik göstergeleri ağırlıklandırır — traderlar için. Uzun vadeli (1-12 ay) makro/jeopolitik faktörleri önceliklendirir — yatırımcılar için.",
     "faq5q": "Tahminleri hangi veri kaynakları besler?",
-    "faq5a": "Yahoo Finance fiyat verileri, Reuters, Kitco, CNBC, Investing.com ve diğer finans RSS kaynaklarından haberler, artı kendi Korku ve Açgözlülük endeksimiz."
+    "faq5a": "Yahoo Finance fiyat verileri, Reuters, Kitco, CNBC, Investing.com ve diğer finans RSS kaynaklarından haberler, artı kendi Korku ve Açgözlülük endeksimiz.",
+    "sig_neutral": "nötr",
+    "sig_overbought": "aşırı alım",
+    "sig_oversold": "aşırı satım",
+    "sig_bullish": "yükseliş",
+    "sig_bearish": "düşüş",
+    "sig_bullish_contracting": "yükseliş zayıflıyor",
+    "sig_bearish_contracting": "düşüş zayıflıyor",
+    "sig_bullish_expanding": "yükseliş güçleniyor",
+    "sig_bearish_expanding": "düşüş güçleniyor",
+    "sig_above_upper": "üst bandın üstünde",
+    "sig_below_lower": "alt bandın altında",
+    "sig_middle": "orta bölge",
+    "sig_well_above_sma20": "SMA20'nin çok üstünde",
+    "sig_above_sma20": "SMA20'nin üstünde",
+    "sig_below_sma20": "SMA20'nin altında",
+    "sig_well_below_sma20": "SMA20'nin çok altında",
+    "sig_bullish_alignment": "yükseliş hizalaması",
+    "sig_bearish_alignment": "düşüş hizalaması",
+    "sig_sideways": "yatay",
+    "sig_uptrend": "yükseliş trendi",
+    "sig_downtrend": "düşüş trendi"
   }
 }

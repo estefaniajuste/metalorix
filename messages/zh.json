@@ -23,7 +23,8 @@
     "changeLanguage": "切换语言",
     "whereToBuy": "购买地点",
     "buy": "购买",
-    "portfolio": "投资组合"
+    "portfolio": "投资组合",
+    "outlookNav": "Outlook"
   },
   "footer": {
     "prices": "价格",
@@ -1791,6 +1792,27 @@
     "faq4q": "短期和长期展望有什么区别？",
     "faq4a": "短期（1-7天）更重视技术指标——适合交易者。长期（1-12个月）优先考虑宏观/地缘政治因素——更适合投资者。",
     "faq5q": "哪些数据源支持预测？",
-    "faq5a": "Yahoo Finance价格数据，Reuters、Kitco、CNBC、Investing.com等金融RSS新闻，加上我们自有的贵金属恐惧与贪婪指数。"
+    "faq5a": "Yahoo Finance价格数据，Reuters、Kitco、CNBC、Investing.com等金融RSS新闻，加上我们自有的贵金属恐惧与贪婪指数。",
+    "sig_neutral": "中性",
+    "sig_overbought": "超买",
+    "sig_oversold": "超卖",
+    "sig_bullish": "看涨",
+    "sig_bearish": "看跌",
+    "sig_bullish_contracting": "看涨收缩",
+    "sig_bearish_contracting": "看跌收缩",
+    "sig_bullish_expanding": "看涨扩张",
+    "sig_bearish_expanding": "看跌扩张",
+    "sig_above_upper": "高于上轨",
+    "sig_below_lower": "低于下轨",
+    "sig_middle": "中间区域",
+    "sig_well_above_sma20": "远高于SMA20",
+    "sig_above_sma20": "高于SMA20",
+    "sig_below_sma20": "低于SMA20",
+    "sig_well_below_sma20": "远低于SMA20",
+    "sig_bullish_alignment": "多头排列",
+    "sig_bearish_alignment": "空头排列",
+    "sig_sideways": "横盘",
+    "sig_uptrend": "上升趋势",
+    "sig_downtrend": "下降趋势"
   }
 }

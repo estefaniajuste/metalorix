@@ -33,6 +33,12 @@ function formatTimeAgo(dateStr: string, t: (key: string) => string): string {
   return t("updatedAgo").replace("{time}", t("updatedMinutes").replace("{count}", String(Math.max(1, minutes))));
 }
 
+function translateSignalDetail(key: string, t: (k: string) => string): string {
+  const k = `sig_${String(key).replace(/[^a-zA-Z0-9_]/g, "_")}`;
+  const translated = t(k);
+  return translated === k ? String(key).replace(/_/g, " ") : translated;
+}
+
 function buildKeySignals(
   factors: OutlookData["factorsJson"],
   t: (key: string) => string
@@ -43,12 +49,12 @@ function buildKeySignals(
   const sent = factors.sentiment.details;
   const mac = factors.macro.details;
 
-  if (tech.rsi) signals.push(`RSI: ${tech.rsi} (${tech.rsiSignal})`);
-  if (tech.macd && tech.macd !== "no_data") signals.push(`MACD: ${String(tech.macd).replace(/_/g, " ")}`);
-  if (tech.ma && tech.ma !== "no_data" && tech.ma !== "insufficient_data") signals.push(`MA: ${String(tech.ma).replace(/_/g, " ")}`);
-  if (mom.trend && mom.trend !== "no_data") signals.push(`${t("momentum")}: ${String(mom.trend).replace(/_/g, " ")}`);
+  if (tech.rsi) signals.push(`RSI: ${tech.rsi} (${translateSignalDetail(String(tech.rsiSignal), t)})`);
+  if (tech.macd && tech.macd !== "no_data") signals.push(`MACD: ${translateSignalDetail(String(tech.macd), t)}`);
+  if (tech.ma && tech.ma !== "no_data" && tech.ma !== "insufficient_data") signals.push(`MA: ${translateSignalDetail(String(tech.ma), t)}`);
+  if (mom.trend && mom.trend !== "no_data") signals.push(`${t("momentum")}: ${translateSignalDetail(String(mom.trend), t)}`);
   if (sent.fearGreed) signals.push(`Fear & Greed: ${sent.fearGreed}`);
-  if (mac.geopolitical && mac.geopolitical !== "no_data") signals.push(`Geo: ${String(mac.geopolitical).replace(/_/g, " ")}`);
+  if (mac.geopolitical && mac.geopolitical !== "no_data") signals.push(`Geo: ${translateSignalDetail(String(mac.geopolitical), t)}`);
 
   return signals.slice(0, 4);
 }

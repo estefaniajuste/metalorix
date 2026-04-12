@@ -110,6 +110,7 @@ export function Nav() {
   const isToolsActive = pathname.startsWith("/herramientas");
   const isNewsActive = pathname.startsWith("/noticias");
   const isPortfolioActive = pathname.startsWith("/portfolio");
+  const isOutlookActive = pathname.startsWith("/outlook") || pathname.startsWith("/predicciones") || pathname.startsWith("/prognose") || pathname.startsWith("/tahmin") || pathname.startsWith("/yuce") || pathname.startsWith("/tawaquat") || pathname.startsWith("/purvanuaman");
   const isLearnActive =
     pathname.startsWith("/guia-inversion") ||
     pathname.startsWith("/learn");
@@ -242,6 +243,14 @@ export function Nav() {
               className={navLinkClass(isNewsActive)}
             >
               {t("news")}
+            </Link>
+
+            {/* Outlook link */}
+            <Link
+              href={"/outlook" as any}
+              className={navLinkClass(isOutlookActive)}
+            >
+              {t("outlookNav")}
             </Link>
 
             {/* Portfolio link */}
@@ -391,6 +400,15 @@ export function Nav() {
               onClick={() => setMobileOpen(false)}
             >
               {t("news")}
+            </Link>
+
+            {/* Outlook */}
+            <Link
+              href={"/outlook" as any}
+              className="block px-4 py-3 rounded-sm text-base font-medium text-content-2 hover:text-content-0 hover:bg-surface-2 transition-colors"
+              onClick={() => setMobileOpen(false)}
+            >
+              {t("outlookNav")}
             </Link>
 
             {/* Portfolio */}

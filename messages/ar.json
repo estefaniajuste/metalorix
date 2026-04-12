@@ -23,7 +23,8 @@
     "changeLanguage": "تغيير اللغة",
     "whereToBuy": "أماكن الشراء",
     "buy": "شراء",
-    "portfolio": "المحفظة"
+    "portfolio": "المحفظة",
+    "outlookNav": "Outlook"
   },
   "footer": {
     "prices": "الأسعار",
@@ -1791,6 +1792,27 @@
     "faq4q": "ما الفرق بين التوقعات قصيرة وطويلة الأجل؟",
     "faq4a": "قصير الأجل (1-7 أيام) يُثقل المؤشرات الفنية — مفيد للمضاربين. طويل الأجل (1-12 شهرًا) يُعطي أولوية للعوامل الماكرو/الجيوسياسية — أكثر ملاءمة للمستثمرين.",
     "faq5q": "ما مصادر البيانات التي تغذي التوقعات؟",
-    "faq5a": "بيانات أسعار من Yahoo Finance وأخبار من Reuters وKitco وCNBC وInvesting.com وغيرها من مصادر RSS المالية، بالإضافة إلى مؤشر الخوف والجشع الخاص بنا."
+    "faq5a": "بيانات أسعار من Yahoo Finance وأخبار من Reuters وKitco وCNBC وInvesting.com وغيرها من مصادر RSS المالية، بالإضافة إلى مؤشر الخوف والجشع الخاص بنا.",
+    "sig_neutral": "محايد",
+    "sig_overbought": "ذروة شراء",
+    "sig_oversold": "ذروة بيع",
+    "sig_bullish": "صعودي",
+    "sig_bearish": "هبوطي",
+    "sig_bullish_contracting": "صعودي متراجع",
+    "sig_bearish_contracting": "هبوطي متراجع",
+    "sig_bullish_expanding": "صعودي متزايد",
+    "sig_bearish_expanding": "هبوطي متزايد",
+    "sig_above_upper": "فوق النطاق العلوي",
+    "sig_below_lower": "تحت النطاق السفلي",
+    "sig_middle": "المنطقة الوسطى",
+    "sig_well_above_sma20": "أعلى بكثير من SMA20",
+    "sig_above_sma20": "أعلى من SMA20",
+    "sig_below_sma20": "أدنى من SMA20",
+    "sig_well_below_sma20": "أدنى بكثير من SMA20",
+    "sig_bullish_alignment": "محاذاة صعودية",
+    "sig_bearish_alignment": "محاذاة هبوطية",
+    "sig_sideways": "عرضي",
+    "sig_uptrend": "اتجاه صعودي",
+    "sig_downtrend": "اتجاه هبوطي"
   }
 }

@@ -1,12 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
 import { getDb } from "@/lib/db";
-import { articles, articleTranslations, metalPrices, learnArticles, learnArticleLocalizations } from "@/lib/db/schema";
+import { articles, articleTranslations, metalPrices, newsSources, learnArticles, learnArticleLocalizations } from "@/lib/db/schema";
 import { eq, desc, gte, lt, and, like, not, inArray, notInArray, sql } from "drizzle-orm";
 import {
   generateDailySummary,
   generateEveningSummary,
   generateEventArticle,
+  generateNewsEventArticle,
+  detectHighImpactNews,
   generateWeeklySummary,
   saveArticle,
   translateArticle,
@@ -208,7 +210,7 @@ export async function POST(request: NextRequest) {
       const startOfTomorrow = new Date(startOfToday);
       startOfTomorrow.setUTCDate(startOfTomorrow.getUTCDate() + 1);
 
-      const anyEventToday = await db
+      const eventsToday = await db
         .select({ id: articles.id })
         .from(articles)
         .where(
@@ -217,40 +219,96 @@ export async function POST(request: NextRequest) {
             gte(articles.publishedAt, startOfToday),
             lt(articles.publishedAt, startOfTomorrow)
           )
-        )
-        .limit(1);
-      if (anyEventToday.length > 0) {
-        generated.push("event: skipped (max 1 per day, already exists)");
+        );
+      const maxEventsPerDay = 2;
+      if (eventsToday.length >= maxEventsPerDay) {
+        generated.push(`event: skipped (max ${maxEventsPerDay}/day, already ${eventsToday.length})`);
       } else {
-        const prices = await db.select().from(metalPrices);
-        const candidates = prices
-          .map((p) => ({
-            symbol: p.symbol,
-            changePct: parseFloat(p.changePct24h ?? "0"),
-            priceUsd: parseFloat(p.priceUsd),
-          }))
-          .filter((p) => Math.abs(p.changePct) >= EVENT_THRESHOLD_PCT)
-          .sort((a, b) => Math.abs(b.changePct) - Math.abs(a.changePct));
+        let eventArticle: Awaited<ReturnType<typeof generateEventArticle>> = null;
+        let eventSource = "";
 
-        if (candidates.length > 0) {
-          const top = candidates[0];
-          const article = await generateEventArticle(
-            top.symbol,
-            metalNames[top.symbol] ?? top.symbol,
-            top.priceUsd,
-            top.changePct
+        // Strategy 1: Check for high-impact news (central bank moves, repatriation, sanctions, etc.)
+        const sixHoursAgo = new Date(Date.now() - 6 * 60 * 60 * 1000);
+        const recentNews = await db
+          .select({
+            title: newsSources.title,
+            summary: newsSources.summary,
+            url: newsSources.url,
+            source: newsSources.source,
+          })
+          .from(newsSources)
+          .where(gte(newsSources.scrapedAt, sixHoursAgo))
+          .orderBy(desc(newsSources.scrapedAt))
+          .limit(50);
+
+        const highImpact = detectHighImpactNews(
+          recentNews.map((n) => ({ ...n, summary: n.summary ?? "" }))
+        );
+
+        if (highImpact.length > 0) {
+          const prices = await db.select().from(metalPrices);
+          const priceData = prices.map((p) => ({
+            symbol: p.symbol,
+            name: p.name,
+            price: parseFloat(p.priceUsd),
+            change: parseFloat(p.change24h ?? "0"),
+            changePct: parseFloat(p.changePct24h ?? "0"),
+          }));
+
+          const allNews = recentNews.map((n) => ({
+            title: n.title,
+            url: n.url,
+            source: n.source,
+            summary: n.summary ?? "",
+            metals: null as string[] | null,
+            sentiment: null as string | null,
+          }));
+
+          eventArticle = await generateNewsEventArticle(
+            highImpact.slice(0, 3).map((n) => ({ title: n.title, summary: n.summary, url: n.url, source: n.source })),
+            allNews,
+            priceData
           );
-          if (article) {
-            let articleId = await saveArticle(article, "event");
-            if (!articleId) {
-              console.warn("[Cron] saveArticle failed (event), retrying once...");
-              articleId = await saveArticle(article, "event");
-            }
-            if (articleId) {
-              generated.push(`event: ${article.slug} (${top.symbol} ${top.changePct >= 0 ? "+" : ""}${top.changePct.toFixed(1)}%)`);
-              articleIdsToTranslate.push(articleId);
-            }
+          eventSource = `news-event (${highImpact[0].matchedPatterns.length} patterns: ${highImpact[0].title.slice(0, 60)})`;
+          console.log(`[Cron] High-impact news detected: ${highImpact.length} items, top: "${highImpact[0].title.slice(0, 80)}"`);
+        }
+
+        // Strategy 2: Fallback to price-based events (≥5% move)
+        if (!eventArticle) {
+          const prices = await db.select().from(metalPrices);
+          const candidates = prices
+            .map((p) => ({
+              symbol: p.symbol,
+              changePct: parseFloat(p.changePct24h ?? "0"),
+              priceUsd: parseFloat(p.priceUsd),
+            }))
+            .filter((p) => Math.abs(p.changePct) >= EVENT_THRESHOLD_PCT)
+            .sort((a, b) => Math.abs(b.changePct) - Math.abs(a.changePct));
+
+          if (candidates.length > 0) {
+            const top = candidates[0];
+            eventArticle = await generateEventArticle(
+              top.symbol,
+              metalNames[top.symbol] ?? top.symbol,
+              top.priceUsd,
+              top.changePct
+            );
+            eventSource = `price-move (${top.symbol} ${top.changePct >= 0 ? "+" : ""}${top.changePct.toFixed(1)}%)`;
           }
+        }
+
+        if (eventArticle) {
+          let articleId = await saveArticle(eventArticle, "event");
+          if (!articleId) {
+            console.warn("[Cron] saveArticle failed (event), retrying once...");
+            articleId = await saveArticle(eventArticle, "event");
+          }
+          if (articleId) {
+            generated.push(`event: ${eventArticle.slug} [${eventSource}]`);
+            articleIdsToTranslate.push(articleId);
+          }
+        } else {
+          generated.push("event: no triggers (no high-impact news, no price moves ≥5%)");
         }
       }
     } catch (err) {

@@ -23,7 +23,8 @@
     "changeLanguage": "Cambiar idioma",
     "whereToBuy": "Dónde Comprar",
     "buy": "Comprar",
-    "portfolio": "Portfolio"
+    "portfolio": "Portfolio",
+    "outlookNav": "Outlook"
   },
   "footer": {
     "prices": "Precios",
@@ -1805,6 +1806,27 @@
     "faq4q": "¿Cuál es la diferencia entre outlook a corto y largo plazo?",
     "faq4a": "El corto plazo (1-7 días) pondera más los indicadores técnicos y el momentum—útil para traders. El largo plazo (1-12 meses) prioriza factores macro/geopolíticos y tendencias de sentimiento—más relevante para inversores.",
     "faq5q": "¿Qué fuentes de datos alimentan las predicciones?",
-    "faq5a": "Datos de precios de Yahoo Finance, noticias de Reuters, Kitco, CNBC, Bloomberg, Investing.com y otros feeds RSS financieros, además de nuestro índice propio de Miedo y Codicia para metales preciosos."
+    "faq5a": "Datos de precios de Yahoo Finance, noticias de Reuters, Kitco, CNBC, Bloomberg, Investing.com y otros feeds RSS financieros, además de nuestro índice propio de Miedo y Codicia para metales preciosos.",
+    "sig_neutral": "neutral",
+    "sig_overbought": "sobrecompra",
+    "sig_oversold": "sobreventa",
+    "sig_bullish": "alcista",
+    "sig_bearish": "bajista",
+    "sig_bullish_contracting": "alcista debilitándose",
+    "sig_bearish_contracting": "bajista debilitándose",
+    "sig_bullish_expanding": "alcista fortaleciéndose",
+    "sig_bearish_expanding": "bajista fortaleciéndose",
+    "sig_above_upper": "por encima de banda superior",
+    "sig_below_lower": "por debajo de banda inferior",
+    "sig_middle": "zona media",
+    "sig_well_above_sma20": "muy por encima de SMA20",
+    "sig_above_sma20": "por encima de SMA20",
+    "sig_below_sma20": "por debajo de SMA20",
+    "sig_well_below_sma20": "muy por debajo de SMA20",
+    "sig_bullish_alignment": "alineación alcista",
+    "sig_bearish_alignment": "alineación bajista",
+    "sig_sideways": "lateral",
+    "sig_uptrend": "tendencia alcista",
+    "sig_downtrend": "tendencia bajista"
   }
 }

@@ -684,6 +684,131 @@ function buildMinimalEveningArticle(
   };
 }
 
+const HIGH_IMPACT_PATTERNS = [
+  /\b(central bank|banco central|banque centrale).{0,40}(buy|bought|purchase|compra|gold|oro|reserve)/i,
+  /\b(repatri|traslad|transport).{0,30}(gold|oro|reserv)/i,
+  /\b(sanction|embargo|tariff|arancel).{0,30}(metal|gold|silver|oro|plata|import|export)/i,
+  /\b(BRICS|de-dollar|dedollar|new currency|moneda).{0,30}(gold|oro|back|respald)/i,
+  /\b(mine|mina).{0,20}(clos|shut|halt|suspend|cerr|parali)/i,
+  /\b(strike|huelga).{0,20}(min|metal|gold|silver|platinum|copper)/i,
+  /\b(record|récord|historic|máximo|all[- ]time high|new high).{0,30}(gold|silver|platinum|palladium|copper|oro|plata)/i,
+  /\b(rate cut|rate hike|tipos? de interés|interest rate).{0,20}(fed|ecb|bce|boj|pboc)/i,
+  /\b(war|guerra|invasion|invasi|attack|missile|nuclear).{0,30}(iran|russia|china|taiwan|korea|israel|ukraine)/i,
+  /\b(default|quiebra|bankruptcy|crisis)\b.{0,20}(sovereign|bank|credit|deuda|debt)/i,
+  /\b(etf|GLD|SLV|PPLT).{0,20}(record|billion|inflow|outflow|récord|mil millones)/i,
+  /\b(basel|regulation|regulaci).{0,20}(gold|tier|metal|bank)/i,
+];
+
+export function detectHighImpactNews(
+  news: { title: string; summary: string; url: string; source: string }[]
+): { title: string; summary: string; url: string; source: string; matchedPatterns: string[] }[] {
+  const hits: typeof news & { matchedPatterns: string[] }[] = [];
+  for (const item of news) {
+    const text = `${item.title} ${item.summary}`;
+    const matched: string[] = [];
+    for (const p of HIGH_IMPACT_PATTERNS) {
+      if (p.test(text)) matched.push(p.source.slice(0, 60));
+    }
+    if (matched.length >= 1) {
+      hits.push({ ...item, matchedPatterns: matched });
+    }
+  }
+  return hits.sort((a, b) => b.matchedPatterns.length - a.matchedPatterns.length);
+}
+
+export async function generateNewsEventArticle(
+  topNews: { title: string; summary: string; url: string; source: string }[],
+  allNews: NewsItem[],
+  prices: PriceData[]
+): Promise<{
+  slug: string;
+  title: string;
+  excerpt: string;
+  content: string;
+  metals: string[];
+} | null> {
+  if (!isConfigured()) return null;
+
+  const today = new Date();
+  const dateStr = formatDate(today);
+  const dateSlug = today.toISOString().slice(0, 10);
+  const glossaryContext = await getGlossaryTermsForPrompt();
+  const glossaryInstructions = buildGlossaryLinkingInstructions(glossaryContext);
+
+  const newsContext = topNews
+    .map((n) => `- [${n.source}] ${n.title}: ${n.summary.slice(0, 500)} (URL: ${n.url})`)
+    .join("\n");
+
+  const prompt = `Eres el analista principal de Metalorix. Una o varias noticias de ALTO IMPACTO acaban de llegar. Escribe un ARTÍCULO DE ÚLTIMA HORA.
+
+FECHA: ${dateStr}
+
+NOTICIAS DE ALTO IMPACTO:
+${newsContext}
+
+CONTEXTO DE PRECIOS:
+${formatPrices(prices)}
+
+OTRAS NOTICIAS RECIENTES:
+${formatNews(allNews.slice(0, 10))}
+
+REGLAS:
+
+1. ESTE NO ES un artículo de precio. Es un artículo sobre un EVENTO IMPORTANTE del mundo de los metales preciosos. Ejemplos:
+   - Francia repatría su oro de EE.UU. — qué significa para la geopolítica del oro
+   - China compra 50 toneladas de oro en un mes — implicaciones para el mercado
+   - Nueva regulación de Basilea III reclasifica el oro como activo Tier 1
+   - Huelga masiva en minas sudafricanas paraliza producción de platino
+   - BRICS anuncia nuevo sistema de pagos respaldado por oro
+
+2. PROFUNDIDAD OBLIGATORIA:
+   - Contexto histórico: ¿cuándo fue la última vez que ocurrió algo similar?
+   - Implicaciones para el mercado: ¿cómo afecta a precios, oferta, demanda?
+   - Dimensión geopolítica: ¿qué dice esto sobre las relaciones entre países?
+   - Perspectiva del inversor: ¿qué debe hacer quien tiene oro/plata?
+
+3. ESTRUCTURA:
+   - Párrafo de apertura impactante con el dato clave
+   - ## Qué Ha Ocurrido — los hechos con detalle
+   - ## Por Qué Es Importante — contexto e implicaciones
+   - ## Impacto en el Mercado — cómo afecta a precios y posicionamiento
+   - ## Qué Vigilar — próximos pasos, reacciones esperadas
+
+4. 500-700 palabras. Tono: urgente pero analítico. No sensacionalista.
+   - NO incluyas título ni fecha al inicio
+   - NO uses primera persona
+   - NO enlaces externos. Solo glosario: [término](/learn/glossary/slug)
+${glossaryInstructions}
+
+Devuelve JSON:
+{
+  "titulo_seo": "50-65 chars. EVENTO + IMPACTO. Ej: 'Francia repatría su oro de EE.UU.: qué significa para Europa', 'China compra récord de 50t de oro en marzo 2026'. NUNCA genérico.",
+  "meta_descripcion": "140-155 chars.",
+  "palabras_clave_url": "3-6 palabras sin fecha.",
+  "contenido": "Artículo completo. SIN fuentes aquí.",
+  "fuentes": [{"titulo": "...", "url": "..."}]
+}
+
+Fuentes: 2-5. Devuelve SOLO JSON.`;
+
+  const raw = await generateText(prompt);
+  if (!raw) return null;
+
+  const parsed = parseStructuredResponse(raw);
+  if (parsed) {
+    const keywordSlug = slugify(parsed.palabras_clave_url);
+    return {
+      slug: `${keywordSlug}-${dateSlug}`,
+      title: parsed.titulo_seo,
+      excerpt: parsed.meta_descripcion,
+      content: appendSources(parsed.contenido.trim(), parsed.fuentes),
+      metals: ["XAU", "XAG", "XPT", "XPD", "HG"],
+    };
+  }
+
+  return null;
+}
+
 export async function generateEventArticle(
   metal: string,
   metalName: string,

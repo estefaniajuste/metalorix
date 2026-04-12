@@ -23,7 +23,8 @@
     "changeLanguage": "Change language",
     "whereToBuy": "Where to Buy",
     "buy": "Buy",
-    "portfolio": "Portfolio"
+    "portfolio": "Portfolio",
+    "outlookNav": "Outlook"
   },
   "footer": {
     "prices": "Prices",
@@ -1805,6 +1806,27 @@
     "faq4q": "What is the difference between short-term and long-term outlook?",
     "faq4a": "Short-term (1-7 days) weighs technical indicators and momentum more heavily—useful for traders. Long-term (1-12 months) prioritizes macro/geopolitical factors and sentiment trends—more relevant for investors.",
     "faq5q": "What data sources power the predictions?",
-    "faq5a": "Price data from Yahoo Finance, news from Reuters, Kitco, CNBC, Bloomberg, Investing.com and other financial RSS feeds, plus our proprietary Fear & Greed index for precious metals."
+    "faq5a": "Price data from Yahoo Finance, news from Reuters, Kitco, CNBC, Bloomberg, Investing.com and other financial RSS feeds, plus our proprietary Fear & Greed index for precious metals.",
+    "sig_neutral": "neutral",
+    "sig_overbought": "overbought",
+    "sig_oversold": "oversold",
+    "sig_bullish": "bullish",
+    "sig_bearish": "bearish",
+    "sig_bullish_contracting": "bullish contracting",
+    "sig_bearish_contracting": "bearish contracting",
+    "sig_bullish_expanding": "bullish expanding",
+    "sig_bearish_expanding": "bearish expanding",
+    "sig_above_upper": "above upper band",
+    "sig_below_lower": "below lower band",
+    "sig_middle": "middle zone",
+    "sig_well_above_sma20": "well above SMA20",
+    "sig_above_sma20": "above SMA20",
+    "sig_below_sma20": "below SMA20",
+    "sig_well_below_sma20": "well below SMA20",
+    "sig_bullish_alignment": "bullish alignment",
+    "sig_bearish_alignment": "bearish alignment",
+    "sig_sideways": "sideways",
+    "sig_uptrend": "uptrend",
+    "sig_downtrend": "downtrend"
   }
 }
