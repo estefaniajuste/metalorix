@@ -1,4 +1,4 @@
-const GRAPH_API = process.env.INSTAGRAM_API_BASE_URL || "https://graph.instagram.com/v21.0";
+const GRAPH_API = process.env.INSTAGRAM_API_BASE_URL || "https://graph.instagram.com/v22.0";
 
 const IG_USER_ID = process.env.INSTAGRAM_USER_ID;
 const IG_IMAGE_SECRET = process.env.INSTAGRAM_IMAGE_SECRET;
@@ -41,9 +41,11 @@ export async function publishPhoto(
     const containerData = await containerRes.json();
 
     if (!containerRes.ok || containerData.error) {
-      const msg = containerData.error?.message ?? `HTTP ${containerRes.status}`;
-      console.error("[Instagram] Container creation failed:", msg);
-      return { ok: false, error: `Container: ${msg}` };
+      const errObj = containerData.error ?? {};
+      const msg = errObj.message ?? `HTTP ${containerRes.status}`;
+      const detail = `code=${errObj.code} type=${errObj.type} subcode=${errObj.error_subcode} fbtrace=${errObj.fbtrace_id}`;
+      console.error("[Instagram] Container creation failed:", msg, detail);
+      return { ok: false, error: `Container: ${msg} (${detail})` };
     }
 
     const containerId = containerData.id as string;
