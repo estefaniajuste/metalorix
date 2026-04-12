@@ -12,6 +12,8 @@ import { DEALER_COUNTRIES, getDealersByCountry, getCountryName } from "@/lib/dat
 import { getProductSlugsByLocale } from "@/lib/data/product-slugs";
 import { SetLocalePathOverrides } from "@/components/layout/SetLocalePathOverrides";
 import { routing, type Locale } from "@/i18n/routing";
+import { getSpotPrices } from "@/lib/providers/spot-prices";
+import { productSchema } from "@/lib/seo/schemas";
 
 export function generateStaticParams() {
   const params: { slug: string }[] = [];
@@ -197,7 +199,27 @@ export default async function ProductoPage({
     ],
   };
 
-  const baseUrl = (process.env.NEXT_PUBLIC_URL || "https://metalorix.com").replace(/\/$/, "");
+  let productJsonLd: Record<string, unknown> | null = null;
+  try {
+    const { prices } = await getSpotPrices();
+    const metalSpot = prices.find((p) => p.symbol === product.symbol);
+    if (metalSpot) {
+      const metalValue = metalSpot.price * product.fineWeightOz;
+      productJsonLd = productSchema({
+        name: product.name,
+        description: product.description.slice(0, 300),
+        brand: product.mint,
+        url: productAlternates.canonical as string,
+        weightG: product.grossWeightG,
+        material: product.metal === "oro" ? "Gold" : "Silver",
+        priceCurrency: "USD",
+        price: metalValue,
+        countryOfOrigin: product.country,
+      });
+    }
+  } catch {
+    /* spot price unavailable — skip Product schema */
+  }
 
   const specs = [
     { label: t("specType"), value: product.type === "moneda" ? t("typeCoin") : t("typeBar") },
@@ -230,6 +252,12 @@ export default async function ProductoPage({
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
+      {productJsonLd && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd) }}
+        />
+      )}
       <section className="py-[var(--section-py)]">
         <div className="mx-auto max-w-[1200px] px-6">
           {/* Breadcrumb */}

@@ -114,6 +114,44 @@ export function howToSchema(opts: {
   };
 }
 
+export function productSchema(opts: {
+  name: string;
+  description: string;
+  brand: string;
+  url: string;
+  weightG: number;
+  material: string;
+  priceCurrency: string;
+  price: number;
+  countryOfOrigin?: string;
+}) {
+  const tomorrow = new Date(Date.now() + 86_400_000).toISOString().split("T")[0];
+  return {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: opts.name,
+    description: opts.description,
+    brand: { "@type": "Brand", name: opts.brand },
+    material: opts.material,
+    weight: {
+      "@type": "QuantitativeValue",
+      value: opts.weightG,
+      unitCode: "GRM",
+    },
+    ...(opts.countryOfOrigin && {
+      countryOfOrigin: { "@type": "Country", name: opts.countryOfOrigin },
+    }),
+    offers: {
+      "@type": "Offer",
+      price: opts.price.toFixed(2),
+      priceCurrency: opts.priceCurrency,
+      availability: "https://schema.org/InStock",
+      priceValidUntil: tomorrow,
+      url: opts.url,
+    },
+  };
+}
+
 export function organizationSchema() {
   return {
     "@context": "https://schema.org",
