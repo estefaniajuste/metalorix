@@ -262,28 +262,13 @@ export async function generateMetadata({
     notFound();
   }
 
-  if (topic.clusterSlug !== baseClusterSlug) {
-    const correctCluster = getLocalizedClusterSlug(topic.clusterSlug, locale);
-    const correctSlug = (await getLocalizedArticleSlug(topic.slug, locale)) || topic.slug;
-    const path = getPathname({
-      locale: locale as Locale,
-      href: { pathname: "/learn/[cluster]/[slug]", params: { cluster: correctCluster, slug: correctSlug } } as any,
-    });
-    permanentRedirect(path);
-  }
+  // Cluster/slug corrections are handled by middleware (proper 301) or
+  // canonical tags below. Avoid permanentRedirect() here because Next.js
+  // App Router streaming causes it to emit a <meta http-equiv="refresh">
+  // (soft redirect, HTTP 200) instead of a real 308, which Google flags
+  // as "Error de redirección".
 
-  const canonicalSlug = (await getLocalizedArticleSlug(topic.slug, locale)) || topic.slug;
-  const canonicalCluster = getLocalizedClusterSlug(baseClusterSlug, locale);
-  const isNonCanonical = params.slug !== canonicalSlug || params.cluster !== canonicalCluster;
-
-  if (isNonCanonical) {
-    const canonPath = getPathname({
-      locale: locale as Locale,
-      href: { pathname: "/learn/[cluster]/[slug]", params: { cluster: canonicalCluster, slug: canonicalSlug } } as any,
-    });
-    permanentRedirect(canonPath);
-  }
-
+  const canonicalClusterBase = topic.clusterSlug;
   const data = await getArticleData(topic.slug, locale);
   const rawTitle = data?.localization.seoTitle || topic.titleEn;
   const title = rawTitle
@@ -297,7 +282,7 @@ export async function generateMetadata({
   const alternates = getAlternates(locale, (loc) => ({
     pathname: "/learn/[cluster]/[slug]",
     params: {
-      cluster: getLocalizedClusterSlug(baseClusterSlug, loc),
+      cluster: getLocalizedClusterSlug(canonicalClusterBase, loc),
       slug: metaSlugsByLocale.get(loc) || topic.slug,
     },
   }));
@@ -455,27 +440,8 @@ export default async function LearnArticlePage({
     }
   }
 
-  if (topic && topic.clusterSlug !== baseClusterSlug) {
-    const correctCluster = getLocalizedClusterSlug(topic.clusterSlug, locale);
-    const correctSlug = (await getLocalizedArticleSlug(topic.slug, locale)) || topic.slug;
-    const path = getPathname({
-      locale: locale as Locale,
-      href: { pathname: "/learn/[cluster]/[slug]", params: { cluster: correctCluster, slug: correctSlug } } as any,
-    });
-    permanentRedirect(path);
-  }
-
-  if (topic) {
-    const canonicalSlug = await getLocalizedArticleSlug(topic.slug, locale);
-    const canonicalCluster = getLocalizedClusterSlug(baseClusterSlug, locale);
-    if (params.slug !== canonicalSlug || params.cluster !== canonicalCluster) {
-      const path = getPathname({
-        locale: locale as Locale,
-        href: { pathname: "/learn/[cluster]/[slug]", params: { cluster: canonicalCluster, slug: canonicalSlug } } as any,
-      });
-      permanentRedirect(path);
-    }
-  }
+  // Cluster/slug corrections use middleware 301 or canonical tags (see
+  // generateMetadata). No permanentRedirect() here to avoid soft redirects.
 
   if (!topic) {
     const dbMatch = await findArticleInDb(params.slug);
@@ -491,19 +457,20 @@ export default async function LearnArticlePage({
     notFound();
   }
 
-  const cluster = TAXONOMY.find((c) => c.slug === baseClusterSlug);
+  const canonicalClusterBase = topic.clusterSlug;
+  const cluster = TAXONOMY.find((c) => c.slug === canonicalClusterBase);
   const subcluster = cluster?.subclusters.find(
     (s) => s.slug === topic.subclusterSlug
   );
 
-  const localizedCluster = getLocalizedCluster(baseClusterSlug, locale);
-  const clusterName = localizedCluster?.name ?? cluster?.nameEn ?? baseClusterSlug;
+  const localizedCluster = getLocalizedCluster(canonicalClusterBase, locale);
+  const clusterName = localizedCluster?.name ?? cluster?.nameEn ?? canonicalClusterBase;
   const localizedSub = subcluster
     ? getLocalizedSubcluster(subcluster.slug, locale)
     : null;
   const subclusterName = localizedSub?.name ?? subcluster?.nameEn;
 
-  const locClusterSlug = getLocalizedClusterSlug(baseClusterSlug, locale);
+  const locClusterSlug = getLocalizedClusterSlug(canonicalClusterBase, locale);
 
   const DIFFICULTY_KEY: Record<string, string> = {
     beginner: "difficultyBeginner",
@@ -539,7 +506,7 @@ export default async function LearnArticlePage({
         const tp = getTopicBySlug(l.targetSlug);
         return {
           slug: l.targetSlug,
-          clusterSlug: tp?.clusterSlug || baseClusterSlug,
+          clusterSlug: tp?.clusterSlug || canonicalClusterBase,
           title: l.suggestedAnchor,
           difficulty: tp?.difficulty || "beginner",
           linkType: l.linkType,
@@ -625,7 +592,7 @@ export default async function LearnArticlePage({
     localeHrefs[loc] = {
       pathname: "/learn/[cluster]/[slug]",
       params: {
-        cluster: getLocalizedClusterSlug(baseClusterSlug, loc as Locale),
+        cluster: getLocalizedClusterSlug(canonicalClusterBase, loc as Locale),
         slug: articleSlugsByLocale.get(loc) || topic.slug,
       },
     };
@@ -634,7 +601,7 @@ export default async function LearnArticlePage({
   const alternates = getAlternates(locale, (loc) => ({
     pathname: "/learn/[cluster]/[slug]",
     params: {
-      cluster: getLocalizedClusterSlug(baseClusterSlug, loc),
+      cluster: getLocalizedClusterSlug(canonicalClusterBase, loc),
       slug: articleSlugsByLocale.get(loc) || topic.slug,
     },
   }));
@@ -799,7 +766,7 @@ export default async function LearnArticlePage({
             ariaLabel={tc("breadcrumbNav")}
           />
 
-          <LearnPriceBanner clusterSlug={baseClusterSlug} articleSlug={topic.slug} locale={locale} />
+          <LearnPriceBanner clusterSlug={canonicalClusterBase} articleSlug={topic.slug} locale={locale} />
 
           <header className="mb-8">
             <div className="flex items-center gap-2 mb-4 flex-wrap">
@@ -903,7 +870,7 @@ export default async function LearnArticlePage({
                 {(() => {
                   let headingIdx = -1;
                   let h2Count = 0;
-                  const inlineToolId = getToolsForArticle(baseClusterSlug, topic.slug)[0];
+                  const inlineToolId = getToolsForArticle(canonicalClusterBase, topic.slug)[0];
                   const elements: React.ReactNode[] = [];
                   strippedContent.split("\n").forEach((line, i) => {
                     if (!line.trim()) return;
@@ -992,7 +959,7 @@ export default async function LearnArticlePage({
           />
 
           <ContextualToolCards
-            toolIds={getToolsForArticle(baseClusterSlug, topic.slug)}
+            toolIds={getToolsForArticle(canonicalClusterBase, topic.slug)}
             heading={t("tryTheseTools")}
             labels={{
               ratio: t("toolRatio"),

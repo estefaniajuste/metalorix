@@ -127,7 +127,7 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL("/api/sitemap", request.url), 301);
   }
 
-  if (pathname.startsWith("/api/")) {
+  if (pathname.startsWith("/api/") || pathname.includes("/opengraph-image")) {
     const response = NextResponse.next();
     response.headers.set("X-Robots-Tag", "noindex");
     return response;
@@ -159,6 +159,27 @@ export function middleware(request: NextRequest) {
       const rest = segments.slice(2).join("/");
       const target = `/${locale}${correctLearnPath}${rest ? `/${rest}` : ""}`;
       return NextResponse.redirect(new URL(target, request.url), 301);
+    }
+  }
+
+  // Fix non-localized cluster slugs in learn article URLs.
+  // E.g. /zh/xuexi/price-factors/slug → /zh/xuexi/jiage-yinsu/slug (301)
+  if (segments.length >= 4 && LOCALES.has(segments[0])) {
+    const locale = segments[0];
+    const learnSeg = LEARN_PATHS[locale]?.replace("/", "");
+    if (learnSeg && segments[1] === learnSeg) {
+      const clusterInUrl = segments[2];
+      const baseCluster = CLUSTER_REVERSE[clusterInUrl];
+      if (baseCluster) {
+        const correctCluster = locale === "en"
+          ? baseCluster
+          : (CLUSTER_SLUG_BY_LOCALE[locale]?.[baseCluster] ?? baseCluster);
+        if (clusterInUrl !== correctCluster) {
+          const rest = segments.slice(3).join("/");
+          const target = `/${locale}/${learnSeg}/${correctCluster}${rest ? `/${rest}` : ""}`;
+          return NextResponse.redirect(new URL(target, request.url), 301);
+        }
+      }
     }
   }
 
