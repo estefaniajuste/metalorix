@@ -16,6 +16,8 @@ import {
 
 const CRON_SECRET = process.env.CRON_SECRET?.trim();
 const NEXT_PUBLIC_URL = process.env.NEXT_PUBLIC_URL || "https://metalorix.com";
+const IG_USER_ID = process.env.INSTAGRAM_USER_ID;
+const IG_TOKEN = process.env.INSTAGRAM_ACCESS_TOKEN ?? "";
 
 type ContentType = "prices" | "fear_greed" | "gold_btc" | "market_summary" | "learn_tip" | "weekly_summary";
 
@@ -53,6 +55,11 @@ export async function POST(request: NextRequest) {
   }
 
   const url = new URL(request.url);
+
+  if (url.searchParams.get("debug") === "1") {
+    return await runDiagnostics();
+  }
+
   const forceType = url.searchParams.get("type") as ContentType | null;
   const contentType = forceType || getContentTypeForToday();
 
@@ -311,4 +318,59 @@ async function gatherLearnTip(db: any): Promise<GatheredData> {
     },
     imageParams: { title, topic: "Precious Metals" },
   };
+}
+
+async function runDiagnostics() {
+  const results: Record<string, unknown> = {
+    userId: IG_USER_ID ? `${IG_USER_ID.slice(0, 4)}...${IG_USER_ID.slice(-4)}` : "NOT SET",
+    tokenLength: IG_TOKEN.length,
+    tokenPrefix: IG_TOKEN.slice(0, 10) + "...",
+  };
+
+  const APIS = [
+    { name: "graph.instagram.com/v22.0", base: "https://graph.instagram.com/v22.0" },
+    { name: "graph.facebook.com/v22.0", base: "https://graph.facebook.com/v22.0" },
+    { name: "graph.facebook.com/v25.0", base: "https://graph.facebook.com/v25.0" },
+  ];
+
+  for (const api of APIS) {
+    try {
+      const res = await fetch(
+        `${api.base}/${IG_USER_ID}?fields=id,username,name,ig_id&access_token=${IG_TOKEN}`,
+        { signal: AbortSignal.timeout(8_000) },
+      );
+      const data = await res.json();
+      results[api.name] = {
+        status: res.status,
+        data: data.error ? { error: data.error.message, code: data.error.code, type: data.error.type, subcode: data.error.error_subcode } : data,
+      };
+    } catch (err) {
+      results[api.name] = { error: err instanceof Error ? err.message : String(err) };
+    }
+  }
+
+  try {
+    const debugRes = await fetch(
+      `https://graph.facebook.com/debug_token?input_token=${IG_TOKEN}&access_token=${IG_TOKEN}`,
+      { signal: AbortSignal.timeout(8_000) },
+    );
+    const debugData = await debugRes.json();
+    if (debugData.data) {
+      const d = debugData.data;
+      results.tokenDebug = {
+        app_id: d.app_id,
+        type: d.type,
+        is_valid: d.is_valid,
+        expires_at: d.expires_at ? new Date(d.expires_at * 1000).toISOString() : "never",
+        scopes: d.scopes,
+        error: d.error,
+      };
+    } else {
+      results.tokenDebug = debugData;
+    }
+  } catch (err) {
+    results.tokenDebug = { error: err instanceof Error ? err.message : String(err) };
+  }
+
+  return NextResponse.json(results);
 }
