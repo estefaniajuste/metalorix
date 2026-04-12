@@ -198,37 +198,6 @@ export default async function ProductoPage({
   };
 
   const baseUrl = (process.env.NEXT_PUBLIC_URL || "https://metalorix.com").replace(/\/$/, "");
-  const productSchema = {
-    "@context": "https://schema.org",
-    "@type": "Product",
-    name: product.name,
-    description: product.description,
-    image: `${baseUrl}/en/opengraph-image`,
-    url: productAlternates.canonical,
-    brand: {
-      "@type": "Brand",
-      name: product.mint,
-    },
-    category: `${product.type === "moneda" ? t("typeCoin") : t("typeBar")} — ${product.metal === "oro" ? t("metalGold") : t("metalSilver")}`,
-    material: product.metal === "oro" ? "Gold" : "Silver",
-    weight: {
-      "@type": "QuantitativeValue",
-      value: product.grossWeightG,
-      unitCode: "GRM",
-    },
-    additionalProperty: [
-      {
-        "@type": "PropertyValue",
-        name: t("specPurity"),
-        value: product.purityLabel,
-      },
-      {
-        "@type": "PropertyValue",
-        name: t("specFineWeight"),
-        value: `${product.fineWeightOz} oz troy`,
-      },
-    ],
-  };
 
   const specs = [
     { label: t("specType"), value: product.type === "moneda" ? t("typeCoin") : t("typeBar") },
@@ -261,11 +230,6 @@ export default async function ProductoPage({
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }}
-      />
-
       <section className="py-[var(--section-py)]">
         <div className="mx-auto max-w-[1200px] px-6">
           {/* Breadcrumb */}
