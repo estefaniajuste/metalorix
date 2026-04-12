@@ -24,7 +24,17 @@
     "whereToBuy": "购买地点",
     "buy": "购买",
     "portfolio": "投资组合",
-    "outlookNav": "Outlook"
+    "outlookNav": "预测",
+    "market": "市场",
+    "fearGreedNav": "恐惧与贪婪指数",
+    "investmentGuide": "投资指南",
+    "encyclopedia": "百科全书",
+    "allTools": "查看全部",
+    "comparatorNav": "金属比较",
+    "converterNav": "汇率转换",
+    "roiCalcNav": "收益计算器",
+    "calendarNav": "经济日历",
+    "jewelryCalcNav": "珠宝估价"
   },
   "footer": {
     "prices": "价格",

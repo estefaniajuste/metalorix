@@ -24,7 +24,17 @@
     "whereToBuy": "Where to Buy",
     "buy": "Buy",
     "portfolio": "Portfolio",
-    "outlookNav": "Outlook"
+    "outlookNav": "Outlook",
+    "market": "Market",
+    "fearGreedNav": "Fear & Greed Index",
+    "investmentGuide": "Investment Guide",
+    "encyclopedia": "Encyclopedia",
+    "allTools": "See all",
+    "comparatorNav": "Metal Comparator",
+    "converterNav": "Currency Converter",
+    "roiCalcNav": "ROI Calculator",
+    "calendarNav": "Economic Calendar",
+    "jewelryCalcNav": "Jewelry Calculator"
   },
   "footer": {
     "prices": "Prices",

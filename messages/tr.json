@@ -23,7 +23,18 @@
     "changeLanguage": "Dil değiştir",
     "whereToBuy": "Nereden Alınır",
     "buy": "Satın Al",
-    "outlookNav": "Outlook"
+    "portfolio": "Portföy",
+    "outlookNav": "Tahmin",
+    "market": "Piyasa",
+    "fearGreedNav": "Korku ve Açgözlülük",
+    "investmentGuide": "Yatırım Rehberi",
+    "encyclopedia": "Ansiklopedi",
+    "allTools": "Tümünü gör",
+    "comparatorNav": "Metal Karşılaştırma",
+    "converterNav": "Döviz Çevirici",
+    "roiCalcNav": "Getiri Hesaplayıcı",
+    "calendarNav": "Ekonomik Takvim",
+    "jewelryCalcNav": "Mücevher Değeri"
   },
   "footer": {
     "prices": "Fiyatlar",

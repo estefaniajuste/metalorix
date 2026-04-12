@@ -71,7 +71,7 @@ function BellIcon() {
   );
 }
 
-type DropdownId = "prices" | "buy" | "learn" | null;
+type DropdownId = "prices" | "market" | "tools" | "buy" | "learn" | null;
 
 export function Nav() {
   const { theme, toggle } = useTheme();
@@ -91,14 +91,29 @@ export function Nav() {
     { href: "/ratio-oro-plata" as const, label: t("ratio"), symbol: "⚖️", color: "#D6B35A" },
   ];
 
+  const marketLinks = [
+    { href: "/noticias" as const, label: t("news") },
+    { href: "/outlook" as const, label: t("outlookNav") },
+    { href: "/fear-greed" as const, label: t("fearGreedNav") },
+  ];
+
+  const toolLinks = [
+    { href: "/portfolio" as const, label: t("portfolio") },
+    { href: "/comparador" as const, label: t("comparatorNav") },
+    { href: "/conversor-divisas" as const, label: t("converterNav") },
+    { href: "/calculadora-rentabilidad" as const, label: t("roiCalcNav") },
+    { href: "/calendario-economico" as const, label: t("calendarNav") },
+    { href: "/valor-joyas" as const, label: t("jewelryCalcNav") },
+  ];
+
   const buyLinks = [
     { href: "/productos" as const, label: t("products") },
     { href: "/donde-comprar" as const, label: t("whereToBuy") },
   ];
 
   const learnLinks = [
-    { href: "/guia-inversion" as const, label: t("guide") },
-    { href: "/learn" as const, label: t("learn") },
+    { href: "/guia-inversion" as const, label: t("investmentGuide") },
+    { href: "/learn" as const, label: t("encyclopedia") },
   ];
 
   const toggleDropdown = (id: DropdownId) => {
@@ -106,14 +121,15 @@ export function Nav() {
   };
 
   const isPricesActive = pathname.startsWith("/precio/") || pathname === "/ratio-oro-plata";
+  const isMarketActive = pathname.startsWith("/noticias") || pathname.startsWith("/outlook") || pathname.startsWith("/fear-greed");
+  const isToolsActive =
+    pathname.startsWith("/herramientas") || pathname.startsWith("/portfolio") ||
+    pathname.startsWith("/comparador") || pathname.startsWith("/comparar/") ||
+    pathname.startsWith("/conversor-divisas") || pathname.startsWith("/calculadora-rentabilidad") ||
+    pathname.startsWith("/calendario-economico") || pathname.startsWith("/valor-joyas") ||
+    pathname.startsWith("/widget");
   const isBuyActive = pathname.startsWith("/productos") || pathname.startsWith("/donde-comprar");
-  const isToolsActive = pathname.startsWith("/herramientas");
-  const isNewsActive = pathname.startsWith("/noticias");
-  const isPortfolioActive = pathname.startsWith("/portfolio");
-  const isOutlookActive = pathname.startsWith("/outlook") || pathname.startsWith("/predicciones") || pathname.startsWith("/prognose") || pathname.startsWith("/tahmin") || pathname.startsWith("/yuce") || pathname.startsWith("/tawaquat") || pathname.startsWith("/purvanuaman");
-  const isLearnActive =
-    pathname.startsWith("/guia-inversion") ||
-    pathname.startsWith("/learn");
+  const isLearnActive = pathname.startsWith("/guia-inversion") || pathname.startsWith("/learn");
   const isAlertsActive = pathname.startsWith("/alertas");
 
   function navLinkClass(active: boolean) {
@@ -166,33 +182,15 @@ export function Nav() {
           <div className="hidden md:flex items-center gap-1">
             {/* Prices dropdown */}
             <div className="relative">
-              <button
-                onClick={() => toggleDropdown("prices")}
-                aria-expanded={openDropdown === "prices"}
-                aria-haspopup="menu"
-                className={navLinkClass(isPricesActive)}
-              >
-                {t("prices")}
-                <ChevronDown open={openDropdown === "prices"} />
+              <button onClick={() => toggleDropdown("prices")} aria-expanded={openDropdown === "prices"} aria-haspopup="menu" className={navLinkClass(isPricesActive)}>
+                {t("prices")} <ChevronDown open={openDropdown === "prices"} />
               </button>
               {openDropdown === "prices" && (
-                <div
-                  role="menu"
-                  aria-label={t("metalPrices")}
-                  className="absolute top-full start-0 mt-1 w-52 bg-surface-1 border border-border rounded-DEFAULT shadow-card py-1.5 z-50"
-                >
+                <div role="menu" aria-label={t("metalPrices")} className="absolute top-full start-0 mt-1 w-52 bg-surface-1 border border-border rounded-DEFAULT shadow-card py-1.5 z-50">
                   {metalLinks.map((metal) => (
-                    <Link
-                      key={typeof metal.href === "string" ? metal.href : metal.href.params.metal}
-                      href={metal.href}
-                      role="menuitem"
-                      onClick={() => setOpenDropdown(null)}
-                      className="flex items-center gap-3 px-4 py-2.5 text-sm text-content-2 hover:text-content-0 hover:bg-surface-2 transition-colors"
-                    >
-                      <span
-                        className="w-2.5 h-2.5 rounded-full flex-shrink-0"
-                        style={{ backgroundColor: metal.color }}
-                      />
+                    <Link key={typeof metal.href === "string" ? metal.href : metal.href.params.metal} href={metal.href} role="menuitem" onClick={() => setOpenDropdown(null)}
+                      className="flex items-center gap-3 px-4 py-2.5 text-sm text-content-2 hover:text-content-0 hover:bg-surface-2 transition-colors">
+                      <span className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ backgroundColor: metal.color }} />
                       <span className="font-medium">{metal.label}</span>
                       <span className="text-xs text-content-3 ms-auto">{metal.symbol}</span>
                     </Link>
@@ -201,27 +199,16 @@ export function Nav() {
               )}
             </div>
 
-            {/* Buy dropdown */}
+            {/* Market dropdown */}
             <div className="relative">
-              <button
-                onClick={() => toggleDropdown("buy")}
-                aria-expanded={openDropdown === "buy"}
-                aria-haspopup="menu"
-                className={navLinkClass(isBuyActive)}
-              >
-                {t("buy")}
-                <ChevronDown open={openDropdown === "buy"} />
+              <button onClick={() => toggleDropdown("market")} aria-expanded={openDropdown === "market"} aria-haspopup="menu" className={navLinkClass(isMarketActive)}>
+                {t("market")} <ChevronDown open={openDropdown === "market"} />
               </button>
-              {openDropdown === "buy" && (
-                <div role="menu" className="absolute top-full start-0 mt-1 w-48 bg-surface-1 border border-border rounded-DEFAULT shadow-card py-1.5 z-50">
-                  {buyLinks.map((link) => (
-                    <Link
-                      key={link.href}
-                      href={link.href as any}
-                      role="menuitem"
-                      onClick={() => setOpenDropdown(null)}
-                      className="block px-4 py-2.5 text-sm font-medium text-content-2 hover:text-content-0 hover:bg-surface-2 transition-colors"
-                    >
+              {openDropdown === "market" && (
+                <div role="menu" className="absolute top-full start-0 mt-1 w-52 bg-surface-1 border border-border rounded-DEFAULT shadow-card py-1.5 z-50">
+                  {marketLinks.map((link) => (
+                    <Link key={link.href} href={link.href as any} role="menuitem" onClick={() => setOpenDropdown(null)}
+                      className="block px-4 py-2.5 text-sm font-medium text-content-2 hover:text-content-0 hover:bg-surface-2 transition-colors">
                       {link.label}
                     </Link>
                   ))}
@@ -229,59 +216,55 @@ export function Nav() {
               )}
             </div>
 
-            {/* Tools link */}
-            <Link
-              href={"/herramientas" as any}
-              className={navLinkClass(isToolsActive)}
-            >
-              {t("tools")}
-            </Link>
+            {/* Tools dropdown */}
+            <div className="relative">
+              <button onClick={() => toggleDropdown("tools")} aria-expanded={openDropdown === "tools"} aria-haspopup="menu" className={navLinkClass(isToolsActive)}>
+                {t("tools")} <ChevronDown open={openDropdown === "tools"} />
+              </button>
+              {openDropdown === "tools" && (
+                <div role="menu" className="absolute top-full start-0 mt-1 w-56 bg-surface-1 border border-border rounded-DEFAULT shadow-card py-1.5 z-50">
+                  {toolLinks.map((link) => (
+                    <Link key={link.href} href={link.href as any} role="menuitem" onClick={() => setOpenDropdown(null)}
+                      className="block px-4 py-2.5 text-sm font-medium text-content-2 hover:text-content-0 hover:bg-surface-2 transition-colors">
+                      {link.label}
+                    </Link>
+                  ))}
+                  <div className="h-px bg-border my-1.5" />
+                  <Link href={"/herramientas" as any} role="menuitem" onClick={() => setOpenDropdown(null)}
+                    className="block px-4 py-2.5 text-sm font-medium text-brand-gold hover:bg-surface-2 transition-colors">
+                    {t("allTools")} &rarr;
+                  </Link>
+                </div>
+              )}
+            </div>
 
-            {/* News link */}
-            <Link
-              href={"/noticias" as any}
-              className={navLinkClass(isNewsActive)}
-            >
-              {t("news")}
-            </Link>
-
-            {/* Outlook link */}
-            <Link
-              href={"/outlook" as any}
-              className={navLinkClass(isOutlookActive)}
-            >
-              {t("outlookNav")}
-            </Link>
-
-            {/* Portfolio link */}
-            <Link
-              href={"/portfolio" as any}
-              className={navLinkClass(isPortfolioActive)}
-            >
-              {t("portfolio")}
-            </Link>
+            {/* Buy dropdown */}
+            <div className="relative">
+              <button onClick={() => toggleDropdown("buy")} aria-expanded={openDropdown === "buy"} aria-haspopup="menu" className={navLinkClass(isBuyActive)}>
+                {t("buy")} <ChevronDown open={openDropdown === "buy"} />
+              </button>
+              {openDropdown === "buy" && (
+                <div role="menu" className="absolute top-full start-0 mt-1 w-48 bg-surface-1 border border-border rounded-DEFAULT shadow-card py-1.5 z-50">
+                  {buyLinks.map((link) => (
+                    <Link key={link.href} href={link.href as any} role="menuitem" onClick={() => setOpenDropdown(null)}
+                      className="block px-4 py-2.5 text-sm font-medium text-content-2 hover:text-content-0 hover:bg-surface-2 transition-colors">
+                      {link.label}
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </div>
 
             {/* Learn dropdown */}
             <div className="relative">
-              <button
-                onClick={() => toggleDropdown("learn")}
-                aria-expanded={openDropdown === "learn"}
-                aria-haspopup="menu"
-                className={navLinkClass(isLearnActive)}
-              >
-                {t("learn")}
-                <ChevronDown open={openDropdown === "learn"} />
+              <button onClick={() => toggleDropdown("learn")} aria-expanded={openDropdown === "learn"} aria-haspopup="menu" className={navLinkClass(isLearnActive)}>
+                {t("learn")} <ChevronDown open={openDropdown === "learn"} />
               </button>
               {openDropdown === "learn" && (
-                <div role="menu" className="absolute top-full start-0 mt-1 w-44 bg-surface-1 border border-border rounded-DEFAULT shadow-card py-1.5 z-50">
+                <div role="menu" className="absolute top-full start-0 mt-1 w-52 bg-surface-1 border border-border rounded-DEFAULT shadow-card py-1.5 z-50">
                   {learnLinks.map((link) => (
-                    <Link
-                      key={link.href}
-                      href={link.href as any}
-                      role="menuitem"
-                      onClick={() => setOpenDropdown(null)}
-                      className="block px-4 py-2.5 text-sm font-medium text-content-2 hover:text-content-0 hover:bg-surface-2 transition-colors"
-                    >
+                    <Link key={link.href} href={link.href as any} role="menuitem" onClick={() => setOpenDropdown(null)}
+                      className="block px-4 py-2.5 text-sm font-medium text-content-2 hover:text-content-0 hover:bg-surface-2 transition-colors">
                       {link.label}
                     </Link>
                   ))}
@@ -327,39 +310,20 @@ export function Nav() {
         </div>
       </nav>
 
-      {/* Mobile nav — outside <nav> so backdrop-blur doesn't break fixed positioning */}
+      {/* Mobile nav */}
       {mobileOpen && (
-        <div
-          role="dialog"
-          aria-label={t("openMenu")}
-          className="md:hidden fixed top-16 inset-x-0 bottom-0 bg-surface-1 border-t border-border z-40 overflow-y-auto"
-        >
+        <div role="dialog" aria-label={t("openMenu")} className="md:hidden fixed top-16 inset-x-0 bottom-0 bg-surface-1 border-t border-border z-40 overflow-y-auto">
           <div className="p-4 space-y-0.5">
-            {/* Alerts CTA — prominent at the top on mobile */}
-            <Link
-              href={"/alertas" as any}
-              className="flex items-center justify-center gap-2 px-4 py-3.5 mb-3 text-base font-semibold bg-brand-gold text-[#0B0F17] rounded-xs hover:brightness-110 transition-all"
-              onClick={() => setMobileOpen(false)}
-            >
-              <BellIcon />
-              {t("alerts")}
+            <Link href={"/alertas" as any} className="flex items-center justify-center gap-2 px-4 py-3.5 mb-3 text-base font-semibold bg-brand-gold text-[#0B0F17] rounded-xs hover:brightness-110 transition-all" onClick={() => setMobileOpen(false)}>
+              <BellIcon /> {t("alerts")}
             </Link>
 
-            {/* Prices section */}
-            <div className="px-4 pt-3 pb-1 text-xs font-semibold text-content-3 uppercase tracking-wider">
-              {t("prices")}
-            </div>
+            {/* Prices */}
+            <div className="px-4 pt-3 pb-1 text-xs font-semibold text-content-3 uppercase tracking-wider">{t("prices")}</div>
             {metalLinks.map((metal) => (
-              <Link
-                key={typeof metal.href === "string" ? metal.href : metal.href.params.metal}
-                href={metal.href}
-                className="flex items-center gap-3 px-4 py-3 rounded-sm text-base font-medium text-content-2 hover:text-content-0 hover:bg-surface-2 transition-colors"
-                onClick={() => setMobileOpen(false)}
-              >
-                <span
-                  className="w-2.5 h-2.5 rounded-full flex-shrink-0"
-                  style={{ backgroundColor: metal.color }}
-                />
+              <Link key={typeof metal.href === "string" ? metal.href : metal.href.params.metal} href={metal.href}
+                className="flex items-center gap-3 px-4 py-3 rounded-sm text-base font-medium text-content-2 hover:text-content-0 hover:bg-surface-2 transition-colors" onClick={() => setMobileOpen(false)}>
+                <span className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ backgroundColor: metal.color }} />
                 {metal.label}
                 <span className="text-xs text-content-3 ms-auto">{metal.symbol}</span>
               </Link>
@@ -367,17 +331,11 @@ export function Nav() {
 
             <div className="h-px bg-border my-3" />
 
-            {/* Buy section */}
-            <div className="px-4 pb-1 text-xs font-semibold text-content-3 uppercase tracking-wider">
-              {t("buy")}
-            </div>
-            {buyLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href as any}
-                className="block px-4 py-3 rounded-sm text-base font-medium text-content-2 hover:text-content-0 hover:bg-surface-2 transition-colors"
-                onClick={() => setMobileOpen(false)}
-              >
+            {/* Market */}
+            <div className="px-4 pb-1 text-xs font-semibold text-content-3 uppercase tracking-wider">{t("market")}</div>
+            {marketLinks.map((link) => (
+              <Link key={link.href} href={link.href as any}
+                className="block px-4 py-3 rounded-sm text-base font-medium text-content-2 hover:text-content-0 hover:bg-surface-2 transition-colors" onClick={() => setMobileOpen(false)}>
                 {link.label}
               </Link>
             ))}
@@ -385,54 +343,36 @@ export function Nav() {
             <div className="h-px bg-border my-3" />
 
             {/* Tools */}
-            <Link
-              href={"/herramientas" as any}
-              className="block px-4 py-3 rounded-sm text-base font-medium text-content-2 hover:text-content-0 hover:bg-surface-2 transition-colors"
-              onClick={() => setMobileOpen(false)}
-            >
-              {t("tools")}
-            </Link>
-
-            {/* News */}
-            <Link
-              href={"/noticias" as any}
-              className="block px-4 py-3 rounded-sm text-base font-medium text-content-2 hover:text-content-0 hover:bg-surface-2 transition-colors"
-              onClick={() => setMobileOpen(false)}
-            >
-              {t("news")}
-            </Link>
-
-            {/* Outlook */}
-            <Link
-              href={"/outlook" as any}
-              className="block px-4 py-3 rounded-sm text-base font-medium text-content-2 hover:text-content-0 hover:bg-surface-2 transition-colors"
-              onClick={() => setMobileOpen(false)}
-            >
-              {t("outlookNav")}
-            </Link>
-
-            {/* Portfolio */}
-            <Link
-              href={"/portfolio" as any}
-              className="block px-4 py-3 rounded-sm text-base font-medium text-content-2 hover:text-content-0 hover:bg-surface-2 transition-colors"
-              onClick={() => setMobileOpen(false)}
-            >
-              {t("portfolio")}
+            <div className="px-4 pb-1 text-xs font-semibold text-content-3 uppercase tracking-wider">{t("tools")}</div>
+            {toolLinks.map((link) => (
+              <Link key={link.href} href={link.href as any}
+                className="block px-4 py-3 rounded-sm text-base font-medium text-content-2 hover:text-content-0 hover:bg-surface-2 transition-colors" onClick={() => setMobileOpen(false)}>
+                {link.label}
+              </Link>
+            ))}
+            <Link href={"/herramientas" as any}
+              className="block px-4 py-3 rounded-sm text-base font-medium text-brand-gold hover:bg-surface-2 transition-colors" onClick={() => setMobileOpen(false)}>
+              {t("allTools")} &rarr;
             </Link>
 
             <div className="h-px bg-border my-3" />
 
-            {/* Learn section */}
-            <div className="px-4 pb-1 text-xs font-semibold text-content-3 uppercase tracking-wider">
-              {t("learn")}
-            </div>
+            {/* Buy */}
+            <div className="px-4 pb-1 text-xs font-semibold text-content-3 uppercase tracking-wider">{t("buy")}</div>
+            {buyLinks.map((link) => (
+              <Link key={link.href} href={link.href as any}
+                className="block px-4 py-3 rounded-sm text-base font-medium text-content-2 hover:text-content-0 hover:bg-surface-2 transition-colors" onClick={() => setMobileOpen(false)}>
+                {link.label}
+              </Link>
+            ))}
+
+            <div className="h-px bg-border my-3" />
+
+            {/* Learn */}
+            <div className="px-4 pb-1 text-xs font-semibold text-content-3 uppercase tracking-wider">{t("learn")}</div>
             {learnLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href as any}
-                className="block px-4 py-3 rounded-sm text-base font-medium text-content-2 hover:text-content-0 hover:bg-surface-2 transition-colors"
-                onClick={() => setMobileOpen(false)}
-              >
+              <Link key={link.href} href={link.href as any}
+                className="block px-4 py-3 rounded-sm text-base font-medium text-content-2 hover:text-content-0 hover:bg-surface-2 transition-colors" onClick={() => setMobileOpen(false)}>
                 {link.label}
               </Link>
             ))}

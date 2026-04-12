@@ -24,7 +24,17 @@
     "whereToBuy": "أماكن الشراء",
     "buy": "شراء",
     "portfolio": "المحفظة",
-    "outlookNav": "Outlook"
+    "outlookNav": "التوقعات",
+    "market": "السوق",
+    "fearGreedNav": "مؤشر الخوف والطمع",
+    "investmentGuide": "دليل الاستثمار",
+    "encyclopedia": "الموسوعة",
+    "allTools": "عرض الكل",
+    "comparatorNav": "مقارنة المعادن",
+    "converterNav": "محول العملات",
+    "roiCalcNav": "حاسبة العائد",
+    "calendarNav": "التقويم الاقتصادي",
+    "jewelryCalcNav": "قيمة المجوهرات"
   },
   "footer": {
     "prices": "الأسعار",

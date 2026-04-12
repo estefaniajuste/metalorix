@@ -24,7 +24,17 @@
     "whereToBuy": "कहां खरीदें",
     "buy": "खरीदें",
     "portfolio": "पोर्टफोलियो",
-    "outlookNav": "Outlook"
+    "outlookNav": "पूर्वानुमान",
+    "market": "बाज़ार",
+    "fearGreedNav": "भय और लालच सूचकांक",
+    "investmentGuide": "निवेश गाइड",
+    "encyclopedia": "ज्ञानकोश",
+    "allTools": "सभी देखें",
+    "comparatorNav": "धातु तुलना",
+    "converterNav": "मुद्रा परिवर्तक",
+    "roiCalcNav": "ROI कैलकुलेटर",
+    "calendarNav": "आर्थिक कैलेंडर",
+    "jewelryCalcNav": "आभूषण मूल्य"
   },
   "footer": {
     "prices": "कीमतें",

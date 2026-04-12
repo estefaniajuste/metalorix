@@ -24,7 +24,17 @@
     "whereToBuy": "Dónde Comprar",
     "buy": "Comprar",
     "portfolio": "Portfolio",
-    "outlookNav": "Outlook"
+    "outlookNav": "Predicciones",
+    "market": "Mercado",
+    "fearGreedNav": "Fear & Greed",
+    "investmentGuide": "Guía de inversión",
+    "encyclopedia": "Enciclopedia",
+    "allTools": "Ver todas",
+    "comparatorNav": "Comparador",
+    "converterNav": "Conversor de divisas",
+    "roiCalcNav": "Calculadora ROI",
+    "calendarNav": "Calendario económico",
+    "jewelryCalcNav": "Valor de joyas"
   },
   "footer": {
     "prices": "Precios",
