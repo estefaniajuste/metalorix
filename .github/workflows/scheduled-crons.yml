@@ -624,6 +624,15 @@ jobs:
             echo "should_run=false" >> $GITHUB_OUTPUT
           fi
 
+      - name: Instagram diagnostics
+        if: steps.check.outputs.should_run == 'true'
+        run: |
+          echo "=== Running Instagram diagnostics ==="
+          diag=$(curl -s -X POST \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+            "${{ env.SERVICE_URL }}/api/cron/instagram?debug=1")
+          echo "Diagnostics: $diag"
+
       - name: Publish Instagram post
         if: steps.check.outputs.should_run == 'true'
         run: |
