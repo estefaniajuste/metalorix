@@ -197,11 +197,13 @@ export default async function ProductoPage({
     ],
   };
 
+  const baseUrl = (process.env.NEXT_PUBLIC_URL || "https://metalorix.com").replace(/\/$/, "");
   const productSchema = {
     "@context": "https://schema.org",
     "@type": "Product",
     name: product.name,
     description: product.description,
+    image: `${baseUrl}/en/opengraph-image`,
     url: productAlternates.canonical,
     brand: {
       "@type": "Brand",
