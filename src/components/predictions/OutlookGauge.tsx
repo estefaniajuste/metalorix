@@ -17,7 +17,7 @@ function scoreColor(score: number): string {
 
 export function OutlookGauge({ score, signal, signalLabel, size = "lg" }: OutlookGaugeProps) {
   const normalized = (score + 100) / 200;
-  const angle = -90 + normalized * 180;
+  const angle = -180 + normalized * 180;
   const color = scoreColor(score);
 
   const w = size === "lg" ? 220 : 140;
