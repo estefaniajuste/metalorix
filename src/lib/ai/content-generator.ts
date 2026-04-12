@@ -699,10 +699,18 @@ const HIGH_IMPACT_PATTERNS = [
   /\b(basel|regulation|regulaci).{0,20}(gold|tier|metal|bank)/i,
 ];
 
+interface HighImpactNewsItem {
+  title: string;
+  summary: string;
+  url: string;
+  source: string;
+  matchedPatterns: string[];
+}
+
 export function detectHighImpactNews(
   news: { title: string; summary: string; url: string; source: string }[]
-): { title: string; summary: string; url: string; source: string; matchedPatterns: string[] }[] {
-  const hits: typeof news & { matchedPatterns: string[] }[] = [];
+): HighImpactNewsItem[] {
+  const hits: HighImpactNewsItem[] = [];
   for (const item of news) {
     const text = `${item.title} ${item.summary}`;
     const matched: string[] = [];
