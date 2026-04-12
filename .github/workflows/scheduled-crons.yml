@@ -613,10 +613,10 @@ jobs:
           hour=$(date -u +%H)
           minute=$(date -u +%M)
           day_of_week=$(date -u +%u)
-          # Post daily at 09:30 UTC (11:30 CEST), skip Saturday (6)
+          # Post daily at ~09:00 UTC (11:00 CEST), skip Saturday (6)
           if [ "$day_of_week" = "6" ]; then
             echo "should_run=false" >> $GITHUB_OUTPUT
-          elif [ "$hour" = "09" ] && [ "$minute" -ge "15" ] && [ "$minute" -lt "45" ]; then
+          elif [ "$hour" = "09" ] && [ "$minute" -lt "15" ]; then
             echo "should_run=true" >> $GITHUB_OUTPUT
           elif [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
             echo "should_run=true" >> $GITHUB_OUTPUT

@@ -85,8 +85,9 @@ export async function POST(request: NextRequest) {
 
     const form = new FormData();
     form.append("reqtype", "fileupload");
+    form.append("time", "1h");
     form.append("fileToUpload", imgBlob, "instagram-post.png");
-    const uploadRes = await fetch("https://catbox.moe/user/api.php", {
+    const uploadRes = await fetch("https://litterbox.catbox.moe/resources/internals/api.php", {
       method: "POST",
       body: form,
       signal: AbortSignal.timeout(30_000),
