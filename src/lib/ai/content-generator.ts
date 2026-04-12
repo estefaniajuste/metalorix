@@ -112,7 +112,7 @@ async function getRecentNews(hours: number = 24): Promise<NewsItem[]> {
       .from(newsSources)
       .where(gte(newsSources.scrapedAt, since))
       .orderBy(desc(newsSources.scrapedAt))
-      .limit(20);
+      .limit(30);
     return rows.map((r) => ({
       title: r.title,
       url: r.url,
@@ -192,8 +192,12 @@ function formatPrices(prices: PriceData[]): string {
 function formatNews(news: NewsItem[]): string {
   if (news.length === 0) return "No relevant recent news.";
   return news
-    .slice(0, 15)
-    .map((n) => `- [${n.source}] ${n.title}: ${n.summary.slice(0, 150)} (URL: ${n.url})`)
+    .slice(0, 20)
+    .map((n) => {
+      const sentiment = n.sentiment ? ` [${n.sentiment}]` : "";
+      const metals = n.metals?.length ? ` (${n.metals.join(", ")})` : "";
+      return `- [${n.source}]${sentiment}${metals} ${n.title}: ${n.summary.slice(0, 400)} (URL: ${n.url})`;
+    })
     .join("\n");
 }
 
@@ -265,21 +269,11 @@ export async function generateDailySummary(log?: DailyGenerationLog): Promise<{
   const glossaryContext = await getGlossaryTermsForPrompt();
   const glossaryInstructions = buildGlossaryLinkingInstructions(glossaryContext);
 
-  const prompt = `Eres un analista experto en metales preciosos, macroeconomía y geopolítica que escribe en español para inversores hispanohablantes.
+  const prompt = `Eres el analista principal de Metalorix, una plataforma de referencia en metales preciosos. Tu análisis es lo que hace que los usuarios vuelvan cada día. Escribe en español para inversores hispanohablantes.
 
-Escribe un RESUMEN DIARIO del mercado de metales preciosos e industriales para hoy, ${dateStr}.
+Escribe el ANÁLISIS DIARIO del mercado para hoy, ${dateStr}.
 
-CRÍTICO - LO MÁS SIGNIFICATIVO EN TODOS LOS ÁMBITOS:
-Tu prioridad es cubrir lo MÁS significativo del día, NO solo subidas o bajadas de precios. Incluye:
-- Movimientos de precios relevantes (pero no como único foco)
-- Compras de bancos centrales, reservas oficiales
-- Geopolítica: conflictos, sanciones, tensiones que afecten a metales
-- Minería: producción, huelgas, proyectos nuevos
-- Regulaciones y normativas
-- Demanda industrial (solar, electrónica, automoción)
-- Datos macro (Fed, BCE, empleo, inflación)
-- ETFs y flujos de inversión
-Si la noticia más importante del día es que un banco central compró oro récord, o que hay una nueva regulación minera, eso debe ser el titular — no una subida del 0.5%.
+TU DIFERENCIAL: No eres un servicio de noticias genérico. Eres un analista que CONECTA puntos que otros no ven. Tu análisis debe responder: "¿Qué está pasando REALMENTE y por qué debería importarme como inversor?"
 
 DATOS DE PRECIOS ACTUALES:
 ${formatPrices(prices)}
@@ -287,43 +281,59 @@ ${formatPrices(prices)}
 NOTICIAS RELEVANTES DE LAS ÚLTIMAS 24H:
 ${formatNews(news)}
 
-INSTRUCCIONES PARA EL CONTENIDO:
-- Escribe en español natural, profesional pero accesible
-- Longitud: 500-700 palabras
-- Estructura:
-  1. Párrafo resumen con lo MÁS significativo del día (precio, regulación, geopolítica, lo que sea más relevante)
-  2. Análisis de cada metal con datos concretos
-  3. Contexto geopolítico y macroeconómico: explica cómo los eventos globales del día afectan a los metales
-  4. Perspectivas a corto plazo
-- Conecta SIEMPRE los movimientos de precios con causas reales: decisiones de la Fed, tensiones geopolíticas, datos económicos, demanda industrial, compras de bancos centrales, etc.
-- Usa formato: párrafos normales, encabezados con ## para secciones principales
-- NO uses markdown en exceso, solo ## para títulos de sección
-- Menciona datos concretos (precios, porcentajes, niveles)
-- Tono: informativo, analítico, útil para quien invierte en metales
-- NO incluyas título ni fecha al inicio (se añaden automáticamente)
-- NO digas "como analista" ni uses primera persona
-- CRÍTICO: NO insertes enlaces externos (URLs http/https) dentro del cuerpo del artículo. Los nombres de fuentes como Reuters, CNBC, Financial Times, etc. deben aparecer como texto plano en el contenido, NO como enlaces clicables. Los enlaces a fuentes van SOLO en el campo "fuentes" del JSON.
-- Los ÚNICOS enlaces permitidos en el cuerpo del artículo son enlaces internos al glosario con formato [término](/learn/glossary/slug-del-termino)
+REGLAS DE CONTENIDO ANALÍTICO (OBLIGATORIAS):
+
+1. PROFUNDIDAD, NO SUPERFICIE:
+   - MAL: "El oro sube por tensiones geopolíticas"
+   - BIEN: "El oro rompe los $4.800 tras el bloqueo marítimo en el estrecho de Ormuz. Irán interceptó dos petroleros el miércoles, lo que dispara el riesgo de interrupción del 21% del suministro mundial de crudo. Los fondos de cobertura han aumentado sus posiciones largas en oro un 12% esta semana según datos CFTC"
+   - MAL: "La plata sube por demanda industrial"
+   - BIEN: "La plata toca $76 impulsada por la expansión de capacidad solar en China: BYD acaba de anunciar 40 GW de nuevas instalaciones para 2026, lo que requiere ~1.200 toneladas de plata industrial. Esto suma presión a un mercado que ya lleva 3 años de déficit estructural según el Silver Institute"
+
+2. DATOS CONCRETOS OBLIGATORIOS en cada sección:
+   - Precios exactos con variación y comparativa (ej: "máximo de 3 semanas", "por debajo de la media de 50 sesiones")
+   - Cifras de fuentes: toneladas, millones de dólares, porcentajes, fechas
+   - Nombres propios: quién dijo qué, qué banco, qué gobierno, qué empresa
+   - Niveles técnicos: soporte, resistencia, medias móviles relevantes
+
+3. CONEXIONES ENTRE MERCADOS que el inversor minorista no ve:
+   - Ratio oro/plata y qué indica cuando sube o baja
+   - Relación DXY (dólar) con metales
+   - Flujos de ETFs (GLD, SLV, PPLT) como indicador de sentimiento institucional
+   - Spread entre futuros y spot como señal de tensión
+   - Compras de bancos centrales (China, India, Turquía, Polonia) con cifras
+
+4. ESTRUCTURA:
+   - Párrafo de apertura: el dato/evento MÁS impactante del día, con cifras
+   - ## Oro — análisis con datos, niveles, drivers
+   - ## Plata — análisis con datos, correlaciones
+   - ## Platino y Paladio — si hay algo relevante (si no, breve)
+   - ## Contexto Macro y Geopolítico — cómo afectan los eventos del día
+   - ## Qué Vigilar — eventos concretos de las próximas 24-48h con fechas
+
+5. TONO: Informativo-analítico. Como un informe de morning briefing de un banco de inversión, pero accesible. No académico, no genérico, no repetitivo.
+
+6. LONGITUD: 600-800 palabras. Sin relleno.
+
+7. FORMATO: ## para secciones. Párrafos normales. Sin markdown excesivo.
+   - NO incluyas título ni fecha al inicio
+   - NO uses primera persona ni "como analista"
+   - NO insertes enlaces externos (URLs http/https) en el cuerpo. Fuentes como texto plano.
+   - Los ÚNICOS enlaces permitidos son internos al glosario: [término](/learn/glossary/slug)
 ${glossaryInstructions}
 
-INSTRUCCIONES SEO Y FUENTES (MUY IMPORTANTE):
-Debes devolver tu respuesta como un JSON válido con esta estructura exacta:
+INSTRUCCIONES SEO Y FUENTES:
+Devuelve JSON con esta estructura exacta:
 
 {
-  "titulo_seo": "Título para CTR (50-65 caracteres). Incluye DATOS CONCRETOS (precio, %, cifra) y la CAUSA. Ejemplos que generan clics: 'Oro a $5.100: sube 2% por tensiones en Irán', 'Bancos centrales compran récord de oro en 2026', 'Plata cae 3% tras datos de empleo en EE.UU.'. Evita genéricos como 'Resumen del mercado'. El título debe hacer que alguien quiera hacer clic.",
-  "meta_descripcion": "Metadescripción para CTR (140-155 caracteres). Primera frase: el dato más impactante (precio actual, variación). Segunda: por qué importa o qué hacer. Incluye números. Ejemplo: 'Oro cotiza a $5.100 (+2%). Tensiones en Oriente Medio y debilidad del dólar impulsan el metal. Análisis y niveles clave para hoy.' Debe generar curiosidad o utilidad.",
-  "palabras_clave_url": "3-6 palabras clave separadas por espacios para la URL, sin fecha. Ejemplo: 'oro sube tensiones geopoliticas ormuz' o 'plata maximo anual demanda industrial'. Solo las palabras más relevantes del día.",
-  "contenido": "El artículo completo aquí (500-700 palabras con formato ## para secciones). NO incluyas la sección de fuentes aquí, va en el campo fuentes.",
-  "fuentes": [{"titulo": "Título descriptivo de la fuente", "url": "URL completa de la noticia original"}]
+  "titulo_seo": "Título 50-65 caracteres. DATO CONCRETO + CAUSA ESPECÍFICA. Ejemplos: 'Oro rompe $4.800: bloqueo de Ormuz dispara la demanda de refugio', 'Plata a $76 por expansión solar de BYD y déficit de mercado', 'Fed mantiene tipos: oro estable en $4.790 esperando datos de empleo'. NUNCA genéricos tipo 'Resumen del mercado' o 'Análisis diario'.",
+  "meta_descripcion": "140-155 caracteres. Dato impactante + causa + utilidad. Ejemplo: 'Oro toca $4.800 (+1.2%) tras el bloqueo de Ormuz. Analizamos niveles clave, flujos de ETFs y qué vigilar mañana.'",
+  "palabras_clave_url": "3-6 palabras para URL sin fecha. Ejemplo: 'oro rompe 4800 bloqueo ormuz' o 'plata sube deficit solar byd'",
+  "contenido": "Artículo completo (600-800 palabras). SIN fuentes aquí.",
+  "fuentes": [{"titulo": "Título descriptivo", "url": "URL completa"}]
 }
 
-IMPORTANTE sobre fuentes:
-- Incluye en "fuentes" las noticias originales que hayas utilizado para escribir el artículo
-- Usa las URLs proporcionadas en las noticias de arriba
-- Mínimo 2 fuentes, máximo 6
-- Si no hay URLs de noticias disponibles, incluye fuentes genéricas como {"titulo": "Reuters Commodities", "url": "https://www.reuters.com/business/commodities/"}
-
-Devuelve SOLO el JSON, sin texto adicional antes o después. No envuelvas en bloques de código.`;
+Fuentes: mínimo 2, máximo 6. Usa las URLs de las noticias proporcionadas.
+Devuelve SOLO el JSON.`;
 
   const promptSize = new TextEncoder().encode(prompt).length;
   if (log) log.promptSizeBytes = promptSize;
@@ -565,52 +575,49 @@ Tu artículo de CIERRE debe ser CLARAMENTE DISTINTO. NO repitas el mismo anális
 `
     : "";
 
-  const prompt = `Eres un analista experto en metales preciosos, macroeconomía y geopolítica que escribe en español para inversores hispanohablantes.
-
-Escribe un RESUMEN DE CIERRE DE SESIÓN del mercado de metales preciosos para hoy, ${dateStr}. Este artículo se publica tras el cierre de los mercados occidentales (NY, Londres). Es distinto del resumen matinal: aquí el foco es qué ha pasado DURANTE la sesión.
+  const prompt = `Eres el analista principal de Metalorix. Escribe el CIERRE DE SESIÓN del mercado de metales para hoy, ${dateStr}. Se publica tras el cierre de NY/Londres.
 ${morningContext}
-
-CRÍTICO - LO MÁS SIGNIFICATIVO DE LA SESIÓN:
-Prioriza lo MÁS significativo, no solo subidas o bajadas de precios. Incluye: movimientos de precios relevantes, noticias geopolíticas, declaraciones de la Fed/BCE, datos macro publicados hoy, compras de bancos centrales, regulaciones, demanda industrial. Si la noticia más importante es una declaración de la Fed o un dato de empleo, eso debe destacar — no solo "oro sube 0.3%".
 
 DATOS DE PRECIOS AL CIERRE:
 ${formatPrices(prices)}
 
-NOTICIAS RELEVANTES DE LAS ÚLTIMAS 12H (prioriza las más recientes; si son las mismas que esta mañana, no repitas el análisis):
+NOTICIAS DE LAS ÚLTIMAS 12H:
 ${formatNews(news)}
 
-INSTRUCCIONES PARA EL CONTENIDO:
-- Escribe en español natural, profesional pero accesible
-- Longitud: 400-550 palabras (más conciso que el resumen matinal). Si no hay novedades respecto al matinal, acorta a 250-350 palabras y prioriza evolución intradía.
-- Estructura:
-  1. Párrafo resumen: lo MÁS significativo de la sesión (precios, noticias, datos macro)
-  2. Niveles de cierre por metal con variación intradía
-  3. Causas: datos macro, declaraciones Fed/BCE, geopolítica, flujos de mercado
-  4. Perspectiva para mañana: qué vigilar
-- Conecta SIEMPRE los movimientos con causas reales
-- Usa formato: párrafos normales, ## para secciones principales
-- Tono: informativo, analítico
-- NO incluyas título ni fecha al inicio
-- NO digas "como analista" ni uses primera persona
-- CRÍTICO: NO insertes enlaces externos (URLs http/https) en el cuerpo. Los ÚNICOS enlaces permitidos son internos al glosario: [término](/learn/glossary/slug-del-termino).
+REGLAS DE CONTENIDO:
+
+1. FOCO: Qué pasó DURANTE la sesión que el inversor necesita saber. No repitas el análisis matinal.
+
+2. PROFUNDIDAD OBLIGATORIA:
+   - Cada movimiento de precio debe tener una CAUSA CONCRETA con nombres, cifras, fechas
+   - Si el oro cayó 0.5%, explica POR QUÉ exactamente: ¿dato de empleo? ¿declaración de qué miembro de la Fed? ¿ventas de ETF GLD? ¿fortaleza del DXY?
+   - Incluye volumen, flujos de ETFs, posiciones CFTC si las noticias los mencionan
+   - Niveles intradía: máximo/mínimo de sesión, donde cerró respecto a soportes/resistencias
+
+3. ESTRUCTURA:
+   - Párrafo resumen: lo más impactante de la sesión con cifra y causa
+   - ## Cierre por Metal — niveles, variación intradía, causa
+   - ## Motor de la Sesión — el evento o dato que marcó la jornada
+   - ## Mañana — qué vigilar con hora/fecha si es posible (datos macro, comparecencias, vencimientos)
+
+4. LONGITUD: 400-550 palabras. Conciso pero con sustancia. Si no hay novedades, 250-350 palabras focalizadas en evolución intradía.
+
+5. TONO: Directo, útil, analítico. Como un cierre de Bloomberg, no un parte meteorológico.
+   - NO incluyas título ni fecha al inicio
+   - NO uses primera persona
+   - NO insertes enlaces externos en el cuerpo. Solo glosario: [término](/learn/glossary/slug)
 ${glossaryInstructions}
 
-INSTRUCCIONES SEO Y FUENTES (MUY IMPORTANTE):
-Devuelve tu respuesta como un JSON válido con esta estructura exacta:
-
+Devuelve JSON:
 {
-  "titulo_seo": "Título para CTR (50-65 caracteres). Incluye precio de cierre y causa. Ejemplos: 'Oro cierra en $5.050 (-1,2%) tras declaraciones de la Fed', 'Plata sube 2% al cierre por datos de China', 'Metales mixtos: oro estable, platino cae 1,5%'. Datos concretos = más clics.",
-  "meta_descripcion": "Metadescripción para CTR (140-155 caracteres). Niveles de cierre + factor clave + qué vigilar mañana. Ejemplo: 'Oro cierra a $5.050. La Fed mantiene tipos y el dólar se fortalece. Resumen de la sesión y perspectivas para mañana.'",
-  "palabras_clave_url": "3-6 palabras clave para la URL sin fecha. Ejemplo: 'oro cierra fed sesion' o 'metales cierre sesion datos china'. Incluye 'cierre' o 'sesion' para diferenciar del resumen matinal.",
-  "contenido": "El artículo completo aquí (400-550 palabras con ## para secciones). NO incluyas la sección de fuentes.",
-  "fuentes": [{"titulo": "Título descriptivo de la fuente", "url": "URL completa de la noticia original"}]
+  "titulo_seo": "50-65 chars. Precio cierre + causa. Ej: 'Oro cierra en $4.790 (-0.5%): dato de empleo supera expectativas', 'Plata pierde $76 al cierre tras ventas de ETF SLV'. NUNCA genéricos.",
+  "meta_descripcion": "140-155 chars. Cierre + causa + qué vigilar mañana.",
+  "palabras_clave_url": "3-6 palabras. Incluye 'cierre' para diferenciar del matinal.",
+  "contenido": "Artículo completo. SIN fuentes aquí.",
+  "fuentes": [{"titulo": "...", "url": "..."}]
 }
 
-IMPORTANTE sobre fuentes:
-- Incluye en "fuentes" las noticias utilizadas
-- Mínimo 2 fuentes, máximo 5
-
-Devuelve SOLO el JSON, sin texto adicional antes o después. No envuelvas en bloques de código.`;
+Fuentes: 2-5. Devuelve SOLO JSON.`;
 
   const promptSize = new TextEncoder().encode(prompt).length;
   if (log) log.promptSizeBytes = promptSize;
@@ -699,42 +706,51 @@ export async function generateEventArticle(
   const glossaryContext = await getGlossaryTermsForPrompt();
   const glossaryInstructions = buildGlossaryLinkingInstructions(glossaryContext);
 
-  const prompt = `Eres un analista experto en metales preciosos, macroeconomía y geopolítica que escribe en español.
-
-ALERTA DE MERCADO EXCEPCIONAL: ${metalName} ${direction} un ${absChange}% hoy (${dateStr}). Este es un movimiento fuera de lo normal que merece un artículo dedicado.
+  const prompt = `Eres el analista principal de Metalorix. ALERTA: ${metalName} ${direction} un ${absChange}% hoy (${dateStr}). Movimiento excepcional.
 Precio actual: $${price.toFixed(2)} USD/oz
 
 NOTICIAS RECIENTES:
 ${formatNews(news)}
 
-Escribe un artículo de 400-500 palabras explicando:
-1. Qué ha pasado (el movimiento de precio)
-2. Por qué: contexto geopolítico (conflictos, sanciones, tensiones comerciales), macroeconómico (decisiones de la Fed, datos de empleo, inflación, dólar) o de mercado (demanda industrial, compras de bancos centrales)
-3. Qué significa para los inversores
-4. Niveles clave a vigilar y perspectivas a corto plazo
+REGLAS DE CONTENIDO (OBLIGATORIAS):
 
-FORMATO: párrafos normales, ## para secciones. Tono profesional, datos concretos.
-NO incluyas título. NO uses primera persona.
-CRÍTICO: NO insertes enlaces externos (URLs http/https) en el cuerpo del artículo. Los nombres de fuentes van como texto plano. Los ÚNICOS enlaces permitidos son internos al glosario: [término](/learn/glossary/slug).
+1. EXPLICA LA CAUSA REAL con detalle:
+   - Qué evento específico disparó el movimiento (nombre, fecha, cifra)
+   - Quién lo provocó (qué gobierno, banco central, empresa, dato)
+   - Cómo se transmitió al mercado (vía dólar, vía tipos reales, vía demanda física, vía ETFs)
+
+2. CONTEXTO QUE OTROS NO DAN:
+   - ¿Es este nivel un máximo/mínimo de cuánto tiempo?
+   - ¿Cuándo fue la última vez que ${metalName.toLowerCase()} se movió así y qué pasó después?
+   - ¿Qué están haciendo los grandes (CFTC net longs, flujos de GLD/SLV, compras de bancos centrales)?
+   - ¿Cómo se compara con otros metales? ¿El movimiento es aislado o coordinado?
+
+3. IMPLICACIONES PRÁCTICAS para el inversor:
+   - Niveles clave: soporte, resistencia, medias móviles a vigilar
+   - Escenarios: qué pasa si continúa, qué pasa si revierte
+   - Próximos catalizadores (datos, eventos, vencimientos)
+
+4. ESTRUCTURA:
+   - Párrafo de apertura: qué pasó, cifra, causa en 2-3 frases impactantes
+   - ## Qué Ha Provocado el Movimiento
+   - ## Niveles Técnicos y Perspectiva
+   - ## Qué Vigilar Ahora
+
+5. 450-600 palabras. Sin relleno. Cada frase aporta valor.
+   - NO incluyas título. NO uses primera persona.
+   - NO enlaces externos en el cuerpo. Solo glosario: [término](/learn/glossary/slug)
 ${glossaryInstructions}
 
-INSTRUCCIONES SEO Y FUENTES (MUY IMPORTANTE):
-Debes devolver tu respuesta como un JSON válido con esta estructura exacta:
-
+Devuelve JSON:
 {
-  "titulo_seo": "Título para CTR (50-65 caracteres). Movimiento + causa. Ejemplos: '${metalName} se dispara ${absChange}% por sanciones a Rusia', '${metalName} cae ${absChange}% tras subida de tipos de la Fed', 'Desplome del ${metalName.toLowerCase()}: inversores huyen a bonos'. Incluye el % y la causa.",
-  "meta_descripcion": "Metadescripción para CTR (140-155 caracteres). Precio actual + variación + causa + qué significa. Ejemplo: '${metalName} cotiza a $X tras subir ${absChange}%. [Causa]. Análisis y niveles clave para inversores.'",
-  "palabras_clave_url": "3-6 palabras clave para la URL sin fecha. Ejemplo: '${metalName.toLowerCase()} ${direction} ${absChange} sanciones rusia' o '${metalName.toLowerCase()} caida tipos interes fed'. Solo palabras relevantes.",
-  "contenido": "El artículo completo aquí (400-500 palabras con formato ## para secciones). NO incluyas la sección de fuentes aquí.",
-  "fuentes": [{"titulo": "Título descriptivo de la fuente", "url": "URL completa de la noticia original"}]
+  "titulo_seo": "50-65 chars. ${metalName} + movimiento + causa específica. NUNCA genérico.",
+  "meta_descripcion": "140-155 chars. Precio + variación + causa + qué hacer.",
+  "palabras_clave_url": "3-6 palabras relevantes sin fecha.",
+  "contenido": "Artículo completo. SIN fuentes aquí.",
+  "fuentes": [{"titulo": "...", "url": "..."}]
 }
 
-IMPORTANTE sobre fuentes:
-- Incluye en "fuentes" las noticias originales que hayas utilizado
-- Usa las URLs proporcionadas en las noticias de arriba
-- Mínimo 2 fuentes, máximo 5
-
-Devuelve SOLO el JSON, sin texto adicional antes o después. No envuelvas en bloques de código.`;
+Fuentes: 2-5. Devuelve SOLO JSON.`;
 
   const raw = await generateText(prompt);
   if (!raw) return null;
@@ -785,49 +801,55 @@ export async function generateWeeklySummary(): Promise<{
   weekStart.setDate(today.getDate() - 7);
   const weekRange = `${weekStart.toLocaleDateString("es-ES", { day: "numeric", month: "long" })} — ${today.toLocaleDateString("es-ES", { day: "numeric", month: "long", year: "numeric" })}`;
 
-  const prompt = `Eres un analista experto en metales preciosos, macroeconomía y geopolítica que escribe en español.
-
-Escribe un ANÁLISIS SEMANAL del mercado de metales preciosos.
+  const prompt = `Eres el analista principal de Metalorix. Escribe el INFORME SEMANAL del mercado de metales preciosos.
 Semana: ${weekRange}
 
-PRECIOS ACTUALES:
+PRECIOS ACTUALES (cierre semanal):
 ${formatPrices(prices)}
 
 NOTICIAS DE LA SEMANA:
 ${formatNews(news)}
 
-INSTRUCCIONES PARA EL CONTENIDO:
-- 700-900 palabras
-- Estructura:
-  1. Resumen ejecutivo de la semana (qué ha dominado)
-  2. Análisis por metal con datos concretos y niveles de soporte/resistencia
-  3. Contexto geopolítico: conflictos, sanciones, tensiones comerciales, aranceles, relaciones entre potencias
-  4. Contexto macroeconómico: decisiones de bancos centrales (Fed, BCE, etc.), datos de empleo, inflación, evolución del dólar, rendimientos de bonos
-  5. Perspectiva para la próxima semana: qué vigilar, eventos clave programados
-- Conecta SIEMPRE los movimientos con causas reales del mundo
-- Usa ## para títulos de sección
-- Tono: profesional, analítico, basado en hechos
-- NO incluyas título. NO uses primera persona.
-- CRÍTICO: NO insertes enlaces externos (URLs http/https) en el cuerpo del artículo. Los nombres de fuentes van como texto plano. Los ÚNICOS enlaces permitidos son internos al glosario: [término](/learn/glossary/slug).
+REGLAS DE CONTENIDO (OBLIGATORIAS):
+
+1. VISIÓN ESTRATÉGICA, NO RESUMEN DE TITULARES:
+   - El semanal debe dar perspectiva que el día a día no puede: tendencias, cambios estructurales, rotaciones
+   - Identifica el TEMA DOMINANTE de la semana (no solo precios): ¿fue la Fed? ¿China? ¿geopolítica? ¿demanda industrial?
+   - Compara: ¿la semana fue consistente con la tendencia mensual o hubo ruptura?
+
+2. DATOS CONCRETOS en cada sección:
+   - Variación semanal por metal (%) y comparativa con semana anterior
+   - Ratio oro/plata actual y tendencia
+   - Flujos de ETFs si las noticias los mencionan
+   - Compras de bancos centrales (quién, cuánto, contexto)
+   - Niveles técnicos: soportes, resistencias, medias de 50 y 200 sesiones
+   - Datos macro clave publicados esta semana con cifras
+
+3. ESTRUCTURA:
+   - ## Resumen Ejecutivo — qué dominó la semana, en 3-4 frases con datos
+   - ## Oro — análisis con niveles, drivers, flujos
+   - ## Plata — correlación con oro, demanda industrial, ratio
+   - ## Platino y Paladio — si relevante
+   - ## Macro y Geopolítica — eventos de la semana que movieron mercados
+   - ## Próxima Semana — eventos clave con FECHAS (reuniones Fed/BCE, datos macro, vencimientos, discursos)
+
+4. 800-1000 palabras. Cada párrafo debe aportar un dato, insight o conexión nueva.
+
+5. TONO: Informe estratégico de calidad institucional, accesible para inversores minoristas.
+   - NO incluyas título. NO uses primera persona.
+   - NO enlaces externos en el cuerpo. Solo glosario: [término](/learn/glossary/slug)
 ${glossaryInstructions}
 
-INSTRUCCIONES SEO Y FUENTES (MUY IMPORTANTE):
-Debes devolver tu respuesta como un JSON válido con esta estructura exacta:
-
+Devuelve JSON:
 {
-  "titulo_seo": "Título para CTR (50-65 caracteres). Resultado semanal + causa. Ejemplos: 'Oro sube 4% en la semana: récord por compras de China', 'Plata lidera con +6% por demanda industrial', 'Oro y platino caen en semana de la Fed'. Incluye % o dato concreto.",
-  "meta_descripcion": "Metadescripción para CTR (140-155 caracteres). Variaciones semanales por metal + factor dominante + qué esperar. Ejemplo: 'Oro +4%, plata +6%, platino -1%. La Fed y China marcan la semana. Resumen y perspectivas.'",
-  "palabras_clave_url": "3-6 palabras clave para la URL sin fecha. Ejemplo: 'oro maximos historicos compras china' o 'plata sube demanda industrial semana'. Solo palabras relevantes.",
-  "contenido": "El artículo completo aquí (700-900 palabras con formato ## para secciones). NO incluyas la sección de fuentes aquí.",
-  "fuentes": [{"titulo": "Título descriptivo de la fuente", "url": "URL completa de la noticia original"}]
+  "titulo_seo": "50-65 chars. Resultado semanal con dato concreto. Ej: 'Oro +3% en la semana: China compra 50t y la Fed pausa tipos'. NUNCA genérico.",
+  "meta_descripcion": "140-155 chars. Variaciones semanales + tema dominante + próxima semana.",
+  "palabras_clave_url": "3-6 palabras sin fecha.",
+  "contenido": "Informe completo (800-1000 palabras). SIN fuentes aquí.",
+  "fuentes": [{"titulo": "...", "url": "..."}]
 }
 
-IMPORTANTE sobre fuentes:
-- Incluye en "fuentes" las noticias originales que hayas utilizado
-- Usa las URLs proporcionadas en las noticias de arriba
-- Mínimo 3 fuentes, máximo 8
-
-Devuelve SOLO el JSON, sin texto adicional antes o después. No envuelvas en bloques de código.`;
+Fuentes: 3-8. Devuelve SOLO JSON.`;
 
   const raw = await generateText(prompt);
   if (!raw) return null;
