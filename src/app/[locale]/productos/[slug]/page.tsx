@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
-import { Link } from "@/i18n/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
+import { Link, getPathname } from "@/i18n/navigation";
 import { getTranslations, getLocale } from "next-intl/server";
 import { getAlternates, buildMetaTitle } from "@/lib/seo/alternates";
 import { PRODUCTS, getProduct, getLocalizedProducts } from "@/lib/data/products";
-import { getAllLocalizedSlugsForBase, getBaseProductSlug } from "@/lib/data/product-slugs";
+import { getAllLocalizedSlugsForBase, getBaseProductSlug, getLocalizedProductSlug } from "@/lib/data/product-slugs";
 import { ProductSpotPrice } from "@/components/products/ProductSpotPrice";
 import { TaxByCountrySelector } from "@/components/products/TaxByCountrySelector";
 import type { MetalSymbol } from "@/lib/providers/metals";
@@ -153,6 +153,14 @@ export default async function ProductoPage({
   if (!product) notFound();
 
   const baseSlug = getBaseProductSlug(params.slug, locale);
+  const expectedSlug = getLocalizedProductSlug(baseSlug, locale);
+  if (params.slug !== expectedSlug) {
+    const correctPath = getPathname({
+      locale: locale as Locale,
+      href: { pathname: "/productos/[slug]" as const, params: { slug: expectedSlug } },
+    });
+    permanentRedirect(correctPath);
+  }
 
   const allProducts = getLocalizedProducts(locale);
   const relatedProducts = allProducts.filter(
