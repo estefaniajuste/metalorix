@@ -205,11 +205,21 @@ export default async function ProductoPage({
     const metalSpot = prices.find((p) => p.symbol === product.symbol);
     if (metalSpot) {
       const metalValue = metalSpot.price * product.fineWeightOz;
+      const imageParams = new URLSearchParams({
+        name: product.name,
+        metal: product.metal === "oro" ? "gold" : "silver",
+        type: product.type === "moneda" ? "coin" : "bar",
+        weight: `${product.fineWeightOz} oz`,
+        purity: product.purityLabel.split(" ")[0],
+        mint: product.mint,
+      });
+      const imageUrl = `https://metalorix.com/api/product-image?${imageParams.toString()}`;
       productJsonLd = productSchema({
         name: product.name,
         description: product.description.slice(0, 300),
         brand: product.mint,
         url: productAlternates.canonical as string,
+        image: imageUrl,
         weightG: product.grossWeightG,
         material: product.metal === "oro" ? "Gold" : "Silver",
         priceCurrency: "USD",

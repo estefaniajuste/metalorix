@@ -12,7 +12,7 @@ export default function robots(): MetadataRoute.Robots {
     rules: [
       {
         userAgent: "*",
-        allow: ["/", "/api/sitemap", "/api/feed"],
+        allow: ["/", "/api/sitemap", "/api/feed", "/api/product-image"],
         disallow: [
           "/api/",
           ...uniquePanelPaths.map((p) => `${p}/`),

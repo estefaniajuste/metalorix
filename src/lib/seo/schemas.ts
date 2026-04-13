@@ -119,6 +119,7 @@ export function productSchema(opts: {
   description: string;
   brand: string;
   url: string;
+  image: string;
   weightG: number;
   material: string;
   priceCurrency: string;
@@ -131,6 +132,7 @@ export function productSchema(opts: {
     "@type": "Product",
     name: opts.name,
     description: opts.description,
+    image: opts.image,
     brand: { "@type": "Brand", name: opts.brand },
     material: opts.material,
     weight: {
@@ -148,6 +150,38 @@ export function productSchema(opts: {
       availability: "https://schema.org/InStock",
       priceValidUntil: tomorrow,
       url: opts.url,
+      shippingDetails: {
+        "@type": "OfferShippingDetails",
+        shippingRate: {
+          "@type": "MonetaryAmount",
+          value: "0",
+          currency: opts.priceCurrency,
+        },
+        shippingDestination: {
+          "@type": "DefinedRegion",
+          addressCountry: "US",
+        },
+        deliveryTime: {
+          "@type": "ShippingDeliveryTime",
+          handlingTime: {
+            "@type": "QuantitativeValue",
+            minValue: 0,
+            maxValue: 0,
+            unitCode: "DAY",
+          },
+          transitTime: {
+            "@type": "QuantitativeValue",
+            minValue: 0,
+            maxValue: 0,
+            unitCode: "DAY",
+          },
+        },
+      },
+      hasMerchantReturnPolicy: {
+        "@type": "MerchantReturnPolicy",
+        applicableCountry: "US",
+        returnPolicyCategory: "https://schema.org/MerchantReturnNotPermitted",
+      },
     },
   };
 }
