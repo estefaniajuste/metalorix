@@ -130,6 +130,7 @@ export default async function LocaleLayout({
   return (
     <html lang={locale} dir={isRtl ? "rtl" : "ltr"} suppressHydrationWarning>
       <head>
+        <meta name="impact-site-verification" content="32e0b93a-2315-4d86-904c-53db53e7bf33" />
         <link rel="alternate" type="application/rss+xml" title={`Metalorix — ${tNav("news")}`} href="/feed.xml" />
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
         <link rel="preconnect" href="https://www.googletagmanager.com" crossOrigin="anonymous" />
