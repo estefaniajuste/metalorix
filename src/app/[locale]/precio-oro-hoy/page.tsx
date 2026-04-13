@@ -4,6 +4,7 @@ import { getTranslations, getLocale } from "next-intl/server";
 import { getAlternates } from "@/lib/seo/alternates";
 import { breadcrumbSchema, faqSchema } from "@/lib/seo/schemas";
 import { MetalPageContent } from "@/components/dashboard/MetalPageContent";
+import { DEALERS, getDealerOutboundUrl, FEATURED_AFFILIATE_DEALERS } from "@/lib/data/dealers";
 
 export async function generateMetadata({
   params,
@@ -88,6 +89,55 @@ export default async function PrecioOroHoyPage() {
         </p>
 
         <MetalPageContent symbol="XAU" />
+
+        {(() => {
+          const goldDealers = DEALERS.filter(
+            (d) =>
+              d.affiliateUrl &&
+              (FEATURED_AFFILIATE_DEALERS as readonly string[]).includes(d.id) &&
+              d.metals.includes("XAU"),
+          ).slice(0, 4);
+          if (goldDealers.length === 0) return null;
+          return (
+            <div className="mt-8 bg-gradient-to-r from-brand-gold/5 to-transparent border border-brand-gold/20 rounded-DEFAULT p-6">
+              <div className="flex items-center gap-2 mb-1">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#D6B35A" strokeWidth="2" strokeLinecap="round">
+                  <circle cx="9" cy="21" r="1" /><circle cx="20" cy="21" r="1" />
+                  <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
+                </svg>
+                <h2 className="text-lg font-bold text-content-0">{t("buyGoldTitle")}</h2>
+              </div>
+              <p className="text-xs text-content-3 mb-4">{t("buyGoldDesc")}</p>
+              <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
+                {goldDealers.map((d) => {
+                  const url = getDealerOutboundUrl(d, "gold-price-cta");
+                  if (!url) return null;
+                  return (
+                    <a
+                      key={d.id}
+                      href={url}
+                      target="_blank"
+                      rel="noopener sponsored"
+                      className="flex items-center gap-3 px-4 py-3 rounded-sm bg-surface-1 border border-border hover:border-brand-gold/40 transition-colors group"
+                    >
+                      <span className="w-9 h-9 rounded-sm bg-brand-gold/10 flex items-center justify-center text-sm font-bold text-brand-gold flex-shrink-0">
+                        {d.name.charAt(0)}
+                      </span>
+                      <div className="min-w-0">
+                        <span className="text-sm font-semibold text-content-0 group-hover:text-brand-gold transition-colors block truncate">{d.name}</span>
+                        <span className="text-[10px] text-content-3">{t("buyGoldCta")}</span>
+                      </div>
+                      <svg className="ml-auto w-4 h-4 text-content-3 group-hover:text-brand-gold transition-colors flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                        <polyline points="9 18 15 12 9 6" />
+                      </svg>
+                    </a>
+                  );
+                })}
+              </div>
+              <p className="text-[9px] text-content-3/60 mt-3">{t("buyGoldDisclosure")}</p>
+            </div>
+          );
+        })()}
 
         <div className="mt-12 grid grid-cols-1 lg:grid-cols-2 gap-6">
           <div className="bg-surface-1 border border-border rounded-DEFAULT p-6">

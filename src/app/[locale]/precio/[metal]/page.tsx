@@ -12,7 +12,7 @@ import {
   getAllMetalSlugs,
   getLocalizedMetalSlug,
 } from "@/lib/utils/metal-slugs";
-import { DEALER_COUNTRIES, getDealersByCountry } from "@/lib/data/dealers";
+import { DEALER_COUNTRIES, getDealersByCountry, getDealerOutboundUrl, DEALERS, FEATURED_AFFILIATE_DEALERS } from "@/lib/data/dealers";
 import { SetLocalePathOverrides } from "@/components/layout/SetLocalePathOverrides";
 import { routing } from "@/i18n/routing";
 import { getLocalizedClusterSlug } from "@/lib/learn/slug-i18n";
@@ -138,15 +138,24 @@ function JsonLd({ slug, locale, canonicalUrl }: { slug: string; locale: string; 
 function WhereToBuyBlock({
   locale,
   metalName,
+  metalSymbol,
   t,
 }: {
   locale: string;
   metalName: string;
+  metalSymbol?: string;
   t: Awaited<ReturnType<typeof getTranslations<"prices">>>;
 }) {
   const featured = DEALER_COUNTRIES.filter(
     (c) => getDealersByCountry(c.code).length > 0
   ).slice(0, 6);
+
+  const affiliateDealers = DEALERS.filter(
+    (d) =>
+      d.affiliateUrl &&
+      (FEATURED_AFFILIATE_DEALERS as readonly string[]).includes(d.id) &&
+      (!metalSymbol || d.metals.includes(metalSymbol as any)),
+  ).slice(0, 3);
 
   return (
     <div className="bg-surface-1 border border-border rounded-DEFAULT p-6 mt-6">
@@ -156,6 +165,40 @@ function WhereToBuyBlock({
       <p className="text-xs text-content-3 mb-4 leading-relaxed">
         {t("whereToBuyDesc")}
       </p>
+
+      {affiliateDealers.length > 0 && (
+        <div className="mb-4 grid gap-2 sm:grid-cols-3">
+          {affiliateDealers.map((d) => {
+            const url = getDealerOutboundUrl(d, "price-page-cta");
+            if (!url) return null;
+            return (
+              <a
+                key={d.id}
+                href={url}
+                target="_blank"
+                rel="noopener sponsored"
+                className="flex items-center gap-2.5 px-3 py-2.5 rounded-sm bg-brand-gold/5 border border-brand-gold/20 hover:border-brand-gold/40 transition-colors group"
+              >
+                <span className="w-8 h-8 rounded-sm bg-surface-2 flex items-center justify-center text-sm font-bold text-brand-gold flex-shrink-0">
+                  {d.name.charAt(0)}
+                </span>
+                <div className="min-w-0">
+                  <span className="text-xs font-semibold text-content-0 group-hover:text-brand-gold transition-colors block truncate">
+                    {d.name}
+                  </span>
+                  <span className="text-[10px] text-content-3">{t("buyNow")}</span>
+                </div>
+                <svg className="ml-auto w-3.5 h-3.5 text-content-3 group-hover:text-brand-gold transition-colors flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+                  <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                  <polyline points="15 3 21 3 21 9" />
+                  <line x1="10" y1="14" x2="21" y2="3" />
+                </svg>
+              </a>
+            );
+          })}
+        </div>
+      )}
+
       <div className="flex flex-wrap gap-2 mb-4">
         {featured.map((c) => {
           const slug = c.slug[locale] ?? c.slug.en;
@@ -174,15 +217,20 @@ function WhereToBuyBlock({
           );
         })}
       </div>
-      <Link
-        href="/donde-comprar"
-        className="text-xs font-semibold text-brand-gold hover:brightness-110 transition-colors flex items-center gap-1"
-      >
-        {t("whereToBuyCta")}
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
-          <polyline points="9 18 15 12 9 6" />
-        </svg>
-      </Link>
+      <div className="flex items-center justify-between">
+        <Link
+          href="/donde-comprar"
+          className="text-xs font-semibold text-brand-gold hover:brightness-110 transition-colors flex items-center gap-1"
+        >
+          {t("whereToBuyCta")}
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+            <polyline points="9 18 15 12 9 6" />
+          </svg>
+        </Link>
+        {affiliateDealers.length > 0 && (
+          <span className="text-[9px] text-content-3/60">{t("affiliateDisclosure")}</span>
+        )}
+      </div>
     </div>
   );
 }
@@ -337,7 +385,7 @@ export default async function PrecioMetalPage({
                 </div>
               </div>
 
-              <WhereToBuyBlock locale={locale} metalName={seo.name} t={t} />
+              <WhereToBuyBlock locale={locale} metalName={seo.name} metalSymbol={seo.symbol} t={t} />
 
               {METAL_LEARN_LINKS[seo.slug] && METAL_LEARN_LINKS[seo.slug].length > 0 && (
                 <div className="bg-surface-1 border border-border rounded-DEFAULT p-6 mt-6">

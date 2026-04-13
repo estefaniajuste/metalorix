@@ -1,6 +1,6 @@
 import { Link } from "@/i18n/navigation";
 import type { Dealer } from "@/lib/data/dealers";
-import { slugifyDealer, slugifyCity } from "@/lib/data/dealers";
+import { slugifyDealer, slugifyCity, getDealerOutboundUrl } from "@/lib/data/dealers";
 
 const METAL_LABELS: Record<string, string> = {
   XAU: "Au",
@@ -134,21 +134,30 @@ export function DealerCard({ dealer, locale, countrySlug, t }: DealerCardProps) 
             </svg>
           </Link>
         )}
-        {dealer.website && (
-          <a
-            href={dealer.website}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 text-xs font-semibold text-content-2 hover:text-content-0 transition-colors"
-          >
-            {t.visitWebsite}
-            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
-              <polyline points="15 3 21 3 21 9" />
-              <line x1="10" y1="14" x2="21" y2="3" />
-            </svg>
-          </a>
-        )}
+        {(() => {
+          const outbound = getDealerOutboundUrl(dealer);
+          if (!outbound) return null;
+          const isAffiliate = !!dealer.affiliateUrl;
+          return (
+            <a
+              href={outbound}
+              target="_blank"
+              rel={isAffiliate ? "noopener sponsored" : "noopener noreferrer"}
+              className={`inline-flex items-center gap-1.5 text-xs font-semibold transition-colors ${
+                isAffiliate
+                  ? "text-brand-gold hover:text-brand-gold/80"
+                  : "text-content-2 hover:text-content-0"
+              }`}
+            >
+              {t.visitWebsite}
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                <polyline points="15 3 21 3 21 9" />
+                <line x1="10" y1="14" x2="21" y2="3" />
+              </svg>
+            </a>
+          );
+        })()}
       </div>
     </article>
   );

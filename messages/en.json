@@ -314,10 +314,10 @@
       "ogDescription": "Profiles of the leading gold and silver coins and bars: purity, premium over spot, liquidity and taxation."
     },
     "precioOroHoy": {
-      "title": "Gold Price Today in Real Time — XAU/USD Quote | Metalorix",
-      "description": "Gold price today updated in real time. XAU/USD quote, interactive chart, daily change, price per gram and kilogram.",
-      "ogTitle": "Gold Price Today — Metalorix",
-      "ogDescription": "Real-time gold quote. Chart, price per gram and daily change."
+      "title": "Gold Price Today — Live XAU/USD Chart & Data | Metalorix",
+      "description": "Live gold price today with real-time XAU/USD chart, daily change %, price per gram, ounce and kilogram. Free alerts and where to buy.",
+      "ogTitle": "Gold Price Today — Live Chart | Metalorix",
+      "ogDescription": "Live gold price with real-time chart, daily change and price per gram. Set free alerts."
     },
     "precioGramoOro": {
       "title": "Gold Price Per Gram Today in EUR and USD — Metalorix",
@@ -474,6 +474,8 @@
     "whereToBuyTitle": "Where to buy {metal}",
     "whereToBuyDesc": "Find verified dealers and trusted stores in your country.",
     "whereToBuyCta": "View all countries",
+    "buyNow": "Visit store",
+    "affiliateDisclosure": "Some links may earn us a commission",
     "relatedSearches": "Related searches",
     "deeperDive": "Learn about {metal}"
   },
@@ -757,6 +759,10 @@
     "roiCalcDesc": "Simulate past investments",
     "alertsLink": "Price alerts",
     "alertsLinkDesc": "Get email notifications",
+    "buyGoldTitle": "Buy Gold Online",
+    "buyGoldDesc": "Trusted dealers with competitive premiums and worldwide shipping.",
+    "buyGoldCta": "Visit store",
+    "buyGoldDisclosure": "Some links are affiliate links — we may earn a commission at no extra cost to you.",
     "faqTitle": "Frequently asked questions about gold",
     "faq1Q": "What is the gold spot price?",
     "faq1A": "The spot price is the current market price at which gold can be bought or sold for immediate delivery. It is set by trading on global exchanges like COMEX and LBMA and updates every few seconds during market hours.",
@@ -1319,8 +1325,8 @@
     "faq3a": "When {currency} is strong relative to USD, {metal} becomes cheaper in {code} terms, which can be a good buying opportunity. Conversely, a weak {currency} means you pay more per ounce. Tracking the {metal}/{code} price helps you time purchases based on local purchasing power."
   },
   "comparisons": {
-    "btcTitle": "Gold vs Bitcoin",
-    "btcDescription": "Complete comparison between gold and Bitcoin as investment assets. Volatility, history, regulation and performance.",
+    "btcTitle": "Gold vs Bitcoin: Which Is the Better Investment?",
+    "btcDescription": "Gold vs Bitcoin compared side by side: live prices, returns, volatility and risk. Data-driven analysis to help you decide where to invest.",
     "btcIntro": "Gold and Bitcoin are the two most debated safe-haven assets of the 21st century. Both share the characteristic of limited supply, but differ radically in history, volatility and institutional adoption.",
     "sp500Title": "Gold vs S&P 500",
     "sp500Description": "Comparison between gold and the S&P 500 index as long-term investment strategies.",
@@ -1460,8 +1466,8 @@
     "disclaimer": "This index is for informational purposes only and does not constitute financial advice or a buy/sell recommendation. Commodity markets are highly volatile. Only invest what you can afford to lose."
   },
   "dealers": {
-    "pageTitle": "Where to Buy and Sell Precious Metals",
-    "pageDesc": "Directory of verified dealers and stores to buy gold, silver, platinum and palladium in your country. Trusted online platforms and physical stores.",
+    "pageTitle": "Where to Buy Gold & Silver — Trusted Dealers by Country",
+    "pageDesc": "Find the best gold and silver dealers near you. 80+ verified dealers in 25 countries: online platforms, mints and physical stores compared.",
     "breadcrumb": "Where to buy",
     "countriesTitle": "Select your country",
     "countriesDesc": "Find precious metals dealers in your country: from major online platforms to specialist physical stores.",
@@ -1480,7 +1486,7 @@
     "backToCountries": "View all countries",
     "noResults": "No dealers match the selected filter.",
     "disclaimer": "Important disclaimer",
-    "disclaimerText": "Metalorix lists these dealers for informational purposes only. We do not receive commission from links, we do not guarantee service availability or accuracy of information. We recommend verifying directly with the dealer before conducting any transaction. Investing in precious metals carries risks.",
+    "disclaimerText": "Metalorix lists these dealers for informational purposes. Some links are affiliate links, meaning we may earn a commission at no extra cost to you. We do not guarantee service availability or accuracy of information. We recommend verifying directly with the dealer before conducting any transaction. Investing in precious metals carries risks.",
     "seoKeywords": "where to buy gold, where to buy silver, precious metals dealers, buy physical gold, gold stores",
     "allMetals": "All metals",
     "verified": "Verified",

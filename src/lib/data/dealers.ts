@@ -8,11 +8,39 @@ export interface Dealer {
   type: DealerType;
   metals: MetalSymbol[];
   website?: string;
+  affiliateUrl?: string;
   description: Partial<Record<string, string>>;
   city?: string;
   featured?: boolean;
   verified?: boolean;
 }
+
+/**
+ * Returns the best outbound URL for a dealer: affiliate link (with UTM) if
+ * available, otherwise the plain website. Returns undefined when neither exists.
+ */
+export function getDealerOutboundUrl(
+  dealer: Dealer,
+  utmContent = "dealer-card",
+): string | undefined {
+  if (dealer.affiliateUrl) {
+    const sep = dealer.affiliateUrl.includes("?") ? "&" : "?";
+    return `${dealer.affiliateUrl}${sep}utm_source=metalorix&utm_medium=affiliate&utm_content=${utmContent}`;
+  }
+  return dealer.website;
+}
+
+/** Dealers that have an active affiliate programme. */
+export const FEATURED_AFFILIATE_DEALERS = [
+  "apmex",
+  "jmbullion",
+  "sdbullion",
+  "bullionvault",
+  "goldavenue-fr",
+  "silvergoldbull-ca",
+  "bullionbypost",
+  "bitpanda",
+] as const;
 
 export interface DealerCountry {
   code: string;
@@ -328,6 +356,7 @@ export const DEALERS: Dealer[] = [
     type: "online",
     metals: ["XAU", "XAG", "XPT", "XPD"],
     website: "https://www.apmex.com",
+    affiliateUrl: "https://www.apmex.com",
     featured: true,
     verified: true,
     description: {
@@ -346,6 +375,7 @@ export const DEALERS: Dealer[] = [
     type: "online",
     metals: ["XAU", "XAG", "XPT", "XPD"],
     website: "https://www.jmbullion.com",
+    affiliateUrl: "https://www.jmbullion.com",
     featured: true,
     description: {
       es: "Una de las principales plataformas online de lingotes de EE.UU., conocida por sus bajos precios y envíos rápidos.",
@@ -360,6 +390,7 @@ export const DEALERS: Dealer[] = [
     type: "online",
     metals: ["XAU", "XAG", "XPT"],
     website: "https://www.sdbullion.com",
+    affiliateUrl: "https://www.sdbullion.com",
     description: {
       es: "Dealer online americano especializado en lingotes a precios spot muy ajustados.",
       en: "American online dealer specialising in bullion at very tight spot prices.",
@@ -386,6 +417,7 @@ export const DEALERS: Dealer[] = [
     type: "online",
     metals: ["XAU", "XAG", "XPT"],
     website: "https://www.bullionbypost.co.uk",
+    affiliateUrl: "https://www.bullionbypost.co.uk",
     featured: true,
     description: {
       es: "El mayor dealer online de metales preciosos del Reino Unido, con millones de pedidos enviados.",
@@ -583,6 +615,7 @@ export const DEALERS: Dealer[] = [
     type: "online",
     metals: ["XAU", "XAG", "XPT", "XPD"],
     website: "https://www.bitpanda.com/en/metals",
+    affiliateUrl: "https://www.bitpanda.com/en/metals",
     featured: true,
     description: {
       es: "La mayor plataforma europea de inversión digital, con sede en Viena, permite comprar fracciones de metales preciosos físicos almacenados en bóvedas certificadas.",
@@ -768,6 +801,7 @@ export const DEALERS: Dealer[] = [
     type: "online",
     metals: ["XAU", "XAG", "XPT", "XPD"],
     website: "https://www.goldavenue.com",
+    affiliateUrl: "https://www.goldavenue.com",
     description: {
       es: "Plataforma online de MKS PAMP Group para comprar y almacenar metales preciosos en bóvedas suizas, disponible para clientes franceses.",
       en: "MKS PAMP Group's online platform to buy and store precious metals in Swiss vaults, available for French customers.",
@@ -1054,6 +1088,7 @@ export const DEALERS: Dealer[] = [
     type: "online",
     metals: ["XAU", "XAG", "XPT"],
     website: "https://www.silvergoldbull.ca",
+    affiliateUrl: "https://www.silvergoldbull.ca",
     description: {
       es: "Dealer online canadiense con precios muy competitivos y amplia selección de monedas y lingotes con envío a todo Canadá.",
       en: "Canadian online dealer with very competitive prices and wide selection of coins and bars with shipping across Canada.",
@@ -1082,6 +1117,7 @@ export const DEALERS: Dealer[] = [
     type: "online",
     metals: ["XAU", "XAG", "XPT"],
     website: "https://www.bullionvault.com",
+    affiliateUrl: "https://www.bullionvault.com",
     featured: true,
     verified: true,
     description: {

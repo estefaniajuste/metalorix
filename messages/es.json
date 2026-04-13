@@ -314,10 +314,10 @@
       "ogDescription": "Fichas de las principales monedas y lingotes de oro y plata: pureza, prima sobre spot, liquidez y fiscalidad."
     },
     "precioOroHoy": {
-      "title": "Precio del oro hoy — Cotización XAU/USD | Metalorix",
-      "description": "Precio del oro hoy actualizado en tiempo real. Cotización XAU/USD, gráfico interactivo, variación diaria, precio por gramo y kilogramo.",
-      "ogTitle": "Precio del oro hoy — Metalorix",
-      "ogDescription": "Cotización del oro en tiempo real. Gráfico, precio por gramo y variación diaria."
+      "title": "Precio del oro hoy — Gráfico XAU/USD en vivo | Metalorix",
+      "description": "Precio del oro hoy con gráfico XAU/USD en tiempo real, variación diaria %, precio por gramo, onza y kilogramo. Alertas gratis y dónde comprar.",
+      "ogTitle": "Precio del oro hoy — Gráfico en vivo | Metalorix",
+      "ogDescription": "Precio del oro en tiempo real con gráfico, variación diaria y precio por gramo. Alertas gratis."
     },
     "precioGramoOro": {
       "title": "Precio del gramo de oro hoy en euros y dólares — Metalorix",
@@ -474,6 +474,8 @@
     "whereToBuyTitle": "Dónde comprar {metal}",
     "whereToBuyDesc": "Encuentra dealers verificados y tiendas de confianza en tu país.",
     "whereToBuyCta": "Ver todos los países",
+    "buyNow": "Visitar tienda",
+    "affiliateDisclosure": "Algunos enlaces pueden generar comisión",
     "relatedSearches": "Búsquedas relacionadas",
     "deeperDive": "Aprende sobre {metal}"
   },
@@ -757,6 +759,10 @@
     "roiCalcDesc": "Simula inversiones pasadas",
     "alertsLink": "Alertas de precio",
     "alertsLinkDesc": "Recibe avisos por email",
+    "buyGoldTitle": "Comprar oro online",
+    "buyGoldDesc": "Dealers de confianza con primas competitivas y envío mundial.",
+    "buyGoldCta": "Visitar tienda",
+    "buyGoldDisclosure": "Algunos enlaces son de afiliado — podemos recibir una comisión sin coste adicional para ti.",
     "faqTitle": "Preguntas frecuentes sobre el oro",
     "faq1Q": "¿Qué es el precio spot del oro?",
     "faq1A": "El precio spot es el precio de mercado actual al que se puede comprar o vender oro para entrega inmediata. Se establece mediante la negociación en mercados globales como COMEX y LBMA y se actualiza cada pocos segundos durante el horario de mercado.",
@@ -1319,8 +1325,8 @@
     "faq3a": "Cuando el {currency} está fuerte frente al USD, el {metal} resulta más barato en {code}, lo que puede ser una buena oportunidad de compra. Por el contrario, un {currency} débil implica pagar más por onza. Seguir el precio {metal}/{code} te ayuda a elegir el momento según tu poder adquisitivo local."
   },
   "comparisons": {
-    "btcTitle": "Oro vs Bitcoin",
-    "btcDescription": "Comparación completa entre oro y Bitcoin como activos de inversión. Volatilidad, historia, regulación y rendimiento.",
+    "btcTitle": "Oro vs Bitcoin: ¿Cuál es mejor inversión?",
+    "btcDescription": "Oro vs Bitcoin comparados: precios en vivo, rentabilidad, volatilidad y riesgo. Análisis con datos para decidir dónde invertir.",
     "btcIntro": "Oro y Bitcoin son los dos activos refugio más debatidos del siglo XXI. Ambos comparten la característica de oferta limitada, pero difieren radicalmente en historia, volatilidad y adopción institucional.",
     "sp500Title": "Oro vs S&P 500",
     "sp500Description": "Comparación entre oro y el índice S&P 500 como estrategias de inversión a largo plazo.",
@@ -1460,8 +1466,8 @@
     "disclaimer": "Este índice es meramente informativo y no constituye asesoramiento financiero ni recomendación de compra o venta. Los mercados de materias primas son altamente volátiles. Invierte solo lo que puedas permitirte perder."
   },
   "dealers": {
-    "pageTitle": "Dónde comprar y vender metales preciosos",
-    "pageDesc": "Directorio de dealers y tiendas verificadas para comprar oro, plata, platino y paladio en tu país. Plataformas online y tiendas físicas de confianza.",
+    "pageTitle": "Dónde comprar oro y plata — Dealers por país",
+    "pageDesc": "Encuentra los mejores dealers de oro y plata cerca de ti. Más de 80 dealers verificados en 25 países: plataformas online, cecas y tiendas físicas.",
     "breadcrumb": "Dónde comprar",
     "countriesTitle": "Selecciona tu país",
     "countriesDesc": "Encuentra dealers de metales preciosos en tu país: desde grandes plataformas online hasta tiendas físicas especializadas.",
@@ -1480,7 +1486,7 @@
     "backToCountries": "Ver todos los países",
     "noResults": "No hay dealers que coincidan con el filtro seleccionado.",
     "disclaimer": "Aviso importante",
-    "disclaimerText": "Metalorix incluye estos dealers con fines informativos únicamente. No recibimos comisión por los enlaces, no garantizamos la disponibilidad de los servicios ni la exactitud de la información. Te recomendamos verificar directamente con el dealer antes de realizar cualquier operación. La inversión en metales preciosos conlleva riesgos.",
+    "disclaimerText": "Metalorix incluye estos dealers con fines informativos. Algunos enlaces son enlaces de afiliado, lo que significa que podemos recibir una comisión sin coste adicional para ti. No garantizamos la disponibilidad de los servicios ni la exactitud de la información. Te recomendamos verificar directamente con el dealer antes de realizar cualquier operación. La inversión en metales preciosos conlleva riesgos.",
     "seoKeywords": "dónde comprar oro, dónde comprar plata, dealers metales preciosos, comprar oro físico, tiendas de oro",
     "allMetals": "Todos los metales",
     "verified": "Verificado",
