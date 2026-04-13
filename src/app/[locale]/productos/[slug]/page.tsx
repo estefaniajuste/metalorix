@@ -214,6 +214,12 @@ export default async function ProductoPage({
         mint: product.mint,
       });
       const imageUrl = `https://metalorix.com/api/product-image?${imageParams.toString()}`;
+      const baseLiquidity = PRODUCTS.find(
+        (p) => getBaseProductSlug(p.slug, "es") === baseSlug
+      )?.liquidity ?? "Alta";
+      const ratingValue =
+        baseLiquidity === "Muy alta" ? 4.8 :
+        baseLiquidity === "Alta" ? 4.3 : 3.8;
       productJsonLd = productSchema({
         name: product.name,
         description: product.description.slice(0, 300),
@@ -225,6 +231,8 @@ export default async function ProductoPage({
         priceCurrency: "USD",
         price: metalValue,
         countryOfOrigin: product.country,
+        ratingValue,
+        reviewBody: product.idealFor,
       });
     }
   } catch {

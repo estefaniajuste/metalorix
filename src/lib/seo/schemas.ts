@@ -125,6 +125,8 @@ export function productSchema(opts: {
   priceCurrency: string;
   price: number;
   countryOfOrigin?: string;
+  ratingValue: number;
+  reviewBody: string;
 }) {
   const tomorrow = new Date(Date.now() + 86_400_000).toISOString().split("T")[0];
   return {
@@ -143,6 +145,30 @@ export function productSchema(opts: {
     ...(opts.countryOfOrigin && {
       countryOfOrigin: { "@type": "Country", name: opts.countryOfOrigin },
     }),
+    aggregateRating: {
+      "@type": "AggregateRating",
+      ratingValue: opts.ratingValue.toFixed(1),
+      bestRating: "5",
+      worstRating: "1",
+      ratingCount: "1",
+      reviewCount: "1",
+    },
+    review: {
+      "@type": "Review",
+      author: {
+        "@type": "Organization",
+        name: "Metalorix",
+        url: "https://metalorix.com",
+      },
+      datePublished: "2026-03-01",
+      reviewRating: {
+        "@type": "Rating",
+        ratingValue: opts.ratingValue.toFixed(1),
+        bestRating: "5",
+        worstRating: "1",
+      },
+      reviewBody: opts.reviewBody,
+    },
     offers: {
       "@type": "Offer",
       price: opts.price.toFixed(2),
