@@ -63,13 +63,14 @@ Si cualquiera falla, **alertar al usuario inmediatamente**.
 
 | Pieza | Archivo / ruta |
 |-------|----------------|
-| XML del sitemap | `GET /api/sitemap` → `src/app/api/sitemap/route.ts` |
-| Datos dinámicos (DB) | `GET /api/sitemap-urls` → JSON consumido por el sitemap vía `fetch(NEXT_PUBLIC_URL)` |
+| Sitemap index | `GET /api/sitemap` → `src/app/api/sitemap/route.ts` — devuelve `<sitemapindex>` con 6 sub-sitemaps |
+| Sub-sitemaps | `GET /api/sitemap?s={pages,prices,products,dealers,news,learn}` — cada sección independiente |
+| Datos dinámicos (DB) | `GET /api/sitemap-urls` → JSON con cache en memoria 1h, consumido por sub-sitemaps `news` y `learn` |
 | robots | `src/app/robots.ts` — `Sitemap: https://metalorix.com/api/sitemap`, `Allow` explícitos para `/api/sitemap` y `/api/feed` |
-| Compatibilidad | `src/middleware.ts` — `301` de `/sitemap.xml` (y `/sitemap_index.xml`) hacia `/api/sitemap`; `302` de `/feed.xml` hacia `/api/feed` |
+| Compatibilidad | `src/middleware.ts` — `301` de `/sitemap.xml` (y `/sitemap_index.xml`) hacia `/api/sitemap`; `301` de `/feed.xml` hacia `/api/feed` |
+| Redirects | `src/middleware.ts` — next-intl 307 convertidos a 301 para consolidar link equity |
 | Pings buscadores | `src/lib/seo/ping.ts` — URL del sitemap `https://metalorix.com/api/sitemap` |
-| Glosario en sitemap | `item.type === "glossary"` en `sitemap/route.ts` (paths `/{locale}/.../glossary/{slug}`) |
-| CI post-deploy | `.github/workflows/deploy-cloud-run.yml` — smoke: `/api/sitemap` 200 + XML, robots con `Sitemap`, **fetch a la URL exacta declarada en robots.txt**, home |
+| CI post-deploy | `.github/workflows/deploy-cloud-run.yml` — smoke: `/api/sitemap` 200 + sitemapindex/urlset XML, sub-sitemap pages 200, robots con `Sitemap`, home |
 
 **Reglas Cursor relacionadas:** `.cursor/rules/seo-disabled.mdc`, `.cursor/rules/production-verification.mdc`
 
@@ -86,16 +87,18 @@ curl -sI https://metalorix.com/sitemap.xml | grep -E "HTTP|location"  # 301 → 
 - **Manual GSC:** re-enviar sitemap `https://metalorix.com/api/sitemap` y solicitar indexación de URLs destino donde había 301 antiguos (ver secciones GSC más abajo en este archivo).
 - **Opcional técnico:** alinear `atom:link rel="self"` del RSS (`src/app/api/feed/route.ts`) con `/api/feed` si se quiere coherencia total con el redirect de `/feed.xml`; valorar `301` en `/feed.xml` para igualar el patrón del sitemap.
 - **Rutas nuevas:** al añadir páginas de marketing, incluirlas en `PATHNAMES`/`FREQ_PRIO` de `src/app/api/sitemap/route.ts` (y datos en DB vía `sitemap-urls` si aplica).
-- **Límite:** sitemap ~1063 URLs — por debajo del límite de 50k de Google; si crece mucho, valorar sitemap index.
+- **Sitemap index:** ~9,576 URLs repartidas en 6 sub-sitemaps (pages 182, prices 350, products 98, dealers 798, news 357, learn 7791). Implementado en abril 2026.
 
 ### Memoria al cerrar conversación (abril 2026)
 
 **Ya hecho (no reabrir como bug):**
 
 - Sitemap estable en **`/api/sitemap`**; **`robots.txt`** declara `Sitemap: https://metalorix.com/api/sitemap`.
-- **`/sitemap.xml`** → redirección **301** a `/api/sitemap` (ver `middleware.ts`); feed: **`/feed.xml` → `/api/feed`** (302 en middleware).
-- Contenido dinámico vía **`/api/sitemap-urls`** + `fetch(NEXT_PUBLIC_URL)`; soporte **`glossary`** en el XML.
-- **CI:** `deploy-cloud-run.yml` valida sitemap 200 + XML y la URL exacta del `Sitemap:` en robots tras cada deploy.
+- **`/sitemap.xml`** → redirección **301** a `/api/sitemap` (ver `middleware.ts`); feed: **`/feed.xml` → `/api/feed`** (301 en middleware).
+- Contenido dinámico vía **`/api/sitemap-urls`** + `fetch(NEXT_PUBLIC_URL)` + **cache en memoria 1h**; soporte **`glossary`** en el XML.
+- **Sitemap index** con 6 sub-sitemaps (`?s=pages,prices,products,dealers,news,learn`). Índice responde en ~240ms, secciones estáticas <300ms, dinámicas ~500ms (cacheadas ~120ms).
+- **CI:** `deploy-cloud-run.yml` valida sitemap 200 + sitemapindex XML, sub-sitemap pages 200, y la URL exacta del `Sitemap:` en robots tras cada deploy.
+- **Middleware:** next-intl 307 → 301, `/feed.xml` → 301, `.txt` excluidos del matcher para IndexNow.
 - **Docs:** `AGENTS.md` alineado con redirect 301 del sitemap (commit docs p. ej. `e3b1f94`); **no hubo instrumentación de debug** en código en esa línea de trabajo.
 - Reglas Cursor: `seo-disabled.mdc`, `production-verification.mdc` (verificar producción con curl antes de afirmar que “funciona”).
 
@@ -104,8 +107,8 @@ curl -sI https://metalorix.com/sitemap.xml | grep -E "HTTP|location"  # 301 → 
 | Área | Qué hacer |
 |------|-----------|
 | **GSC (manual)** | Re-enviar sitemap `https://metalorix.com/api/sitemap`; inspeccionar y pedir indexación de URLs **destino** donde antes había 301 (cluster/learn antiguos). |
-| **Opcional código** | RSS: `atom:link rel="self"` en `api/feed/route.ts` aún puede decir `feed.xml`; alinear con realidad (`/api/feed`) si se desea; valorar **301** para `/feed.xml` como el sitemap. |
-| **Nuevas rutas** | Añadir a `PATHNAMES`/`FREQ_PRIO` en `api/sitemap/route.ts` y a `sitemap-urls` si es contenido de DB. |
+| **Opcional código** | RSS: `atom:link rel="self"` en `api/feed/route.ts` aún puede decir `feed.xml`; alinear con realidad (`/api/feed`) si se desea. `/feed.xml` ya redirige 301 a `/api/feed`. |
+| **Nuevas rutas** | Añadir a `PATHNAMES`/`FREQ_PRIO` en `api/sitemap/route.ts` (sección `buildPages`) y a `sitemap-urls` si es contenido de DB. Los sub-sitemaps son: pages, prices, products, dealers, news, learn. |
 | **Backlog producto** | Ver más abajo en este mismo archivo: alertas técnicas, marketplace pospuesto, dealers/outreach, CTR/learn titles, etc. |
 
 **Verificación de un minuto:**
