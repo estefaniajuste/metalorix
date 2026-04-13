@@ -1117,7 +1117,7 @@ export const DEALERS: Dealer[] = [
     type: "online",
     metals: ["XAU", "XAG", "XPT"],
     website: "https://www.bullionvault.com",
-    affiliateUrl: "https://www.bullionvault.com",
+    affiliateUrl: "https://www.bullionvaultaffiliate.com/METALORIX/en",
     featured: true,
     verified: true,
     description: {
