@@ -127,7 +127,11 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL("/api/sitemap", request.url), 301);
   }
 
-  if ((pathname.startsWith("/api/") && !pathname.startsWith("/api/product-image")) || pathname.includes("/opengraph-image")) {
+  if (pathname.startsWith("/api/product-image")) {
+    return NextResponse.next();
+  }
+
+  if (pathname.startsWith("/api/") || pathname.includes("/opengraph-image")) {
     const response = NextResponse.next();
     response.headers.set("X-Robots-Tag", "noindex");
     return response;
