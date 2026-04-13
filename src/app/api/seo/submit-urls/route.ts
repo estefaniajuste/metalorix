@@ -11,6 +11,7 @@ import {
 import { eq, desc, inArray, isNotNull } from "drizzle-orm";
 import { pingSearchEngines, pingIndexNow } from "@/lib/seo/ping";
 import { DEALER_COUNTRIES, DEALER_BASE_PATHS, getCitiesByCountry } from "@/lib/data/dealers";
+import { getLocalizedProductSlug } from "@/lib/data/product-slugs";
 
 const BASE = "https://metalorix.com";
 const CRON_SECRET = process.env.CRON_SECRET;
@@ -96,6 +97,22 @@ export async function POST(request: NextRequest) {
     urls.push(
       ...allLocaleUrls({ pathname: "/precio/[metal]", params: { metal: localizedSlug } } as any)
     );
+  }
+
+  const PRODUCT_BASE_SLUGS = [
+    "krugerrand-oro", "maple-leaf-oro", "filarmonica-oro", "britannia-oro", "eagle-oro",
+    "maple-leaf-plata", "filarmonica-plata", "britannia-plata", "eagle-plata", "krugerrand-plata",
+    "lingote-oro-1oz", "lingote-oro-100g", "lingote-oro-1kg", "lingote-plata-1kg",
+  ];
+  const PRODUCT_PATHS: Record<string, string> = {
+    es: "productos", en: "products", de: "produkte", zh: "chanpin",
+    ar: "muntajat", tr: "urunler", hi: "utpad",
+  };
+  for (const baseSlug of PRODUCT_BASE_SLUGS) {
+    for (const loc of routing.locales) {
+      const locSlug = getLocalizedProductSlug(baseSlug, loc);
+      urls.push(`${BASE}/${loc}/${PRODUCT_PATHS[loc] ?? "products"}/${locSlug}`);
+    }
   }
 
   try {
