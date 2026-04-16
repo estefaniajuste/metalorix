@@ -4,7 +4,7 @@ import { Link, getPathname } from "@/i18n/navigation";
 import { getTranslations, getLocale } from "next-intl/server";
 import { getAlternates, buildMetaTitle } from "@/lib/seo/alternates";
 import { PRODUCTS, getProduct, getLocalizedProducts } from "@/lib/data/products";
-import { getAllLocalizedSlugsForBase, getBaseProductSlug, getLocalizedProductSlug } from "@/lib/data/product-slugs";
+import { getBaseProductSlug, getLocalizedProductSlug } from "@/lib/data/product-slugs";
 import { ProductSpotPrice } from "@/components/products/ProductSpotPrice";
 import { TaxByCountrySelector } from "@/components/products/TaxByCountrySelector";
 import type { MetalSymbol } from "@/lib/providers/metals";
@@ -15,14 +15,18 @@ import { routing, type Locale } from "@/i18n/routing";
 import { getSpotPrices } from "@/lib/providers/spot-prices";
 import { productSchema } from "@/lib/seo/schemas";
 
-export function generateStaticParams() {
-  const params: { slug: string }[] = [];
+export function generateStaticParams({ params }: { params: { locale: string } }) {
+  const locale = params.locale;
+  const seen = new Set<string>();
+  const result: { slug: string }[] = [];
   for (const p of PRODUCTS) {
-    for (const slug of getAllLocalizedSlugsForBase(p.slug)) {
-      params.push({ slug });
+    const slug = locale === "es" ? p.slug : getLocalizedProductSlug(p.slug, locale);
+    if (!seen.has(slug)) {
+      seen.add(slug);
+      result.push({ slug });
     }
   }
-  return params;
+  return result;
 }
 
 export async function generateMetadata({
