@@ -4,7 +4,7 @@ import {
   articles, articleTranslations, glossaryTerms,
   learnClusters, learnArticles, learnArticleLocalizations,
 } from "@/lib/db/schema";
-import { eq, desc, isNotNull, inArray } from "drizzle-orm";
+import { eq, desc, isNotNull, inArray, and, sql } from "drizzle-orm";
 
 export const dynamic = "force-dynamic";
 
@@ -67,7 +67,7 @@ export async function GET() {
     const articleIds = allArticles.map((a) => a.id);
     const learnIds = learnRows.map((l) => l.id);
 
-    const [translationSlugs, learnLocRows] = await Promise.all([
+    const [translationSlugs, learnLocRows, learnWithContent] = await Promise.all([
       articleIds.length > 0
         ? db.select({ articleId: articleTranslations.articleId, locale: articleTranslations.locale, slug: articleTranslations.slug })
             .from(articleTranslations)
@@ -81,6 +81,17 @@ export async function GET() {
             .where(inArray(learnArticleLocalizations.articleId, learnIds))
             .catch(() => [] as { articleId: number; locale: string; slug: string | null }[])
         : ([] as { articleId: number; locale: string; slug: string | null }[]),
+
+      learnIds.length > 0
+        ? db.select({ articleId: learnArticleLocalizations.articleId })
+            .from(learnArticleLocalizations)
+            .where(and(
+              inArray(learnArticleLocalizations.articleId, learnIds),
+              eq(learnArticleLocalizations.locale, "en"),
+              sql`length(${learnArticleLocalizations.content}) > 500`
+            ))
+            .catch(() => [] as { articleId: number }[])
+        : ([] as { articleId: number }[]),
     ]);
 
     // --- News articles ---
@@ -105,7 +116,8 @@ export async function GET() {
     // --- Clusters ---
     for (const c of clusters) urls.push({ slug: c.slug, type: "cluster" });
 
-    // --- Learn articles ---
+    // --- Learn articles (only those with real content beyond KT+FAQ) ---
+    const learnHasContent = new Set(learnWithContent.map((r) => r.articleId));
     const learnSlugsByArticle = new Map<number, Record<string, string>>();
     for (const lr of learnLocRows) {
       if (!lr.slug) continue;
@@ -113,6 +125,7 @@ export async function GET() {
       learnSlugsByArticle.get(lr.articleId)![lr.locale] = lr.slug;
     }
     for (const la of learnRows) {
+      if (!learnHasContent.has(la.id)) continue;
       urls.push({
         slug: la.slug,
         type: "learn-article",
