@@ -3804,9 +3804,9 @@ export const TOPICS_PART2: TopicDefinition[] = [
     difficulty: "intermediate",
     articleType: "explainer",
     metals: ["gold"],
-    titleEn: "Above-Ground Gold Stock: 212,000 Tonnes & $21T Value [2026]",
+    titleEn: "Total Above-Ground Gold Stock 2026: 212,000 Tonnes, $21T Market Cap",
     summaryEn:
-      "Total above-ground gold stock is ~212,000 tonnes worth over $21 trillion in 2026. Full breakdown by jewelry, central banks, ETFs & industrial use.",
+      "World Gold Council: ~212,000 tonnes of gold ever mined. 47% jewelry, 17% central banks, 22% investment bars & coins. Growth 1.5%/yr. Full breakdown & charts.",
     tags: ["above-ground-stock", "gold", "total-supply", "distribution"],
     relatedSlugs: [
       "annual-gold-mine-production",
