@@ -35,6 +35,7 @@ import { routing } from "@/i18n/routing";
 import { SetLocalePathOverrides } from "@/components/layout/SetLocalePathOverrides";
 import { ContextualToolCards, InlineToolCallout, getToolsForArticle } from "@/components/tools/ContextualToolCards";
 import type { Locale } from "@/i18n/config";
+import { resolveCanonicalArticleSlug } from "@/lib/learn/slug-aliases";
 
 async function findArticleInDb(slug: string): Promise<{ slug: string; clusterSlug: string } | null> {
   const db = getDb();
@@ -62,6 +63,16 @@ async function findArticleInDb(slug: string): Promise<{ slug: string; clusterSlu
   } catch {
     return null;
   }
+}
+
+async function findArticleInDbConsideringAlias(
+  slug: string,
+): Promise<{ slug: string; clusterSlug: string } | null> {
+  const canon = resolveCanonicalArticleSlug(slug);
+  return (
+    (await findArticleInDb(slug)) ??
+    (canon !== slug ? findArticleInDb(canon) : null)
+  );
 }
 
 function truncateDescription(text: string, maxLen = 155): string {
@@ -182,8 +193,9 @@ async function resolveParams(
 ) {
   const baseClusterSlug = getBaseClusterSlug(params.cluster, locale);
 
+  const canonicalSlug = resolveCanonicalArticleSlug(params.slug);
   // Try the slug as a base slug first (topic files are keyed by base slug)
-  let topic = getTopicBySlug(params.slug);
+  let topic = getTopicBySlug(canonicalSlug);
 
   // If not found, try resolving as a localized slug from the DB
   if (!topic) {
@@ -249,7 +261,7 @@ export async function generateMetadata({
   }
 
   if (!topic) {
-    const dbMatch = await findArticleInDb(params.slug);
+    const dbMatch = await findArticleInDbConsideringAlias(params.slug);
     if (dbMatch) {
       const correctCluster = getLocalizedClusterSlug(dbMatch.clusterSlug, locale);
       const correctSlug = (await getLocalizedArticleSlug(dbMatch.slug, locale)) || dbMatch.slug;
@@ -444,7 +456,7 @@ export default async function LearnArticlePage({
   // generateMetadata). No permanentRedirect() here to avoid soft redirects.
 
   if (!topic) {
-    const dbMatch = await findArticleInDb(params.slug);
+    const dbMatch = await findArticleInDbConsideringAlias(params.slug);
     if (dbMatch) {
       const correctCluster = getLocalizedClusterSlug(dbMatch.clusterSlug, locale);
       const correctSlug = (await getLocalizedArticleSlug(dbMatch.slug, locale)) || dbMatch.slug;
