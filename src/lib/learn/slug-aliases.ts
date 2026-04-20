@@ -4,6 +4,7 @@
  */
 export const LEARN_ARTICLE_SLUG_ALIASES: Record<string, string> = {
   "gold-purity-karat-system": "karat-system-for-gold",
+  "the-karat-system-for-gold-from-9k-to-24k": "karat-system-for-gold",
   "the-troy-ounce-explained": "troy-ounce-explained",
   "precious-metals-vs-base-metals": "precious-vs-base-metals",
   "ppi-and-gold": "ppi-and-gold-correlation",

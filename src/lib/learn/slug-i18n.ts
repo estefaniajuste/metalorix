@@ -189,6 +189,8 @@ export async function getLocalizedArticleSlug(
   baseSlug: string,
   locale: Locale
 ): Promise<string> {
+  if (locale === "en") return baseSlug;
+
   const db = getDb();
   if (!db) return baseSlug;
 
@@ -357,11 +359,17 @@ export async function getArticleSlugsForAllLocales(
       .where(eq(learnArticles.slug, baseSlug));
 
     for (const row of rows) {
-      if (row.slug) result.set(row.locale, row.slug);
+      if (row.slug && row.locale !== "en") {
+        result.set(row.locale, row.slug);
+      }
     }
   } catch {
     // DB error — fallback to base slug
   }
+
+  // English URL path is always `learn_articles.slug` (TOPICS), never a marketing
+  // variant stored in localizations — avoids duplicate URLs in hreflang/canonical.
+  result.set("en", baseSlug);
 
   for (const loc of allLocales) {
     if (!result.has(loc)) result.set(loc, baseSlug);

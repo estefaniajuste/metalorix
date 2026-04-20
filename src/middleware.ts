@@ -53,6 +53,7 @@ const LEARN_SLUG_REDIRECTS: Record<string, { cluster: string; slug: string }> = 
   "pcgs-vs-ngc-coin-grading-services-comparison-chart": { cluster: "physical-metals", slug: "coin-grading-ngc-and-pcgs" },
   "what-is-a-carat-and-how-does-it-apply-to-gold": { cluster: "fundamentals", slug: "karat-system-for-gold" },
   "gold-purity-karat-system": { cluster: "fundamentals", slug: "karat-system-for-gold" },
+  "the-karat-system-for-gold-from-9k-to-24k": { cluster: "fundamentals", slug: "karat-system-for-gold" },
   "what-is-sterling-silver": { cluster: "fundamentals", slug: "sterling-silver-explained" },
   "silver-chemical-symbol-and-abbreviation": { cluster: "fundamentals", slug: "silver-chemical-symbol-ag" },
   "what-is-a-troy-ounce": { cluster: "fundamentals", slug: "troy-ounce-explained" },
