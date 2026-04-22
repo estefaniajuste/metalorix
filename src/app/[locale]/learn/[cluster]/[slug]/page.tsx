@@ -24,6 +24,7 @@ import {
   getLocalizedCluster,
   getLocalizedSubcluster,
 } from "@/lib/learn/taxonomy-i18n";
+import { LearnAffiliateCTA } from "@/components/learn/LearnAffiliateCTA";
 import {
   getBaseClusterSlug,
   getLocalizedClusterSlug,
@@ -957,6 +958,8 @@ export default async function LearnArticlePage({
               </div>
             </div>
           )}
+
+          <LearnAffiliateCTA clusterSlug={canonicalClusterBase} locale={locale} />
 
           <RelatedArticles
             articles={relatedArticles}
