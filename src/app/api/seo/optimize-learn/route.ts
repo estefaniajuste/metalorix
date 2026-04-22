@@ -176,9 +176,14 @@ const OPTIMIZED_METADATA: {
   {
     slug: "historical-gold-silver-ratio-chart",
     locale: "en",
-    seoTitle: "Gold to Silver Ratio: Historical Chart & Analysis",
+    seoTitle: "Gold-Silver Ratio: 100-Year Historical Chart & Signal",
     metaDescription:
-      "The gold-to-silver ratio ranged from 1:2.5 in ancient Egypt to over 120:1 in 2020. Historical chart, key extremes, and when to swap gold for silver.",
+      "From 15:1 in ancient times to 120:1 in 2020. The 100-year chart, key turning points, and what today's ratio signals for gold-to-silver allocation.",
+    faq: [
+      { question: "What is the historical average of the gold-silver ratio?", answer: "The long-run average gold-silver ratio is approximately 60-70:1. Ratios above 80 historically favored buying silver relative to gold, while ratios below 50 favored gold." },
+      { question: "When was the gold-silver ratio at its highest?", answer: "The gold-silver ratio hit its all-time high of around 125:1 in March 2020 during the COVID-19 market panic, when silver fell faster than gold in the liquidity sell-off." },
+      { question: "How do you trade the gold-silver ratio?", answer: "Traders sell the relatively expensive metal and buy the cheap one. At extreme ratios (>80), buying silver and selling gold has historically outperformed over a 12-24 month horizon." },
+    ],
   },
   {
     slug: "malleability-of-gold",
@@ -608,13 +613,37 @@ const OPTIMIZED_METADATA: {
     ],
   },
 
+  {
+    slug: "silver-mine-production",
+    locale: "en",
+    seoTitle: "Silver Mine Supply 2026: Where 26,000 Tonnes Come From",
+    metaDescription:
+      "Mexico, China and Peru produce 50%+ of world silver — but 70% comes as a by-product of copper mining, limiting supply response to solar and EV demand.",
+    faq: [
+      { question: "How much silver is mined per year?", answer: "Global silver mine production is approximately 25,000-27,000 tonnes per year. Mexico, China, Peru, Australia, and Chile account for roughly 60% of annual output." },
+      { question: "Is most silver mined as a by-product?", answer: "Yes. Around 70-72% of silver production is a by-product of mining other metals — primarily copper, gold, lead, and zinc. Only about 28% comes from primary silver mines." },
+      { question: "Which country produces the most silver?", answer: "Mexico is consistently the world's largest silver producer, accounting for ~24% of global mine supply. China and Peru typically rank second and third, each producing 13-16% of global output." },
+    ],
+  },
+  {
+    slug: "hyperinflation-and-precious-metals",
+    locale: "en",
+    seoTitle: "Gold in Hyperinflation: Weimar, Zimbabwe, Venezuela Data",
+    metaDescription:
+      "Gold surged 1 trillion% in Weimar marks. But silver outperformed in two of three cases. Real price data and lessons for today's investors.",
+    faq: [
+      { question: "Did gold protect against Weimar hyperinflation?", answer: "Yes. An ounce of gold held its purchasing power throughout the Weimar hyperinflation of 1921-1923, when paper marks became worthless. Gold priced in marks rose by trillions of percent." },
+      { question: "How did gold perform during Zimbabwe's hyperinflation?", answer: "Gold was one of the few stores of value during Zimbabwe's hyperinflation (2007-2009). Citizens who held gold or foreign currency preserved their wealth as the Zimbabwe dollar collapsed to zero." },
+      { question: "Is silver a better hedge than gold during hyperinflation?", answer: "Historically mixed. Silver outperformed gold during Venezuela and Zimbabwe crises due to its smaller market size and industrial uses. But gold is more universally accepted as collateral during extreme events." },
+    ],
+  },
   // ───────── NEW BATCH: High-impression pages from GSC March 2026 ─────────
   {
     slug: "above-ground-gold-stock",
     locale: "en",
-    seoTitle: "Above-Ground Gold Stock: 212,000 Tonnes & $21T Value [2026]",
+    seoTitle: "All the Gold Ever Mined: 212,000 Tonnes & Where It All Is",
     metaDescription:
-      "Total above-ground gold stock is ~212,000 tonnes worth over $21 trillion in 2026. Full breakdown by jewelry, central banks, ETFs & industrial use.",
+      "~212,000 tonnes of gold exists above ground — worth $21 trillion. 47% jewelry, 17% central bank vaults, 22% investment bars. 2026 WGC data by country.",
     faq: [
       { question: "How much gold has been mined in total?", answer: "As of 2026, approximately 212,000 tonnes of gold have been mined throughout history. This would form a cube roughly 22 meters on each side." },
       { question: "What is the total value of all above-ground gold?", answer: "At current 2026 prices, the total above-ground gold stock is worth over $16 trillion — roughly the GDP of the European Union." },
