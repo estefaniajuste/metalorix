@@ -67,6 +67,9 @@ const LEARN_SLUG_REDIRECTS: Record<string, { cluster: string; slug: string }> = 
   // GSC April 2026: duplicate long-slug variants that split impressions with the canonical short slug
   // Top offenders: pages ranking in top 5 with thousands of impressions but 0 clicks due to canonical split
   "coin-grading-scale-understanding-ms-pf-and-the-70-point-system": { cluster: "security-authenticity", slug: "coin-grading-scale-ms-pf" },
+  "above-ground-gold-stock-all-the-gold-ever-mined": { cluster: "price-factors", slug: "above-ground-gold-stock" },
+  "the-miller-process-chlorine-based-gold-refining": { cluster: "production-industry", slug: "the-miller-process" },
+  "liquidity-comparison-across-precious-metals": { cluster: "comparisons", slug: "liquidity-comparison-across-metals" },
   "volatility-comparison-across-precious-metals": { cluster: "comparisons", slug: "volatility-comparison-across-metals" },
   "gold-price-by-decade-1970s-through-2020s": { cluster: "history", slug: "gold-price-in-different-decades" },
   "precious-metals-content-in-e-waste-whats-inside-your-devices": { cluster: "production-industry", slug: "e-waste-precious-metals-content" },
