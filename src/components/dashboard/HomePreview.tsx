@@ -1,5 +1,6 @@
 import { Link } from "@/i18n/navigation";
 import { HomeEmailCapture } from "@/components/dashboard/HomeEmailCapture";
+import { FearGreedBadge } from "@/components/dashboard/FearGreedBadge";
 import { getTranslations, getLocale } from "next-intl/server";
 import { getLocalizedClusterSlug } from "@/lib/learn/slug-i18n";
 import { getCategoryLabel } from "@/lib/data/glossary-categories";
@@ -8,7 +9,8 @@ import type { Locale } from "@/i18n/routing";
 import { getDb } from "@/lib/db";
 import { articles, articleTranslations, glossaryTerms } from "@/lib/db/schema";
 import { eq, desc, and, inArray } from "drizzle-orm";
-import { DEALER_COUNTRIES, getDealersByCountry, getCountryName } from "@/lib/data/dealers";
+import { DEALER_COUNTRIES, getDealersByCountry, getCountryName, getDealerOutboundUrl } from "@/lib/data/dealers";
+import { DEALERS } from "@/lib/data/dealers";
 
 const FEATURED_GUIDES = [
   { slug: "above-ground-gold-stock", cluster: "price-factors" },
@@ -120,9 +122,40 @@ export async function HomePreview() {
   const featuredArticle = hasNews ? latestArticles[0] : null;
   const restArticles = hasNews ? latestArticles.slice(1) : [];
 
+  const bullionvault = DEALERS.find((d) => d.id === "bullionvault");
+  const bvUrl = bullionvault ? getDealerOutboundUrl(bullionvault, "homepage-cta") : "https://www.bullionvault.com";
+
   return (
     <section className="pb-[var(--section-py)]">
       <div className="mx-auto max-w-[1200px] px-6">
+
+        {/* Fear & Greed badge + BullionVault CTA */}
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-8 pt-2">
+          <FearGreedBadge label={locale === "es" ? "Sentimiento" : locale === "de" ? "Sentiment" : "Sentiment"} />
+          {bvUrl && (
+            <a
+              href={bvUrl}
+              target="_blank"
+              rel="sponsored noopener noreferrer"
+              className="inline-flex items-center gap-2.5 px-4 py-2 rounded-DEFAULT border border-brand-gold/30 bg-[rgba(214,179,90,0.06)] hover:border-brand-gold/60 hover:bg-[rgba(214,179,90,0.10)] transition-all text-[13px] font-medium text-content-1 group flex-shrink-0"
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#D6B35A" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
+                <rect x="2" y="7" width="20" height="14" rx="2" />
+                <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" />
+                <line x1="12" y1="12" x2="12" y2="17" />
+                <line x1="9" y1="14.5" x2="15" y2="14.5" />
+              </svg>
+              <span>
+                {locale === "es" ? "Comprar oro online" : locale === "de" ? "Gold kaufen" : "Buy Gold Online"}
+              </span>
+              <span className="text-content-3 text-[11px]">BullionVault</span>
+              <svg className="w-3 h-3 text-content-3 group-hover:translate-x-0.5 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
+                <polyline points="9 18 15 12 9 6" />
+              </svg>
+            </a>
+          )}
+        </div>
+
         {hasNews && (
           <div id="news" className="mb-14">
             <div className="flex items-center justify-between mb-7">

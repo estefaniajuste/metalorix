@@ -2,6 +2,46 @@
 
 import { Link } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
+import { useEffect, useState } from "react";
+
+interface LivePrice {
+  symbol: string;
+  priceUsd: number;
+  changePct24h: number;
+}
+
+function GoldTicker() {
+  const [gold, setGold] = useState<LivePrice | null>(null);
+
+  useEffect(() => {
+    try {
+      const initial = (window as any).__MTX_INITIAL_PRICES__?.prices as LivePrice[] | undefined;
+      const xau = initial?.find((p) => p.symbol === "XAU");
+      if (xau) setGold(xau);
+    } catch {}
+  }, []);
+
+  if (!gold) return null;
+
+  const up = gold.changePct24h >= 0;
+  const pct = Math.abs(gold.changePct24h).toFixed(2);
+  const price = gold.priceUsd.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+  return (
+    <div className="flex items-center gap-2 text-[13px]">
+      <span className="text-content-3 font-medium">XAU</span>
+      <span className="font-semibold text-content-0">${price}</span>
+      <span className={`inline-flex items-center gap-0.5 font-semibold ${up ? "text-emerald-400" : "text-red-400"}`}>
+        <svg width="10" height="10" viewBox="0 0 10 10" fill="currentColor">
+          {up
+            ? <polygon points="5,1 9,9 1,9" />
+            : <polygon points="5,9 9,1 1,1" />}
+        </svg>
+        {pct}%
+      </span>
+    </div>
+  );
+}
 
 export function Hero() {
   const t = useTranslations("home");
@@ -19,12 +59,15 @@ export function Hero() {
               {t("subtitle")}
             </p>
           </div>
-          <Link
-            href="/alertas"
-            className="text-[12px] font-medium text-content-3 hover:text-brand-gold transition-colors flex-shrink-0 hidden sm:block"
-          >
-            {t("heroLink")} →
-          </Link>
+          <div className="flex items-center gap-4 flex-shrink-0">
+            <GoldTicker />
+            <Link
+              href="/alertas"
+              className="text-[12px] font-medium text-content-3 hover:text-brand-gold transition-colors hidden sm:block"
+            >
+              {t("heroLink")} →
+            </Link>
+          </div>
         </div>
       </div>
     </section>
