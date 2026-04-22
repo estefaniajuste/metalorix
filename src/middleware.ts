@@ -65,6 +65,12 @@ const LEARN_SLUG_REDIRECTS: Record<string, { cluster: string; slug: string }> = 
   "gold-performance-during-hyperinflation": { cluster: "history", slug: "hyperinflation-and-precious-metals" },
   "hyperinflation-episodes-and-gold": { cluster: "history", slug: "hyperinflation-and-precious-metals" },
   // GSC April 2026: duplicate long-slug variants that split impressions with the canonical short slug
+  // Top offenders: pages ranking in top 5 with thousands of impressions but 0 clicks due to canonical split
+  "coin-grading-scale-understanding-ms-pf-and-the-70-point-system": { cluster: "security-authenticity", slug: "coin-grading-scale-ms-pf" },
+  "volatility-comparison-across-precious-metals": { cluster: "comparisons", slug: "volatility-comparison-across-metals" },
+  "gold-price-by-decade-1970s-through-2020s": { cluster: "history", slug: "gold-price-in-different-decades" },
+  "precious-metals-content-in-e-waste-whats-inside-your-devices": { cluster: "production-industry", slug: "e-waste-precious-metals-content" },
+  "hyperinflation-and-precious-metals-lessons-from-weimar-to-zimbabwe": { cluster: "history", slug: "hyperinflation-and-precious-metals" },
   "coin-grading-ngc-and-pcgs-standards-explained": { cluster: "physical-metals", slug: "coin-grading-ngc-and-pcgs" },
   "the-us-silver-purchase-act-government-as-silver-buyer": { cluster: "history", slug: "us-silver-purchase-act" },
   "gold-recyclers-and-their-market-impact": { cluster: "markets-trading", slug: "gold-recyclers-in-the-market" },
