@@ -136,6 +136,8 @@ export default async function LocaleLayout({
         <link rel="preconnect" href="https://www.googletagmanager.com" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="https://www.gold-api.com" />
         <link rel="dns-prefetch" href="https://api.twelvedata.com" />
+        {/* Google Consent Mode v2 — must run before gtag.js loads */}
+        <script dangerouslySetInnerHTML={{ __html: `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('consent','default',{analytics_storage:'denied',ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied',wait_for_update:2000});` }} />
       </head>
       <body className={`${inter.variable} ${notoSansSC.variable} ${isCJK ? "font-cjk" : "font-sans"}`}>
         <NextIntlClientProvider messages={messages}>

@@ -1,34 +1,48 @@
 "use client";
 
 import Script from "next/script";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 const GA_ID = "G-9K1MTS78FF";
 const CONSENT_KEY = "mtx-cookie-consent";
 
+function updateGAConsent(value: string) {
+  if (typeof window === "undefined" || typeof window.gtag !== "function") return;
+  const granted = value === "accepted" ? "granted" : "denied";
+  window.gtag("consent", "update", {
+    analytics_storage: granted,
+    ad_storage: "denied",
+    ad_user_data: "denied",
+    ad_personalization: "denied",
+  });
+}
+
 export function AnalyticsLoader() {
-  const [consent, setConsent] = useState<string | null>(null);
-
   useEffect(() => {
-    setConsent(localStorage.getItem(CONSENT_KEY));
+    // Apply stored consent immediately on mount
+    const stored = localStorage.getItem(CONSENT_KEY);
+    if (stored === "accepted" || stored === "rejected") {
+      updateGAConsent(stored);
+    }
 
-    const handleStorage = (e: StorageEvent) => {
-      if (e.key === CONSENT_KEY) setConsent(e.newValue);
-    };
     const handleConsentChanged = (e: CustomEvent<{ value: string }>) => {
-      setConsent(e.detail.value);
+      updateGAConsent(e.detail.value);
     };
-    window.addEventListener("storage", handleStorage);
+    const handleStorage = (e: StorageEvent) => {
+      if (e.key === CONSENT_KEY && e.newValue) updateGAConsent(e.newValue);
+    };
+
     window.addEventListener("mtx-consent-changed", handleConsentChanged as EventListener);
+    window.addEventListener("storage", handleStorage);
     return () => {
-      window.removeEventListener("storage", handleStorage);
       window.removeEventListener("mtx-consent-changed", handleConsentChanged as EventListener);
+      window.removeEventListener("storage", handleStorage);
     };
   }, []);
 
-  if (consent !== "accepted") return null;
-
-  const debugMode = typeof window !== "undefined" && new URLSearchParams(window.location.search).get("debug_ga") === "1";
+  const isDebug =
+    typeof window !== "undefined" &&
+    new URLSearchParams(window.location.search).get("debug_ga") === "1";
 
   return (
     <>
@@ -37,7 +51,7 @@ export function AnalyticsLoader() {
         strategy="afterInteractive"
       />
       <Script id="gtag-init" strategy="afterInteractive">
-        {`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','${GA_ID}'${debugMode ? ",{debug_mode:true}" : ""});`}
+        {`gtag('js',new Date());gtag('config','${GA_ID}'${isDebug ? ",{debug_mode:true}" : ""});`}
       </Script>
     </>
   );
