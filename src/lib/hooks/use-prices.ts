@@ -12,7 +12,6 @@ interface PricesState {
 declare global {
   interface Window {
     __MTX_INITIAL_PRICES__?: { prices: MetalSpot[]; source: string };
-    gtag?: (...args: any[]) => void;
   }
 }
 
