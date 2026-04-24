@@ -31,15 +31,17 @@ export function getDealerOutboundUrl(
 }
 
 /** Dealers that have an active affiliate programme. */
+// Only dealers with a REAL tracking URL (not placeholder).
+// Add back when affiliate programs are approved:
+//   "apmex"      — Impact.com rejected; try direct or ShareASale
+//   "jmbullion"  — Awin ID 2853625 applied, awaiting JM Bullion program approval
+//   "sdbullion"  — pending registration
+//   "bullionbypost" — pending registration
+//   "bitpanda"   — pending (same Impact.com platform, blocked)
+//   "goldavenue-fr" — pending registration
+//   "silvergoldbull-ca" — pending registration
 export const FEATURED_AFFILIATE_DEALERS = [
-  "apmex",
-  "jmbullion",
-  "sdbullion",
   "bullionvault",
-  "goldavenue-fr",
-  "silvergoldbull-ca",
-  "bullionbypost",
-  "bitpanda",
 ] as const;
 
 export interface DealerCountry {
@@ -356,7 +358,7 @@ export const DEALERS: Dealer[] = [
     type: "online",
     metals: ["XAU", "XAG", "XPT", "XPD"],
     website: "https://www.apmex.com",
-    affiliateUrl: "https://www.apmex.com",
+    // affiliateUrl: pending — Impact.com rejected, apply direct at apmex.com/affiliate-program
     featured: true,
     verified: true,
     description: {
@@ -375,7 +377,7 @@ export const DEALERS: Dealer[] = [
     type: "online",
     metals: ["XAU", "XAG", "XPT", "XPD"],
     website: "https://www.jmbullion.com",
-    affiliateUrl: "https://www.jmbullion.com",
+    // affiliateUrl: pending — Awin ID 2853625 applied, awaiting JM Bullion program approval
     featured: true,
     description: {
       es: "Una de las principales plataformas online de lingotes de EE.UU., conocida por sus bajos precios y envíos rápidos.",
@@ -390,7 +392,7 @@ export const DEALERS: Dealer[] = [
     type: "online",
     metals: ["XAU", "XAG", "XPT"],
     website: "https://www.sdbullion.com",
-    affiliateUrl: "https://www.sdbullion.com",
+    // affiliateUrl: pending registration
     description: {
       es: "Dealer online americano especializado en lingotes a precios spot muy ajustados.",
       en: "American online dealer specialising in bullion at very tight spot prices.",
