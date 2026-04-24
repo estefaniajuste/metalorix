@@ -150,20 +150,23 @@ export function middleware(request: NextRequest) {
     // Redirect malformed price-page opengraph-image URLs (wrong locale path or metal slug)
     // to the canonical price page before they reach Next.js and cause a 5xx.
     // e.g. /de/precio/platino/opengraph-image → /de/preis/platin
-    if (pathname.includes("/opengraph-image") && segments.length >= 4 && LOCALES.has(segments[0])) {
-      const locale = segments[0];
-      const priceSeg = PRICE_PATHS[locale];
-      const allPricePaths = new Set(Object.values(PRICE_PATHS));
-      if (allPricePaths.has(segments[1])) {
-        const metalInUrl = segments[2];
-        const internal = METAL_REVERSE[metalInUrl];
-        if (internal) {
-          const expectedMetal = METAL_SLUGS[internal]?.[locale] ?? metalInUrl;
-          if (segments[1] !== priceSeg || metalInUrl !== expectedMetal) {
-            return NextResponse.redirect(
-              new URL(`/${locale}/${priceSeg}/${expectedMetal}`, request.url),
-              301,
-            );
+    if (pathname.includes("/opengraph-image")) {
+      const ogSegs = pathname.toLowerCase().split("/").filter(Boolean);
+      if (ogSegs.length >= 4 && LOCALES.has(ogSegs[0])) {
+        const locale = ogSegs[0];
+        const priceSeg = PRICE_PATHS[locale];
+        const allPricePaths = new Set(Object.values(PRICE_PATHS));
+        if (allPricePaths.has(ogSegs[1])) {
+          const metalInUrl = ogSegs[2];
+          const internal = METAL_REVERSE[metalInUrl];
+          if (internal) {
+            const expectedMetal = METAL_SLUGS[internal]?.[locale] ?? metalInUrl;
+            if (ogSegs[1] !== priceSeg || metalInUrl !== expectedMetal) {
+              return NextResponse.redirect(
+                new URL(`/${locale}/${priceSeg}/${expectedMetal}`, request.url),
+                301,
+              );
+            }
           }
         }
       }
