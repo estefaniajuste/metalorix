@@ -147,6 +147,27 @@ export function middleware(request: NextRequest) {
   }
 
   if (pathname.startsWith("/api/") || pathname.includes("/opengraph-image")) {
+    // Redirect malformed price-page opengraph-image URLs (wrong locale path or metal slug)
+    // to the canonical price page before they reach Next.js and cause a 5xx.
+    // e.g. /de/precio/platino/opengraph-image → /de/preis/platin
+    if (pathname.includes("/opengraph-image") && segments.length >= 4 && LOCALES.has(segments[0])) {
+      const locale = segments[0];
+      const priceSeg = PRICE_PATHS[locale];
+      const allPricePaths = new Set(Object.values(PRICE_PATHS));
+      if (allPricePaths.has(segments[1])) {
+        const metalInUrl = segments[2];
+        const internal = METAL_REVERSE[metalInUrl];
+        if (internal) {
+          const expectedMetal = METAL_SLUGS[internal]?.[locale] ?? metalInUrl;
+          if (segments[1] !== priceSeg || metalInUrl !== expectedMetal) {
+            return NextResponse.redirect(
+              new URL(`/${locale}/${priceSeg}/${expectedMetal}`, request.url),
+              301,
+            );
+          }
+        }
+      }
+    }
     const response = NextResponse.next();
     response.headers.set("X-Robots-Tag", "noindex");
     return response;
