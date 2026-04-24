@@ -384,6 +384,15 @@ export function middleware(request: NextRequest) {
     }
   }
 
+  // When the URL already has a locale prefix (e.g. /en/learn/...), the NEXT_LOCALE
+  // cookie set by next-intl is redundant — the locale is determined by the URL.
+  // Removing it prevents Next.js from adding "private, no-cache, no-store" headers
+  // (which it does automatically whenever a response sets cookies), allowing
+  // Googlebot to cache and crawl these pages efficiently.
+  if (LOCALES.has(segments[0]) && response.status === 200) {
+    response.headers.delete("set-cookie");
+  }
+
   // Propagate the original URL so not-found/error pages can log it
   response.headers.set("x-pathname", pathname);
   return response;

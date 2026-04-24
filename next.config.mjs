@@ -56,6 +56,21 @@ const nextConfig = {
           { key: "Cache-Control", value: "public, s-maxage=3600, stale-while-revalidate=7200" },
         ],
       },
+      {
+        // Learn/aprende article pages: static educational content, revalidated every hour.
+        // These patterns cover all locale variants (en/learn, es/aprende-inversion, de/lernen-investition, etc.)
+        source: "/:locale(en|es|de|zh|ar|tr|hi)/(learn|aprende-inversion|lernen-investition|xuexi|taallam|ogren-yatirim|gyaan-nivesh)/:cluster/:slug",
+        headers: [
+          { key: "Cache-Control", value: "public, s-maxage=3600, stale-while-revalidate=7200" },
+        ],
+      },
+      {
+        // Learn cluster index pages
+        source: "/:locale(en|es|de|zh|ar|tr|hi)/(learn|aprende-inversion|lernen-investition|xuexi|taallam|ogren-yatirim|gyaan-nivesh)/:cluster",
+        headers: [
+          { key: "Cache-Control", value: "public, s-maxage=3600, stale-while-revalidate=7200" },
+        ],
+      },
     ];
   },
 };

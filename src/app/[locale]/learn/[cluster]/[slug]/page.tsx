@@ -86,6 +86,22 @@ function truncateDescription(text: string, maxLen = 155): string {
   return truncated;
 }
 
+/**
+ * Appends the current year to meta descriptions if they don't already contain it.
+ * Google rewards freshness signals in snippets, and explicit years in descriptions
+ * increase CTR by signalling up-to-date content vs AI Overview generic answers.
+ */
+function addFreshnessSignal(description: string): string {
+  const year = new Date().getFullYear().toString();
+  if (description.includes(year)) return description;
+  // Only append if there's room (stay under 160 chars total)
+  const suffix = ` (${year})`;
+  if (description.length + suffix.length <= 160) return description + suffix;
+  // Otherwise replace last word with the year suffix to stay within limit
+  const trimmed = description.slice(0, 155 - suffix.length).replace(/\s+\S*$/, "");
+  return trimmed + suffix;
+}
+
 export const revalidate = 3600;
 
 async function getArticleData(slug: string, locale: string) {
@@ -288,7 +304,7 @@ export async function generateMetadata({
     .replace(/\s*\|\s*Metalorix\s*(Learn)?\s*/gi, "")
     .trim();
   const rawDesc = data?.localization.metaDescription || topic.summaryEn;
-  const description = truncateDescription(rawDesc, 155);
+  const description = addFreshnessSignal(truncateDescription(rawDesc, 140));
 
   const metaSlugsByLocale = await getArticleSlugsForAllLocales(topic.slug);
 
@@ -818,7 +834,11 @@ export default async function LearnArticlePage({
               )}
             </div>
 
-            <p className="text-lg text-content-2 leading-relaxed">
+            {/* data-nosnippet: prevents Google AI Overview from using this paragraph as
+                an inline answer, forcing it to use the curated <meta description> instead.
+                Users who see the regular search result (not AI Overview) still have context
+                from the title + meta description, but Google cannot auto-answer from this text. */}
+            <p className="text-lg text-content-2 leading-relaxed" data-nosnippet>
               {summary}
             </p>
 
