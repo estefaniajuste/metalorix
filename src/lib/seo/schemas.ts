@@ -122,8 +122,8 @@ export function productSchema(opts: {
   image: string;
   weightG: number;
   material: string;
-  priceCurrency: string;
-  price: number;
+  priceCurrency?: string;
+  price?: number;
   countryOfOrigin?: string;
   ratingValue: number;
   reviewBody: string;
@@ -169,46 +169,48 @@ export function productSchema(opts: {
       },
       reviewBody: opts.reviewBody,
     },
-    offers: {
-      "@type": "Offer",
-      price: opts.price.toFixed(2),
-      priceCurrency: opts.priceCurrency,
-      availability: "https://schema.org/InStock",
-      priceValidUntil: tomorrow,
-      url: opts.url,
-      shippingDetails: {
-        "@type": "OfferShippingDetails",
-        shippingRate: {
-          "@type": "MonetaryAmount",
-          value: "0",
-          currency: opts.priceCurrency,
-        },
-        shippingDestination: {
-          "@type": "DefinedRegion",
-          addressCountry: "US",
-        },
-        deliveryTime: {
-          "@type": "ShippingDeliveryTime",
-          handlingTime: {
-            "@type": "QuantitativeValue",
-            minValue: 0,
-            maxValue: 0,
-            unitCode: "DAY",
+    ...(opts.price !== undefined && opts.priceCurrency && {
+      offers: {
+        "@type": "Offer",
+        price: opts.price.toFixed(2),
+        priceCurrency: opts.priceCurrency,
+        availability: "https://schema.org/InStock",
+        priceValidUntil: tomorrow,
+        url: opts.url,
+        shippingDetails: {
+          "@type": "OfferShippingDetails",
+          shippingRate: {
+            "@type": "MonetaryAmount",
+            value: "0",
+            currency: opts.priceCurrency,
           },
-          transitTime: {
-            "@type": "QuantitativeValue",
-            minValue: 0,
-            maxValue: 0,
-            unitCode: "DAY",
+          shippingDestination: {
+            "@type": "DefinedRegion",
+            addressCountry: "US",
           },
+          deliveryTime: {
+            "@type": "ShippingDeliveryTime",
+            handlingTime: {
+              "@type": "QuantitativeValue",
+              minValue: 0,
+              maxValue: 0,
+              unitCode: "DAY",
+            },
+            transitTime: {
+              "@type": "QuantitativeValue",
+              minValue: 0,
+              maxValue: 0,
+              unitCode: "DAY",
+            },
+          },
+        },
+        hasMerchantReturnPolicy: {
+          "@type": "MerchantReturnPolicy",
+          applicableCountry: "US",
+          returnPolicyCategory: "https://schema.org/MerchantReturnNotPermitted",
         },
       },
-      hasMerchantReturnPolicy: {
-        "@type": "MerchantReturnPolicy",
-        applicableCountry: "US",
-        returnPolicyCategory: "https://schema.org/MerchantReturnNotPermitted",
-      },
-    },
+    }),
   };
 }
 

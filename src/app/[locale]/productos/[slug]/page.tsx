@@ -211,45 +211,47 @@ export default async function ProductoPage({
     ],
   };
 
-  let productJsonLd: Record<string, unknown> | null = null;
+  const imageParams = new URLSearchParams({
+    name: product.name,
+    metal: product.metal === "oro" ? "gold" : "silver",
+    type: product.type === "moneda" ? "coin" : "bar",
+    weight: `${product.fineWeightOz} oz`,
+    purity: product.purityLabel.split(" ")[0],
+    mint: product.mint,
+  });
+  const imageUrl = `https://metalorix.com/api/product-image?${imageParams.toString()}`;
+  const baseLiquidity = PRODUCTS.find(
+    (p) => getBaseProductSlug(p.slug, "es") === baseSlug
+  )?.liquidity ?? "Alta";
+  const ratingValue =
+    baseLiquidity === "Muy alta" ? 4.8 :
+    baseLiquidity === "Alta" ? 4.3 : 3.8;
+
+  let spotPrice: number | undefined;
   try {
     const { prices } = await getSpotPrices();
     const metalSpot = prices.find((p) => p.symbol === product.symbol);
     if (metalSpot) {
-      const metalValue = metalSpot.price * product.fineWeightOz;
-      const imageParams = new URLSearchParams({
-        name: product.name,
-        metal: product.metal === "oro" ? "gold" : "silver",
-        type: product.type === "moneda" ? "coin" : "bar",
-        weight: `${product.fineWeightOz} oz`,
-        purity: product.purityLabel.split(" ")[0],
-        mint: product.mint,
-      });
-      const imageUrl = `https://metalorix.com/api/product-image?${imageParams.toString()}`;
-      const baseLiquidity = PRODUCTS.find(
-        (p) => getBaseProductSlug(p.slug, "es") === baseSlug
-      )?.liquidity ?? "Alta";
-      const ratingValue =
-        baseLiquidity === "Muy alta" ? 4.8 :
-        baseLiquidity === "Alta" ? 4.3 : 3.8;
-      productJsonLd = productSchema({
-        name: product.name,
-        description: product.description.slice(0, 300),
-        brand: product.mint,
-        url: productAlternates.canonical as string,
-        image: imageUrl,
-        weightG: product.grossWeightG,
-        material: product.metal === "oro" ? "Gold" : "Silver",
-        priceCurrency: "USD",
-        price: metalValue,
-        countryOfOrigin: product.country,
-        ratingValue,
-        reviewBody: product.idealFor,
-      });
+      spotPrice = metalSpot.price * product.fineWeightOz;
     }
   } catch {
-    /* spot price unavailable — skip Product schema */
+    /* spot price unavailable — offers omitted from schema */
   }
+
+  const productJsonLd = productSchema({
+    name: product.name,
+    description: product.description.slice(0, 300),
+    brand: product.mint,
+    url: productAlternates.canonical as string,
+    image: imageUrl,
+    weightG: product.grossWeightG,
+    material: product.metal === "oro" ? "Gold" : "Silver",
+    priceCurrency: "USD",
+    price: spotPrice,
+    countryOfOrigin: product.country,
+    ratingValue,
+    reviewBody: product.idealFor,
+  });
 
   const specs = [
     { label: t("specType"), value: product.type === "moneda" ? t("typeCoin") : t("typeBar") },
@@ -282,12 +284,10 @@ export default async function ProductoPage({
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
-      {productJsonLd && (
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd) }}
-        />
-      )}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd) }}
+      />
       <section className="py-[var(--section-py)]">
         <div className="mx-auto max-w-[1200px] px-6">
           {/* Breadcrumb */}
