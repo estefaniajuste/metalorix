@@ -59,7 +59,7 @@ function DownloadIcon({ className }: { className?: string }) {
 export function InstallPrompt() {
   const [visible, setVisible] = useState(false);
   const [platform, setPlatform] = useState<Platform>("other");
-  const [deferredPrompt, setDeferredPrompt] = useState<typeof window.__pwaPrompt>(null);
+  const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
   const t = useTranslations("installPrompt");
 
   useEffect(() => {
@@ -82,7 +82,7 @@ export function InstallPrompt() {
 
     const onPrompt = (e: Event) => {
       e.preventDefault();
-      setDeferredPrompt(e);
+      setDeferredPrompt(e as BeforeInstallPromptEvent);
     };
     window.addEventListener("beforeinstallprompt", onPrompt);
 

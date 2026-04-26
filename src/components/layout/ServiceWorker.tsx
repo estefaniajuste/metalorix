@@ -22,7 +22,7 @@ export function ServiceWorkerRegistration() {
 
     const onPrompt = (e: Event) => {
       gtagEvent("pwa_install_prompt");
-      window.__pwaPrompt = e as unknown as typeof window.__pwaPrompt;
+      window.__pwaPrompt = e as BeforeInstallPromptEvent;
     };
     window.addEventListener("beforeinstallprompt", onPrompt);
 
