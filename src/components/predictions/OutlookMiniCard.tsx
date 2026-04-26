@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+// next-intl's Link href is strictly typed; static string literals require `as any`.
 "use client";
 
 import { useState, useEffect } from "react";

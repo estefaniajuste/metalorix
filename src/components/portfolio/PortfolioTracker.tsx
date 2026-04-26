@@ -50,15 +50,15 @@ function genId() {
   return Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
 }
 
-function dbRowToHolding(row: any): Holding {
+function dbRowToHolding(row: Record<string, unknown>): Holding {
   return {
     id: String(row.id),
-    symbol: row.symbol,
+    symbol: String(row.symbol),
     quantity: Number(row.quantity),
-    unit: row.unit as "g" | "oz",
+    unit: (row.unit as "g" | "oz") ?? "oz",
     purchasePrice: Number(row.purchasePrice ?? row.purchase_price),
-    purchaseDate: row.purchaseDate ?? row.purchase_date ?? "",
-    notes: row.notes ?? "",
+    purchaseDate: String(row.purchaseDate ?? row.purchase_date ?? ""),
+    notes: String(row.notes ?? ""),
   };
 }
 
@@ -278,7 +278,7 @@ export function PortfolioTracker() {
                   backgroundColor: METAL_COLORS[sym] || "#666",
                 }}
                 className="rounded-full min-w-[4px] transition-all duration-500"
-                title={`${tn(sym as any)} — ${((val / totalValue) * 100).toFixed(1)}%`}
+                title={`${tn(sym as Parameters<typeof tn>[0])} — ${((val / totalValue) * 100).toFixed(1)}%`}
               />
             ))}
           </div>
@@ -289,7 +289,7 @@ export function PortfolioTracker() {
                   className="w-2.5 h-2.5 rounded-full"
                   style={{ backgroundColor: METAL_COLORS[sym] }}
                 />
-                {tn(sym as any)} {((val / totalValue) * 100).toFixed(1)}%
+                {tn(sym as Parameters<typeof tn>[0])} {((val / totalValue) * 100).toFixed(1)}%
               </div>
             ))}
           </div>
@@ -318,7 +318,7 @@ export function PortfolioTracker() {
               pnlPct={getPnlPct(h)}
               fmt={fmt}
               fmtPct={fmtPct}
-              metalName={tn(h.symbol as any)}
+              metalName={tn(h.symbol as Parameters<typeof tn>[0])}
               onEdit={() => handleEdit(h)}
               onDelete={() => handleDelete(h.id)}
               editLabel={t("editHolding")}

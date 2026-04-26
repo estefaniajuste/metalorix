@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+// next-intl's Link href is strictly typed; search result URLs require `as any`.
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";

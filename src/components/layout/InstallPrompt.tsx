@@ -59,7 +59,7 @@ function DownloadIcon({ className }: { className?: string }) {
 export function InstallPrompt() {
   const [visible, setVisible] = useState(false);
   const [platform, setPlatform] = useState<Platform>("other");
-  const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
+  const [deferredPrompt, setDeferredPrompt] = useState<typeof window.__pwaPrompt>(null);
   const t = useTranslations("installPrompt");
 
   useEffect(() => {
@@ -105,7 +105,7 @@ export function InstallPrompt() {
   }, []);
 
   const handleInstallClick = useCallback(async () => {
-    const prompt = deferredPrompt || (window as any).__pwaPrompt;
+    const prompt = deferredPrompt || window.__pwaPrompt;
     if (prompt) {
       prompt.prompt();
       const result = await prompt.userChoice;
@@ -113,7 +113,7 @@ export function InstallPrompt() {
         setVisible(false);
       }
       setDeferredPrompt(null);
-      (window as any).__pwaPrompt = null;
+      window.__pwaPrompt = null;
     }
   }, [deferredPrompt]);
 

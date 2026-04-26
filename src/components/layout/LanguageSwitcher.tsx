@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+// next-intl's router.replace is strictly typed; locale switching requires `as any` for dynamic pathnames.
 "use client";
 
 import { useState, useRef, useEffect, useSyncExternalStore } from "react";

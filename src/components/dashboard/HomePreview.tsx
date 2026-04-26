@@ -407,6 +407,7 @@ export async function HomePreview() {
               ].map(({ href, title, desc }) => (
                 <Link
                   key={title}
+                  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- next-intl requires typed routes; string union can't be narrowed here
                   href={href as any}
                   className="bg-surface-1 border border-border rounded-DEFAULT p-6 hover:border-border-hover hover:-translate-y-0.5 transition-all group"
                 >
@@ -456,6 +457,7 @@ export async function HomePreview() {
             ] as const).map(({ href, icon, title, desc }) => (
               <Link
                 key={title}
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any -- next-intl requires typed routes; string union can't be narrowed here
                 href={href as any}
                 className="bg-surface-1 border border-border rounded-DEFAULT p-4 hover:border-brand-gold/30 hover:-translate-y-0.5 transition-all group text-center"
               >

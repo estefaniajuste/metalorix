@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+// next-intl's Link href is strictly typed; tool hrefs from a data array require `as any`.
 import { Link } from "@/i18n/navigation";
 
 interface ToolSuggestion {

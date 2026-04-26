@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+// next-intl's Link href is strictly typed to known routes; dynamic string unions require `as any`.
+// This is safe here because all hrefs are static string literals defined in this file.
 import { Link } from "@/i18n/navigation";
 import { useTranslations, useLocale } from "next-intl";
 import { Logo } from "./Logo";

@@ -4,8 +4,8 @@ import { useEffect } from "react";
 
 function gtagEvent(name: string, params?: Record<string, string>) {
   const consent = localStorage.getItem("mtx-cookie-consent");
-  if (consent === "accepted" && typeof (window as any).gtag === "function") {
-    (window as any).gtag("event", name, params);
+  if (consent === "accepted" && typeof window.gtag === "function") {
+    window.gtag("event", name, params);
   }
 }
 
@@ -22,7 +22,7 @@ export function ServiceWorkerRegistration() {
 
     const onPrompt = (e: Event) => {
       gtagEvent("pwa_install_prompt");
-      (window as any).__pwaPrompt = e;
+      window.__pwaPrompt = e as unknown as typeof window.__pwaPrompt;
     };
     window.addEventListener("beforeinstallprompt", onPrompt);
 

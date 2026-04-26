@@ -13,4 +13,5 @@ interface Window {
     params?: Record<string, unknown> | GtagConsentParams
   ) => void;
   dataLayer: unknown[];
+  __pwaPrompt?: { prompt: () => void; userChoice: Promise<{ outcome: string }> } | null;
 }

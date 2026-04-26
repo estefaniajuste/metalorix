@@ -4,21 +4,12 @@ import { Link } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 
-interface LivePrice {
-  symbol: string;
-  price: number;
-  changePct: number;
-}
-
 function GoldTicker() {
-  const [gold, setGold] = useState<LivePrice | null>(null);
+  const [gold, setGold] = useState<{ price: number; changePct: number } | null>(null);
 
   useEffect(() => {
-    try {
-      const initial = (window as any).__MTX_INITIAL_PRICES__?.prices as LivePrice[] | undefined;
-      const xau = initial?.find((p) => p.symbol === "XAU");
-      if (xau) setGold(xau);
-    } catch {}
+    const xau = window.__MTX_INITIAL_PRICES__?.prices.find((p) => p.symbol === "XAU");
+    if (xau) setGold({ price: xau.price, changePct: xau.changePct });
   }, []);
 
   if (!gold) return null;
