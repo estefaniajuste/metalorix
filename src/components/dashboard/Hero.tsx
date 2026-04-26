@@ -6,8 +6,8 @@ import { useEffect, useState } from "react";
 
 interface LivePrice {
   symbol: string;
-  priceUsd: number;
-  changePct24h: number;
+  price: number;
+  changePct: number;
 }
 
 function GoldTicker() {
@@ -23,9 +23,9 @@ function GoldTicker() {
 
   if (!gold) return null;
 
-  const up = gold.changePct24h >= 0;
-  const pct = Math.abs(gold.changePct24h).toFixed(2);
-  const price = gold.priceUsd.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  const up = gold.changePct >= 0;
+  const pct = Math.abs(gold.changePct).toFixed(2);
+  const price = gold.price.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
   return (
     <div className="flex items-center gap-2 text-[13px]">
