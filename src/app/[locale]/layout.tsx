@@ -93,6 +93,11 @@ export async function generateMetadata({
       index: true,
       follow: true,
     },
+    verification: {
+      other: {
+        "msvalidate.01": "9E98A41ABA6A806EBA05D0512EBFBB2E",
+      },
+    },
     alternates: {
       canonical: `https://metalorix.com/${locale}`,
       languages: alternates,
