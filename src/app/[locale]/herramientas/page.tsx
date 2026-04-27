@@ -4,6 +4,8 @@ import { getTranslations, getLocale } from "next-intl/server";
 import { getAlternates } from "@/lib/seo/alternates";
 import { breadcrumbSchema, softwareAppSchema, faqSchema } from "@/lib/seo/schemas";
 
+export const revalidate = 3600;
+
 const toolSkeleton = (h = "h-[300px]") => (
   <div className={`w-full ${h} bg-surface-1 border border-border rounded-DEFAULT animate-shimmer`} />
 );

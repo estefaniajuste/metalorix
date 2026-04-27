@@ -5,6 +5,8 @@ import { MetalComparator } from "@/components/tools/MetalComparator";
 import { breadcrumbSchema, softwareAppSchema } from "@/lib/seo/schemas";
 import { getAlternates } from "@/lib/seo/alternates";
 
+export const revalidate = 3600;
+
 export async function generateMetadata({
   params,
 }: {

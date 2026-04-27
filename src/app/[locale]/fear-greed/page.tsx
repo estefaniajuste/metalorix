@@ -3,6 +3,8 @@ import dynamic from "next/dynamic";
 import { getTranslations, getLocale } from "next-intl/server";
 import { getAlternates } from "@/lib/seo/alternates";
 import { breadcrumbSchema, softwareAppSchema, faqSchema } from "@/lib/seo/schemas";
+
+export const revalidate = 3600;
 import { Link } from "@/i18n/navigation";
 
 const FearGreedGauge = dynamic(

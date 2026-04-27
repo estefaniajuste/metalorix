@@ -3,6 +3,8 @@ import { Link } from "@/i18n/navigation";
 import { getTranslations, getLocale } from "next-intl/server";
 import { getAlternates } from "@/lib/seo/alternates";
 import { breadcrumbSchema, faqSchema } from "@/lib/seo/schemas";
+
+export const revalidate = 60;
 import { GramPriceContent } from "@/components/seo/GramPriceContent";
 
 export async function generateMetadata({

@@ -14,6 +14,8 @@ import {
 } from "@/lib/seo/schemas";
 import { getAlternates, buildMetaTitle } from "@/lib/seo/alternates";
 
+export const revalidate = 3600;
+
 const SEO_KEYWORDS: Record<string, string[]> = {
   es: [
     "cómo invertir en oro", "ETF oro Europa", "oro físico vs ETF",

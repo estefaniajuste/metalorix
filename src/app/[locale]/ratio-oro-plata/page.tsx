@@ -2,8 +2,11 @@ import type { Metadata } from "next";
 import { Link } from "@/i18n/navigation";
 import { getTranslations, getLocale } from "next-intl/server";
 import { GoldSilverRatioContent } from "@/components/ratio/GoldSilverRatioContent";
-import { breadcrumbSchema, webPageSchema, faqSchema } from "@/lib/seo/schemas";
+import { breadcrumbSchema, webPageSchema, faqSchema, softwareAppSchema } from "@/lib/seo/schemas";
+
 import { getAlternates } from "@/lib/seo/alternates";
+
+export const revalidate = 3600;
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("pages");

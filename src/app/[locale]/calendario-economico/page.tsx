@@ -5,6 +5,8 @@ import { EconomicCalendar } from "@/components/tools/EconomicCalendar";
 import { breadcrumbSchema, webPageSchema } from "@/lib/seo/schemas";
 import { getAlternates } from "@/lib/seo/alternates";
 
+export const revalidate = 3600;
+
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("pages");
   const locale = await getLocale();
